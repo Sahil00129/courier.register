@@ -94,5 +94,59 @@ function catagoriesCheck(that) {
         document.getElementById("for_month_imprest").style.display = "none";
             
     }
+    if (that.value == "Legal Department Documents") {
+        document.getElementById("discription_legal").style.display = "block";
+        document.getElementById("company_name_legal").style.display = "block";
+        document.getElementById("person_name_legal").style.display = "block";
+ 
+    } else{
+        document.getElementById("discription_legal").style.display = "none";
+        document.getElementById("company_name_legal").style.display = "none";   
+        document.getElementById("person_name_legal").style.display = "none";
+            
+    }
+    if (that.value == "Principle Certificate") {
+        document.getElementById("number_of_pc").style.display = "block";
+        document.getElementById("discription_pc").style.display = "block";
+        document.getElementById("company_name_pc").style.display = "block";
+ 
+    } else{
+        document.getElementById("number_of_pc").style.display = "none";
+        document.getElementById("discription_pc").style.display = "none";   
+        document.getElementById("company_name_pc").style.display = "none";
+            
+    }
+    if (that.value == "Government Letters") {
+        document.getElementById("document_number_govt").style.display = "block";
+        document.getElementById("Discription_govt").style.display = "block";
+       
+ 
+    } else{
+        document.getElementById("document_number_govt").style.display = "none";
+        document.getElementById("Discription_govt").style.display = "none";   
+           
+    }
+    if (that.value == "DDR") {
+        document.getElementById("DDR_type").style.display = "block";
+        document.getElementById("number_of_DDR").style.display = "block";
+        document.getElementById("party_name_ddr").style.display = "block";
+ 
+    } else{
+        document.getElementById("DDR_type").style.display = "none";
+        document.getElementById("number_of_DDR").style.display = "none";   
+        document.getElementById("party_name_ddr").style.display = "none";
+            
+    }
+
+    if (that.value == "Physical stock report") {
+        document.getElementById("physical_stock_report").style.display = "block";
+        document.getElementById("discription_physical").style.display = "block";
+        document.getElementById("month_physical").style.display = "block";
+ 
+    } else{
+        document.getElementById("physical_stock_report").style.display = "none";
+        document.getElementById("discription_physical").style.display = "none";   
+        document.getElementById("month_physical").style.display = "none";       
+    }
 
 }

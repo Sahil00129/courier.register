@@ -309,7 +309,95 @@
                                     </div>
 
 <!----------------------------------------------End------------------------------------------->
-                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+<!------------------------------Legal Department Documents catagories -------------------------------->
+                          <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="discription_legal" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-4" id="company_name_legal" style="display: none;">
+                                        <label for="inputPassword4">Company Name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="person_name_legal" style="display: none;">
+                                        <label for="inputPassword4">Person name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+<!----------------------------------------------End---------------------------------------------->
+<!---------------------------------Principle Certificate catagories ---------------------------------->
+                            <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="number_of_pc" style="display: none;">
+                                        <label for="inputPassword4">Nubmer of PC</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-4" id="discription_pc" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="company_name_pc" style="display: none;">
+                                        <label for="inputPassword4">Company name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+<!----------------------------------------------End------------------------------------------->
+<!---------------------------------Government Letterscatagories ---------------------------------->
+                        <div class="form-row mb-0">
+                                <div class="form-group col-md-6" id="document_number_govt" style="display: none;">
+                                        <label for="inputPassword4">Document Number</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-6" id="Discription_govt" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+<!----------------------------------------------End------------------------------------------->
+<!-----------------------------------------DDR catagories ---------------------------------->
+                        <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="DDR_type" style="display: none;">
+                                <label for="inputState">DDR Type</label>
+                                        <select id="catagories" name="catagories" class="form-control">
+                                            <option selected disabled>Select...</option>
+                                              <option>Dupont DDR</option>
+                                              <option>FMC DDR</option>
+                                          </select>
+                                    </div>
+                                      <div class="form-group col-md-4" id="number_of_DDR" style="display: none;">
+                                        <label for="inputPassword4">Number of DDR</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="party_name_ddr" style="display: none;">
+                                        <label for="inputPassword4">Party Name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+<!-----------------------------------------------------End----------------------------------------------->
+
+<!-----------------------------------------Physical stock report catagories ----------------------------->
+                           <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="physical_stock_report" style="display: none;">
+                                <label for="inputState">Physical stock report</label>
+                                        <select id="catagories" name="catagories" class="form-control">
+                                            <option selected disabled>Select...</option>
+                                              <option>Physical stock report (SD-1)</option>
+                                              <option>Physical stock report (SD-3)</option>
+                                          </select>
+                                    </div>
+                                      <div class="form-group col-md-4" id="discription_physical" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="month_physical" style="display: none;">
+                                        <label for="inputPassword4">Month</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+<!-------------------------------------------------End---------------------------------------------->
+                                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
                               </form>
                                       
                             </div>
