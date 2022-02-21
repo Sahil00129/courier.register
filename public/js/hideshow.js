@@ -66,4 +66,33 @@ function catagoriesCheck(that) {
         
     }
 
+    if (that.value == "Bank Documents & Bills & Cheques") {
+        document.getElementById("bank_name").style.display = "block";
+        document.getElementById("document_type_c").style.display = "block";
+        document.getElementById("acc_number").style.display = "block";
+        document.getElementById("for_month_c").style.display = "block";
+        document.getElementById("series").style.display = "block";
+       
+        
+    } else{
+        document.getElementById("bank_name").style.display = "none";
+        document.getElementById("document_type_c").style.display = "none";   
+        document.getElementById("acc_number").style.display = "none";
+        document.getElementById("for_month_c").style.display = "none";  
+        document.getElementById("series").style.display = "none";
+            
+    }
+
+    if (that.value == "Imprest Statement") {
+        document.getElementById("statement_no").style.display = "block";
+        document.getElementById("amount_imperest").style.display = "block";
+        document.getElementById("for_month_imprest").style.display = "block";
+ 
+    } else{
+        document.getElementById("statement_no").style.display = "none";
+        document.getElementById("amount_imperest").style.display = "none";   
+        document.getElementById("for_month_imprest").style.display = "none";
+            
+    }
+
 }

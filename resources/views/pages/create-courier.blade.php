@@ -132,7 +132,7 @@
                                           </select>
                                       </div> 
                                   </div>
-      <!-------------------------------------  1st catagories  ------------------------------------->
+      <!--------------------------  Distributor Agreements catagories  --------------------------->
                                   <div class="form-row mb-0">
                                  <div class="form-group col-md-4"  id="distributor_agreement" style="display: none;">
                                         <label for="inputState">Distributor Agreements</label>
@@ -166,7 +166,7 @@
                                     </div>
                                 </div>
      <!------------------------------------- 1st end------------------------------------------>
-     <!-----------------------------------  2nd catagories---------------------------------- -->
+     <!-----------------------------------  Ledgers catagories---------------------------------- -->
                                <div class="form-row mb-0">
                                  <div class="form-group col-md-6"  id="ledger_for" style="display: none;">
                                         <label for="inputState">Ledgers</label>
@@ -193,7 +193,7 @@
                                     </div>
                                     </div>
          <!------------------------------------------- 2nd end----------------------------------------->
-         <!----------------------------------------  3rd catagories------------------------------------>
+         <!------------------------------------  Invoice Type catagories------------------------------->
                                 <div class="form-row mb-0">
                                  <div class="form-group col-md-4"  id="invoice_t" style="display: none;">
                                         <label for="inputState">Invoice Type</label>
@@ -229,7 +229,7 @@
                                     </div>
                                 </div>
 <!------------------------------------------- 3rd end----------------------------------------->
-<!------------------------------------------- 4th catagories------------------------------------>
+<!------------------------------------------- Bills catagories------------------------------------>
                         <div class="form-row mb-0">
                                  <div class="form-group col-md-4"  id="bills_type" style="display: none;">
                                         <label for="inputState">Bills Type</label>
@@ -265,6 +265,50 @@
                                 </div>
 
 <!------------------------------------------- 4th end----------------------------------------->
+<!----------------------------  Bank Documents & Bills & Cheques catagories ---------------------->
+                         <div class="form-row mb-0">
+                                 <div class="form-group col-md-6"  id="bank_name" style="display: none;">
+                                 <label for="inputPassword4">Bank Name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-6" id="document_type_c" style="display: none;">
+                                        <label for="inputPassword4">Document Type</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                   </div>
+                                   <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="acc_number" style="display: none;">
+                                        <label for="inputPassword4">A/c Number</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-4" id="for_month_c" style="display: none;">
+                                        <label for="inputPassword4">for the Month/year</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="series" style="display: none;">
+                                        <label for="inputPassword4">Series</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+<!----------------------------------------------End------------------------------------------->
+<!---------------------------------------Imprest Statement catagories---------------------------------->
+                           <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="statement_no" style="display: none;">
+                                        <label for="inputPassword4">Statement No.</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-4" id="amount_imperest" style="display: none;">
+                                        <label for="inputPassword4">Amount</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="for_month_imprest" style="display: none;">
+                                        <label for="inputPassword4">for the Month/year</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+<!----------------------------------------------End------------------------------------------->
                                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
                               </form>
                                       
