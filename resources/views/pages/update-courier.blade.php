@@ -8,8 +8,8 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">Add New Courier</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><a href="#">Create New</a></li>
+                                <li class="breadcrumb-item"><a href="#">Update Courier</a></li>
+                                
                             </ol>
                         </nav>
                     </div>
@@ -382,6 +382,18 @@
                                          <label for="inputPassword4">Discription</label>
                                         <input type="text" class="form-control" id="" name="discription_it[]" placeholder="" autocomplete="off">
                                     </div>             
+                                    </div>
+<!-----------------------------------------------------End----------------------------------------------->
+<!-----------------------------------------------Update Field ------------------------------------->
+                      <div class="form-row mb-0">
+                                <div class="form-group col-md-6" >
+                                        <label for="inputPassword4">Checked By</label>
+                                        <input type="text" class="form-control" id="" name="checked_by" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Given To</label>
+                                        <input type="text" class="form-control" id="" name="given_to" placeholder="" autocomplete="off">
+                                    </div>
                                     </div>
 <!-----------------------------------------------------End----------------------------------------------->
                                  <button type="submit" class="btn btn-primary mt-3">Update</button>

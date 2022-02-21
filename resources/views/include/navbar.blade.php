@@ -111,14 +111,12 @@
                             <a href="{{url('courier-table')}}"> Courier List</a>
                         </li>
                         
-                        
                     </ul>
                 </li>
             </ul>
         </nav>
     </div>
     <!--  END TOPBAR  -->
-
 </ul>
 
 <ul class="navbar-item flex-row ml-auto">
@@ -135,18 +133,9 @@
 <ul class="navbar-item flex-row nav-dropdowns">
     <li class="nav-item dropdown language-dropdown more-dropdown">
         <div class="dropdown custom-dropdown-icon">
-            <a class="dropdown-toggle btn" href="#" role="button" id="customDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="assets/img/ca.png" class="flag-width" alt="flag">
+            <a class="dropdown-toggle btn" href="#" role="button" id="customDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('assets/img/ca.png')}}" class="flag-width" alt="flag">
             </a>
 
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="customDropdown">
-                <div class="search-dropdown">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <a class="dropdown-item" data-img-value="de" data-value="de" href="javascript:void(0);"><img src="assets/img/de.png" class="flag-width" alt="flag"> German</a>
-                <a class="dropdown-item" data-img-value="jp" data-value="jp" href="javascript:void(0);"><img src="assets/img/jp.png" class="flag-width" alt="flag"> Japanese</a>
-                <a class="dropdown-item" data-img-value="fr" data-value="fr" href="javascript:void(0);"><img src="assets/img/fr.png" class="flag-width" alt="flag"> French</a>
-                <a class="dropdown-item" data-img-value="ca" data-value="en" href="javascript:void(0);"><img src="assets/img/ca.png" class="flag-width" alt="flag"> English</a>
-            </div>
         </div>
     </li>
 
@@ -280,7 +269,7 @@
     <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media">
-                <img src="assets/img/90x90.jpg" class="img-fluid" alt="admin-profile">
+                <img src="{{asset('assets/img/90x90.jpg')}}" class="img-fluid" alt="admin-profile">
             </div>
         </a>
         <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
@@ -313,6 +302,5 @@
                 </a>
             </div>
         </div>
-
     </li>
 </ul>
