@@ -132,8 +132,8 @@
                                           </select>
                                       </div> 
                                   </div>
-      <!-----------------------------------  1st catagories---------------------------------- -->
-                                  <div class="form-row mb-2">
+      <!-------------------------------------  1st catagories  ------------------------------------->
+                                  <div class="form-row mb-0">
                                  <div class="form-group col-md-4"  id="distributor_agreement" style="display: none;">
                                         <label for="inputState">Distributor Agreements</label>
                                         <select id="catagories" name="catagories" class="form-control">
@@ -151,11 +151,11 @@
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
                                     </div>
                                 </div>
-                                <div class="form-row mb-2">
-                                <div class="form-group col-md-4" id="distributor_location" style="display: none;">
+                                 <div class="form-row mb-0">
+                                    <div class="form-group col-md-4" id="distributor_location" style="display: none;">
                                         <label for="inputPassword4">Distributor Location</label>
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
-                                    </div>
+                                      </div>
                                       <div class="form-group col-md-4" id="security_check" style="display: none;">
                                         <label for="inputPassword4">Security Check</label>
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
@@ -165,9 +165,9 @@
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
                                     </div>
                                 </div>
-     <!-------------------------------- 1st end------------------------------------->
- <!-----------------------------------  2nd catagories---------------------------------- -->
-                               <div class="form-row mb-2">
+     <!------------------------------------- 1st end------------------------------------------>
+     <!-----------------------------------  2nd catagories---------------------------------- -->
+                               <div class="form-row mb-0">
                                  <div class="form-group col-md-6"  id="ledger_for" style="display: none;">
                                         <label for="inputState">Ledgers</label>
                                         <select id="catagories" name="catagories" class="form-control">
@@ -182,7 +182,7 @@
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
                                     </div>
                                    </div>
-                                   <div class="form-row mb-2">
+                                   <div class="form-row mb-0">
                                 <div class="form-group col-md-6" id="party_name" style="display: none;">
                                         <label for="inputPassword4">Party Name</label>
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
@@ -192,7 +192,79 @@
                                         <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
                                     </div>
                                     </div>
+         <!------------------------------------------- 2nd end----------------------------------------->
+         <!----------------------------------------  3rd catagories------------------------------------>
+                                <div class="form-row mb-0">
+                                 <div class="form-group col-md-4"  id="invoice_t" style="display: none;">
+                                        <label for="inputState">Invoice Type</label>
+                                        <select id="catagories" name="catagories" class="form-control">
+                                            <option selected disabled>Select...</option>
+                                              <option>Transport Invoices</option>
+                                              <option>Courier Invoices</option>
+                                              <option>Marketing Invoices and other Documents</option>
+                                              <option>Rent Invoices</option>
+                                          </select>
+                                      </div>
+                                      <div class="form-group col-md-4" id="invoice_number" style="display: none;">
+                                        <label for="inputPassword4">Invoice Number</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="amount_i" style="display: none;">
+                                        <label for="inputPassword4">Amount</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-row mb-0">
+                                <div class="form-group col-md-4" id="party_name_i" style="display: none;">
+                                        <label for="inputPassword4">Party Name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-4" id="month_i" style="display: none;">
+                                        <label for="inputPassword4">Month</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="discription_i" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+<!------------------------------------------- 3rd end----------------------------------------->
+<!------------------------------------------- 4th catagories------------------------------------>
+                        <div class="form-row mb-0">
+                                 <div class="form-group col-md-4"  id="bills_type" style="display: none;">
+                                        <label for="inputState">Bills Type</label>
+                                        <select id="catagories" name="catagories" class="form-control">
+                                            <option selected disabled>Select...</option>
+                                              <option>Electricity & water Bills</option>
+                                              <option>Security Invoices</option>
+                                              <option>Labour Contractor Invoices</option>
+                                          </select>
+                                      </div>
+                                      <div class="form-group col-md-4" id="invoice_number_b" style="display: none;">
+                                        <label for="inputPassword4">Invoice Number</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="amount_b" style="display: none;">
+                                        <label for="inputPassword4">Amount</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+                                 <div class="form-row mb-2">
+                                    <div class="form-group col-md-4" id="previouse_reading_b" style="display: none;">
+                                        <label for="inputPassword4">Previouse reading</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-4" id="current_reading_b" style="display: none;">
+                                        <label for="inputPassword4">current reading</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4" id="for_month_b" style="display: none;">
+                                        <label for="inputPassword4">for the Month/year</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
 
+<!------------------------------------------- 4th end----------------------------------------->
                                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
                               </form>
                                       
