@@ -65,7 +65,7 @@
                                         <td>{{$courier->courier_name}}</td>
                                         <td>{{$courier->checked_by}}</td>
                                         <td>{{$courier->given_to}}</td>
-                                        <td><button type= "button" class="btn btn-warning  btn-sm"  value="">Edit</button> <a href="" class="btn btn-danger btn-sm">Delete</a>   
+                                        <td> <a href="{{ url('edit-courier/'.$courier->id) }}" class="btn btn-warning btn-sm">Edit</a> <a href="#" class="btn btn-danger btn-sm">Delete</a>   
                                         </td>
                                     </tr>
                                    @endforeach

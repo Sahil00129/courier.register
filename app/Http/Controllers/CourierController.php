@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Sender;
+use App\Models\CreateCourier;
 use Response;
 
 class CourierController extends Controller
@@ -138,11 +139,11 @@ class CourierController extends Controller
                 // $sender->save();
                 //echo'<pre>'; print_r($sender); die;
                 DB::table('new_courier_created')->insert($sender);
-              }
+               }
                 $response['success'] = true;
                 $response['messages'] = 'Succesfully Submitted';
                 return Response::json($response); 
-            }catch (\Exception $e) {
+              }catch (\Exception $e) {
                 $response['success'] = false;
                 $response['messages'] = 'something wrong';
                // echo'<pre>'; print_r($e); die;
@@ -150,5 +151,10 @@ class CourierController extends Controller
               }
           }  
 
+    public function editCourier($id)
+    {  
+       $sender = CreateCourier::find($id); 
+       return view('pages.update-courier',compact('sender'));
+    }
 
 }
