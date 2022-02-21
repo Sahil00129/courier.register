@@ -397,6 +397,31 @@
                                     </div>
                                     </div>
 <!-------------------------------------------------End---------------------------------------------->
+<!---------------------------------- Affidavits & Agreements catagories ------------------------------>
+                           <div class="form-row mb-0">
+                                <div class="form-group col-md-6" id="discription_affidavits" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      <div class="form-group col-md-6" id="company_name_affidavits" style="display: none;">
+                                        <label for="inputPassword4">Company name</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                    </div>
+
+
+<!-----------------------------------------------------End----------------------------------------------->
+<!-----------------------------------------IT Documents/Material catagories ------------------------------>
+                     <div class="form-row mb-0">
+                                <div class="form-group col-md-10" id="discription_it" style="display: none;">
+                                        <label for="inputPassword4">Discription</label>
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                    </div>
+                                      
+                                    </div>
+
+
+<!-----------------------------------------------------End----------------------------------------------->
                                  <button type="submit" class="btn btn-primary mt-3">Submit</button>
                               </form>
                                       

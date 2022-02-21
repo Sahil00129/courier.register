@@ -148,5 +148,23 @@ function catagoriesCheck(that) {
         document.getElementById("discription_physical").style.display = "none";   
         document.getElementById("month_physical").style.display = "none";       
     }
+    if (that.value == "Affidavits & Agreements") {
+        document.getElementById("discription_affidavits").style.display = "block";
+        document.getElementById("company_name_affidavits").style.display = "block";
+       
+    } else{
+        document.getElementById("discription_affidavits").style.display = "none";
+        document.getElementById("company_name_affidavits").style.display = "none";   
+            
+    }
+    if (that.value == "IT Documents/Material") {
+        document.getElementById("discription_it").style.display = "block";
+     
+       
+    } else{
+        document.getElementById("discription_it").style.display = "none";
+           
+            
+    }
 
 }
