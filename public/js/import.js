@@ -36,13 +36,23 @@ $(document).ready(function (e) {
                       //this.reset();
                       //console.log(data.ignoredItems);
                       //console.log(data.ignoredcount);
-                      if(data.success === true) { 
+                      if(data.import_type == 1) { 
                         
+                          swal("Success!", "File has been imported successfully", "success");
+                          window.location.href = "sender-table";
+                        }else if(data.import_type == 2) {
                          
                           swal("Success!", "File has been imported successfully", "success");
-                        }
-                      
-                      else{
+                          window.location.href = "courier-company";
+                        }else if(data.import_type == 3) {
+                         
+                          swal("Success!", "File has been imported successfully", "success");
+                          window.location.href = "catagories";
+                        }else if(data.import_type == 4) {
+                         
+                          swal("Success!", "File has been imported successfully", "success");
+                          window.location.href = "for-company"; 
+                         }else{
                       swal("Error", data.messages, "error");
                       }
                       

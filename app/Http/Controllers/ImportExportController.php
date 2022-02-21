@@ -19,16 +19,18 @@ public function ImportExcel()
     if($_POST['import_type'] == 1){
     try
     {     
+      $type = $_POST['import_type'];
        //echo'<pre>'; print_r($_FILES); die;
         $data = Excel::import(new BulkImport, request()->file('file'));
         $response['success'] = true;
+        $response['import_type'] = $type;
         $response['messages'] = 'Succesfully imported';
         return Response::json($response);
     
     }catch (\Exception $e) {
       $response['success'] = false;
       $response['messages'] = 'something wrong';
-      echo'<pre>'; print_r($e); die;
+     // echo'<pre>'; print_r($e); die;
       return Response::json($e);
     }
 
@@ -37,8 +39,10 @@ public function ImportExcel()
     try
      {      
    // echo'<pre>'; print_r($_FILES); die;
+   $type = $_POST['import_type'];
      $data = Excel::import(new BulkImport, request()->file('file'));
      $response['success'] = true;
+      $response['import_type'] = $type;
      $response['messages'] = 'Succesfully imported';
      return Response::json($response);
    
@@ -53,9 +57,11 @@ public function ImportExcel()
    try
   {      
   //echo'<pre>'; print_r($_POST); die;
+  $type = $_POST['import_type'];
   $data = Excel::import(new BulkImport, request()->file('file'));
   $response['success'] = true;
   $response['messages'] = 'Succesfully imported';
+  $response['import_type'] = $type;
   return Response::json($response);
 
   }catch (\Exception $e) {
@@ -69,9 +75,11 @@ public function ImportExcel()
 try
 {      
 //echo'<pre>'; print_r($_POST); die;
+$type = $_POST['import_type'];
   $data = Excel::import(new BulkImport, request()->file('file'));
   $response['success'] = true;
   $response['messages'] = 'Succesfully imported';
+  $response['import_type'] = $type;
   return Response::json($response);
 
   }catch (\Exception $e) {

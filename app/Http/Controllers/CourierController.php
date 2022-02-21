@@ -51,9 +51,11 @@ class CourierController extends Controller
     }
 
     public function newCourier(Request $request)
+
     {
      //echo"<pre>"; print_r($_POST); die;
-
+     try
+     {
        $name_company = $request->name_company; 
        $location = $request->location;
        $docket_no = $request->docket_no;
@@ -70,10 +72,10 @@ class CourierController extends Controller
            $courier_name = $request->slct;
        }
 
-       foreach($request->catagories as $key => $value){
+        foreach($request->catagories as $key => $value){
            
         
-    // echo'<pre>'; print_r($request->catagories); die;
+         //echo'<pre>'; print_r($request->catagories); die;
             $sender = ([
                   'name_company' => $name_company,
                   'location' => $location,
@@ -140,6 +142,12 @@ class CourierController extends Controller
                 $response['success'] = true;
                 $response['messages'] = 'Succesfully Submitted';
                 return Response::json($response); 
+            }catch (\Exception $e) {
+                $response['success'] = false;
+                $response['messages'] = 'something wrong';
+               // echo'<pre>'; print_r($e); die;
+                return Response::json($e);
+              }
           }  
 
 
