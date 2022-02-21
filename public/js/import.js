@@ -128,13 +128,11 @@ $('#new_sender_add').submit(function(e) {
                           success: (data) => {
                             $(".indicator-progress").hide();
                             $(".indicator-label").show();
-                            $('#newSender').trigger('reset');       
+                            $('#new_courier_create').trigger('reset');       
                             //this.reset();
                             //console.log(data.ignoredItems);
                             //console.log(data.ignoredcount);
-                            if(data.success === true) { 
-                              
-                               
+                            if(data.success === true) {     
                                 swal("Success!", "Data has been Saved", "success");
                               }
                             

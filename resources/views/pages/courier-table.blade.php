@@ -70,6 +70,24 @@
                                     </tr>
                                    @endforeach
                                 </tbody>
+                                <tfoot>
+                             <tr>
+                             <th>S. No.</th>
+                                        <th>Date of Receipt</th>
+							         	<th>Docket No</th>
+								        <th>Docket Date</th>
+                                        <th>Name</th>
+								        <th>Location</th>
+								        <th>Telephone No</th>
+                                        <th>Catagories</th>
+                                        <th>For</th>
+                                        <th>Document Details</th>
+                                        <th>Courier Company</th>
+                                        <th>Checked By</th>
+                                        <th>Given To</th>
+                                        <th class="dt-no-sorting">Actions</th>
+                              </tr>
+                          </tfoot>
                             </table>
                         </div>
                     </div>
