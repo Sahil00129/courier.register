@@ -24,6 +24,7 @@
                             <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th>S. No.</th>
                                         <th>Date of Receipt</th>
 							         	<th>Docket No</th>
 								        <th>Docket Date</th>
@@ -51,6 +52,7 @@
                                   // echo'<pre>'; print_r($document); die;
              		     	?>
                                     <tr>
+                                        <td>{{$courier->id}}</td>
                                         <td>{{$courier->created_at}}</td>
                                         <td>{{$courier->docket_no}}</td>
                                         <td>{{$courier->docket_date}}</td>
