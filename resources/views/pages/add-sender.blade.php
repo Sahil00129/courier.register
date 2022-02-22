@@ -1,7 +1,12 @@
 @extends('layouts.main')
 @section('title', 'Add Sender')
 @section('content')
-
+<style>
+  .required:after {
+  content:" * ";
+  color: red;
+}  
+    </style>
 <div class="container">
                 <div class="container">
 
@@ -30,7 +35,7 @@
                                    
                                         <div class="form-row mb-4">
                                             <div class="form-group col-md-6">
-                                                <label for="inputEmail4">Name</label>
+                                                <label for="inputEmail4" class="required">Name</label>
                                                 <input type="text" class="form-control" id="name" name="name" placeholder="" autocomplete="off">
                                             </div>
 
@@ -42,6 +47,8 @@
                                                   <option value="Cutomer">Customer</option>
                                                   <option value="Government Department">Government Department</option>
                                                   <option value="Vendors">Vendors</option>
+                                                  <option value="Internal">Internal</option>
+                                                  <option value="Employee">Employee</option>
                                                   
                                         </select>
                                             </div>
@@ -53,7 +60,7 @@
                                       <input type="text" class="form-control" id="location" placeholder="" name="location" autocomplete="off">
                                       </div>
                                       <div class="form-group col-md-6">
-                                     <label for="inputPassword4">Telephone No.</label>
+                                     <label for="inputPassword4" class="required">Telephone No.</label>
                                      <input type="text" class="form-control" name="telephone_no" id="telephone_no" placeholder="" autocomplete="off">
                                      </div>
                                      </div>

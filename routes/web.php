@@ -81,3 +81,5 @@ Route::get('/sample-category',[SampleDownloadController::class, 'catagoreisSampl
 Route::get('/sample-for',[SampleDownloadController::class, 'forSample']);
 
 Route::get('/edit-courier/{id}',[CourierController::class, 'editCourier']);
+Route::any('edit-courier/update-data/{id}', [CourierController::class, 'updateCourier']);
+Route::any('delete-courier/{id}', [CourierController::class, 'destroyCourier']);

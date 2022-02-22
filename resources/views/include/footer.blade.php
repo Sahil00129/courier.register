@@ -41,6 +41,8 @@
        <script src="{{asset('plugins/sweetalerts/sweetalert2.min.js')}}"></script>
        <script src="{{asset('plugins/sweetalerts/custom-sweetalert.js')}}"></script>
     <!-- END THEME GLOBAL STYLE --> 
+    <script src="{{asset('plugins/select2/select2.min.js')}}"></script>
+   
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="plugins/apex/apexcharts.min.js"></script>
@@ -195,5 +197,10 @@ $('.delete-confirm').on('click', function () {
   </script>
 	 @endif
   <!-- courier table --> 
+  <script>
+    $(".tagging").select2({
+    tags: true
+});
+</script>
 </body>
 </html>

@@ -28,8 +28,7 @@ class CreateNewCourierCreatedTable extends Migration
             $table->string('distributor_name')->nullable();
             $table->string('document_type')->nullable();
             $table->string('distributor_location')->nullable();
-            $table->string('security_check')->nullable();
-            $table->string('documents')->nullable();
+            $table->string('remarks_distributor')->nullable();      
             $table->string('ledger_for')->nullable();
             $table->string('type_ledger')->nullable();
             $table->string('party_name')->nullable();

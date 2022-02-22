@@ -69,10 +69,10 @@
                                                         <label for="inputState">Import Type</label>
                                                         <select id="itype" class="form-control" name="import_type">
                                                             <option selected disabled>Choose...</option>
-                                                            <option value="1">Sender Import</option>
+                                                            <option value="1">Sender Name & Details</option>
                                                             <option value="2">Courier Companies</option>
-                                                            <option value="3">Add Catagories</option>
-                                                            <option value="4">For</option>
+                                                            <option value="3">Document Catagories</option>
+                                                            <option value="4">Receiving Company</option>
                                                         </select>  
                                                    </div>
                                                    <div class="custom-file-container" data-upload-id="myFirstImage">

@@ -18,9 +18,13 @@
     <link href="{{asset('assets/css/dashboard/dash_2.css')}}" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/jquery-step/jquery.steps.css')}}">
+
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/select2/select2.min.css')}}">
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <style class="dark-theme">
         #chart-2 path {
-            stroke: #0e1726;
+            stroke: #0e1726; 
         }
     </style>

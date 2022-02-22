@@ -75,7 +75,7 @@
                                          </div>
                                          <div class="form-group col-md-3">
                                              <label for="inputPassword4">Type</label>
-                                             <input type="text" class="form-control"  id="" name="customer_type" placeholder=""                                  autocomplete="off" readonly="readonly">
+                                             <input type="text" class="form-control"  id="customer_type" name="customer_type" placeholder=""                                  autocomplete="off" readonly="readonly">
                                          </div>
                                      </div>
                                  
@@ -94,7 +94,7 @@
                                         </select><br>
                                         <!--courier other field -->
                                      <div id="ifYes" style="display: none">
-                                         <input type="text" class="form-control" id="other" name="other"  placeholder="Other" autocomplete="off">
+                                         <input type="text" class="form-control" id="other" name="other_courier"  placeholder="Other" autocomplete="off">
                                     </div>
                                         <!-- end -->
                                     </div>
@@ -112,7 +112,7 @@
                                 <h5><b>Document Details</b></h5>
                                 <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
-                                        <label for="inputState">Add Catagories</label>
+                                        <label for="inputState">Document Catagories</label>
                                         <select id="catagories" name="catagories[]" class="form-control" onchange="catagoriesCheck(this);">
                                             <option selected disabled>Select...</option>
                                             @foreach($categorys as $category)
@@ -122,7 +122,7 @@
                                           </select>
                                       </div>
                                       <div class="form-group col-md-6">
-                                          <label for="inputState">For</label>
+                                          <label for="inputState">Receiving Company</label>
                                           <select id="for" name="for[]" class="form-control">
                                               <option selected>Select...</option>
                                               @foreach($forcompany as $forcomp)
@@ -138,32 +138,33 @@
                                         <label for="inputState">Distributor Agreements</label>
                                         <select id="catagories" name="distributor_agreement[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Distributor Agreement Form and Documents (SD-1)</option>
-                                              <option>Distributor Agreement Form and Documents (SD-3)</option>
+                                              <option value="Distributor Agreement Form and Documents (SD-1)">Distributor Agreement Form and Documents (SD-1)</option>
+                                              <option value="Distributor Agreement Form and Documents (SD-3)">Distributor Agreement Form and Documents (SD-3)</option>
                                           </select>
                                       </div>
                                       <div class="form-group col-md-4" id="distributor_name" style="display: none;">
                                         <label for="inputPassword4">Distributor Name</label>
                                         <input type="text" class="form-control" id="" name="distributor_name[]" placeholder="" autocomplete="off">
                                     </div>
-                                    <div class="form-group col-md-4" id="document_type" style="display: none;">
-                                        <label for="inputPassword4">Document Type</label>
-                                        <input type="text" class="form-control" id="" name="document_type[]" placeholder="" autocomplete="off">
-                                    </div>
-                                </div>
-                                 <div class="form-row mb-0">
                                     <div class="form-group col-md-4" id="distributor_location" style="display: none;">
                                         <label for="inputPassword4">Distributor Location</label>
                                         <input type="text" class="form-control" id="" name="distributor_location[]" placeholder="" autocomplete="off">
                                       </div>
-                                      <div class="form-group col-md-4" id="security_check" style="display: none;">
-                                        <label for="inputPassword4">Security Check</label>
-                                        <input type="text" class="form-control" id="" name="security_check[]" placeholder="" autocomplete="off">
+                                </div>
+                                 <div class="form-row mb-0">
+                                   
+                                      <div class="form-group col-md-6" id="document_type" style="display: none;">
+                                        <label for="inputPassword4">Document Type</label>
+                                        <select class="form-control tagging" name="document_type[]" multiple="multiple">
+                                      <option value="Agreement">Agreement</option>
+                                      <option value="Security Check">Security Check</option>
+                                      <option value="Documents">Documents</option>
+                                    </select>
                                     </div>
-                                    <div class="form-group col-md-4" id="documents" style="display: none;">
-                                        <label for="inputPassword4">Documents</label>
-                                        <input type="text" class="form-control" id="" name="documents[]" placeholder="" autocomplete="off">
-                                    </div>
+                                    <div class="form-group col-md-6" id="remarks_distributor" style="display: none;">
+                                        <label for="inputPassword4">Remarks</label>
+                                        <input type="text" class="form-control" id="" name="remarks_distributor[]" placeholder="" autocomplete="off">
+                                      </div>
                                 </div>
      <!------------------------------------- 1st end------------------------------------------>
      <!-----------------------------------  Ledgers catagories---------------------------------- -->
@@ -172,9 +173,9 @@
                                         <label for="inputState">Ledgers</label>
                                         <select id="catagories" name="ledger_for[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Customer Ledger (SD-1)</option>
-                                              <option>Customer Ledger (SD-3)</option>
-                                              <option>Vendor Ledgers</option>
+                                              <option value="Customer Ledger (SD-1)">Customer Ledger (SD-1)</option>
+                                              <option value="Customer Ledger (SD-3)">Customer Ledger (SD-3)</option>
+                                              <option value="Vendor Ledgers">Vendor Ledgers</option>
                                           </select>
                                       </div>
                                       <div class="form-group col-md-6" id="type_l" style="display: none;">
@@ -199,10 +200,10 @@
                                         <label for="inputState">Invoice Type</label>
                                         <select id="catagories" name="invoice_type[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Transport Invoices</option>
-                                              <option>Courier Invoices</option>
-                                              <option>Marketing Invoices and other Documents</option>
-                                              <option>Rent Invoices</option>
+                                              <option value="Transport Invoices">Transport Invoices</option>
+                                              <option value="Courier Invoices">Courier Invoices</option>
+                                              <option value="Marketing Invoices and other Documents">Marketing Invoices and other Documents</option>
+                                              <option value="Rent Invoices">Rent Invoices</option>
                                           </select>
                                       </div>
                                       <div class="form-group col-md-4" id="invoice_number" style="display: none;">
@@ -235,9 +236,9 @@
                                         <label for="inputState">Bills Type</label>
                                         <select id="" name="bills_type[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Electricity & water Bills</option>
-                                              <option>Security Invoices</option>
-                                              <option>Labour Contractor Invoices</option>
+                                              <option value="Electricity & water Bills">Electricity & water Bills</option>
+                                              <option value="Security Invoice" >Security Invoices</option>
+                                              <option value="Labour Contractor Invoices">Labour Contractor Invoices</option>
                                           </select>
                                       </div>
                                       <div class="form-group col-md-4" id="invoice_number_b" style="display: none;">
@@ -361,8 +362,8 @@
                                 <label for="inputState">DDR Type</label>
                                         <select id="" name="DDR_type[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Dupont DDR</option>
-                                              <option>FMC DDR</option>
+                                              <option value="Dupont DDR">Dupont DDR</option>
+                                              <option value="FMC DDR">FMC DDR</option>
                                           </select>
                                     </div>
                                       <div class="form-group col-md-4" id="number_of_DDR" style="display: none;">
@@ -383,8 +384,8 @@
                                 <label for="inputState">Physical stock report</label>
                                         <select id="" name="physical_stock_report[]" class="form-control">
                                             <option selected disabled>Select...</option>
-                                              <option>Physical stock report (SD-1)</option>
-                                              <option>Physical stock report (SD-3)</option>
+                                              <option value="Physical stock report (SD-1)">Physical stock report (SD-1)</option>
+                                              <option value="Physical stock report (SD-3)">Physical stock report (SD-3)</option>
                                           </select>
                                     </div>
                                       <div class="form-group col-md-4" id="discription_physical" style="display: none;">
@@ -461,7 +462,7 @@
                 $('#search').val(value);
                 $('#location').val(location[1]);
                 $('#telephone_no').val(location[2]);
-                $('#ctype').val(location[3]);
+                $('#customer_type').val(location[3]);
                 $('#product_list').html("");
                 }
             });

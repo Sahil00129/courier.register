@@ -2,18 +2,17 @@ function catagoriesCheck(that) {
     if (that.value == "Distributor Agreements") {
         document.getElementById("distributor_agreement").style.display = "block";
         document.getElementById("distributor_name").style.display = "block";
-        document.getElementById("document_type").style.display = "block";
         document.getElementById("distributor_location").style.display = "block";
-        document.getElementById("security_check").style.display = "block";
-        document.getElementById("documents").style.display = "block";
+        document.getElementById("document_type").style.display = "block";
+        document.getElementById("remarks_distributor").style.display = "block";
    
     } else{
         document.getElementById("distributor_agreement").style.display = "none";
         document.getElementById("distributor_name").style.display = "none";   
         document.getElementById("document_type").style.display = "none";
         document.getElementById("distributor_location").style.display = "none";  
-        document.getElementById("security_check").style.display = "none";
-        document.getElementById("documents").style.display = "none";  
+        document.getElementById("remarks_distributor").style.display = "none";
+          
     }
 
     if (that.value == "Ledger") {
