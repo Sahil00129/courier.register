@@ -34,17 +34,6 @@
                    
                 </li>
 
-                <li class="menu single-menu">
-                    <a href="{{url('import-Data')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
-                            
-                            <span>Import Master</span>
-                        </div>
-                        </svg>
-                    </a>
-                    
-                </li>
                 
                 <li class="menu single-menu">
                     <a href="#components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -88,7 +77,7 @@
                 <li class="menu single-menu">
                     <a href="{{url('create-courier')}}">
                         <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
                             
                             <span>Add New Courier</span>
                         </div>
@@ -96,23 +85,19 @@
                     </a>
                    
                 </li>
-
-                <li class="menu single-menu menu-extras">
-                <a href="#more" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                               
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </a>
-                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="more" data-parent="#topAccordion">
-                       
-                        <li>
-                            <a href="{{url('courier-table')}}"> Courier List</a>
-                        </li>
-                        
-                    </ul>
+                <li class="menu single-menu">
+                    <a href="{{url('courier-table')}}">
+                        <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                            
+                            <span>Courier List</span>
+                        </div>
+                        </svg>
+                    </a>
+                    
                 </li>
+
+               
                 
             </ul>
         </nav>
@@ -121,7 +106,7 @@
 </ul>
 
 <ul class="navbar-item flex-row ml-auto">
-    <li class="nav-item align-self-center search-animated">
+    <li>
         
         
     </li>
@@ -129,19 +114,15 @@
 
 <ul class="navbar-item flex-row nav-dropdowns">
     
-
-    
-
     <li class="nav-item dropdown notification-dropdown">
-        
-    
-        
-    </li>
+    <a href="{{url('import-Data')}}" class="nav-link dropdown-toggle user"  aria-haspopup="true" aria-expanded="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>    
+    </li></a>
 
     <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media">
-                <img src="{{asset('assets/img/90x90.jpg')}}" class="img-fluid" alt="admin-profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> 
             </div>
         </a>
         <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">

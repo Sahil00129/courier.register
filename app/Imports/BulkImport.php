@@ -46,9 +46,7 @@ class BulkImport implements ToModel,WithHeadingRow
          if(is_null($CU)) {
             return new CourierCompany([
                 'courier_name'  => $row['courier_name']
-            ]);
-               
-         
+            ]); 
          } 
 
     }

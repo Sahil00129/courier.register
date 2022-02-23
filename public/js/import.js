@@ -134,6 +134,7 @@ $('#new_sender_add').submit(function(e) {
                             //console.log(data.ignoredcount);
                             if(data.success === true) {     
                                 swal("Success!", "Data has been Saved", "success");
+                                window.location.href = "courier-table";
                               }
                             
                             else{

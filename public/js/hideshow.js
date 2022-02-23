@@ -165,5 +165,16 @@ function catagoriesCheck(that) {
            
             
     }
+    if (that.value == "Other") {
+        document.getElementById("other_last").style.display = "block";
+     
+       
+    } else{
+        document.getElementById("other_last").style.display = "none";
+           
+            
+    }
+
+    
 
 }

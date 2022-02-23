@@ -17,6 +17,7 @@
                                 <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);">Add Sender</a></li>
                             </ol>
                         </nav>
+                       
                     </div>
                      
                     <div class="row">
@@ -35,13 +36,13 @@
                                    
                                         <div class="form-row mb-4">
                                             <div class="form-group col-md-6">
-                                                <label for="inputEmail4" class="required">Name</label>
+                                                <label for="inputEmail4" class="required">Sender Name</label>
                                                 <input type="text" class="form-control" id="name" name="name" placeholder="" autocomplete="off">
                                             </div>
 
                                             <div class="form-group col-md-6">
 
-                                            <label for="inputState">Courier Name</label>
+                                            <label for="inputState">Type</label>
                                                   <select id="type" name="type" class="form-control" >
                                                   <option selected disabled>Select..</option>
                                                   <option value="Cutomer">Customer</option>
@@ -49,6 +50,7 @@
                                                   <option value="Vendors">Vendors</option>
                                                   <option value="Internal">Internal</option>
                                                   <option value="Employee">Employee</option>
+                                                  <option>Other</option>
                                                   
                                         </select>
                                             </div>

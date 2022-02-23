@@ -61,9 +61,13 @@
             
                                         <div class="form-row mb-2">
                                          <div class="form-group col-md-3">
-                                             <label for="inputEmail4">From </label>
-                                             <input type="text" class="form-control" id="search" name="name_company"  placeholder=""                                  autocomplete="off">
-                                             <div id="product_list"></div>
+                                         <label for="inputPassword4">From</label>
+                                         <select class="form-control  basic" name="name_company" id="new_search">
+                                             <option selected disabled>search..</option>
+                                        @foreach($senders as $sender)
+                                          <option>{{$sender->name}} : {{$sender->location}} : {{$sender->telephone_no}} : {{$sender->type}}</option>
+                                          @endforeach
+                                    </select>
                                          </div>
                                          <div class="form-group col-md-3">
                                              <label for="inputPassword4">Location</label>
@@ -101,11 +105,11 @@
                                     
                                     <div class="form-group col-md-4">
                                         <label for="inputPassword4">Docket No.</label>
-                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off">
+                                        <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off" Required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="inputPassword4">Docket Date</label>
-                                        <input type="date" class="form-control" id="docket_date" name="docket_date" placeholder="">
+                                        <input type="date" class="form-control" id="docket_date" name="docket_date" placeholder="" Required>
                                     </div>
                                 </div>
                                 
@@ -113,7 +117,7 @@
                                 <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                         <label for="inputState">Document Catagories</label>
-                                        <select id="catagories" name="catagories[]" class="form-control" onchange="catagoriesCheck(this);">
+                                        <select id="catagories" name="catagories[]" class="form-control" onchange="catagoriesCheck(this);" Required>
                                             <option selected disabled>Select...</option>
                                             @foreach($categorys as $category)
                                             <option value="{{$category->catagories}}">{{$category->catagories}}</option>
@@ -123,13 +127,18 @@
                                       </div>
                                       <div class="form-group col-md-6">
                                           <label for="inputState">Receiving Company</label>
-                                          <select id="for" name="for[]" class="form-control">
-                                              <option selected>Select...</option>
+                                          <select id="for" name="for[]" class="form-control" onchange="receveCheck(this);">
+                                              <option selected disabled>Select...</option>
                                               @foreach($forcompany as $forcomp)
                                               <option value="{{$forcomp->for_company}}">{{$forcomp->for_company}}</option>
                                               @endforeach
                                               <option>Other</option>
-                                          </select>
+                                          </select><br>
+                                           <!--courier other field -->
+                                     <div id="ifYes_receiving" style="display: none;">
+                                         <input type="text" class="form-control" id="" name="other_receiving[]"  placeholder="Other Receiving Company" autocomplete="off">
+                                    </div>
+                                        <!-- end -->
                                       </div> 
                                   </div>
       <!---------------------------------  Distributor Agreements catagories  ------------------------------->
@@ -423,8 +432,19 @@
 
 
 <!-----------------------------------------------------End----------------------------------------------->
-                                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                              </form>
+<!--------------------------------other----------------------------------------------------------->
+                   <div class="form-row mb-0">
+                                <div class="form-group col-md-12" id="other_last" style="display: none;">
+                                         <label for="inputPassword4">Other</label>
+                                        <input type="text" class="form-control" id="" name="other_last[]" placeholder="" autocomplete="off">
+                                    </div>
+                                      
+                                    </div>
+<!---------------------------------end-------------------------------------->
+                                    <button type="submit" class="btn btn-primary"><span class="indicator-label">Save</span>
+		                            <span class="indicator-progress" style="display: none;">Please wait...
+	                            	<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span></button> 
+                              </form> 
                                       
                             </div>
                           </div>
@@ -433,16 +453,16 @@
       
                 </div>
                 </div>
-                <script src="assets/js/libs/jquery-3.1.1.min.js"></script>
+                <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
                 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 
-                <script type="text/javascript">
-       // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-       $(document).ready(function(){
-     // alert('h'); die;
+                <script>
+          // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+      $(document).ready(function(){
+        //alert('h'); die;
 
 
-       $('#search').on('keyup',function () {
+    /*   $('#search').on('keyup',function () {
                 var query = $(this).val();
                 $.ajax({
                     url:'{{ url('autocomplete-search') }}',
@@ -452,13 +472,14 @@
                         $('#product_list').html(data);
                     }
                 });
-            });
-            $(document).on('click', 'li', function(){
-                var value = $(this).text();        
-                var location = value.split(':');         //break value in js split
+            }); */
+            $("#new_search").change(function(){
+             var value = $(this).children("option:selected").val();
+                //alert(value);       
+                var location = value.split(':');  
+                                                       //break value in js split
                 for(var i = 0; i < location.length; i++){
-           
-
+                   // alert(location[1]);  
                 $('#search').val(value);
                 $('#location').val(location[1]);
                 $('#telephone_no').val(location[2]);
@@ -467,7 +488,7 @@
                 }
             });
 
-});
+});  
 </script>
 
 <script>
@@ -476,6 +497,15 @@
         document.getElementById("ifYes").style.display = "block";
     } else {
         document.getElementById("ifYes").style.display = "none";
+    }
+}
+</script>
+<script>
+     function receveCheck(that) {
+    if (that.value == "Other") {
+        document.getElementById("ifYes_receiving").style.display = "block";
+    } else {
+        document.getElementById("ifYes_receiving").style.display = "none";
     }
 }
 </script>

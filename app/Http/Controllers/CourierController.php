@@ -7,6 +7,7 @@ use DB;
 use App\Models\Sender;
 use App\Models\CreateCourier;
 use App\Models\CourierCompany;
+use App\Models\ForCompany;
 use Response;
 use Session;
 
@@ -14,10 +15,12 @@ class CourierController extends Controller
 {
     public function createCourier()
     {
+        $senders =  DB::table('sender_details')->get();
+        //echo'<pre>'; print_r($sender); die;
         $couriers = DB::table('courier_companies')->select ('courier_name')->distinct()->get();
         $categorys = DB::table('catagories')->select ('catagories')->distinct()->get();
         $forcompany = DB::table('for_companies')->select ('for_company')->distinct()->get();
-        return view('pages.create-courier',  ['couriers' => $couriers ,'categorys' => $categorys ,'forcompany' => $forcompany]);
+        return view('pages.create-courier',  ['senders'=>$senders, 'couriers' => $couriers ,'categorys' => $categorys ,'forcompany' => $forcompany]);
     }
 
     public function courierTable()
@@ -56,7 +59,7 @@ class CourierController extends Controller
     public function newCourier(Request $request)
 
     {
-       // echo'<pre>'; print_r($_POST); die;
+       //echo'<pre>'; print_r($_POST); die;
        $name_company = $request->name_company; 
        $location = $request->location;
        $docket_no = $request->docket_no;
@@ -79,7 +82,15 @@ class CourierController extends Controller
            $new = implode(' , ', $dt);
            }
            
-          // echo'<pre>'; print_r($news); die;
+           if(@$request->for[$key] == 'Other'){
+            $c = $request->other_receiving[$key];
+            $cfor = new ForCompany;
+            $cfor->for_company = $request->other_receiving[$key];
+            $cfor->save();
+            }else{
+            @$c = $request->for[$key];
+         } 
+          // echo'<pre>'; print_r($c); die;
             $sender = ([
                   'name_company' => $name_company,
                   'location' => $location,
@@ -89,7 +100,7 @@ class CourierController extends Controller
                   'telephone_no' => $telephone_no,
                   'courier_name' => $courier_name,
                   'catagories' => $value,
-                  'for' => $request->for[$key],
+                  'for' => @$c,
                   'distributor_agreement' => @$request->distributor_agreement[$key],
                   'distributor_name' => $request->distributor_name[$key],
                   'document_type' => @$new,
@@ -136,6 +147,7 @@ class CourierController extends Controller
                   'discription_affidavits' => $request->discription_affidavits[$key],
                   'company_name_affidavits' => $request->company_name_affidavits[$key],
                   'discription_it' => $request->discription_it[$key],
+                  'other_last' => $request->other_last[$key],
                    ]);
                 // echo'<pre>'; print_r($request->document_type[$key]); die;
                 // $sender->save();
@@ -216,6 +228,7 @@ class CourierController extends Controller
           $senders->discription_affidavits = $request->discription_affidavits;
           $senders->company_name_affidavits = $request->company_name_affidavits;
           $senders->discription_it = $request->discription_it;
+          $senders->other_last = $request->other_last;
           $senders->given_to = $request->given_to;
           $senders->checked_by = $request->checked_by;
          

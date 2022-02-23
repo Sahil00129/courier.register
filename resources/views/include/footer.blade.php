@@ -201,6 +201,10 @@ $('.delete-confirm').on('click', function () {
     $(".tagging").select2({
     tags: true
 });
+
+var ss = $(".basic").select2({
+    tags: true,
+});
 </script>
 </body>
 </html>

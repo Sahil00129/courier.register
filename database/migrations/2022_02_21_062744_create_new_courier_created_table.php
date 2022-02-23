@@ -70,6 +70,7 @@ class CreateNewCourierCreatedTable extends Migration
             $table->string('discription_affidavits')->nullable();
             $table->string('company_name_affidavits')->nullable();
             $table->string('discription_it')->nullable();  
+            $table->string('other_last')->nullable(); 
             $table->string('given_to')->nullable();
             $table->string('checked_by')->nullable();        
             $table->timestamps();

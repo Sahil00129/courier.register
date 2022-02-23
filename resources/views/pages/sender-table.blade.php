@@ -15,6 +15,7 @@
                            
                         </ol>
                     </nav>
+                    <a class="btn btn-primary" href="{{url('add-sender')}}" >Add Sender</a>
                 </div>
                 
                 <div class="row layout-top-spacing" id="cancel-row">

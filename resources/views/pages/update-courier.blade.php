@@ -394,6 +394,15 @@
                                     </div>             
                                     </div>
 <!-----------------------------------------------------End----------------------------------------------->
+<!--------------------------------other----------------------------------------------------------->
+<div class="form-row mb-0">
+                                <div class="form-group col-md-12" id="other_last" style="display: none;">
+                                         <label for="inputPassword4">Other</label>
+                                        <input type="text" class="form-control" id="" value="{{$sender->other_last}}" name="other_last" placeholder="" autocomplete="off">
+                                    </div>
+                                      
+                                    </div>
+<!---------------------------------end-------------------------------------->
 <!-----------------------------------------------Update Field ------------------------------------->
                       <div class="form-row mb-0">
                                 <div class="form-group col-md-6" >
@@ -406,6 +415,7 @@
                                     </div>
                                     </div>
 <!-----------------------------------------------------End----------------------------------------------->
+
                                  <button type="submit" class="btn btn-primary mt-3">Update</button>
                               </form>
                                       
@@ -417,5 +427,14 @@
                 </div>
                 </div>
                 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
-             
+                </script>
+<script>
+     function receveCheck(that) {
+    if (that.value == "Other") {
+        document.getElementById("ifYes_receiving").style.display = "block";
+    } else {
+        document.getElementById("ifYes_receiving").style.display = "none";
+    }
+}
+</script>
 @endsection
