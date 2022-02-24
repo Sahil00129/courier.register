@@ -68,6 +68,7 @@
                                           <option>{{$sender->name}} : {{$sender->location}} : {{$sender->telephone_no}} : {{$sender->type}}</option>
                                           @endforeach
                                     </select>
+                                    <a class="btn btn-outline-primary" href="{{url('add-sender')}}">Add Sender</a>
                                          </div>
                                          <div class="form-group col-md-3">
                                              <label for="inputPassword4">Location</label>
@@ -112,7 +113,8 @@
                                         <input type="date" class="form-control" id="docket_date" name="docket_date" placeholder="" Required>
                                     </div>
                                 </div>
-                                
+                <!----------------------Document details -------------------->           
+              <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;">    -->                 
                                 <h5><b>Document Details</b></h5>
                                 <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
@@ -145,7 +147,7 @@
                                   <div class="form-row mb-0">
                                  <div class="form-group col-md-4"  id="distributor_agreement" style="display: none;">
                                         <label for="inputState">Distributor Agreements</label>
-                                        <select id="catagories" name="distributor_agreement[]" class="form-control">
+                                        <select id="" name="distributor_agreement[]" class="form-control">
                                             <option selected disabled>Select...</option>
                                               <option value="Distributor Agreement Form and Documents (SD-1)">Distributor Agreement Form and Documents (SD-1)</option>
                                               <option value="Distributor Agreement Form and Documents (SD-3)">Distributor Agreement Form and Documents (SD-3)</option>
@@ -180,7 +182,7 @@
                                <div class="form-row mb-0">
                                  <div class="form-group col-md-6"  id="ledger_for" style="display: none;">
                                         <label for="inputState">Ledgers</label>
-                                        <select id="catagories" name="ledger_for[]" class="form-control">
+                                        <select id="" name="ledger_for[]" class="form-control">
                                             <option selected disabled>Select...</option>
                                               <option value="Customer Ledger (SD-1)">Customer Ledger (SD-1)</option>
                                               <option value="Customer Ledger (SD-3)">Customer Ledger (SD-3)</option>
@@ -318,7 +320,7 @@
                                     </div>
                                     </div>
 
-<!----------------------------------------------End------------------------------------------->
+<!----------------------------------------------End----------------------------------------------->
 <!------------------------------Legal Department Documents catagories -------------------------------->
                           <div class="form-row mb-0">
                                 <div class="form-group col-md-4" id="discription_legal" style="display: none;">
@@ -335,8 +337,8 @@
                                     </div>
                                     </div>
 
-<!----------------------------------------------End---------------------------------------------->
-<!---------------------------------Principle Certificate catagories ---------------------------------->
+   <!------------------------------------------------End---------------------------------------------->
+   <!---------------------------------Principle Certificate catagories ---------------------------------->
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-4" id="number_of_pc" style="display: none;">
                                         <label for="inputPassword4">Nubmer of PC</label>
@@ -441,6 +443,13 @@
                                       
                                     </div>
 <!---------------------------------end-------------------------------------->
+         <!--        </div>
+                      <div class="row">
+                       <div class="col">
+                       <button class="btn btn-warning btn-sm addrow" style="float:right; border-radius: 30%;" type="button">add</button>
+
+                   </div>
+             </div>  -->
                                     <button type="submit" class="btn btn-primary"><span class="indicator-label">Save</span>
 		                            <span class="indicator-progress" style="display: none;">Please wait...
 	                            	<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span></button> 
@@ -454,7 +463,7 @@
                 </div>
                 </div>
                 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
-                <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+              <!--  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>  -->
 
                 <script>
           // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -509,4 +518,5 @@
     }
 }
 </script>
+
 @endsection

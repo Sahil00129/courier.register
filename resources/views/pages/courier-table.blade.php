@@ -2,9 +2,9 @@
 @section('title', 'Courier List')
 @section('content')
  <!-- BEGIN PAGE LEVEL CUSTOM STYLES -->
- <link rel="stylesheet" type="text/css" href="plugins/table/datatable/datatables.css">
-    <link rel="stylesheet" type="text/css" href="plugins/table/datatable/custom_dt_html5.css">
-    <link rel="stylesheet" type="text/css" href="plugins/table/datatable/dt-global_style.css">
+ <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/datatables.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/custom_dt_html5.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/dt-global_style.css')}}">
     <!-- END PAGE LEVEL CUSTOM STYLES -->
 <div class="layout-px-spacing">
                 <div class="page-header">
@@ -60,7 +60,7 @@
                                         <td>{{$courier->docket_no}}</td>
                                         <td>{{$newDate}}</td>
                                         <td>{{$n = $l[0]}}</td>
-                                        <td>{{$courier->location}}</td>
+                                        <td>{{$courier->location}}</td> 
                                         <td>{{$courier->telephone_no}}</td>
                                         <td>{{$courier->catagories}}</td>
                                         <td>{{$courier->for}}</td>

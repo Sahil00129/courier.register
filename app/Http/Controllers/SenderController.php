@@ -26,6 +26,12 @@ class SenderController extends Controller
        $sender = new Sender;
        $sender->name = $request->name; 
        $sender->type = $request->type;
+       if($request->type == 'Other')
+       {
+           $sender->type = $request->other_type;
+       }else{
+        $sender->type = $request->type;
+       }
        $sender->location = $request->location;
        $sender->telephone_no = $request->telephone_no;
 

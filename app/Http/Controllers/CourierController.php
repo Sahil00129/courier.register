@@ -59,7 +59,7 @@ class CourierController extends Controller
     public function newCourier(Request $request)
 
     {
-       //echo'<pre>'; print_r($_POST); die;
+     // echo'<pre>'; print_r($_POST); die;
        $name_company = $request->name_company; 
        $location = $request->location;
        $docket_no = $request->docket_no;
@@ -77,7 +77,10 @@ class CourierController extends Controller
        }
 
         foreach($request->catagories as $key => $value){
+          //echo'<pre>'; print_r($request->catagories); die;
            $dt = $request->document_type; 
+           //echo'<pre>'; print_r($dt); die;
+          // $new = implode(' , ', $dt);    
            if(!empty($dt)){
            $new = implode(' , ', $dt);
            }
@@ -90,7 +93,7 @@ class CourierController extends Controller
             }else{
             @$c = $request->for[$key];
          } 
-          // echo'<pre>'; print_r($c); die;
+          //echo'<pre>'; print_r($c); die;
             $sender = ([
                   'name_company' => $name_company,
                   'location' => $location,
@@ -149,7 +152,7 @@ class CourierController extends Controller
                   'discription_it' => $request->discription_it[$key],
                   'other_last' => $request->other_last[$key],
                    ]);
-                // echo'<pre>'; print_r($request->document_type[$key]); die;
+          // echo'<pre>'; print_r($sender); die;
                 // $sender->save();
                 //echo'<pre>'; print_r($sender); die;
                 DB::table('new_courier_created')->insert($sender);

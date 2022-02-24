@@ -34,7 +34,7 @@
                                  @csrf
                                 <div class="widget-content widget-content-area">
                                    
-                                        <div class="form-row mb-4">
+                                        <div class="form-row mb-0">
                                             <div class="form-group col-md-6">
                                                 <label for="inputEmail4" class="required">Sender Name</label>
                                                 <input type="text" class="form-control" id="name" name="name" placeholder="" autocomplete="off">
@@ -43,20 +43,25 @@
                                             <div class="form-group col-md-6">
 
                                             <label for="inputState">Type</label>
-                                                  <select id="type" name="type" class="form-control" >
+                                                  <select id="type" name="type" class="form-control" onchange="typeCheck(this);">
                                                   <option selected disabled>Select..</option>
                                                   <option value="Cutomer">Customer</option>
                                                   <option value="Government Department">Government Department</option>
                                                   <option value="Vendors">Vendors</option>
                                                   <option value="Internal">Internal</option>
                                                   <option value="Employee">Employee</option>
-                                                  <option>Other</option>
-                                                  
+                                                  <option>Other</option>               
                                         </select>
+                                        <br>
+                                           <!--courier other field -->
+                                     <div id="ifYes_type" style="display: none;">
+                                         <input type="text" class="form-control" id="" name="other_type"  placeholder="other type" autocomplete="off">
+                                    </div>
+                                        <!-- end -->
                                             </div>
                                         </div>
                                         
-                                        <div class="form-row mb-4">
+                                        <div class="form-row mb-0">
                                        <div class="form-group col-md-6">
                                       <label for="inputEmail4">Location</label>
                                       <input type="text" class="form-control" id="location" placeholder="" name="location" autocomplete="off">

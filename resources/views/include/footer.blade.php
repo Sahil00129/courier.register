@@ -45,14 +45,14 @@
    
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-    <script src="plugins/apex/apexcharts.min.js"></script>
-    <script src="assets/js/dashboard/dash_2.js"></script>
+    <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
+    <script src="{{asset('assets/js/dashboard/dash_2.js')}}"></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{ asset('js/custom.js') }}"></script>
     <script src="{{ asset('js/import.js') }}"></script>
     <script src="{{ asset('js/hideshow.js') }}"></script>
 
-    <script>
+    <script> 
         $('#html5-extension').DataTable( {
             "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
         "<'table-responsive'tr>" +
@@ -95,7 +95,6 @@
             "lengthMenu": [5, 10, 20, 50],
             "pageLength": 15
         });
-
         multiCheck(c3);
     </script>
     <!-- END PAGE LEVEL SCRIPTS -->  
@@ -205,6 +204,15 @@ $('.delete-confirm').on('click', function () {
 var ss = $(".basic").select2({
     tags: true,
 });
+</script>
+<script>
+     function typeCheck(that) {
+    if (that.value == "Other") {
+        document.getElementById("ifYes_type").style.display = "block";
+    } else {
+        document.getElementById("ifYes_type").style.display = "none";
+    }
+}
 </script>
 </body>
 </html>

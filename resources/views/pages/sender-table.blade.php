@@ -2,9 +2,9 @@
 @section('title', 'Sender-List')
 @section('content')
  <!-- BEGIN PAGE LEVEL CUSTOM STYLES -->
- <link rel="stylesheet" type="text/css" href="plugins/table/datatable/datatables.css">
-    <link rel="stylesheet" type="text/css" href="plugins/table/datatable/custom_dt_html5.css">
-    <link rel="stylesheet" type="text/css" href="plugins/table/datatable/dt-global_style.css">
+ <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/datatables.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/custom_dt_html5.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/dt-global_style.css')}}">
     <!-- END PAGE LEVEL CUSTOM STYLES -->
 <div class="layout-px-spacing">
                 <div class="page-header"> 
@@ -25,7 +25,7 @@
                             <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
+                                        <th>Sender Name</th>
                                         <th>Type</th>
                                         <th>Location</th>
                                         <th>Telephone No</th>
