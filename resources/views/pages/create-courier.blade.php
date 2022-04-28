@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                 <!----------------------Document details -------------------->           
-              <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;">    -->                 
+              <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;"> -->                 
                                 <h5><b>Document Details</b></h5>
                                 <div class="form-row mb-2">
                                 <div class="form-group col-md-6">

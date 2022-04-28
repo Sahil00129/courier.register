@@ -19,8 +19,8 @@ public function ImportExcel()
     if($_POST['import_type'] == 1){
     try
     {     
-      $type = $_POST['import_type'];
-       //echo'<pre>'; print_r($_FILES); die;
+        $type = $_POST['import_type'];
+        //echo'<pre>'; print_r($_FILES); die;
         $data = Excel::import(new BulkImport, request()->file('file'));
         $response['success'] = true;
         $response['import_type'] = $type;
