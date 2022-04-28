@@ -61,7 +61,7 @@ Route::get('catagories',  [TableController::class, 'categoryTable']);
 Route::get('for-company',  [TableController::class, 'forCompany']);
 
 
-
+Route::post('create-courierName', [TableController::class, 'createcourierCompany']);
 Route::get('edit-courierName/{id}', [TableController::class, 'editcourierCompany']);
 Route::put('updated-courier', [TableController::class, 'updatecourierCompany']);
 Route::any('delete-courierCompany/{id}', [TableController::class, 'destroycourierCompany']);
@@ -71,6 +71,7 @@ Route::get('edit-catagories/{id}', [TableController::class, 'editCat']);
 Route::put('update-catagories', [TableController::class, 'updateCatagories']);
 Route::any('delete-catagories/{id}', [TableController::class, 'destroyCatagories']);
 
+Route::post('create-company', [TableController::class, 'createforCompany']);
 Route::get('edit-company/{id}', [TableController::class, 'editforCompany']);
 Route::put('updated-company', [TableController::class, 'updateforCompany']);
 Route::any('delete-forcompany/{id}', [TableController::class, 'destroyforCompany']);

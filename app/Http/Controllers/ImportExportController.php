@@ -14,7 +14,7 @@ public function ImportExcel()
     return view('pages.import-data');
 }
 
-   public function Import() 
+public function Import() 
 {
     if($_POST['import_type'] == 1){
     try
@@ -28,10 +28,10 @@ public function ImportExcel()
         return Response::json($response);
     
     }catch (\Exception $e) {
-      $response['success'] = false;
-      $response['messages'] = 'something wrong';
-     // echo'<pre>'; print_r($e); die;
-      return Response::json($e);
+        $response['success'] = false;
+        $response['messages'] = 'something wrong';
+        // echo'<pre>'; print_r($e); die;
+        return Response::json($e);
     }
 
   }elseif($_POST['import_type'] == 2){

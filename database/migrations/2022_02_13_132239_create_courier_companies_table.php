@@ -16,6 +16,7 @@ class CreateCourierCompaniesTable extends Migration
         Schema::create('courier_companies', function (Blueprint $table) {
             $table->id();
             $table->string('courier_name');
+            $table->string('phone');
             $table->timestamps();
         });
     }

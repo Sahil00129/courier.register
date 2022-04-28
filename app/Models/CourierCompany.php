@@ -10,6 +10,6 @@ class CourierCompany extends Model
     use HasFactory;
     protected $table = 'courier_companies';
     protected $fillable = [
-        'courier_name'
+        'courier_name','phone'
     ];
 }
