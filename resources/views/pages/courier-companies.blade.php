@@ -15,7 +15,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0);">Courier Companies</a></li>
             </ol>
         </nav>
-        <a class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#createcompany" href="#"><span><i class="fa fa-plus"></i> Add New</span></a>
+        <a class="btn btn-primary mb-2 mr-2" id="add_courier" data-toggle="modal" data-target="#createcompany" href="#"><span><i class="fa fa-plus"></i> Add New</span></a>
     </div>
     
     <div class="row layout-top-spacing" id="cancel-row">
@@ -66,11 +66,11 @@
                     <div class="form-row mb-4">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Courier Company</label>
-                            <input type="text" class="form-control" id="courier_name" name="courier_name" placeholder="" autocomplete="off">
+                            <input type="text" class="form-control" id="couriername" name="courier_name" placeholder="" autocomplete="off">
                         </div>  
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Contact Number</label>
-                            <input type="number" class="form-control" id="phone" name="phone" placeholder="" maxlength="10" autocomplete="off">
+                            <input type="text" class="form-control mbCheckNm" id="phoneno" name="phone" placeholder="" maxlength="10" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                         </div>  
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Contact Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="" autocomplete="off">
+                            <input type="text" class="form-control mbCheckNm" id="phone" name="phone" placeholder="" maxlength="10" autocomplete="off">
                         </div>
                     </div>
                 </div>
