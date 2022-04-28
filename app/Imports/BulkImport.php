@@ -39,13 +39,14 @@ class BulkImport implements ToModel,WithHeadingRow
        }
 
        if($_POST['import_type'] == 2){
-         //echo "<pre>"; print_r($row['courier_name']);die;
+         //echo "<pre>"; print_r($row);die;
          $CU = DB::table('courier_companies')
          ->where('courier_name', '=', $row['courier_name'])
          ->first();
          if(is_null($CU)) {
             return new CourierCompany([
-                'courier_name'  => $row['courier_name']
+                'courier_name'  => $row['courier_name'],
+                'phone'  => $row['phone']
             ]); 
          } 
 
