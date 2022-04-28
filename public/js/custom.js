@@ -1,5 +1,21 @@
 jQuery(document).ready(function(){
 
+/*========== Enter only number ========*/
+    jQuery(document).on('keyup blur', '.mbCheckNm', function(e){
+        e.preventDefault();
+        var key  = e.charCode || e.keyCode || 0;
+        if (key >= 65 && key <= 90){
+          this.value = this.value.replace(/[^\d]/g,'');
+          return false;
+        }
+    });
+
+    /*========== Number ========*/
+    $.validator.addMethod("Numbers", function(value, element) {
+        return this.optional(element) || /^[0-9]*$/.test(value);
+    }, "Please enter numeric values only.");
+
+/*========== createcourier ========*/
     jQuery('#createcourier').validate({
         rules:
         {
@@ -7,7 +23,8 @@ jQuery(document).ready(function(){
                 required: true,
             },
             phone: {
-
+                Numbers: true,
+                minlength:10,
             },
         },
         messages:
@@ -16,7 +33,8 @@ jQuery(document).ready(function(){
                 required: "Courier name is required"
             },
             phone: {
-
+                Numbers: "Enter only numbers",
+                minlength: "Enter at least 10 digits",
             },
         },
         submitHandler : function(form)
@@ -24,6 +42,9 @@ jQuery(document).ready(function(){
             formSubmit(form);
             jQuery('#createcompany').modal('hide');
         }
+    });
+    jQuery('#add_courier').click(function(){
+        $('#createcourier').trigger("reset");
     });
 
     jQuery('#createforcmpny').validate({
@@ -44,6 +65,9 @@ jQuery(document).ready(function(){
             formSubmit(form);
             jQuery('#createforcompany').modal('hide');
         }
+    });
+    jQuery('#add_forcompany').click(function(){
+        $('#createforcmpny').trigger("reset");
     });
 
 

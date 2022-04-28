@@ -15,7 +15,7 @@
                 <li class="breadcrumb-item"><a href="javascript:void(0);">For</a></li>
             </ol>
         </nav>
-        <a class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#createforcompany" href="#"><span><i class="fa fa-plus"></i> Add New</span></a>
+        <a class="btn btn-primary mb-2 mr-2" id="add_forcompany" data-toggle="modal" data-target="#createforcompany" href="#"><span><i class="fa fa-plus"></i> Add New</span></a>
     </div>
                 
     <div class="row layout-top-spacing" id="cancel-row">
@@ -65,7 +65,7 @@
                         <input type="hidden" name="for_id" id="for_id" value=""/>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">For Company</label>
-                            <input type="text" class="form-control" id="for_company" name="for_company"  placeholder="" autocomplete="off">
+                            <input type="text" class="form-control" id="forcompany" name="for_company"  placeholder="" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                         <input type="hidden" name="for_id" id="for_id" value=""/>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">For Company</label>
-                            <input type="text" class="form-control" id="for_company" name="for_company"  placeholder="" autocomplete="off">
+                            <input type="text" class="form-control" id="for_company" name="for_company" placeholder="" autocomplete="off">
                         </div>
                     </div>                                        
                 </div>
