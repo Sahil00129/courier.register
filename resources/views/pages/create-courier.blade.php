@@ -63,7 +63,7 @@
                                         <option>{{$sender->name}} : {{$sender->location}} : {{$sender->telephone_no}} : {{$sender->type}}</option>
                                       @endforeach
                                     </select>
-                                    <a class="btn btn-outline-primary" href="{{url('add-sender')}}">Add Sender</a>
+                                    <!-- <a class="btn btn-outline-primary" href="{{url('add-sender')}}">Add Sender</a> -->
                                 </div>
                             </div>
                             <div class="form-row mb-2">
