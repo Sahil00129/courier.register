@@ -55,7 +55,7 @@
                         <form id="new_courier_create" method="post" class="specify-numbers-price">
                             @csrf
                             <div class="form-row mb-2">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label for="inputPassword4">From</label>
                                     <select class="form-control  basic" name="name_company" id="new_search">
                                         <option selected disabled>search..</option>
@@ -65,15 +65,17 @@
                                     </select>
                                     <a class="btn btn-outline-primary" href="{{url('add-sender')}}">Add Sender</a>
                                 </div>
-                                <div class="form-group col-md-3">
+                            </div>
+                            <div class="form-row mb-2">
+                                <div class="form-group col-md-4">
                                     <label for="inputPassword4">Location</label>
                                     <input type="text" class="form-control" id="location" name="location" readonly="readonly">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="inputPassword4">Telephone No.</label>
                                     <input type="text" class="form-control"  id="telephone_no" name="telephone_no" autocomplete="off" readonly="readonly">
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="inputPassword4">Type</label>
                                     <input type="text" class="form-control"  id="customer_type" name="customer_type" autocomplete="off" readonly="readonly">
                                 </div>
@@ -427,7 +429,14 @@
                                 </div>
                             </div>
         <!--------------- end ------------------>
-
+        <!--------------- Remarks ---------->
+                            <div class="form-row mb-2">
+                                <div class="form-group col-md-6">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea name="remarks" rows="4" cols="70"></textarea>
+                                </div>
+                            </div>
+        <!--------------- end ------------------>
          <!--        </div>
                       <div class="row">
                        <div class="col">
@@ -448,15 +457,9 @@
         </div>
     </div>
 </div>
-                <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
-              <!--  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>  -->
-
-                <script>
-          // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-      $(document).ready(function(){
-        //alert('h'); die;
-
-
+<script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+<script>
+    $(document).ready(function(){
     /*   $('#search').on('keyup',function () {
                 var query = $(this).val();
                 $.ajax({
@@ -468,41 +471,37 @@
                     }
                 });
             }); */
-            $("#new_search").change(function(){
-             var value = $(this).children("option:selected").val();
-                //alert(value);       
-                var location = value.split(':');  
-                                                       //break value in js split
-                for(var i = 0; i < location.length; i++){
-                   // alert(location[1]);  
+        $("#new_search").change(function(){
+            var value = $(this).children("option:selected").val();
+            var location = value.split(':');  
+            //break value in js split
+            for(var i = 0; i < location.length; i++){
                 $('#search').val(value);
                 $('#location').val(location[1]);
                 $('#telephone_no').val(location[2]);
                 $('#customer_type').val(location[3]);
                 $('#product_list').html("");
-                }
-            });
+            }
+        });
 
 });  
-</script>
 
-<script>
-     function yesnoCheck(that) {
+function yesnoCheck(that) {
     if (that.value == "Other") {
         document.getElementById("ifYes").style.display = "block";
     } else {
         document.getElementById("ifYes").style.display = "none";
     }
 }
-</script>
-<script>
-     function receveCheck(that) {
+
+function receveCheck(that) {
     if (that.value == "Other") {
         document.getElementById("ifYes_receiving").style.display = "block";
     } else {
         document.getElementById("ifYes_receiving").style.display = "none";
     }
 }
+
 </script>
 
 @endsection
