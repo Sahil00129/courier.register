@@ -10,9 +10,7 @@
                 <div class="page-header">
                     <nav class="breadcrumb-one" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Courier List</a></li>
-                            
                         </ol>
                     </nav>
                 </div>
