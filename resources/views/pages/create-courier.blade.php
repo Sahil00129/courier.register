@@ -28,7 +28,7 @@
     color: gray;
 
  }
- 
+
 </style>
    
 <div class="container">
@@ -53,14 +53,13 @@
                     <div class="widget-content widget-content-area">
                         <h5><b>Sender Details</b></h5>
                         <form id="new_courier_create" method="post" class="specify-numbers-price">
-                        @csrf
-
+                            @csrf
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">From</label>
                                     <select class="form-control  basic" name="name_company" id="new_search">
                                         <option selected disabled>search..</option>
-                                    @foreach($senders as $sender)
+                                        @foreach($senders as $sender)
                                         <option>{{$sender->name}} : {{$sender->location}} : {{$sender->telephone_no}} : {{$sender->type}}</option>
                                       @endforeach
                                     </select>
@@ -68,15 +67,15 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">Location</label>
-                                    <input type="text" class="form-control" id="location" name="location" placeholder="" readonly="readonly">
+                                    <input type="text" class="form-control" id="location" name="location" readonly="readonly">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" placeholder=""                                  autocomplete="off" readonly="readonly">
+                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" autocomplete="off" readonly="readonly">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">Type</label>
-                                    <input type="text" class="form-control"  id="customer_type" name="customer_type" placeholder="" autocomplete="off" readonly="readonly">
+                                    <input type="text" class="form-control"  id="customer_type" name="customer_type" autocomplete="off" readonly="readonly">
                                 </div>
                             </div>
                             <h5><b>Courier Details</b></h5>
@@ -92,18 +91,18 @@
                                     </select><br>
                                     <!--courier other field -->
                                     <div id="ifYes" style="display: none">
-                                        <input type="text" class="form-control" id="other" name="other_courier"  placeholder="Other" autocomplete="off">
+                                        <input type="text" class="form-control" id="other" name="other_courier" placeholder="Other" autocomplete="off">
                                     </div>
                                     <!-- end -->
                                 </div>
                         
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" autocomplete="off" Required>
+                                    <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" Required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>
-                                    <input type="date" class="form-control" id="docket_date" name="docket_date" placeholder="" Required>
+                                    <input type="date" class="form-control" id="docket_date" name="docket_date" Required>
                                 </div>
                             </div>
                 <!------------Document details --------->           
@@ -136,7 +135,7 @@
                                     <!-- end -->
                                 </div> 
                             </div>
-      <!-------  Distributor Agreements catagories  -------->
+            <!-------  Distributor Agreements catagories  -------->
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-4"  id="distributor_agreement" style="display: none;">
                                     <label for="inputState">Distributor Agreements</label>
@@ -148,11 +147,11 @@
                                 </div>
                                 <div class="form-group col-md-4" id="distributor_name" style="display: none;">
                                     <label for="inputPassword4">Distributor Name</label>
-                                    <input type="text" class="form-control" id="" name="distributor_name[]" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control" id="" name="distributor_name[]" autocomplete="off">
                                 </div>
                                 <div class="form-group col-md-4" id="distributor_location" style="display: none;">
                                     <label for="inputPassword4">Distributor Location</label>
-                                    <input type="text" class="form-control" id="" name="distributor_location[]" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control" id="" name="distributor_location[]" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-row mb-0">
@@ -166,7 +165,7 @@
                                 </div>
                                 <div class="form-group col-md-6" id="remarks_distributor" style="display: none;">
                                     <label for="inputPassword4">Remarks</label>
-                                    <input type="text" class="form-control" id="" name="remarks_distributor[]" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control" id="" name="remarks_distributor[]" autocomplete="off">
                                 </div>
                             </div>
         <!--------- 1st end ----------->
@@ -183,7 +182,7 @@
                                 </div>
                                 <div class="form-group col-md-6" id="type_l" style="display: none;">
                                     <label for="inputPassword4">Type</label>
-                                    <input type="text" class="form-control" id="" name="type_ledger[]" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control" id="" name="type_ledger[]" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-row mb-0">

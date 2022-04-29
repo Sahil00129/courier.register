@@ -53,16 +53,16 @@
 <div class="modal" id="createcompany" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-             <!-- Modal Header -->
+            <!-- Modal Header -->
             <form method="POST" action="{{url('create-courierName')}}" id="createcourier">
-               <div class="modal-header text-center">
+                <div class="modal-header text-center">
                     <h4 class="modal-title">Create Courier Company</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-               </div>
-               <!-- Modal body -->
-               <div class="modal-body">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
                     <div class="form-row mb-4">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Courier Company</label>
@@ -74,12 +74,12 @@
                         </div>
                     </div>
                 </div>
-               <!-- Modal footer -->
+                <!-- Modal footer -->
                 <div class="modal-footer">
-                      <div class="btn-section w-100 P-0">
-                           <button type="submit" id="courier_savebtn" class="btn btn-primary">Add</button>
-                           <a class="btn btn-modal" data-dismiss="modal">Cancel</a>
-                      </div>
+                    <div class="btn-section w-100 P-0">
+                        <button type="submit" id="courier_savebtn" class="btn btn-primary">Add</button>
+                        <a class="btn btn-modal" data-dismiss="modal">Cancel</a>
+                    </div>
                 </div>
             </form> 
         </div>
@@ -97,8 +97,8 @@
                 </button>
             </div>
             <form action="{{ url('updated-courier')}}" method="post">
-            @csrf
-            @method('PUT')
+                @csrf
+                @method('PUT')
                 <div class="modal-body">
                     <div class="form-row mb-4">
                         <input type="hidden" name="courier_id" id="courier_id" value=""/>
