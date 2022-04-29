@@ -72,7 +72,8 @@ class CreateNewCourierCreatedTable extends Migration
             $table->string('discription_it')->nullable();  
             $table->string('other_last')->nullable(); 
             $table->string('given_to')->nullable();
-            $table->string('checked_by')->nullable();        
+            $table->string('checked_by')->nullable();
+            $table->string('remarks')->nullable();      
             $table->timestamps();
         });
     }

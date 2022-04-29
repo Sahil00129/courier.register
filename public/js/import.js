@@ -62,88 +62,74 @@ $(document).ready(function (e) {
 
 //////////////////////////Add Sender/////////////////////////////////////////////
 $('#new_sender_add').submit(function(e) {
-        //alert('hii');return false;
+    //alert('hii');return false;
     e.preventDefault();
     var formData = new FormData(this);
     var name = jQuery('#name').val();
     var telephone = jQuery('#telephone_no').val();
     if (!name) {
-    swal("Error!", "Please enter the name", "error");
-    return false;
+        swal("Error!", "Please enter the name", "error");
+        return false;
     }
-    if (!telephone) {
-    swal("Error!", "please enter telephone no.", "error");
-    return false;
-    }
+    // if (!telephone) {
+    //     swal("Error!", "please enter telephone no.", "error");
+    //     return false;
+    // }
         //alert (this); die;
         $.ajax({
-              url: "/save-sender", 
-              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-              type: 'POST',  
-              data:new FormData(this),
-              processData: false,
-              contentType: false,
-              beforeSend: function(){
-              $(".indicator-progress").show(); 
-              $(".indicator-label").hide();
-               },
-              success: (data) => {
+            url: "/save-sender", 
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'POST',  
+            data:new FormData(this),
+            processData: false,
+            contentType: false,
+            beforeSend: function(){
+                $(".indicator-progress").show(); 
+                $(".indicator-label").hide();
+            },
+            success: (data) => {
                 $(".indicator-progress").hide();
                 $(".indicator-label").show();
                 $('#new_sender_add').trigger('reset');
                 //this.reset();
-                //console.log(data.ignoredItems); 
-                //console.log(data.ignoredcount);
                 if(data.success === true) { 
                     swal("Success!", "Data has been Submitted successfully", "success");
-                    
-                  }
-                    else{
-                swal("Error!", data.messages, "error");
-                
+                }else{
+                    swal("Error!", data.messages, "error");
                 }
-                }
-                
+            }
         }); 
     });	
 
     /////////////////////////New Courier Create//////////////////////////
-    	//alert('h'); die;
 		$('#new_courier_create').submit(function(e) {
             e.preventDefault();
-            
-                  //alert (this); die;
-                    $.ajax({
-                          url: "/create-newCourier", 
-                          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                          type: 'POST',  
-                          data:new FormData(this),
-                          processData: false,
-                          contentType: false,
-                           beforeSend: function(){
-                          $(".indicator-progress").show(); 
-                          $(".indicator-label").hide();
-            
-                          },
-                          success: (data) => {
-                            $(".indicator-progress").hide();
-                            $(".indicator-label").show();
-                            $('#new_courier_create').trigger('reset');       
-                            //this.reset();
-                            //console.log(data.ignoredItems);
-                            //console.log(data.ignoredcount);
-                            if(data.success === true) {     
-                                swal("Success!", "Data has been Saved", "success");
-                                window.location.href = "courier-table";
-                              }
-                            
-                            else{
-                            swal("Error!", data.messages, "error");
-                            }
-                            }
-                    }); 
-                });	 
-
-
+            //alert (this); die;
+            $.ajax({
+                url: "/create-newCourier", 
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                type: 'POST',  
+                data:new FormData(this),
+                processData: false,
+                contentType: false,
+                beforeSend: function(){
+                    $(".indicator-progress").show(); 
+                    $(".indicator-label").hide();
+                },
+                success: (data) => {
+                    $(".indicator-progress").hide();
+                    $(".indicator-label").show();
+                    $('#new_courier_create').trigger('reset');       
+                    //this.reset();
+                    if(data.success === true) {     
+                        swal("Success!", "Data has been Saved", "success");
+                        window.location.href = "courier-table";
+                    }
+                    else{
+                        swal("Error!", data.messages, "error");
+                    }
+                }
+            }); 
+        });
 
 });

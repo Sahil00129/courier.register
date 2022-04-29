@@ -35,8 +35,8 @@ class TableController extends Controller
         $this->prefix = request()->route()->getPrefix();
        
         $rules = array(
-                'courier_name'     => 'required',
-            );
+            'courier_name'  => 'required',
+        );
         $validator = Validator::make($request->all() , $rules);
         if($validator->fails())
         {
@@ -156,12 +156,12 @@ class TableController extends Controller
             $url = URL::to($this->prefix.'/for-company');
             $response['success'] = true;
             $response['page'] = 'forcompany';
-             $response['success_message'] = "For Company created successfully";
+             $response['success_message'] = "Receiving Company created successfully";
             $response['error'] = false;
             $response['redirect_url'] = $url;
         }else{
             $response['success'] = false;
-            $response['error_message'] = "Can not created for company please try again";
+            $response['error_message'] = "Can not created Receiving company please try again";
             $response['error'] = true;
         }
 
@@ -172,32 +172,32 @@ class TableController extends Controller
 
     public function editforCompany($id)
     {
-         $forcomp = ForCompany::find($id);
-          return response()->json([
-         'status' =>200,
-          'forcomp' => $forcomp,
-    ]);
-  }
+        $forcomp = ForCompany::find($id);
+        return response()->json([
+            'status' =>200,
+            'forcomp' => $forcomp,
+        ]);
+    }
 
-     public function updateforCompany(Request $request)
+    public function updateforCompany(Request $request)
     {
-      $for_id = $request->for_id;
-      $addfor = ForCompany::find($for_id);
-      $addfor->for_company = $request->for_company;
-      Session::flash('update', 'Data has been updated successfully');
-      $addfor->update();
-     return redirect()->back();
+        $for_id = $request->for_id;
+        $addfor = ForCompany::find($for_id);
+        $addfor->for_company = $request->for_company;
+        Session::flash('update', 'Data has been updated successfully');
+        $addfor->update();
+        return redirect()->back();
 
     }
 
-      public function destroyforCompany($forcompany_id)
-      {
+    public function destroyforCompany($forcompany_id)
+    {
         $forcompany = ForCompany::find($forcompany_id); 
         //Session::flash('delete', 'deleted');
         $forcompany->delete();
         Session::flash('deleted', 'Data has been deleted');
         return redirect()->back();
-      }
+    }
 
 
 }

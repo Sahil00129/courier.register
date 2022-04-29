@@ -56,13 +56,13 @@ class CourierController extends Controller
     {
         // echo'<pre>'; print_r($_POST); die;
         $name_company = $request->name_company; 
-        $location = $request->location;
-        $docket_no = $request->docket_no;
-        $docket_date = $request->docket_date;
+        $location     = $request->location;
+        $docket_no    = $request->docket_no;
+        $docket_date  = $request->docket_date;
         $telephone_no = $request->telephone_no;
-        $customer = $request->customer_type;
+        $customer     = $request->customer_type;
         $courier_name = $request->slct;
-        if( $request->slct == 'Other'){
+        if($request->slct == 'Other'){
             $courier_name = $request->other_courier;
             $cmpny = new CourierCompany;
             $cmpny->courier_name = $request->other_courier;
@@ -140,6 +140,7 @@ class CourierController extends Controller
                 'company_name_affidavits' => $request->company_name_affidavits[$key],
                 'discription_it' => $request->discription_it[$key],
                 'other_last' => $request->other_last[$key],
+                'remarks' => $request->remarks,
             ]);
             // echo'<pre>'; print_r($sender); die;
             DB::table('new_courier_created')->insert($sender);
@@ -220,6 +221,7 @@ class CourierController extends Controller
         $senders->other_last = $request->other_last;
         $senders->given_to = $request->given_to;
         $senders->checked_by = $request->checked_by;
+        $senders->remarks = $request->remarks;
          
         Session::flash('update', 'Data has been updated successfully');
         $senders->update();

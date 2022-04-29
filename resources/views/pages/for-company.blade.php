@@ -12,7 +12,7 @@
         <nav class="breadcrumb-one" aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0);">Tables</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0);">For</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0);">Receiving Company</a></li>
             </ol>
         </nav>
         <a class="btn btn-primary mb-2 mr-2" id="add_forcompany" data-toggle="modal" data-target="#createforcompany" href="#"><span><i class="fa fa-plus"></i> Add New</span></a>
@@ -24,7 +24,7 @@
                 <table id="style-3" class="table style-3  table-hover">
                     <thead>
                         <tr>
-                            <th>For</th>
+                            <th>Receiving Company</th>
                             <th class="text-center dt-no-sorting">Actions</th>
                         </tr>
                     </thead>
@@ -54,7 +54,7 @@
              <!-- Modal Header -->
             <form method="POST" action="{{url('create-company')}}" id="createforcmpny">
                <div class="modal-header text-center">
-                    <h4 class="modal-title">Create For Company</h4>
+                    <h4 class="modal-title">Create Receiving Company</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
@@ -64,7 +64,7 @@
                     <div class="form-row mb-4">
                         <input type="hidden" name="for_id" id="for_id" value=""/>
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">For Company</label>
+                            <label for="inputEmail4">Receiving Company</label>
                             <input type="text" class="form-control" id="forcompany" name="for_company"  placeholder="" autocomplete="off">
                         </div>
                     </div>
@@ -86,7 +86,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">For Update</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Receiving Company Update</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -98,7 +98,7 @@
                     <div class="form-row mb-4">
                         <input type="hidden" name="for_id" id="for_id" value=""/>
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">For Company</label>
+                            <label for="inputEmail4">Receiving Company</label>
                             <input type="text" class="form-control" id="for_company" name="for_company" placeholder="" autocomplete="off">
                         </div>
                     </div>                                        
