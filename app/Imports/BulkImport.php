@@ -24,32 +24,30 @@ class BulkImport implements ToModel,WithHeadingRow
            ->where('telephone_no', '=', $row['telephone_no'])
            ->first();
            if(is_null($sender)) {
-            return new Sender([
-                'name'  => $row['name'],
-                'type'    => $row['type'],
-                'location' => $row['location'],
-                'telephone_no' =>$row['telephone_no'],
-            ]);
-        }else{
-            DB::table('sender_details')
-            ->where('name',$row['name'])->update([ 'name' => $row['name'], 'type' => $row['type'], 'location' => $row['location'], 'telephone_no' => $row['telephone_no'] ]);
+                return new Sender([
+                    'name'  => $row['name'],
+                    'type'    => $row['type'],
+                    'location' => $row['location'],
+                    'telephone_no' =>$row['telephone_no'],
+                ]);
+            }else{
+                DB::table('sender_details')
+                ->where('name',$row['name'])->update([ 'name' => $row['name'], 'type' => $row['type'], 'location' => $row['location'], 'telephone_no' => $row['telephone_no'] ]);
+            }
         }
 
-            
-       }
-
-       if($_POST['import_type'] == 2){
+        if($_POST['import_type'] == 2){
          //echo "<pre>"; print_r($row);die;
          $CU = DB::table('courier_companies')
          ->where('courier_name', '=', $row['courier_name'])
          ->first();
+         
          if(is_null($CU)) {
             return new CourierCompany([
                 'courier_name'  => $row['courier_name'],
-                'phone'  => $row['phone']
-            ]); 
-         } 
-
+                'phone'  => $row['phone'],
+            ]);
+         }
     }
     
    if($_POST['import_type'] == 3){
