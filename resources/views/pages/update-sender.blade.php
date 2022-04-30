@@ -58,11 +58,11 @@
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="inputEmail4">Location</label>
-                                    <input type="text" class="form-control" id="location" placeholder="" name="location" value="{{$sender->location}}" autocomplete="off">
+                                    <input type="text" class="form-control" id="location" name="location" value="{{$sender->location}}" autocomplete="off">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control" name="telephone_no" id="telephone_no" value="{{$sender->telephone_no}}" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control mbCheckNm" name="telephone_no" id="telephone_no" value="{{$sender->telephone_no}}" maxlength="10" autocomplete="off">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary"><span class="indicator-label">Save</span>

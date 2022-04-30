@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" autocomplete="off" readonly="readonly">
+                                    <input type="text" class="form-control mbCheckNm"  id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Type</label>
