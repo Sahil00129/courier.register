@@ -27,12 +27,12 @@ class SenderController extends Controller
         $sender = new Sender;
         $sender->name = $request->name; 
         $sender->type = $request->type;
-        if($request->type == 'Other')
-        {
-           $sender->type = $request->other_type;
-        }else{
-            $sender->type = $request->type;
-        }
+        // if($request->type == 'Other')
+        // {
+        //    $sender->type = $request->other_type;
+        // }else{
+        // $sender->type = $request->type;
+        // }
         $sender->location = $request->location;
         $sender->telephone_no = $request->telephone_no;
 
@@ -78,12 +78,7 @@ class SenderController extends Controller
             $sendersave['name']         = $request->name;
             $sendersave['telephone_no'] = $request->telephone_no;
             $sendersave['location']   = $request->location;
-            if($request->type == 'Other')
-            {
-                $sendersave['type'] = $request->other_type;
-            }else{
-                $sendersave['type'] = $request->type;
-            }
+            $sendersave['type']       = $request->type;
             
             $savesender = Sender::where('id',$request->sender_id)->update($sendersave);
 

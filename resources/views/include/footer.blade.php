@@ -210,7 +210,7 @@ var ss = $(".basic").select2({
 });
 </script>
 <script>
-     function typeCheck(that) {
+    function typeCheck(that) {
     if (that.value == "Other") {
         document.getElementById("ifYes_type").style.display = "block";
     } else {

@@ -44,13 +44,13 @@
                                         <option value="Vendors">Vendors</option>
                                         <option value="Internal">Internal</option>
                                         <option value="Employee">Employee</option>
-                                        <option>Other</option>               
+                                        <option value="Other">Other</option>               
                                     </select>
                                     <br>
                         <!---- courier other field ---->
-                                    <div id="ifYes_type" style="display: none;">
+                                    <!-- <div id="ifYes_type" style="display: none;">
                                         <input type="text" class="form-control" id="" name="other_type"  placeholder="other type" autocomplete="off">
-                                    </div>
+                                    </div> -->
                         <!---- end ---->
                                 </div>
                             </div>
