@@ -13,7 +13,7 @@
             <nav class="breadcrumb-one" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);">Add Sender</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);">Update Sender</a></li>
                 </ol>
             </nav>       
         </div>
@@ -23,7 +23,7 @@
                     <div class="widget-header">
                         <div class="row">
                             <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                                <h4>Add Sender</h4>
+                                <h4>Update Sender</h4>
                             </div>   
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                                         <option value="Vendors" {{$sender->type == 'Vendors' ? 'selected' : ''}}>Vendors</option>
                                         <option value="Internal" {{$sender->type == 'Internal' ? 'selected' : ''}}>Internal</option>
                                         <option value="Employee" {{$sender->type == 'Employee' ? 'selected' : ''}}>Employee</option>
-                                        <option>Other</option>
+                                        <option value="Other" {{$sender->type == 'Other' ? 'selected' : ''}}>Other</option>
                                     </select>
                                     <br>
                         <!---- courier other field ---->
