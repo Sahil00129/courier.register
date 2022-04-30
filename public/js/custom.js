@@ -15,6 +15,36 @@ jQuery(document).ready(function(){
         return this.optional(element) || /^[0-9]*$/.test(value);
     }, "Please enter numeric values only.");
 
+
+    /*===== delete Sender =====*/
+    jQuery(document).on('click', '.delete_sender', function(){
+        jQuery('#deletesender').modal('show');
+        var senderid =  jQuery(this).attr('data-id');
+        var url =  jQuery(this).attr('data-action');
+        jQuery(document).off('click','.deletesenderconfirm').on('click', '.deletesenderconfirm', function(){
+           
+            jQuery.ajax({
+                type      : 'post',
+                url       : url,
+                data      : {senderid:senderid},
+                headers   : {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType : "JSON",
+                success:function(response){
+                    if(response){
+                        jQuery("#sendertable").load(" #sendertable");
+                        jQuery("#deletesender").modal("hide");
+
+                        swal("Success!", "Data has been Deleted successfully", "success");
+                        setTimeout(() => {window.location.href = response.redirect_url},1500);
+                    }
+                }
+            });
+        });
+    });
+    /*===== End delete Sender =====*/
+
 /*========== createcourier ========*/
     jQuery('#createcourier').validate({
         rules:
@@ -47,6 +77,7 @@ jQuery(document).ready(function(){
         $('#createcourier').trigger("reset");
     });
 
+    // create company
     jQuery('#createforcmpny').validate({
         rules:
         {
@@ -69,6 +100,27 @@ jQuery(document).ready(function(){
     jQuery('#add_forcompany').click(function(){
         $('#createforcmpny').trigger("reset");
     });
+
+    // update sender
+    jQuery('#update_sender').validate({
+        rules:
+        {
+            name: {
+                required: true,
+            },
+        },
+        messages:
+        {
+            name: {
+                required: "Sender name is required"
+            },
+        },
+        submitHandler : function(form)
+        {
+            formSubmit(form);
+        }
+    });
+   
 
 
 });
@@ -97,10 +149,13 @@ function formSubmit(form)
             if(response.success){
                 if(response.page == 'couriercompany'){
                     swal("Success!", "Data has been Submitted successfully", "success");
-                    setTimeout(() => {window.location.href = response.redirect_url},2000);
+                    setTimeout(() => {window.location.href = response.redirect_url},1500);
                 }else if(response.page == 'forcompany'){
                     swal("Success!", "Data has been Submitted successfully", "success");
-                    setTimeout(() => {window.location.href = response.redirect_url},2000);
+                    setTimeout(() => {window.location.href = response.redirect_url},1500);
+                }else if(response.page == 'sender-update'){
+                    swal("Success!", "Data has been Updated successfully", "success");
+                    setTimeout(() => {window.location.href = response.redirect_url},1500);
                 }else{
                     
                 }

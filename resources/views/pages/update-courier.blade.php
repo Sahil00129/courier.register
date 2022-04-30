@@ -30,7 +30,7 @@
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                     <label for="inputEmail4">From </label>
-                                    <input type="text" class="form-control" id="" name="name_company"  placeholder=""                                  autocomplete="off" value="{{$sender->name_company}}">
+                                    <input type="text" class="form-control" id="" name="name_company" placeholder="" autocomplete="off" value="{{$sender->name_company}}">
                                     <div id="product_list"></div>
                                 </div>
                             </div>
@@ -41,11 +41,11 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" placeholder=""                                  autocomplete="off" value="{{$sender->telephone_no}}" readonly="readonly">
+                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" placeholder="" autocomplete="off" value="{{$sender->telephone_no}}" readonly="readonly">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Type</label>
-                                    <input type="text" class="form-control"  id="" name="customer_type" placeholder=""                                  autocomplete="off" value="{{$sender->customer_type}}" readonly="readonly">
+                                    <input type="text" class="form-control"  id="" name="customer_type" placeholder="" autocomplete="off" value="{{$sender->customer_type}}" readonly="readonly">
                                 </div>
                             </div>
                             
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder=""  value="{{$sender->docket_no}}" autocomplete="off">
+                                    <input type="text" class="form-control" id="docket_no" name="docket_no" placeholder="" value="{{$sender->docket_no}}" autocomplete="off">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>
