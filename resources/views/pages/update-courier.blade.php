@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control"  id="telephone_no" name="telephone_no" placeholder="" autocomplete="off" value="{{$sender->telephone_no}}" readonly="readonly">
+                                    <input type="text" class="form-control mbCheckNm"  id="telephone_no" name="telephone_no" maxlength="10" autocomplete="off" value="{{$sender->telephone_no}}" readonly="readonly">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Type</label>

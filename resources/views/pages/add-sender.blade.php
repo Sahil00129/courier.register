@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control" name="telephone_no" id="telephone_no" placeholder="" autocomplete="off">
+                                    <input type="text" class="form-control mbCheckNm" name="telephone_no" id="telephone_no" maxlength="10" placeholder="" autocomplete="off">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary"><span class="indicator-label">Save</span>
