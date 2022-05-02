@@ -24,6 +24,7 @@
                 <table id="style-3" class="table style-3  table-hover">
                     <thead>
                         <tr>
+                            <th>Sr No.</th>
                             <th>Receiving Company</th>
                             <th class="text-center dt-no-sorting">Actions</th>
                         </tr>
@@ -31,6 +32,7 @@
                     <tbody>
                         @foreach ($forcompanys as $forcompany)
         				<tr>
+                            <td>{{ ++$i }}</td>
                             <td>{{$forcompany->for_company}}</td>
                             <td class="text-center">
                                 <ul class="table-controls">
@@ -71,10 +73,10 @@
                 </div>
                <!-- Modal footer -->
                 <div class="modal-footer">
-                      <div class="btn-section w-100 P-0">
-                           <button type="submit" id="forcmpny_savebtn" class="btn btn-primary">Add</button>
-                           <a class="btn btn-modal" data-dismiss="modal">Cancel</a>
-                      </div>
+                    <div class="btn-section w-100 P-0">
+                        <button type="submit" id="forcmpny_savebtn" class="btn btn-primary">Add</button>
+                        <a class="btn btn-modal" data-dismiss="modal">Cancel</a>
+                    </div>
                 </div>
             </form> 
         </div>
@@ -88,12 +90,12 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Receiving Company Update</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             <form action="{{ url('updated-company')}}" method="post">
-            @csrf
-            @method('PUT')
+                @csrf
+                @method('PUT')
                 <div class="modal-body">
                     <div class="form-row mb-4">
                         <input type="hidden" name="for_id" id="for_id" value=""/>
