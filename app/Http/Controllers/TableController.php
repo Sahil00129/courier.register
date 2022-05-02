@@ -12,22 +12,22 @@ use URL;
 
 class TableController extends Controller
 {
-    public function courierCompanies()
+    public function courierCompanies(Request $request)
     {
-       $couriers = CourierCompany::all(); 
-       return view('pages.courier-companies' , ['couriers' => $couriers]);
+        $couriers = CourierCompany::all(); 
+        return view('pages.courier-companies' , ['couriers' => $couriers])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
-    public function categoryTable()
+    public function categoryTable(Request $request)
     {
-      $catagories = Category::all();
-      return view('pages.catagories', ['catagories' => $catagories]);
+        $catagories = Category::all();
+        return view('pages.catagories', ['catagories' => $catagories])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
-    public function forCompany()
+    public function forCompany(Request $request)
     {
-      $forcompanys = ForCompany::all(); 
-      return view('pages.for-company' , ['forcompanys' => $forcompanys]);
+        $forcompanys = ForCompany::all(); 
+        return view('pages.for-company' , ['forcompanys' => $forcompanys])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function createcourierCompany(Request $request)

@@ -24,6 +24,7 @@
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
+                            <th>Sr No.</th>
                             <th>Sender Name</th>
                             <th>Type</th>
                             <th>Location</th>
@@ -34,6 +35,7 @@
                     <tbody>
                     @foreach ($sends as $send)
                         <tr>
+                            <td>{{ ++$i }}</td>
                             <td>{{$send->name}}</td>
                             <td>{{$send->type}}</td>
                             <td>{{$send->location}}</td>

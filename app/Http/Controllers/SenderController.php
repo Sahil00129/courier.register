@@ -16,10 +16,10 @@ class SenderController extends Controller
         return view ('pages.add-sender');
     }
 
-    public function senderTable()
+    public function senderTable(Request $request)
     {
         $sends = Sender::all();
-        return view ('pages.sender-table',  ['sends' => $sends]);
+        return view ('pages.sender-table',  ['sends' => $sends])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function addSender(Request $request) 

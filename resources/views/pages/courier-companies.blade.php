@@ -24,6 +24,7 @@
                 <table id="style-3" class="table style-3  table-hover">
                     <thead>
                         <tr>
+                            <th>Sr No.</th>
                             <th>Courier Companies</th>
                             <th>Contact Number</th>
                             <th class="text-center dt-no-sorting">Actions</th>
@@ -32,6 +33,7 @@
                     <tbody>
                         @foreach ($couriers as $courier)
     			        <tr>
+                            <td>{{ ++$i }}</td>
                             <td>{{$courier->courier_name}}</td>
                             <td>{{$courier->phone}}</td>
                             <td class="text-center">
