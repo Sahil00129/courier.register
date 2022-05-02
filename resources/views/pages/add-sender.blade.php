@@ -42,7 +42,13 @@
                                         <option value="Cutomer">Customer</option>
                                         <option value="Government Department">Government Department</option>
                                         <option value="Vendors">Vendors</option>
-                                        <option value="Internal">Internal</option>
+                                        <option value="Warehouse">Warehouse</option>
+                                        <option value="Bank">Bank</option>
+                                        <option value="Corteva">Corteva</option>
+                                        <option value="FMC">FMC</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Godrej">Godrej</option>
+                                        <option value="Investements">Investements</option>
                                         <option value="Employee">Employee</option>
                                         <option value="Other">Other</option>               
                                     </select>

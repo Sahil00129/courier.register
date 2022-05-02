@@ -43,7 +43,13 @@
                                         <option value="Cutomer" {{$sender->type == 'Cutomer' ? 'selected' : ''}}>Customer</option>
                                         <option value="Government Department" {{$sender->type == 'Government Department' ? 'selected' : ''}}>Government Department</option>
                                         <option value="Vendors" {{$sender->type == 'Vendors' ? 'selected' : ''}}>Vendors</option>
-                                        <option value="Internal" {{$sender->type == 'Internal' ? 'selected' : ''}}>Internal</option>
+                                        <option value="Warehouse" {{$sender->type == 'Warehouse' ? 'selected' : ''}}>Warehouse</option>
+                                        <option value="Bank" {{$sender->type == 'Bank' ? 'selected' : ''}}>Bank</option>
+                                        <option value="Corteva" {{$sender->type == 'Corteva' ? 'selected' : ''}}>Corteva</option>
+                                        <option value="FMC" {{$sender->type == 'FMC' ? 'selected' : ''}}>FMC</option>
+                                        <option value="Buyer" {{$sender->type == 'Buyer' ? 'selected' : ''}}>Buyer</option>
+                                        <option value="Godrej" {{$sender->type == 'Godrej' ? 'selected' : ''}}>Godrej</option>
+                                        <option value="Investements" {{$sender->type == 'Investements' ? 'selected' : ''}}>Investements</option>
                                         <option value="Employee" {{$sender->type == 'Employee' ? 'selected' : ''}}>Employee</option>
                                         <option value="Other" {{$sender->type == 'Other' ? 'selected' : ''}}>Other</option>
                                     </select>
