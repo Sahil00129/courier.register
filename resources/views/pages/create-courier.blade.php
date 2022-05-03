@@ -110,7 +110,7 @@
                 <!------------Document details --------->           
               <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;">    -->                 
                             <h5><b>Document Details</b></h5>
-                            <div class="form-row mb-2">
+                            <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="inputState">Document Catagories</label>
                                     <select id="catagories" name="catagories[]" class="form-control" onchange="catagoriesCheck(this);" Required>
@@ -429,14 +429,23 @@
                                 </div>
                             </div>
         <!--------------- end ------------------>
+         <!--------------- Date of Receipt ---------->
+                            <div class="form-row mb-0">
+                                <div class="form-group col-md-6">
+                                     <label for="inputPassword4">Date of Receipt</label>
+                                    <input type="date" class="form-control" name="receipt_date" Required>
+                                </div>
+                            
+        <!--------------- end ------------------>
         <!--------------- Remarks ---------->
-                            <div class="form-row mb-2">
+                            
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Remarks</label>
-                                    <textarea name="remarks" rows="4" cols="70"></textarea>
+                                    <textarea name="remarks" class="form-control" rows="1" cols="70"></textarea>
                                 </div>
                             </div>
         <!--------------- end ------------------>
+       
          <!--        </div>
                       <div class="row">
                        <div class="col">
