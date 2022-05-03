@@ -398,14 +398,22 @@
                                 </div>
                             </div>
         <!--------------- End ----------------->
+        <!--------------- Date of Receipt ---------->
+                            <div class="form-row mb-0">
+                                <div class="form-group col-md-6">
+                                     <label for="inputPassword4">Date of Receipt</label>
+                                    <input type="date" class="form-control" name="receipt_date" value="{{$sender->receipt_date}}" Required>
+                                </div>
+                            
+        <!--------------- end ------------------>
         <!--------------- Remarks ---------->
-                            <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Remarks</label>
-                                    <textarea name="remarks" rows="4" cols="70" value="{{$sender->remarks}}"></textarea>
+                                    <textarea name="remarks" class="form-control" rows="1" cols="70">{{$sender->remarks}}</textarea>
                                 </div>
                             </div>
         <!--------------- end ------------------>
+
                             <button type="submit" class="btn btn-primary mt-3">Update</button>
                         </form>        
                     </div>

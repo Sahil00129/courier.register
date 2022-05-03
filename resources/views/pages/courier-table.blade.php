@@ -30,7 +30,7 @@
 								        <th>Location</th>
 								        <th>Telephone No</th>
                                         <th>Catagories</th>
-                                        <th>For</th>
+                                        <th>Receiving Company</th>
                                         <th>Document Details</th>
                                         <th>Courier Company</th>
                                         <th>Checked By</th>
@@ -49,7 +49,8 @@
 							   
                                   // echo'<pre>'; print_r($document); die;
                                   $newDate = date("d-m-Y", strtotime($courier->docket_date));
-                                  $today = date("d-m-Y", strtotime($courier->created_at));
+                                  // $today = date("d-m-Y", strtotime($courier->created_at));
+                                  $today = date('d-M-Y',strtotime($courier->receipt_date));
 
              		     	?>
                                     <tr>
@@ -81,7 +82,7 @@
 								        <th>Location</th>
 								        <th>Telephone No</th>
                                         <th>Catagories</th>
-                                        <th>For</th>
+                                        <th>Receiving Company</th>
                                         <th>Document Details</th>
                                         <th>Courier Company</th>
                                         <th>Checked By</th>

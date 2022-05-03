@@ -141,6 +141,7 @@ class CourierController extends Controller
                 'discription_it' => $request->discription_it[$key],
                 'other_last' => $request->other_last[$key],
                 'remarks' => $request->remarks,
+                'receipt_date' => $request->receipt_date,
             ]);
             // echo'<pre>'; print_r($sender); die;
             DB::table('new_courier_created')->insert($sender);
@@ -222,6 +223,7 @@ class CourierController extends Controller
         $senders->given_to = $request->given_to;
         $senders->checked_by = $request->checked_by;
         $senders->remarks = $request->remarks;
+        $senders->receipt_date = $request->receipt_date;
          
         Session::flash('update', 'Data has been updated successfully');
         $senders->update();
