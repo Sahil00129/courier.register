@@ -33,6 +33,12 @@
                                     <input type="text" class="form-control" id="" name="name_company" placeholder="" autocomplete="off" value="{{$sender->name_company}}">
                                     <div id="product_list"></div>
                                 </div>
+                            <!--------------- Date of Receipt ---------->
+                                <div class="form-group col-md-6">
+                                     <label for="inputPassword4">Date of Receipt</label>
+                                    <input type="date" class="form-control" name="receipt_date" value="{{$sender->receipt_date}}" Required>
+                                </div>
+                            <!--------------- end ------------------>
                             </div>
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-4">
@@ -398,15 +404,9 @@
                                 </div>
                             </div>
         <!--------------- End ----------------->
-        <!--------------- Date of Receipt ---------->
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-6">
-                                     <label for="inputPassword4">Date of Receipt</label>
-                                    <input type="date" class="form-control" name="receipt_date" value="{{$sender->receipt_date}}" Required>
-                                </div>
-                            
-        <!--------------- end ------------------>
+        
         <!--------------- Remarks ---------->
+                            <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Remarks</label>
                                     <textarea name="remarks" class="form-control" rows="1" cols="70">{{$sender->remarks}}</textarea>

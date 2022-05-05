@@ -65,7 +65,14 @@
                                     </select>
                                     <!-- <a class="btn btn-outline-primary" href="{{url('add-sender')}}">Add Sender</a> -->
                                 </div>
+                                <!--------------- Date of Receipt ---------->
+                                <div class="form-group col-md-6">
+                                     <label for="inputPassword4">Date of Receipt</label>
+                                    <input type="date" class="form-control" name="receipt_date" Required>
+                                </div>
+                                <!--------------- end ------------------>
                             </div>
+                            
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Location</label>
@@ -429,16 +436,9 @@
                                 </div>
                             </div>
         <!--------------- end ------------------>
-         <!--------------- Date of Receipt ---------->
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-6">
-                                     <label for="inputPassword4">Date of Receipt</label>
-                                    <input type="date" class="form-control" name="receipt_date" Required>
-                                </div>
-                            
-        <!--------------- end ------------------>
+         
         <!--------------- Remarks ---------->
-                            
+                            <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Remarks</label>
                                     <textarea name="remarks" class="form-control" rows="1" cols="70"></textarea>
