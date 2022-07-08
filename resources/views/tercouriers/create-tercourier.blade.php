@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Other Details</label>
-                                    <input type="text" class="form-control" id="details" name="details" Required>
+                                    <input type="text" class="form-control" id="details" name="details">
                                 </div>
                             </div>
          
