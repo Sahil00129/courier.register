@@ -15,5 +15,9 @@ class Tercourier extends Model
     public function CourierCompany(){
         return $this->belongsTo('App\Models\CourierCompany','courier_id');
     }
+
+    public function SenderDetail(){
+        return $this->belongsTo('App\Models\Sender','sender_id');
+    }
     
 }

@@ -60,7 +60,7 @@
                                     <select class="form-control  basic" name="sender_id" id="new_search">
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
-                                        <option value="{{$sender->ax_id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}}</option>
+                                        <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}}</option>
                                       @endforeach
                                     </select>
                                 </div>
