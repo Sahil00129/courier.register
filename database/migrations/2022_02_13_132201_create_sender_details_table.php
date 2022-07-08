@@ -15,7 +15,9 @@ class CreateSenderDetailsTable extends Migration
     {
         Schema::create('sender_details', function (Blueprint $table) {
             $table->id();
+            $table->string('ax_id');
             $table->string('name')->nullable();
+            $table->string('employee_id')->nullable();
             $table->string('type')->nullable();
             $table->string('location')->nullable();
             $table->string('telephone_no')->nullable();
