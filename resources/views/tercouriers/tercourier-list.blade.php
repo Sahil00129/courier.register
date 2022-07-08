@@ -22,7 +22,7 @@
                             <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>S. No.</th>
+                                        <th>UN ID</th>
                                         <th>Date of Receipt</th>
                                         <th>Courier Name</th>
 							         	<th>Docket No</th>
@@ -44,7 +44,7 @@
                                     foreach ($tercouriers as $key => $tercourier) {  
                                 ?> 
                                     <tr>
-                                        <td>{{ $i++ }}</td>
+                                        <td>{{$tercourier->id }}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
                                         <td>{{ucwords($tercourier->CourierCompany->courier_name) ?? '-'}}</td>
                                         <td>{{$tercourier->docket_no ?? '-'}}</td>

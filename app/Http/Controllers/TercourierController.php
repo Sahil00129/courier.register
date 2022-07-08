@@ -23,7 +23,7 @@ class TercourierController extends Controller
     public function index(Request $request)
     {
         $query = Tercourier::query();
-        $tercouriers = $query->with('CourierCompany')->orderBy('id','DESC')->get();
+        $tercouriers = $query->with('CourierCompany')->get();
         return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers]);
     }
 
