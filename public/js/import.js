@@ -132,4 +132,35 @@ $('#new_sender_add').submit(function(e) {
             }); 
         });
 
+        /////////////////////////New TERCourier Create//////////////////////////
+		$('#new_tercourier_create').submit(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/tercouriers", 
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                type: 'POST',
+                data:new FormData(this),
+                processData: false,
+                contentType: false,
+                beforeSend: function(){
+                    $(".indicator-progress").show(); 
+                    $(".indicator-label").hide();
+                },
+                success: (data) => {
+                    $(".indicator-progress").hide();
+                    $(".indicator-label").show();
+                    $('#new_tercourier_create').trigger('reset');       
+                    //this.reset();
+                    if(data.success === true) {     
+                        swal("Success!", "Data has been Saved", "success");
+                        setTimeout(() => {window.location.href = data.redirect_url},2000);
+                    }
+                    else{
+                        swal("Error!", data.messages, "error");
+                    }
+                }
+            }); 
+        });
+
 });

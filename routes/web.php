@@ -12,6 +12,7 @@ use App\Http\Controllers\SenderController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\SampleDownloadController;
+use App\Http\Controllers\TercourierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +88,5 @@ Route::get('/sample-for',[SampleDownloadController::class, 'forSample']);
 Route::get('/edit-courier/{id}',[CourierController::class, 'editCourier']);
 Route::any('edit-courier/update-data/{id}', [CourierController::class, 'updateCourier']);
 Route::any('delete-courier/{id}', [CourierController::class, 'destroyCourier']); 
+
+Route::resource('tercouriers', TercourierController::class);

@@ -25,7 +25,9 @@ class BulkImport implements ToModel,WithHeadingRow
            ->first();
            if(is_null($sender)) {
                 return new Sender([
+                    'ax_id' => $row['ax_id'],
                     'name'  => $row['name'],
+                    'employee_id'  => $row['employee_id'],
                     'type'    => $row['type'],
                     'location' => $row['location'],
                     'telephone_no' =>$row['telephone_no'],
