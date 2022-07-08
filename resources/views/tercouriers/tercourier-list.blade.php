@@ -24,9 +24,9 @@
                                     <tr>
                                         <th>UN ID</th>
                                         <th>Date of Receipt</th>
-                                        <th>Courier Name</th>
-							         	<th>Docket No</th>
-								        <th>Docket Date</th>
+                                        <th>Sender Name</th>
+							         	<th>AX ID</th>
+								        <th>Employee ID</th>
 								        <th>Location</th>
                                         <th>Company Name</th>
                                         <th>TER Amount</th>
@@ -36,6 +36,9 @@
                                         <th>Remarks</th>
 								        <th>Given To</th>
                                         <th>Handover Date</th>
+                                        <th>Courier Name</th>
+							         	<th>Docket No</th>
+								        <th>Docket Date</th>
                                         <!-- <th class="dt-no-sorting">Actions</th> -->
                                     </tr>
                                 </thead>
@@ -46,9 +49,9 @@
                                     <tr>
                                         <td>{{$tercourier->id }}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
-                                        <td>{{ucwords($tercourier->CourierCompany->courier_name) ?? '-'}}</td>
-                                        <td>{{$tercourier->docket_no ?? '-'}}</td>
-                                        <td>{{Helper::ShowFormatDate($tercourier->docket_date)}}</td>
+                                        <td>{{ucwords($tercourier->SenderDetail->name) ?? '-'}}</td>
+                                        <td>{{$tercourier->SenderDetail->ax_id ?? '-'}}</td>
+                                        <td>{{$tercourier->SenderDetail->employee_id ?? '-'}}</td>
                                         <td>{{ucwords($tercourier->location) ?? '-'}}</td> 
                                         <td>{{$tercourier->company_name ?? '-'}}</td> 
                                         <td>{{$tercourier->amount ?? '-'}}</td> 
@@ -58,6 +61,9 @@
                                         <td>{{ucfirst($tercourier->remarks) ?? '-'}}</td>
                                         <td>{{$tercourier->given_to ?? '-'}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->delivery_date)}}</td>
+                                        <td>{{ucwords($tercourier->CourierCompany->courier_name) ?? '-'}}</td>
+                                        <td>{{$tercourier->docket_no ?? '-'}}</td>
+                                        <td>{{Helper::ShowFormatDate($tercourier->docket_date)}}</td>
                                         <!-- <td> <a href="{{ url('edit-tercourier/'.$tercourier->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="delete-courier/{{$tercourier->id}}" class="btn btn-danger btn-sm">Delete</a>   
                                         </td> -->
@@ -68,9 +74,9 @@
                                     <tr>
                                         <th>S. No.</th>
                                         <th>Date of Receipt</th>
-                                        <th>Courier Name</th>
-							         	<th>Docket No</th>
-								        <th>Docket Date</th>
+                                        <th>Sender Name</th>
+							         	<th>AX ID</th>
+								        <th>Employee ID</th>
 								        <th>Location</th>
                                         <th>Company Name</th>
                                         <th>TER Amount</th>
@@ -80,6 +86,9 @@
                                         <th>Remarks</th>
 								        <th>Given To</th>
                                         <th>Handover Date</th>
+                                        <th>Courier Name</th>
+							         	<th>Docket No</th>
+								        <th>Docket Date</th>
                                         <!-- <th class="dt-no-sorting">Actions</th> -->
                                     </tr>
                                 </tfoot>
