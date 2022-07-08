@@ -46,16 +46,16 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
-                                        <td>{{$tercourier->CourierCompany->courier_name ?? '-'}}</td>
+                                        <td>{{ucwords($tercourier->CourierCompany->courier_name) ?? '-'}}</td>
                                         <td>{{$tercourier->docket_no ?? '-'}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->docket_date)}}</td>
-                                        <td>{{$tercourier->location ?? '-'}}</td> 
+                                        <td>{{ucwords($tercourier->location) ?? '-'}}</td> 
                                         <td>{{$tercourier->company_name ?? '-'}}</td> 
                                         <td>{{$tercourier->amount ?? '-'}}</td> 
                                         <td>{{Helper::ShowFormatDate($tercourier->terfrom_date)}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->terto_date)}}</td>
-                                        <td>{{$tercourier->details ?? '-'}}</td>
-                                        <td>{{$tercourier->remarks ?? '-'}}</td>
+                                        <td>{{ucfirst($tercourier->details) ?? '-'}}</td>
+                                        <td>{{ucfirst($tercourier->remarks) ?? '-'}}</td>
                                         <td>{{$tercourier->given_to ?? '-'}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->delivery_date)}}</td>
                                         <!-- <td> <a href="{{ url('edit-tercourier/'.$tercourier->id) }}" class="btn btn-warning btn-sm">Edit</a>
