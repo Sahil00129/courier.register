@@ -1272,7 +1272,7 @@ code {
             background: #4361ee;
             border-radius: 6px; }
         .topbar-nav.header nav#topbar ul.menu-categories li.menu:not(:last-child) {
-          margin-right: 5px; }
+          margin-right: -12px; }
         .topbar-nav.header nav#topbar ul.menu-categories li.menu.menu-extras {
           padding: 14px 0 14px 0; }
           .topbar-nav.header nav#topbar ul.menu-categories li.menu.menu-extras.active a svg:not(.feather-chevron-down):not(.feather-chevron-right), .topbar-nav.header nav#topbar ul.menu-categories li.menu.menu-extras a[aria-expanded="true"] svg:not(.feather-chevron-down):not(.feather-chevron-right) {
