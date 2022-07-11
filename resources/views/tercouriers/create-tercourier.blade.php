@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>
-                                    <input type="date" class="form-control" id="docket_date" name="docket_date" Required>
+                                    <input type="date" class="form-control" id="docket_date" name="docket_date">
                                 </div>
                             </div>
                 <!------------Document details --------->           

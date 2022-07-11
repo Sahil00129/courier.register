@@ -23,7 +23,8 @@ class TercourierController extends Controller
     public function index(Request $request)
     {
         $query = Tercourier::query();
-        $tercouriers = $query->with('CourierCompany','SenderDetail')->get();
+        $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+        //echo'<pre>';print_r($tercouriers); die;
         return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers]);
     }
 
@@ -140,5 +141,77 @@ class TercourierController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function addTrRow()
+    {
+        if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
+            $senders =  DB::table('sender_details')->get();
+            $couriers = DB::table('courier_companies')->select ('id','courier_name')->distinct()->get();
+
+            $decode  = json_decode(json_encode($senders));
+            $decode_couriers  = json_decode(json_encode($couriers));
+            //echo "<pre>";print_r($decode);die;
+            ?>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="date" class="form-control" name="date_of_receipt" id="date_of_receipt" Required>                                          
+                </td>
+                <td colspan="3">
+                    <select class="form-control  basic" name="sender_id" id="new_search">
+                        <option selected disabled>search..</option>
+                        <?php
+                         foreach($decode as $sender){?>
+                          <option value="<?= $sender->id ?>"><?= $sender->name ?> : <?= $sender->ax_id ?> : <?= $sender->employee_id ?></option>
+                         <?php
+                        }
+                        ?>        
+                    </select>                      
+                </td>
+                <td>
+                <input type="text" class="form-control" id="location" name="location" Required>                
+                </td> 
+                <td>
+                <select id="for" name="company_name" class="form-control" onchange="receveCheck(this);">
+                                        <option selected disabled>Select...</option>
+                                        <option value="FMC">FMC</option>
+                                        <option value="Corteva">Corteva</option>
+                                        <option value="Unit-HSB">Unit-HSB</option>
+                                        <option value="Remainco">Remainco</option>
+                                    </select>                               
+                </td> 
+                <td>
+                <input type="text" class="form-control" id="amount" name="amount" Required>                   
+                </td> 
+                <td><input type="date" class="form-control" id="terfrom_date" name="terfrom_date" Required></td>
+                <td><input type="date" class="form-control" id="terto_date" name="terto_date" Required></td>
+                <td><input type="text" class="form-control"  id="details" name="details"></td>
+                <td width=""><textarea name="remarks" placeholder="Enter your Emarks" class="form-control" rows="1" cols=""></textarea></td>
+                <td>
+                    <select class="form-control" id="given_to" name="given_to">
+                                        <option value="">Select</option>
+                                        <option value="Veena">Veena</option>
+                                    </select></td>
+                <td><input type="date" class="form-control" id="delivery_date" name="delivery_date"></td>
+                <td>
+                <select id="slct" name="courier_id" class="form-control" onchange="yesnoCheck(this);">
+                     <option selected disabled>Select..</option>
+                      <?php
+                         foreach($decode_couriers as $courier){?>
+                          <option value="<?= $courier->id ?>"><?= $courier->courier_name ?></option>
+                         <?php
+                        }
+                        ?> 
+                        <option>Other</option>
+                    </select>                           
+                </td>
+                <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off" Required></td>
+                <td><input type="date" placeholder="Docket Date" class="form-control" id="docket_date" name="docket_date"></td>                
+            </tr>
+            <?php
+            echo '|***|addmore';
+        }
+        
     }
 }
