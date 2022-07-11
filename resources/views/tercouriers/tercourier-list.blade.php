@@ -33,7 +33,7 @@
                                         <th>TER Period From</th>
                                         <th>TER Period To</th>
                                         <th>Other Details</th>
-                                        <th>Remarks</th>
+                                        <th width="200px;">Remarks</th>
 								        <th>Given To</th>
                                         <th>Handover Date</th>
                                         <th>Courier Name</th>
@@ -42,7 +42,7 @@
                                         <!-- <th class="dt-no-sorting">Actions</th> -->
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tb">
                                 <?php $i=1;  
                                     foreach ($tercouriers as $key => $tercourier) {  
                                 ?> 
@@ -71,32 +71,20 @@
                                 <?php } ?>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th>S. No.</th>
-                                        <th>Date of Receipt</th>
-                                        <th>Sender Name</th>
-							         	<th>AX ID</th>
-								        <th>Employee ID</th>
-								        <th>Location</th>
-                                        <th>Company Name</th>
-                                        <th>TER Amount</th>
-                                        <th>TER Period From</th>
-                                        <th>TER Period To</th>
-                                        <th>Other Details</th>
-                                        <th>Remarks</th>
-								        <th>Given To</th>
-                                        <th>Handover Date</th>
-                                        <th>Courier Name</th>
-							         	<th>Docket No</th>
-								        <th>Docket Date</th>
-                                        <!-- <th class="dt-no-sorting">Actions</th> -->
-                                    </tr>
-                                </tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <!-- <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
+                                        <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button> -->
+                                    </td>
+                                </tr>
+                            </tfoot>
                             </table>
                         </div>
                     </div>
 
                 </div>
                 </div>
+
+
                 
 @endsection

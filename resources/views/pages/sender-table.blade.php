@@ -25,20 +25,21 @@
                     <thead>
                         <tr>
                             <th>Sr No.</th>
+                            <th>Ax Id</th>
+                            <th>Employee Id</th>
                             <th>Sender Name</th>
-                            <th>Type</th>
-                            <th>Location</th>
                             <th>Telephone No</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach ($sends as $send)
+                     <?php //echo '<pre>'; print_r($send); die; ?>
                         <tr>
                             <td>{{ ++$i }}</td>
-                            <td>{{$send->name}}</td>
-                            <td>{{$send->type}}</td>
-                            <td>{{$send->location}}</td>
+                            <td>{{$send->ax_id}}</td>
+                            <td>{{$send->employee_id}}</td>
+                            <td>{{$send->name}}</td>                      
                             <td>{{$send->telephone_no}}</td>
                             <td>
                                 <a href="{{url('edit-sender/'.Crypt::encrypt($send->id))}}" class="btn btn-primary">Edit</a>

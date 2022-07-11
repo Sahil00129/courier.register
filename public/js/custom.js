@@ -181,3 +181,36 @@ function formSubmit(form)
         }
     });
 }
+
+
+// Add table row //
+
+$("#addmore").on("click",function(){
+    //alert('hi');
+    $.ajax({
+        headers     : {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type:'POST',
+        url:'add-trrow',
+        data:{'action':'addDataRow'},
+        success: function(data){
+            $('#tb').append(data);
+            //$('.selectpicker').selectpicker('refresh');
+            $('#save').removeAttr('hidden',true);
+        }
+    });
+});
+
+////////////////
+$(document).ready(function(){
+    $("#save").on("click",function(){
+       
+        var field1 = $("#date_of_receipt").val();
+        alert(field1);
+
+
+    });
+
+});
+

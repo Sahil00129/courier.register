@@ -20,8 +20,8 @@ class BulkImport implements ToModel,WithHeadingRow
         if($_POST['import_type'] == 1){
            //echo "<pre>"; print_r($row);die;
            $sender = DB::table('sender_details')
-           ->where('name', '=', $row['name'])
-           ->where('telephone_no', '=', $row['telephone_no'])
+           ->where('ax_id', '=', $row['ax_id'])
+           ->where('employee_id', '=', $row['employee_id'])
            ->first();
            if(is_null($sender)) {
                 return new Sender([
