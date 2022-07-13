@@ -91,15 +91,17 @@ class TercourierController extends Controller
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
             $peid = "1201159713185947382"; // Get Key from DLT 
-            $SENDERID = $getsender->ax_id; // Approved from DLT
-            $mob = '7018130820'; // Get Mobile Number from Sender
+            $sender_id = "FAPLHR"; // Approved from DLT
+            $mob = $getsender->telephone_no; // Get Mobile Number from Sender
             $name = $getsender->name;
             $from_period = $tercourier->terfrom_date;
             $to_period = $tercourier->terto_date;
             $UNID = $tercourier->id;
             $umsg= "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
 
-            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey='.$API.'&senderid='.$SENDERID.'&channel=Trans&DCS=0&flashsms=0&number='.urlencode($mob).'&text='.urlencode($umsg).'&route=2&peid='.urlencode($peid).'';
+            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey='.$API.'&senderid='.$sender_id.'&channel=Trans&DCS=0&flashsms=0&number='.urlencode($mob).'&text='.urlencode($umsg).'&route=2&peid='.urlencode($peid).'';
+
+            $this->SendTSMS($url);
 
             $response['success'] = true;
             $response['messages'] = 'Succesfully Submitted';
@@ -111,6 +113,18 @@ class TercourierController extends Controller
             $response['messages'] = 'Can not created TER Courier please try again';
         }
         return Response::json($response);  
+    }
+
+    public function SendTSMS($hostUrl){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $hostUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_POST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        $result = curl_exec($ch);
+        return $result;
     }
 
     /**
