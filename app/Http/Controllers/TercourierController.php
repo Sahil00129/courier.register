@@ -147,7 +147,7 @@ class TercourierController extends Controller
     {
         if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
             $senders =  DB::table('sender_details')->get();
-            $couriers = DB::table('courier_companies')->select('id','courier_name')->distinct()->get();
+            $couriers = DB::table('courier_companies')->select ('id','courier_name')->distinct()->get();
 
             $decode  = json_decode(json_encode($senders));
             $decode_couriers  = json_decode(json_encode($couriers));
