@@ -23,7 +23,6 @@ class BulkImport implements ToModel,WithHeadingRow
             $lastworkingdate = $lastworkingdate->format('d-m-Y');
             $sender = DB::table('sender_details')
                 ->where('ax_id', '=', $row['ax_id'])
-                ->where('employee_id', '=', $row['employee_id'])
                 ->first();
             if(is_null($sender)) {
                 if($row['type'] == 'Employee'){
