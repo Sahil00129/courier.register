@@ -19,22 +19,28 @@ class BulkImport implements ToModel,WithHeadingRow
     {
         if($_POST['import_type'] == 1){
            //echo "<pre>"; print_r($row);die;
-           $sender = DB::table('sender_details')
-           ->where('ax_id', '=', $row['ax_id'])
-           ->where('employee_id', '=', $row['employee_id'])
-           ->first();
-           if(is_null($sender)) {
-                return new Sender([
-                    'ax_id' => $row['ax_id'],
-                    'name'  => $row['name'],
-                    'employee_id'  => $row['employee_id'],
-                    'type'    => $row['type'],
-                    'location' => $row['location'],
-                    'telephone_no' =>$row['telephone_no'],
-                ]);
-            }else{
-                DB::table('sender_details')
-                ->where('name',$row['name'])->update([ 'name' => $row['name'], 'type' => $row['type'], 'location' => $row['location'], 'telephone_no' => $row['telephone_no'] ]);
+            $lastworkingdate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['last_working_date']);
+            $lastworkingdate = $lastworkingdate->format('d-m-Y');
+            $sender = DB::table('sender_details')
+                ->where('ax_id', '=', $row['ax_id'])
+                ->where('employee_id', '=', $row['employee_id'])
+                ->first();
+            if(is_null($sender)) {
+                if($row['type'] == 'Employee'){
+                    return new Sender([
+                        'ax_id' => $row['ax_id'],
+                        'name'  => $row['name'],
+                        'employee_id' => $row['employee_id'],
+                        'type'    => $row['type'],
+                        'location' => $row['location'],
+                        'telephone_no' =>$row['telephone_no'],
+                        'status' => $row['status'],
+                        'last_working_date' => $lastworkingdate,
+                    ]);
+                }else{
+                    DB::table('sender_details')
+                    ->where('name',$row['name'])->update([ 'name' => $row['name'], 'type' => $row['type'], 'location' => $row['location'], 'telephone_no' => $row['telephone_no'] ]);
+                }
             }
         }
 

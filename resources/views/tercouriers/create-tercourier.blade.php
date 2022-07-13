@@ -28,7 +28,7 @@
     color: gray;
 
  }
-
+ <meta name="csrf-token" content="{{ csrf_token() }}" />
 </style>
    
 <div class="container">
@@ -54,20 +54,39 @@
                         <h5><b>Sender Details</b></h5>
                         <form id="new_tercourier_create" method="post" class="specify-numbers-price">
                             @csrf
+                            
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">From</label>
-                                    <select class="form-control  basic" name="sender_id" id="new_search">
+                                    <select class="form-control  basic" name="sender_id" id="select_employee">
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
                                         <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}}</option>
                                       @endforeach
                                     </select>
                                 </div>
+                                <!--------------- Date of Receipt ---------->
                                 <div class="form-group col-md-6">
-                                    <label for="inputPassword4">Date of Receipt</label>
+                                     <label for="inputPassword4">Date of Receipt</label>
                                     <input type="date" class="form-control" name="date_of_receipt" Required>
                                 </div>
+                                <!--------------- end ------------------>
+                            </div>
+
+                            <div class="form-row mb-2">
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Telephone No.</label>
+                                    <input type="text" class="form-control mbCheckNm"  id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Status</label>
+                                    <input type="text" class="form-control"  id="emp_status" name="emp_status" autocomplete="off" readonly="readonly">
+                                </div>
+                                <input type="hidden" class="form-control"  id="last_working_date" name="last_working_date">
                             </div>
                             
                             <h5><b>Courier Details</b></h5>
@@ -90,6 +109,7 @@
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>
                                     <input type="date" class="form-control" id="docket_date" name="docket_date">
+                                    <p class="docketdate_error text-danger" style="display: none; color: #ff0000; font-weight: 500;">Docket date invalid.</p>
                                 </div>
                             </div>
                 <!------------Document details --------->           
@@ -143,7 +163,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Given To</label>
                                     <select class="form-control" id="given_to" name="given_to">
-                                        <option value="">Select</option>
+                                        <!-- <option value="">Select</option> -->
                                         <option value="Veena">Veena</option>
                                     </select>
                                 </div>
@@ -180,36 +200,55 @@
                     }
                 });
             }); */
-        $("#new_search").change(function(){
-            var value = $(this).children("option:selected").val();
-            var location = value.split(':');  
-            //break value in js split
-            for(var i = 0; i < location.length; i++){
-                $('#search').val(value);
-                $('#location').val(location[1]);
-                $('#telephone_no').val(location[2]);
-                $('#customer_type').val(location[3]);
-                $('#product_list').html("");
+
+    //// get employee data on change
+    $('#select_employee').on('change', function() {
+        var emp_id = $(this).val();
+        
+        $.ajax({
+            type      : 'GET',
+            url       : "/get_employees",
+            data      : {emp_id:emp_id},
+            headers   : {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType  : 'json',
+            cache     :   false, 
+            contentType : false,
+            processData : true,
+            
+            success:function(res){   
+                if(res.data){
+                    //alert(res.data);
+                    console.log(res.data);
+                    if(res.data.location == null){
+                        var location = '';
+                    }else{
+                        var location = res.data.location;
+                    }
+                    if(res.data.telephone_no == null){
+                        var telephone_no = '';
+                    }else{
+                        var telephone_no = res.data.telephone_no;
+                    }
+                    if(res.data.status == null){
+                        var status = '';
+                    }else{
+                        var status = res.data.status;
+                    }
+                    $("#location").val(location);
+                    $("#telephone_no").val(telephone_no);
+                    $("#emp_status").val(status);
+                    $("#last_working_date").val(res.data.last_working_date);
+                }
             }
         });
+    });
+        
 
 });  
 
-function yesnoCheck(that) {
-    if (that.value == "Other") {
-        document.getElementById("ifYes").style.display = "block";
-    } else {
-        document.getElementById("ifYes").style.display = "none";
-    }
-}
 
-function receveCheck(that) {
-    if (that.value == "Other") {
-        document.getElementById("ifYes_receiving").style.display = "block";
-    } else {
-        document.getElementById("ifYes_receiving").style.display = "none";
-    }
-}
 
 </script>
 

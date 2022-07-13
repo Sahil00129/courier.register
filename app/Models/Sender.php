@@ -10,6 +10,6 @@ class Sender extends Model
     use HasFactory;
     protected $table = 'sender_details';
     protected $fillable = [
-        'ax_id', 'name', 'employee_id', 'type','location','telephone_no'
+        'ax_id', 'name', 'employee_id', 'type','location','telephone_no','last_working_date','status'
     ];
 }

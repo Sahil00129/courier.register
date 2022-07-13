@@ -146,6 +146,20 @@ $('#new_sender_add').submit(function(e) {
                 beforeSend: function(){
                     $(".indicator-progress").show(); 
                     $(".indicator-label").hide();
+                    // var lastwrk_date = $('#last_working_date').val();
+                    // var d_date = $('#docket_date').val();
+
+                    // var d = new Date(d_date);
+                    // console.log(d.toLocaleDateString());
+                    // d.setMonth(d.getMonth() - 3);
+                    // console.log(d.toLocaleDateString());
+
+                    // if ($('#emp_status').val() == 'blocked' && $("#emp_status").val() == '') {
+                    //     $('.empstatus_error').show();
+                    //     return false;
+                    // }else{
+                    //     $('.empstatus_error').hide();
+                    // }
                 },
                 success: (data) => {
                     $(".indicator-progress").hide();
@@ -162,5 +176,16 @@ $('#new_sender_add').submit(function(e) {
                 }
             }); 
         });
+
+        // $('#new_tercourier_create').click(function(e) {
+        //     docket_date = $('#docket_date').val();
+        //     // alert(docket_date);
+        //     if ($('#emp_status').val() == 'blocked' && $("#emp_status").val() == '') {
+        //         $('.empstatus_error').show();
+        //         return false;
+        //     }else{
+        //         $('.empstatus_error').hide();
+        //     }
+        // });
 
 });

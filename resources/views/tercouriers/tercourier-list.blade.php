@@ -49,7 +49,7 @@
                                     <tr>
                                         <td>{{$tercourier->id }}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
-                                        <td>{{ucwords($tercourier->SenderDetail->name) ?? '-'}}</td>
+                                        <td>{{ucwords(@$tercourier->SenderDetail->name) ?? '-'}}</td>
                                         <td>{{$tercourier->SenderDetail->ax_id ?? '-'}}</td>
                                         <td>{{$tercourier->SenderDetail->employee_id ?? '-'}}</td>
                                         <td>{{ucwords($tercourier->location) ?? '-'}}</td> 
@@ -61,7 +61,7 @@
                                         <td>{{ucfirst($tercourier->remarks) ?? '-'}}</td>
                                         <td>{{$tercourier->given_to ?? '-'}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->delivery_date)}}</td>
-                                        <td>{{ucwords($tercourier->CourierCompany->courier_name) ?? '-'}}</td>
+                                        <td>{{ucwords(@$tercourier->CourierCompany->courier_name) ?? '-'}}</td>
                                         <td>{{$tercourier->docket_no ?? '-'}}</td>
                                         <td>{{Helper::ShowFormatDate($tercourier->docket_date)}}</td>
                                         <!-- <td> <a href="{{ url('edit-tercourier/'.$tercourier->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -73,8 +73,8 @@
                                 <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        <!-- <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
-                                        <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button> -->
+                                        <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
+                                        <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
                                     </td>
                                 </tr>
                             </tfoot>

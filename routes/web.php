@@ -90,5 +90,7 @@ Route::any('edit-courier/update-data/{id}', [CourierController::class, 'updateCo
 Route::any('delete-courier/{id}', [CourierController::class, 'destroyCourier']); 
 
 Route::resource('tercouriers', TercourierController::class);
+Route::any('add-trrow', [TercourierController::class, 'addTrRow']);
+Route::any('create-terrow', [TercourierController::class, 'createRow']); 
+Route::any('get_employees', [TercourierController::class, 'getEmployees']);
 
-Route::any('add-trrow', [TercourierController::class, 'addTrRow']); 
