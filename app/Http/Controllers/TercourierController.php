@@ -189,7 +189,7 @@ class TercourierController extends Controller
                 <td><input type="text" class="form-control"  id="details" name="details"></td>
                 <td width=""><textarea name="remarks" id="remarks" placeholder="" class="form-control" rows="1" cols=""></textarea></td>
                 <td>
-                    <select class="form-control" id="given_to" name="given_to" style="padding:6px 0px 8px 0px;">
+                    <select style="padding:6px 0px 8px 0px;" class="form-control" id="given_to" name="given_to">
                         <!-- <option value="">Select</option> -->
                         <option value="Veena">Veena</option>
                     </select>
