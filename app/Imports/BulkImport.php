@@ -32,7 +32,7 @@ class BulkImport implements ToModel,WithHeadingRow
                         'employee_id' => $row['employee_id'],
                         'type'    => $row['type'],
                         'location' => $row['location'],
-                        'telephone_no' =>$row['telephone_no'],
+                        'telephone_no' => (float)$row['telephone_no'],
                         'status' => $row['status'],
                         'last_working_date' => $lastworkingdate,
                     ]);
