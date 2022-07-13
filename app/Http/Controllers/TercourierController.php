@@ -84,8 +84,23 @@ class TercourierController extends Controller
         $terdata['status'] = '1';
 
         $tercourier = Tercourier::create($terdata);
+        // dd($tercourier->id);
         if($tercourier)
         {
+            $getsender = Sender::where('id',$tercourier->sender_id)->first();
+
+            $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
+            $peid = "1201159713185947382"; // Get Key from DLT 
+            $SENDERID = $getsender->ax_id; // Approved from DLT
+            $mob = '7018130820'; // Get Mobile Number from Sender
+            $name = $getsender->name;
+            $from_period = $tercourier->terfrom_date;
+            $to_period = $tercourier->terto_date;
+            $UNID = $tercourier->id;
+            $umsg= "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
+
+            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey='.$API.'&senderid='.$SENDERID.'&channel=Trans&DCS=0&flashsms=0&number='.urlencode($mob).'&text='.urlencode($umsg).'&route=2&peid='.urlencode($peid).'';
+
             $response['success'] = true;
             $response['messages'] = 'Succesfully Submitted';
             $response['redirect_url'] = URL::to('/tercouriers');
