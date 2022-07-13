@@ -21,6 +21,8 @@ class CreateSenderDetailsTable extends Migration
             $table->string('type')->nullable();
             $table->string('location')->nullable();
             $table->string('telephone_no')->nullable();
+            $table->string('last_working_date')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
