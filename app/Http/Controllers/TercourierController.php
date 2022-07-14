@@ -93,7 +93,7 @@ class TercourierController extends Controller
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
             $peid = "1201159713185947382"; // Get Key from DLT 
             $sender_id = "FAPLHR"; // Approved from DLT
-            $mob = '7018130820'; // Get Mobile Number from Sender
+            $mob = $getsender->telephone_no; // Get Mobile Number from Sender
             $name = $getsender->name;
 
             $from_period = Helper::ShowFormat($tercourier->terfrom_date);
