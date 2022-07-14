@@ -11,6 +11,7 @@ use App\Models\ForCompany;
 use Validator;
 use DB;
 use URL;
+use Helper;
 use Illuminate\Support\Facades\Response;
 
 class TercourierController extends Controller
@@ -94,8 +95,10 @@ class TercourierController extends Controller
             $sender_id = "FAPLHR"; // Approved from DLT
             $mob = $getsender->telephone_no; // Get Mobile Number from Sender
             $name = $getsender->name;
-            $from_period = $tercourier->terfrom_date;
-            $to_period = $tercourier->terto_date;
+
+            $from_period = Helper::ShowFormat($tercourier->terfrom_date);
+            $to_period = Helper::ShowFormat($tercourier->terto_date);
+
             $UNID = $tercourier->id;
             $umsg= "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
 
