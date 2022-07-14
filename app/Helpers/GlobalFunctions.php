@@ -32,4 +32,11 @@ class GlobalFunctions {
         return $changeformat;
     }
 
+    // function for show date and time in frontend ///
+
+    public static function ShowFormat($date){
+        $changeformat = date('d-m-Y',strtotime($date));
+        return $changeformat;
+    }
+
 }
