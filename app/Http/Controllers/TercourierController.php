@@ -16,6 +16,13 @@ use Illuminate\Support\Facades\Response;
 
 class TercourierController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth');
+        $this->middleware('permission:tercouriers/create' ,['only' => ['create']]);
+        $this->middleware('permission:tercouriers' ,['only' => ['index']]);
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -186,7 +193,7 @@ class TercourierController extends Controller
             //echo "<pre>";print_r($decode);die;
             ?>
             <tr>
-                <td></td>
+                <td></td><td></td>
                 <td>
                     <input type="date" class="form-control" name="date_of_receipt" id="date_of_receipt" Required>                                          
                 </td>
@@ -239,11 +246,12 @@ class TercourierController extends Controller
                         <option>Other</option>
                     </select>                           
                 </td>
-                <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off" Required></td>
+                <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off"></td>
                 <td><input type="date" placeholder="Docket Date" class="form-control" id="docket_date" name="docket_date"></td>                
             </tr>
             <tr>
                 <th>UN ID</th>
+                <th>Status</th>
                 <th>Date of Receipt</th>
                 <th>Sender Name</th>
                 <th>AX ID</th>
@@ -318,6 +326,13 @@ class TercourierController extends Controller
             $response['error']           = true;
         }
     	return response()->json($response);
+    }
+
+    public function terBundles(Request $request)
+    {
+        $query = Tercourier::query();
+        $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+        return view('tercouriers.terbundles-list',['tercouriers'=>$tercouriers]);
     }
 
 }

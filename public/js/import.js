@@ -146,20 +146,36 @@ $('#new_sender_add').submit(function(e) {
                 beforeSend: function(){
                     $(".indicator-progress").show(); 
                     $(".indicator-label").hide();
-                    // var lastwrk_date = $('#last_working_date').val();
-                    // var d_date = $('#docket_date').val();
+                    var nowdate1 = new Date();
+                    var nowdate = nowdate1.getTime();
+                    var lastwrk_date = $('#last_working_date').val();	
+                    var arr = lastwrk_date.split('-');
+                    var lastwrk_date = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]).getTime(); 
+                    console.log(lastwrk_date);
+                    var empstatus = $('#emp_status').val();
 
-                    // var d = new Date(d_date);
-                    // console.log(d.toLocaleDateString());
-                    // d.setMonth(d.getMonth() - 3);
-                    // console.log(d.toLocaleDateString());
+                    var dateOffset = (24*60*60*1000) * 90;  // 90 days
+                    console.log(dateOffset);
+                    var caldays = nowdate1.setTime(nowdate1.getTime() - dateOffset);
+                    console.log(caldays);
+                    var from_date = $('#terfrom_date').val();
+                    var arr2 = from_date.split('-');
+                    var from_date = new Date(arr2[0]+"-" + arr2[1]+"-"+arr2[2]).getTime();
+                    console.log(from_date);
+                    if (empstatus == 'Blocked' || empstatus == '') {
+                        if(from_date > lastwrk_date) {
+                            swal("Error!", "Last working date should be greater than from date", "error");
+                            return false;
+                        }
+                        else if(caldays > lastwdate) {
+                            swal("Error!", "Last working date should be less than 90 days", "error");
+                            return false;
+                        }
+                    }
+                    
+                },
+                complete: function (response) {
 
-                    // if ($('#emp_status').val() == 'blocked' && $("#emp_status").val() == '') {
-                    //     $('.empstatus_error').show();
-                    //     return false;
-                    // }else{
-                    //     $('.empstatus_error').hide();
-                    // }
                 },
                 success: (data) => {
                     $(".indicator-progress").hide();
