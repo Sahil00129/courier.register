@@ -173,21 +173,6 @@ $('#new_sender_add').submit(function(e) {
                         }
                     }
                     
-                    
-                    // var from_date = $('#terfrom_date').val();
-                    // var arr2 = from_date.split('-');
-                    // var from_date = new Date(arr2[0]+"-" + arr2[1]+"-"+arr2[2]).getTime();
-                    // alert(from_date);
-                    // var daycount = (lastwrk_date - from_date) / (1000 * 60 * 60 * 24);
-                    // alert(daycount);
-                    // if (isNaN(lastwrk_date) == false && isNaN(from_date) == false) {
-                    //     if (lastwrk_date < from_date) {
-                    //         swal("Error!", "Last working date should be greater than from date", "error");
-                    //         return false;
-                    //     }else{
-                    //         return true;
-                    //     }
-                    // }
                 },
                 complete: function (response) {
 
