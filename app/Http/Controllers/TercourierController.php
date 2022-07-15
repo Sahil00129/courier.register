@@ -246,7 +246,7 @@ class TercourierController extends Controller
                         <option>Other</option>
                     </select>                           
                 </td>
-                <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off" Required></td>
+                <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off"></td>
                 <td><input type="date" placeholder="Docket Date" class="form-control" id="docket_date" name="docket_date"></td>                
             </tr>
             <tr>

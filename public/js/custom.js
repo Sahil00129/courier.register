@@ -222,7 +222,7 @@ $(document).ready(function(){
         var docket_no = $("#docket_no").val();
         var docket_date = $("#docket_date").val();
         
-        if(date == '' || employee_name == '' || location == '' || company_name == '' || remarks == '' || amount == '' || terfrom_date == '' || terto_date == '' || details == '' || given_to == '' || delivery_date == '' || slct == '' || docket_no == '' || docket_date == ''){
+        if(date == '' || employee_name == '' || location == '' || company_name == '' || remarks == '' || amount == '' || terfrom_date == '' || terto_date == '' || details == '' || given_to == '' || delivery_date == '' || slct == '' || docket_date == ''){
             swal("Error!", "Please fill empity field", "error");
             return false;
         }
