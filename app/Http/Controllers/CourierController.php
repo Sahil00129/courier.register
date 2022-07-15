@@ -13,6 +13,14 @@ use Session;
 
 class CourierController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth');
+        $this->middleware('permission:create-courier' ,['only' => ['createCourier']]);
+        $this->middleware('permission:courier-table' ,['only' => ['courierTable']]);
+
+    }
+
     public function createCourier()
     {
         $senders =  DB::table('sender_details')->get();

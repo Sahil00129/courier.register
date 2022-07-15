@@ -104,7 +104,7 @@
                         
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" Required>
+                                    <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>

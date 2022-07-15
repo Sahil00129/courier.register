@@ -11,6 +11,13 @@ use Validator;
 
 class SenderController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth');
+        $this->middleware('permission:add-sender' ,['only' => ['addSenderIndex']]);
+
+    }
+
     public function addSenderIndex()
     {
         return view ('pages.add-sender');

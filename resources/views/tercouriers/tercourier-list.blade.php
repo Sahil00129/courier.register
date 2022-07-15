@@ -23,6 +23,7 @@
                                 <thead>
                                     <tr>
                                         <th>UN ID</th>
+                                        <th>Status</th>
                                         <th>Date of Receipt</th>
                                         <th>Sender Name</th>
 							         	<th>AX ID</th>
@@ -43,11 +44,29 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tb">
-                                <?php $i=1;  
+                                <?php $i=1;
                                     foreach ($tercouriers as $key => $tercourier) {  
-                                ?> 
+                                ?>
                                     <tr>
                                         <td>{{$tercourier->id }}</td>
+                                        <?php
+                                    if($tercourier->status==1){
+                                        $status = 'Received';
+                                        $class = "btn-success";
+                                    }elseif($tercourier->status==2){
+                                        $status = 'Handover';
+                                        $class = "btn-warning";
+                                    }else{
+                                        $status = 'Cancel';
+                                        $class = "btn-danger";
+                                    }
+                                    ?>
+                                        <td>@if($tercourier->status == 1)
+                                        <span class="btn {{$class}}">{{ $status }}</span>
+                                        @else
+                                        <span class="btn {{$class}}">{{ $status }}</span>
+                                        @endif
+                                    </td>
                                         <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
                                         <td>{{ucwords(@$tercourier->SenderDetail->name) ?? '-'}}</td>
                                         <td>{{$tercourier->SenderDetail->ax_id ?? '-'}}</td>

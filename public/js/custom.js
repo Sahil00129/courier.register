@@ -253,17 +253,16 @@ $(document).ready(function(){
             contentType: false,
             beforeSend: function(){
                  
-               },
-              success: (data) => {  
+            },
+            success: (data) => {  
                 if(data.success){
                     swal("Success!", "Data has been Submitted successfully", "success");
                     setTimeout(() => {window.location.href = data.redirect_url},1500);
                 }else{
                     swal("Error!", "Something went wrong", "error");
                 }
-
-              }
-      });
+            }
+        });
 
     });
 
