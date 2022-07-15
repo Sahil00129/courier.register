@@ -150,13 +150,14 @@ $('#new_sender_add').submit(function(e) {
                     var nowdate = nowdate1.getTime();
                     var lastwrk_date = $('#last_working_date').val();	
                     var arr = lastwrk_date.split('-');
-                    var lastwrk_date = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]).getTime(); 
+                    var lastwrk_date1 = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]); 
+                    var lastwrk_date = lastwrk_date1.getTime();
                     console.log(lastwrk_date);
                     var empstatus = $('#emp_status').val();
 
                     var dateOffset = (24*60*60*1000) * 90;  // 90 days
                     console.log(dateOffset);
-                    var caldays = nowdate1.setTime(nowdate1.getTime() - dateOffset);
+                    var caldays = lastwrk_date1.setTime(lastwrk_date1.getTime() - dateOffset);
                     console.log(caldays);
                     var from_date = $('#terfrom_date').val();
                     var arr2 = from_date.split('-');
@@ -167,7 +168,7 @@ $('#new_sender_add').submit(function(e) {
                             swal("Error!", "Last working date should be greater than from date", "error");
                             return false;
                         }
-                        else if(caldays > lastwdate) {
+                        else if(caldays > from_date) {
                             swal("Error!", "Last working date should be less than 90 days", "error");
                             return false;
                         }
