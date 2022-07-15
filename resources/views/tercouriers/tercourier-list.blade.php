@@ -5,6 +5,12 @@
  <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/datatables.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/custom_dt_html5.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/dt-global_style.css')}}">
+    <style>
+        .btn {
+            padding: 10px 10px;
+            font-size: 10px;
+        }
+    </style>
     <!-- END PAGE LEVEL CUSTOM STYLES -->
 <div class="layout-px-spacing">
                 <div class="page-header">
