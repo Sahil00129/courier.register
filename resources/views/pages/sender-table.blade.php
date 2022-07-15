@@ -29,6 +29,8 @@
                             <th>Employee Id</th>
                             <th>Sender Name</th>
                             <th>Telephone No</th>
+                            <th>Last Working Date</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -41,6 +43,8 @@
                             <td>{{$send->employee_id}}</td>
                             <td>{{$send->name}}</td>                      
                             <td>{{$send->telephone_no}}</td>
+                            <td>{{Helper::ShowFormatDate($send->last_working_date)}}</td>
+                            <td>{{ucfirst($send->status)}}</td>
                             <td>
                                 <a href="{{url('edit-sender/'.Crypt::encrypt($send->id))}}" class="btn btn-primary">Edit</a>
                                 <a href="Javascript:void();" class="btn btn-danger delete_sender" data-id="{{ $send->id }}" data-action="<?php echo URL::to('senders/delete-sender'); ?>">Delete</a>
