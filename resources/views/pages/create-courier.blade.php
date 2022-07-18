@@ -510,7 +510,6 @@ function receveCheck(that) {
         document.getElementById("ifYes_receiving").style.display = "none";
     }
 }
-
 </script>
 
 @endsection
