@@ -22,12 +22,26 @@
                 </div>
                 
                 <div class="row layout-top-spacing" id="cancel-row">
-                
+
+                    <a class="dropdown-item" id="ter-bulkstatus" data-toggle="modal" data-target="#bulk-terstatus"><i class="fa fa-user"></i>Assign User</a>
+                    <!-- <button class="btn-primary btn-cstm btn w-100"  disabled type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span><i class="fa fa-list" aria-hidden="true"></i> Handover</span>
+                    </button> -->
+
                     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
                         <div class="widget-content widget-content-area br-6">
                             <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
+                                
                                 <thead>
                                     <tr>
+                                        <th class="pr-0">
+                                            <div class="checkbox">
+                                                <label class="check-label">
+                                                    <input id="ckbCheckAll" type="checkbox">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </th>
                                         <th>UN ID</th>
                                         <th>Status</th>
                                         <th>Date of Receipt</th>
@@ -54,6 +68,15 @@
                                     foreach ($tercouriers as $key => $tercourier) {  
                                 ?>
                                     <tr>
+                                        <td class="pr-0">
+                                            <div class="checkbox">
+                                                <label class="check-label">
+                                                    <!-- <input type="checkbox" class="chkBoxClass"> -->
+                                                    <input type="checkbox" id="tr{{$tercourier->id}}" class="chkBoxClass" name = "chk" value = "{{$tercourier->id}}"/>
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </td>
                                         <td>{{$tercourier->id }}</td>
                                         <?php
                                     if($tercourier->status==1){
@@ -96,20 +119,61 @@
                                 <?php } ?>
                                 </tbody>
                                 <tfoot>
-                                <tr>
-                                    <td colspan="6">
-                                        <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
-                                        <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
+                                            <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
 
                 </div>
-                </div>
-
-
+            </div>
                 
+
+<script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+<script>
+    ///// check box checked tercourier page
+
+    jQuery(document).on('click','#ckbCheckAll',function(){
+        // alert("hhjj");
+        if(this.checked){
+            jQuery('#ter-bulkstatus').prop('disabled', false);
+            jQuery('.chkBoxClass').each(function(){
+            this.checked = true;
+            });
+        }
+        else{
+            jQuery('.chkBoxClass').each(function(){
+            this.checked = false;
+            });
+            jQuery('#ter-bulkstatus').prop('disabled', true);
+        }
+
+    });
+
+    jQuery(document).on('click','.chkBoxClass',function(){
+        if($('.chkBoxClass:checked').length == $('.chkBoxClass').length){
+            $('#ckbCheckAll').prop('checked',true);
+            jQuery('#ter-bulkstatus').prop('disabled', false);
+        }else{
+
+        var checklength = $('.chkBoxClass:checked').length;
+        if(checklength < 1){
+            jQuery('#ter-bulkstatus').prop('disabled', true);
+        }else{
+            jQuery('#ter-bulkstatus').prop('disabled', false);
+        }
+
+        $('#ckbCheckAll').prop('checked',false);
+        }
+    });
+
+</script>
+
+
+@include('models.bulk-statuschange')
 @endsection

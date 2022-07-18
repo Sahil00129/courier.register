@@ -94,4 +94,6 @@ Route::any('add-trrow', [TercourierController::class, 'addTrRow']);
 Route::any('create-terrow', [TercourierController::class, 'createRow']); 
 Route::any('get_employees', [TercourierController::class, 'getEmployees']);
 Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
+Route::any('/update-bulkstatus', [TercourierController::class, 'terBulkstatus']);
+
 

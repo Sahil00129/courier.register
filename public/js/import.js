@@ -62,7 +62,6 @@ $(document).ready(function (e) {
 
 //////////////////////////Add Sender/////////////////////////////////////////////
 $('#new_sender_add').submit(function(e) {
-    //alert('hii');return false;
     e.preventDefault();
     var formData = new FormData(this);
     var name = jQuery('#name').val();
@@ -152,17 +151,13 @@ $('#new_sender_add').submit(function(e) {
                     var arr = lastwrk_date.split('-');
                     var lastwrk_date1 = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]); 
                     var lastwrk_date = lastwrk_date1.getTime();
-                    console.log(lastwrk_date);
                     var empstatus = $('#emp_status').val();
 
                     var dateOffset = (24*60*60*1000) * 90;  // 90 days
-                    console.log(dateOffset);
                     var caldays = lastwrk_date1.setTime(lastwrk_date1.getTime() - dateOffset);
-                    console.log(caldays);
                     var from_date = $('#terfrom_date').val();
                     var arr2 = from_date.split('-');
                     var from_date = new Date(arr2[0]+"-" + arr2[1]+"-"+arr2[2]).getTime();
-                    console.log(from_date);
                     if (empstatus == 'Blocked' || empstatus == '') {
                         if(from_date > lastwrk_date) {
                             swal("Error!", "Last working date should be greater than from date", "error");
@@ -194,15 +189,46 @@ $('#new_sender_add').submit(function(e) {
             }); 
         });
 
-        // $('#new_tercourier_create').click(function(e) {
-        //     docket_date = $('#docket_date').val();
-        //     // alert(docket_date);
-        //     if ($('#emp_status').val() == 'blocked' && $("#emp_status").val() == '') {
-        //         $('.empstatus_error').show();
-        //         return false;
-        //     }else{
-        //         $('.empstatus_error').hide();
-        //     }
-        // });
+        ///////////change bulk status/////////////////
+     $('#ter-bulkstatus').click(function () {
+        var checkedId = [];
+        jQuery('.chkBoxClass:checked').each(function(){
+            checkedId.push(this.value);
+        });
+        var checkedId = $("#tercourier_id").val(checkedId);
+    });
+
+    $('body').on('click', '.bulkstatus-yes', function () { 
+    // jQuery('#update_bulkstatus').submit( function(e){ 
+        // var formData = new FormData(this);
+        var checkedId  =  jQuery("#tercourier_id").val();
+        var given_to   =  jQuery("#given_to").val();
+        var delivery_date  =  jQuery("#delivery_date").val();
+        var bulkstatus = 'bulkstatus';
+
+        if(checkedId == '' || given_to == '' || delivery_date == ''){
+            swal("Error!", "Please fill empity field", "error");
+            return false;
+        }
+        $.ajax({
+            url: '/update-bulkstatus',
+            method: "GET",
+            data : {checkedId:checkedId,given_to:given_to,delivery_date:delivery_date,bulkstatus:bulkstatus},
+            headers : {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType  : 'json',
+            success: function (data) {
+                if(data.success == true){
+                    swal("Success!", "Data has been Updated", "success");
+                    location.reload();
+                }
+                else{
+                    swal("Error!", data.messages, "error");
+                }
+            }
+        })
+    });
+
 
 });

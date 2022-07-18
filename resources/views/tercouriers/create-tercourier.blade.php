@@ -158,12 +158,11 @@
                                 </div>
                             </div>
                         <!--------------- end ------------------>
-                            <h5><b>Handover Details</b></h5>
+                            <!-- <h5><b>Handover Details</b></h5>
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="remarks">Given To</label>
                                     <select class="form-control" id="given_to" name="given_to">
-                                        <!-- <option value="">Select</option> -->
                                         <option value="Veena">Veena</option>
                                     </select>
                                 </div>
@@ -171,7 +170,7 @@
                                     <label for="remarks">Delivery Date</label>
                                     <input type="date" class="form-control" id="delivery_date" name="delivery_date">
                                 </div>
-                            </div>
+                            </div> -->
          
                             <button type="submit" class="btn btn-primary">
                                 <span class="indicator-label">Save</span>

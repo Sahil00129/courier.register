@@ -30,10 +30,12 @@ class TercourierController extends Controller
      */
     public function index(Request $request)
     {
+        $this->prefix = request()->route()->getPrefix();
+
         $query = Tercourier::query();
         $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
         //echo'<pre>';print_r($tercouriers); die;
-        return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers]);
+        return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers,'prefix'=>$this->prefix]);
     }
 
     /**
@@ -333,6 +335,32 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
         return view('tercouriers.terbundles-list',['tercouriers'=>$tercouriers]);
+    }
+
+    public function terBulkstatus(Request $request){
+        $prefix = request()->route()->getPrefix();
+        $tercourierId = $request->checkedId;
+        $cc = explode(',', $tercourierId);
+
+        if(isset($request->bulkstatus)){
+            $checkItem = 0;
+            if($checkItem == 0)
+            {
+                Tercourier::whereIn('id',$cc)->update(['given_to'=>$request->given_to,'delivery_date'=>$request->delivery_date,'status'=>'2']);
+
+                $response['success'] = true;
+                $response['messages'] = 'Status updated successfully';
+            }
+            else
+            {
+                $response['success'] = false;
+                $response['messages'] = 'Can not update status please try again';
+            }
+        }else{
+            $response['success'] = false;
+            $response['messages'] = 'failed!';
+        }
+        return Response::json($response);
     }
 
 }
