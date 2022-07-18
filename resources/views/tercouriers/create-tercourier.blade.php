@@ -80,16 +80,16 @@
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">From</label>
-                                    <input type="text" class="form-control" name="" id="select_employee" autocomplete="off">
-                                    <!-- <select class="form-control  basic" name="sender_id" id="select_employee">
+                                    <!-- <input type="text" class="form-control" name="" id="select_employee" autocomplete="off"> -->
+                                    <select class="form-control  basic" name="sender_id" id="select_employee">
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
-                                        <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}}</option>
+                                        <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}} : {{$sender->status}}</option>
                                       @endforeach
-                                    </select> -->
-                                    <div id="product_list"></div>
+                                    </select>
+                                    <!-- <div id="product_list"></div> -->
                                 </div>
-                                <input type="hidden" class="form-control" name="sender_id"  id="senderID">
+                                <!-- <input type="hidden" class="form-control" name="sender_id"  id="senderID"> -->
                                 <!--------------- Date of Receipt ---------->
                                 <div class="form-group col-md-6">
                                      <label for="inputPassword4">Date of Receipt</label>
@@ -216,48 +216,49 @@
     $(document).ready(function(){
         $('#delivery_date').val(new Date().toJSON().slice(0, 10));
         //////////
-        $('#select_employee').on('keyup',function () {
+        // $('#select_employee').on('keyup',function () {
              
-                var query = $(this).val();
-                //alert(query);
-                $.ajax({
-                    url:'{{ url('autocomplete-search') }}',
-                    type:'GET',
-                    data:{'search':query},
-                    beforeSend:function () {
-                        $('#product_list').empty();
+        //         var query = $(this).val();
+        //         //alert(query);
+        //         $.ajax({
+        //             url:'{{ url('autocomplete-search') }}',
+        //             type:'GET',
+        //             data:{'search':query},
+        //             beforeSend:function () {
+        //                 $('#product_list').empty();
                         
-                    },
-                    success:function (data) {
-                        // console.log(data.fetch);
-                        $('#product_list').html(data);
-                    // $.each(data.fetch, function (index, item) {
-                    //      console.log(item.name);
-                    //     $('#product_list').append('<ul class="list-group" style="display: block; position: relative; z-index: 1"><li class="list-group-item">' + item.name + ':'+ item.location +':'+ item.telephone_no +'</li></ul>');
+        //             },
+        //             success:function (data) {
+        //                 // console.log(data.fetch);
+        //                 $('#location').val('');
+        //                 $('.location1').val('');
+        //                 $('#telephone_no').val('');
+        //                 $('#emp_status').val('');
+        //                 $('#senderID').val('');
+        //                 $('#product_list').html(data);
 
-                    // });
+        //             }
+        //         });
+        //     });
 
+           
+        //     $(document).on('click', 'li', function(){
+        //         var value = $(this).text(); 
+        //         //console.log(value);
+        //         var location = value.split(':');         //break value in js split
+        //         for(var i = 0; i < location.length; i++){
+        //             //console.log(location);
+        //             var slct = location[0]+':'+location[2]+':'+location[3]+':'+location[5] ;
 
-                    }
-                });
-            });
-            $(document).on('click', 'li', function(){
-                var value = $(this).text(); 
-                //console.log(value);
-                var location = value.split(':');         //break value in js split
-                for(var i = 0; i < location.length; i++){
-                    //console.log(location);
-                    var slct = location[0]+':'+location[2]+':'+location[3]+':'+location[5] ;
-
-                $('#select_employee').val(slct);
-                $('#location').val(location[1]);
-                $('.location1').val(location[1]);
-                $('#telephone_no').val(location[4]);
-                $('#emp_status').val(location[5]);
-                $('#senderID').val(location[6]);
-                $('#product_list').html("");
-                }
-            });
+        //         $('#select_employee').val(slct);
+        //         $('#location').val(location[1]);
+        //         $('.location1').val(location[1]);
+        //         $('#telephone_no').val(location[4]);
+        //         $('#emp_status').val(location[5]);
+        //         $('#senderID').val(location[6]);
+        //         $('#product_list').html("");
+        //         }
+        //     });
     /*   $('#search').on('keyup',function () {
                 var query = $(this).val();
                 $.ajax({
@@ -309,10 +310,13 @@
                     $("#telephone_no").val(telephone_no);
                     $("#emp_status").val(status);
                     $("#last_working_date").val(res.data.last_working_date);
+                    $(".location1").val(location);
                 }
             }
         });
     });
+
+    
         
 
 });  
