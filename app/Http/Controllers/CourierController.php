@@ -41,15 +41,8 @@ class CourierController extends Controller
     public function autocompleteSearch(Request $request)
     { 
         if ($request->ajax()) {
-            $data = Sender::orderby('name')->select('id', 'location','name','type','telephone_no','status','ax_id','employee_id')->where('name', 'like', '%' .$request->search . '%')->orWhere('location', 'like', '%' .$request->search . '%')->orWhere('telephone_no', 'like', '%' .$request->search . '%')->orWhere('employee_id', 'like', '%' .$request->search . '%')->get();
+            $data = Sender::orderby('name')->select('id', 'location','name','type','telephone_no','status','ax_id','employee_id')->where('name', 'like', '%' .$request->search . '%')->orWhere('location', 'like', '%' .$request->search . '%')->orWhere('employee_id', 'like', '%' .$request->search . '%')->get();
 
-            // $response['fetch'] = $data;
-            // $response['success'] = true;
-            // $response['messages'] = 'Succesfully Submitted';
-            // return Response::json($response);    
-
-               // $data = Sender::where('name','LIKE',$request->search.'%')->orWhere('location','LIKE',      $request->search.'%')->get();
-            // echo'<pre>'; print_r($data); die;
             $output = '';
             if (count($data)>0) {
                 $output = '<ul class="list-group" style="display: block; position: relative; z-index: 1">';
@@ -58,7 +51,6 @@ class CourierController extends Controller
                     
                 }
                 $output .= '</ul>';
-                // $output .= '<input type="text" name="sender_id" value="'.$row->id.'" />';
             }else {
                 $output .= '<li class="list-group-item disabled">'.'No Data Found'
             ;
@@ -159,7 +151,6 @@ class CourierController extends Controller
                 'remarks' => $request->remarks,
                 'receipt_date' => $request->receipt_date,
             ]);
-            // echo'<pre>'; print_r($sender); die;
             DB::table('new_courier_created')->insert($sender);
         }
         $response['success'] = true;
