@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('posts', PostController::class);
 });
 
-///////////////////
+/////////////////// 
 Route::get('/import-Data', [ImportExportController::class,'ImportExcel']);
 Route::get('/add-sender', [SenderController::class,'addSenderIndex']);
 Route::get('/sender-table', [SenderController::class,'senderTable']);

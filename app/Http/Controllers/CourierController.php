@@ -41,23 +41,31 @@ class CourierController extends Controller
     public function autocompleteSearch(Request $request)
     { 
         if ($request->ajax()) {
-            $data = Sender::orderby('name')->select('location','name','type','telephone_no')->where('name', 'like', '%' .$request->search . '%')->orWhere('location', 'like', '%' .$request->search . '%')->get();
+            $data = Sender::orderby('name')->select('id', 'location','name','type','telephone_no','status','ax_id','employee_id')->where('name', 'like', '%' .$request->search . '%')->orWhere('location', 'like', '%' .$request->search . '%')->orWhere('telephone_no', 'like', '%' .$request->search . '%')->orWhere('employee_id', 'like', '%' .$request->search . '%')->get();
+
+            // $response['fetch'] = $data;
+            // $response['success'] = true;
+            // $response['messages'] = 'Succesfully Submitted';
+            // return Response::json($response);    
+
                // $data = Sender::where('name','LIKE',$request->search.'%')->orWhere('location','LIKE',      $request->search.'%')->get();
-              // echo'<pre>'; print_r($data); die;
+            // echo'<pre>'; print_r($data); die;
             $output = '';
             if (count($data)>0) {
                 $output = '<ul class="list-group" style="display: block; position: relative; z-index: 1">';
                 foreach ($data as $row) {
-                    $output .= '<li class="list-group-item">'.$row->name.':'.$row->location.':'.$row->telephone_no.':'.$row->type.'</li>';  
+                    $output .= '<li class="list-group-item"><ul><li>'.$row->name.' : '.$row->location.' : '.$row->ax_id.' : '.$row->employee_id.'</li><li">:'.$row->telephone_no.'</li><li style="font-weight: bold;">:'.$row->status.'</li><li style="font-weight: bold; display: none;">:'.$row->id.'</li></ul></li>'; 
+                    
                 }
                 $output .= '</ul>';
+                // $output .= '<input type="text" name="sender_id" value="'.$row->id.'" />';
             }else {
-                $output .= '<li class="list-group-item disabled">'.'No Data Found'.'</li> <a href="'.url('add-sender').'" class="btn btn-sm btn-primary" >Add Sender</a>'
+                $output .= '<li class="list-group-item disabled">'.'No Data Found'
             ;
             }
             return $output;
         }
-        return view('pages.create-courier');  
+         return view('tercouriers.create-tercourier');  
     }
 
     public function newCourier(Request $request)

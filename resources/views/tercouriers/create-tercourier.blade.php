@@ -3,17 +3,28 @@
 @section('content')
 <style>
 .list-group{
-    width: 300px !important;
+    width: 500px !important;
    
     padding: 10px !important;
     list-style-type: none;
 }
-.list-group {
+/* .list-group {
     max-height: 230px;
     overflow-y: auto;
-    / prevent horizontal scrollbar /
-    overflow-x: hidden;
-  }
+    /* // prevent horizontal scrollbar / */
+    /* overflow-x: hidden;
+  } */
+  .list-group {
+    max-height: 439px;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+#product_list {
+    position: absolute;
+    background: #e2e2e2;
+    z-index: 9999;
+    margin-top: 10px;
+}
   /* IE 6 doesn't support max-height
    * we use height instead, but this forces the menu to always be this tall
    */
@@ -21,15 +32,26 @@
     height: 100px;
   }
    li:hover{  
-    color: blue;
+    color: #1f4eaf;
  }  
  .editlable{
    
     color: gray;
 
  }
- <meta name="csrf-token" content="{{ csrf_token() }}" />
+ .list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px;
+    background-color: #f7f2f2;
+    border: 1pxsolidrgba(0,0,0,.125);
+    color: #000;
+}
+ /* <meta name="csrf-token" content="{{ csrf_token() }}" /> */
 </style>
+<?php
+// echo'<pre>'; print_r($lastdate->date_of_receipt); die;
+?>
    
 <div class="container">
     <div class="container">
@@ -58,17 +80,20 @@
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">From</label>
-                                    <select class="form-control  basic" name="sender_id" id="select_employee">
+                                    <input type="text" class="form-control" name="" id="select_employee" autocomplete="off">
+                                    <!-- <select class="form-control  basic" name="sender_id" id="select_employee">
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
                                         <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}}</option>
                                       @endforeach
-                                    </select>
+                                    </select> -->
+                                    <div id="product_list"></div>
                                 </div>
+                                <input type="hidden" class="form-control" name="sender_id"  id="senderID">
                                 <!--------------- Date of Receipt ---------->
                                 <div class="form-group col-md-6">
                                      <label for="inputPassword4">Date of Receipt</label>
-                                    <input type="date" class="form-control" name="date_of_receipt" Required>
+                                    <input type="date" class="form-control" name="date_of_receipt" value="{{$lastdate->date_of_receipt}}" Required>
                                 </div>
                                 <!--------------- end ------------------>
                             </div>
@@ -118,7 +143,7 @@
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-4">
                                     <label for="inputState">Location</label>
-                                    <input type="text" class="form-control" id="location" name="location" Required>
+                                    <input type="text" class="form-control location1" id="location" name="location" Required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputState">Company Name</label>
@@ -189,6 +214,50 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 <script>
     $(document).ready(function(){
+        $('#delivery_date').val(new Date().toJSON().slice(0, 10));
+        //////////
+        $('#select_employee').on('keyup',function () {
+             
+                var query = $(this).val();
+                //alert(query);
+                $.ajax({
+                    url:'{{ url('autocomplete-search') }}',
+                    type:'GET',
+                    data:{'search':query},
+                    beforeSend:function () {
+                        $('#product_list').empty();
+                        
+                    },
+                    success:function (data) {
+                        // console.log(data.fetch);
+                        $('#product_list').html(data);
+                    // $.each(data.fetch, function (index, item) {
+                    //      console.log(item.name);
+                    //     $('#product_list').append('<ul class="list-group" style="display: block; position: relative; z-index: 1"><li class="list-group-item">' + item.name + ':'+ item.location +':'+ item.telephone_no +'</li></ul>');
+
+                    // });
+
+
+                    }
+                });
+            });
+            $(document).on('click', 'li', function(){
+                var value = $(this).text(); 
+                //console.log(value);
+                var location = value.split(':');         //break value in js split
+                for(var i = 0; i < location.length; i++){
+                    //console.log(location);
+                    var slct = location[0]+':'+location[2]+':'+location[3]+':'+location[5] ;
+
+                $('#select_employee').val(slct);
+                $('#location').val(location[1]);
+                $('.location1').val(location[1]);
+                $('#telephone_no').val(location[4]);
+                $('#emp_status').val(location[5]);
+                $('#senderID').val(location[6]);
+                $('#product_list').html("");
+                }
+            });
     /*   $('#search').on('keyup',function () {
                 var query = $(this).val();
                 $.ajax({

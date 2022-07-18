@@ -47,7 +47,10 @@ class TercourierController extends Controller
         $couriers = DB::table('courier_companies')->select ('id','courier_name')->distinct()->get();
         $categorys = DB::table('catagories')->select ('catagories')->distinct()->get();
         $forcompany = DB::table('for_companies')->select ('for_company')->distinct()->get();
-        return view('tercouriers.create-tercourier',  ['senders'=>$senders, 'couriers' => $couriers ,'categorys' => $categorys ,'forcompany' => $forcompany]);
+        //$lastdate = DB::table('tercouriers')->select('date_of_receipt')->latest()->distinct();
+        $lastdate = DB::table('tercouriers')->select('date_of_receipt','docket_no')->orderby('id', 'desc')->first();
+        //echo'<pre>'; print_r($lastdate);die;
+        return view('tercouriers.create-tercourier',  ['senders'=>$senders, 'couriers' => $couriers ,'categorys' => $categorys ,'forcompany' => $forcompany,'lastdate' => $lastdate]);
     }
 
     /**
