@@ -146,33 +146,33 @@ $('#new_sender_add').submit(function(e) {
                 beforeSend: function(){
                     $(".indicator-progress").show(); 
                     $(".indicator-label").hide();
-                    var nowdate1 = new Date();
-                    var nowdate = nowdate1.getTime();
-                    var lastwrk_date = $('#last_working_date').val();	
-                    var arr = lastwrk_date.split('-');
-                    var lastwrk_date1 = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]); 
-                    var lastwrk_date = lastwrk_date1.getTime();
-                    console.log(lastwrk_date);
-                    var empstatus = $('#emp_status').val();
+                    // var nowdate1 = new Date();
+                    // var nowdate = nowdate1.getTime();
+                    // var lastwrk_date = $('#last_working_date').val();	
+                    // var arr = lastwrk_date.split('-');
+                    // var lastwrk_date1 = new Date(arr[2]+"-" + arr[1]+"-"+arr[0]); 
+                    // var lastwrk_date = lastwrk_date1.getTime();
+                    // console.log(lastwrk_date);
+                    // var empstatus = $('#emp_status').val();
 
-                    var dateOffset = (24*60*60*1000) * 90;  // 90 days
-                    console.log(dateOffset);
-                    var caldays = lastwrk_date1.setTime(lastwrk_date1.getTime() - dateOffset);
-                    console.log(caldays);
-                    var from_date = $('#terfrom_date').val();
-                    var arr2 = from_date.split('-');
-                    var from_date = new Date(arr2[0]+"-" + arr2[1]+"-"+arr2[2]).getTime();
-                    console.log(from_date);
-                    if (empstatus == 'Blocked' || empstatus == '') {
-                        if(from_date > lastwrk_date) {
-                            swal("Error!", "Last working date should be greater than from date", "error");
-                            return false;
-                        }
-                        else if(caldays > from_date) {
-                            swal("Error!", "Last working date should be less than 90 days", "error");
-                            return false;
-                        }
-                    }
+                    // var dateOffset = (24*60*60*1000) * 90;  // 90 days
+                    // console.log(dateOffset);
+                    // var caldays = lastwrk_date1.setTime(lastwrk_date1.getTime() - dateOffset);
+                    // console.log(caldays);
+                    // var from_date = $('#terfrom_date').val();
+                    // var arr2 = from_date.split('-');
+                    // var from_date = new Date(arr2[0]+"-" + arr2[1]+"-"+arr2[2]).getTime();
+                    // console.log(from_date);
+                    // if (empstatus == 'Blocked' || empstatus == '') {
+                    //     if(from_date > lastwrk_date) {
+                    //         swal("Error!", "Last working date should be greater than from date", "error");
+                    //         return false;
+                    //     }
+                    //     else if(caldays > from_date) {
+                    //         swal("Error!", "Last working date should be less than 90 days", "error");
+                    //         return false;
+                    //     }
+                    // }
                     
                 },
                 complete: function (response) {
