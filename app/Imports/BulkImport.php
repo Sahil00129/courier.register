@@ -18,13 +18,13 @@ class BulkImport implements ToModel,WithHeadingRow
     public function model(array $row)
     {
         if($_POST['import_type'] == 1){
-           //echo "<pre>"; print_r($row);die;
             $lastworkingdate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['last_working_date']);
             $lastworkingdate = $lastworkingdate->format('d-m-Y');
             $sender = DB::table('sender_details')
                 ->where('ax_id', '=', $row['ax_id'])
                 ->first();
-            if(is_null($sender)) {
+               
+            if(empty($sender)) {
                 if($row['type'] == 'Employee'){
                     return new Sender([
                         'ax_id' => $row['ax_id'],
@@ -36,11 +36,11 @@ class BulkImport implements ToModel,WithHeadingRow
                         'status' => $row['status'],
                         'last_working_date' => $lastworkingdate,
                     ]);
-                }else{
-                    DB::table('sender_details')
-                    ->where('name',$row['name'])->update([ 'name' => $row['name'], 'type' => $row['type'], 'location' => $row['location'], 'telephone_no' => $row['telephone_no'] ]);
                 }
-            }
+            }else{
+               DB::table('sender_details')
+               ->where('ax_id', $row['ax_id'])->update(['status' => $row['status'] ]);
+           }
         }
 
         if($_POST['import_type'] == 2){
