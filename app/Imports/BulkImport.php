@@ -18,7 +18,6 @@ class BulkImport implements ToModel,WithHeadingRow
     public function model(array $row)
     {
         if($_POST['import_type'] == 1){
-        //    echo "<pre>"; print_r($row);die;dd
             $lastworkingdate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['last_working_date']);
             $lastworkingdate = $lastworkingdate->format('d-m-Y');
             $sender = DB::table('sender_details')
@@ -39,7 +38,6 @@ class BulkImport implements ToModel,WithHeadingRow
                     ]);
                 }
             }else{
-                //dd('ll');
                DB::table('sender_details')
                ->where('ax_id', $row['ax_id'])->update(['status' => $row['status'] ]);
            }
