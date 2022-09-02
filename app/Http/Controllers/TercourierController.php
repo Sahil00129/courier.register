@@ -13,6 +13,8 @@ use DB;
 use URL;
 use Helper;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
+
 
 class TercourierController extends Controller
 {
@@ -30,9 +32,25 @@ class TercourierController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Tercourier::query();
-        $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-        //echo'<pre>';print_r($tercouriers); die;
+     
+        if (Auth::check()) {
+            $query = Tercourier::query();
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name=$data->roles[0]->name;
+            if($name === "tr admin")
+            {
+                $tercouriers = $query->where('status', 2)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+            }
+            else
+            {
+                $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+            }
+        //    echo'<pre>'; print_r(); die;
+        }
+       
+      
+        // echo'<pre>';print_r($query); die;
         return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers]);
     }
 
@@ -336,6 +354,19 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
         return view('tercouriers.terbundles-list',['tercouriers'=>$tercouriers]);
+    }
+
+
+    // Dhruv code 
+    public function change_status_to_handover(Request $request)
+    {
+        // return 'hello'; die;
+        $data=$request->all();
+        $new_data = explode("|",$data['selected_value']);
+        // return $new_data;
+        $info=Tercourier::get_details_of_employee($new_data);
+        // $info=Tercourier::get_details_of_employee($data['selected_value']);
+        return $info;
     }
 
 }

@@ -41,9 +41,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('posts', PostController::class);
-});
 
-/////////////////// 
+    ////////////////// 
 Route::get('/import-Data', [ImportExportController::class,'ImportExcel']);
 Route::get('/add-sender', [SenderController::class,'addSenderIndex']);
 Route::get('/sender-table', [SenderController::class,'senderTable']);
@@ -95,3 +94,14 @@ Route::any('create-terrow', [TercourierController::class, 'createRow']);
 Route::any('get_employees', [TercourierController::class, 'getEmployees']);
 Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
 
+
+
+
+});
+
+/
+// Dhruv routes
+
+Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
+
+// Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

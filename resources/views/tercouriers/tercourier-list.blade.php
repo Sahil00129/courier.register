@@ -1,115 +1,199 @@
 @extends('layouts.main')
 @section('title', 'Courier List')
 @section('content')
- <!-- BEGIN PAGE LEVEL CUSTOM STYLES -->
- <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/datatables.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/custom_dt_html5.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/dt-global_style.css')}}">
+    <!-- BEGIN PAGE LEVEL CUSTOM STYLES -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/custom_dt_html5.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"
+        integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.2.15/dist/vee-validate.min.js"
+        integrity="sha256-m+taJnCBUpRECKCx5pbA0mw4ckdM2SvoNxgPMeUJU6E=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"
+        integrity="sha256-bd8XIKzrtyJ1O5Sh3Xp3GiuMIzWC42ZekvrMMD4GxRg=" crossorigin="anonymous"></script>
     <style>
         .btn {
             padding: 10px 10px;
             font-size: 10px;
         }
     </style>
+
+
     <!-- END PAGE LEVEL CUSTOM STYLES -->
-<div class="layout-px-spacing">
-                <div class="page-header">
-                    <nav class="breadcrumb-one" aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Courier List</a></li>
-                        </ol>
-                    </nav>
-                </div>
-                
-                <div class="row layout-top-spacing" id="cancel-row">
-                
-                    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-                        <div class="widget-content widget-content-area br-6">
-                            <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>UN ID</th>
-                                        <th>Status</th>
-                                        <th>Date of Receipt</th>
-                                        <th>Sender Name</th>
-							         	<th>AX ID</th>
-								        <th>Employee ID</th>
-								        <th>Location</th>
-                                        <th>Company Name</th>
-                                        <th>TER Amount</th>
-                                        <th>TER Period From</th>
-                                        <th>TER Period To</th>
-                                        <th>Other Details</th>
-                                        <th width="200px;">Remarks</th>
-								        <th>Given To</th>
-                                        <th>Handover Date</th>
-                                        <th>Courier Name</th>
-							         	<th>Docket No</th>
-								        <th>Docket Date</th>
-                                        <!-- <th class="dt-no-sorting">Actions</th> -->
-                                    </tr>
-                                </thead>
-                                <tbody id="tb">
-                                <?php $i=1;
+    <div class="layout-px-spacing" id="divbox">
+        <div class="page-header">
+            <nav class="breadcrumb-one" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Courier List</a></li>
+                </ol>
+            </nav>
+        </div>
+
+        <button class="btn btn-success" v-on:click="change_to_handover()">Handover</button>
+
+        <div class="row layout-top-spacing" id="cancel-row">
+            <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+                <div class="widget-content widget-content-area br-6">
+                    <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th> <input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
+                                </th>
+                                <th>UN ID</th>
+                                <th>Status</th>
+                                <th>Date of Receipt</th>
+                                <th>Sender Name</th>
+                                <th>AX ID</th>
+                                <th>Employee ID</th>
+                                <th>Location</th>
+                                <th>Company Name</th>
+                                <th>TER Amount</th>
+                                <th>TER Period From</th>
+                                <th>TER Period To</th>
+                                <th>Other Details</th>
+                                <th width="200px;">Remarks</th>
+                                <th>Given To</th>
+                                <th>Handover Date</th>
+                                <th>Courier Name</th>
+                                <th>Docket No</th>
+                                <th>Docket Date</th>
+                                <!-- <th class="dt-no-sorting">Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="tb">
+                            <?php $i=1;
                                     foreach ($tercouriers as $key => $tercourier) {  
                                 ?>
-                                    <tr>
-                                        <td>{{$tercourier->id }}</td>
-                                        <?php
-                                    if($tercourier->status==1){
-                                        $status = 'Received';
-                                        $class = "btn-success";
-                                    }elseif($tercourier->status==2){
-                                        $status = 'Handover';
-                                        $class = "btn-warning";
-                                    }else{
-                                        $status = 'Cancel';
-                                        $class = "btn-danger";
-                                    }
-                                    ?>
-                                        <td>@if($tercourier->status == 1)
-                                        <span class="btn {{$class}}">{{ $status }}</span>
-                                        @else
-                                        <span class="btn {{$class}}">{{ $status }}</span>
-                                        @endif
-                                    </td>
-                                        <td>{{Helper::ShowFormatDate($tercourier->date_of_receipt)}}</td>
-                                        <td>{{ucwords(@$tercourier->SenderDetail->name) ?? '-'}}</td>
-                                        <td>{{$tercourier->SenderDetail->ax_id ?? '-'}}</td>
-                                        <td>{{$tercourier->SenderDetail->employee_id ?? '-'}}</td>
-                                        <td>{{ucwords($tercourier->location) ?? '-'}}</td> 
-                                        <td>{{$tercourier->company_name ?? '-'}}</td> 
-                                        <td>{{$tercourier->amount ?? '-'}}</td> 
-                                        <td>{{Helper::ShowFormatDate($tercourier->terfrom_date)}}</td>
-                                        <td>{{Helper::ShowFormatDate($tercourier->terto_date)}}</td>
-                                        <td>{{ucfirst($tercourier->details) ?? '-'}}</td>
-                                        <td>{{ucfirst($tercourier->remarks) ?? '-'}}</td>
-                                        <td>{{$tercourier->given_to ?? '-'}}</td>
-                                        <td>{{Helper::ShowFormatDate($tercourier->delivery_date)}}</td>
-                                        <td>{{ucwords(@$tercourier->CourierCompany->courier_name) ?? '-'}}</td>
-                                        <td>{{$tercourier->docket_no ?? '-'}}</td>
-                                        <td>{{Helper::ShowFormatDate($tercourier->docket_date)}}</td>
-                                        <!-- <td> <a href="{{ url('edit-tercourier/'.$tercourier->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="delete-courier/{{$tercourier->id}}" class="btn btn-danger btn-sm">Delete</a>   
-                                        </td> -->
-                                    </tr>
-                                <?php } ?>
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td colspan="6">
-                                        <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
-                                        <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                            </table>
-                        </div>
-                    </div>
-
+                            <tr>
+                                <td><input type="checkbox" id="vehicle1" name="vehicle1[]" class="selected_box"
+                                        value="<?php echo $tercourier->id; ?>"></td>
+                                <td>{{ $tercourier->id }}</td>
+                                <?php
+                                if ($tercourier->status == 1) {
+                                    $status = 'Received';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 2) {
+                                    $status = 'Handover';
+                                    $class = 'btn-warning';
+                                } else {
+                                    $status = 'Cancel';
+                                    $class = 'btn-danger';
+                                }
+                                ?>
+                                <td>
+                                    @if ($tercourier->status == 1)
+                                        <span class="btn {{ $class }}">{{ $status }}</span>
+                                    @else
+                                        <span class="btn {{ $class }}">{{ $status }}</span>
+                                    @endif
+                                </td>
+                                <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
+                                <td>{{ ucwords(@$tercourier->SenderDetail->name) ?? '-' }}</td>
+                                <td>{{ $tercourier->SenderDetail->ax_id ?? '-' }}</td>
+                                <td>{{ $tercourier->SenderDetail->employee_id ?? '-' }}</td>
+                                <td>{{ ucwords($tercourier->location) ?? '-' }}</td>
+                                <td>{{ $tercourier->company_name ?? '-' }}</td>
+                                <td>{{ $tercourier->amount ?? '-' }}</td>
+                                <td>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }}</td>
+                                <td>{{ Helper::ShowFormatDate($tercourier->terto_date) }}</td>
+                                <td>{{ ucfirst($tercourier->details) ?? '-' }}</td>
+                                <td>{{ ucfirst($tercourier->remarks) ?? '-' }}</td>
+                                <td>{{ $tercourier->given_to ?? '-' }}</td>
+                                <td>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</td>
+                                <td>{{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}</td>
+                                <td>{{ $tercourier->docket_no ?? '-' }}</td>
+                                <td>{{ Helper::ShowFormatDate($tercourier->docket_date) }}</td>
+                                <!-- <td> <a href="{{ url('edit-tercourier/' . $tercourier->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="delete-courier/{{ $tercourier->id }}" class="btn btn-danger btn-sm">Delete</a>
+                                                </td> -->
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <a href="javascript:;" class="btn btn-danger" id="addmore"><i
+                                            class="fa fa-fw fa-plus-circle"></i> Add row</a>
+                                    <button type="submit" name="save" id="save" value="save"
+                                        class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                </div>
+            </div>
+
+        </div>
+    </div>
 
 
-                
+
+
+    <script>
+        new Vue({
+            el: '#divbox',
+            // components: {
+            //   ValidationProvider
+            // },
+            data: {
+
+            },
+            created: function() {
+                // alert(this.got_details)
+                //   alert('hello');
+            },
+            methods: {
+                select_all_trx: function() {
+                    var x = this.$el.querySelector("#select_all");
+                    var y = this.$el.querySelectorAll(".selected_box");
+                    if (x.checked == true) {
+                        for (var i = 0; i < y.length; i++) {
+                            y[i].checked = true;
+                        }
+                    } else {
+                        for (i = 0; i < y.length; i++) {
+                            y[i].checked = false;
+                        }
+                    }
+                },
+                change_to_handover: function() {
+                    var x = this.$el.querySelector("#tb");
+                    var y = x.querySelectorAll(".selected_box");
+                    var trx_str = "";
+
+                    for (var i = 0; i < y.length; i++) {
+                        // console.log(y[i].value);
+                        if (y[i].checked) {
+                            if (trx_str == "") {
+                                trx_str += y[i].value;
+                            } else {
+                                trx_str += "|" + y[i].value;
+                            }
+                        }
+                    }
+
+                    axios.post('/change_status', {
+                            'selected_value': trx_str
+                        })
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data >= 1) {
+                        location.reload();
+                            } else {
+                                swal('error',"This record has been already updated",'error')
+                            }
+                            
+                        }).catch(error => {
+
+                            console.log(response)
+                            this.apply_offer_btn = 'Apply';
+
+                        })
+                }
+
+
+            }
+        })
+    </script>
+
 @endsection
