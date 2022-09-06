@@ -126,6 +126,8 @@
 	});
 </script>
 
+
+
 <script>
     $(document).ready(function(){
 		//alert('h'); die;
@@ -166,6 +168,8 @@
 		});
 	});
 </script>
+
+
 
 <!--<script>
 $('.delete-confirm').on('click', function () {

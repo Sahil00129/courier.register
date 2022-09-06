@@ -38,20 +38,25 @@ class TercourierController extends Controller
             $user = Auth::user();
             $data = json_decode(json_encode($user));
             $name=$data->roles[0]->name;
+            $role = 'Admin';
+            // echo'<pre>'; print_r($name); die;
             if($name === "tr admin")
             {
-                $tercouriers = $query->where('status', 2)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+                $tercouriers = $query->whereIn('status',['2','3'])->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+                $role="Tr Admin";
+                // echo'<pre>'; print_r($tercouriers->status); die;
+                return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers, 'role' => $role]);
             }
             else
             {
                 $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
             }
-        //    echo'<pre>'; print_r(); die;
+        //    echo'<pre>'; print_r($name); die;
         }
        
       
         // echo'<pre>';print_r($query); die;
-        return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers]);
+        return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers, 'role' => $role]);
     }
 
     /**
@@ -367,6 +372,46 @@ class TercourierController extends Controller
         $info=Tercourier::get_details_of_employee($new_data);
         // $info=Tercourier::get_details_of_employee($data['selected_value']);
         return $info;
+    }
+
+    public function add_details_to_DB(Request $request)
+    {
+        // return [$amount,$voucher_code];
+        $data=$request->all();
+        $voucher_code=$data['coupon_code'];
+        $amount=$data['amount'];
+        $id=$data['selected_id'];
+        if (Auth::check()) {
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name=$data->name;
+            // return $name;
+            if($name === "tr admin")
+            {
+                $add_data = Tercourier::add_data($voucher_code,$amount,$id);
+                return $add_data;
+            }
+            else{
+                return "You don't have rights for this step";
+            }
+            // else
+            // {
+            //     $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+            // }
+        //    echo'<pre>'; print_r(); die;
+        // return [$amount,$voucher_code];
+        }
+        
+    }
+
+    public function add_multi_details_to_DB(Request $request)
+    {
+        $data=$request->all();
+        $voucher_code = explode("|",$data['coupon_code']);
+        $amount = explode("|",$data['amount']);
+        $id = explode("|",$data['selected_id']);
+        $add_multiple_data = Tercourier::add_multiple_data($voucher_code,$amount,$id);
+        return $add_multiple_data;
     }
 
 }

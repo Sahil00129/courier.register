@@ -99,9 +99,11 @@ Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
 
 });
 
-/
+
 // Dhruv routes
 
 Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
+Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
+Route::post('add_multiple_data', [TercourierController::class, 'add_multi_details_to_DB']);
 
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

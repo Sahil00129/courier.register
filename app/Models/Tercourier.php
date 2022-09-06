@@ -35,4 +35,58 @@ class Tercourier extends Model
         return $data;
         
     }
+
+   public static function add_data($voucher,$amount,$unique_ids)
+   {
+    $data['voucher_code'] = $voucher;
+    $data['payable_amount'] = $amount;
+    $data['status']=3;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $query =  DB::table('tercouriers')->where('id', $unique_ids)
+    ->update($data);
+
+    // if($query)
+    // {
+    //     $new_query_data=DB::table('tercouriers')->whereIn('status',[2,3])->get()->toArray();
+    // }else{
+    //     $new_query_data=0;
+    // }
+
+    // return $new_query_data;
+    return $query;
+   }
+
+   public static function add_multiple_data($voucher,$amount,$unique_ids)
+   {
+
+    $data['voucher_code'] = $voucher;
+    $data['payable_amount'] = $amount;
+    $data['id']=$unique_ids;
+
+    // $checkquery=DB::table('tercouriers')->select('amount','id')->whereIn('id',$unique_ids)->get()->toArray();
+    // return $checkquery;
+
+    foreach($data['id'] as $key => $newdata){
+        $payable_amount=$data['payable_amount'][$key];
+        $coupon=$data['voucher_code'][$key];
+        $id=$newdata;
+        $checkquery=DB::table('tercouriers')->select('amount','id')->where('id',$id)->get();
+
+        if($checkquery[0]->amount > $payable_amount)
+        {
+            $query= DB::table('tercouriers')->
+            where('id', $id)->
+            update(array('payable_amount'=>$payable_amount,'voucher_code'=> $coupon,
+            'status'=>3, 'updated_at'=>date('Y-m-d H:i:s')));
+        }else {
+            return 0;
+        }
+      
+        }
+
+        return $query;
+
+        
+   }
+
 }
