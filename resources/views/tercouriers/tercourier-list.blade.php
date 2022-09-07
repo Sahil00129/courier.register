@@ -14,6 +14,9 @@
         padding: 10px 10px;
         font-size: 10px;
     }
+    #divbox{
+        zoom: 75%;
+    }
 </style>
 
 
