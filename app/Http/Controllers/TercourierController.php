@@ -49,7 +49,7 @@ class TercourierController extends Controller
             }
             else
             {
-                $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+                $tercouriers = $query->whereIn('status',['1','2'])->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
             }
         //    echo'<pre>'; print_r($name); die;
         }
