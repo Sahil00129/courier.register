@@ -112,7 +112,7 @@
                                         </td>
                                     <?php  } else { ?>
                                         <td>
-                                            <input type="number" placeholder="Enter Amount" v-on:keyup=check_amount_id(<?php echo $tercourier->id; ?>) id="amount" class="amount" name="amount" :disabled="set_input_off"/>
+                                            <input type="number" placeholder="Enter Amount" v-on:keyup=check_amount_id(<?php echo $tercourier->id; ?>) id="amount" class="amount" name="amount"  />
                                         </td>
                                     <?php } ?>
 
@@ -123,7 +123,7 @@
                                         </td>
                                     <?php  } else { ?>
                                         <td>
-                                            <input type="text" placeholder="Enter Coupan" id="voucher_code" v-on:keyup=check_coupon_id(<?php echo $tercourier->id; ?>) name="voucher_code" class="voucher_code" :disabled="set_input_off"/>
+                                            <input type="text" placeholder="Enter Coupan" id="voucher_code" v-on:keyup=check_coupon_id(<?php echo $tercourier->id; ?>) name="voucher_code" class="voucher_code" />
                                         </td>
                                     <?php } ?>
 
@@ -271,7 +271,6 @@
         data: {
             unique_amount_id: "",
             unique_coupon_id: "",
-            set_input_off:false,
         },
         created: function() {
             // alert(this.got_details)
@@ -433,7 +432,7 @@
                 // alert($total_amount);
                 // alert(amount)
                 // return $total_amount;
-                if ($total_amount > amount) {
+                if ($total_amount >= amount) {
                     if (amount != "" && coupon != "") {
 
                         if (this.unique_amount_id === this.unique_coupon_id && this.unique_amount_id === unique_id) {
@@ -447,7 +446,6 @@
                                     if (response.data >= 1) {
                                         amount = "";
                                         coupon = "";
-                                        // this.set_input_off=true;
                                         location.reload();
                                     } else {
                                         swal('error', "Either Record is already updated or not selected", 'error')
