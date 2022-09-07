@@ -29,6 +29,8 @@ class Tercourier extends Model
     public static function get_details_of_employee($unique_ids)
     {
         $change['status'] = 2;
+        $change['given_to'] = 'TR-Department';
+        $change['delivery_date'] = date('Y-m-d');
         // $change['status'] = 1;
         $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->where('status',1)->update($change);
         // $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->update($change);
