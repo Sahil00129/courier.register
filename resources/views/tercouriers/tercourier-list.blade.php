@@ -146,14 +146,14 @@
                                 </tr>
                             <?php } ?>
                         </tbody>
-                        <tfoot>
+                        <!-- <tfoot>
                             <tr>
                                 <td colspan="6">
                                     <a href="javascript:;" class="btn btn-danger" id="addmore"><i class="fa fa-fw fa-plus-circle"></i> Add row</a>
                                     <button type="submit" name="save" id="save" value="save" class="btn btn-primary" hidden><i class="fa fa-fw fa-save"></i> Save</button>
                                 </td>
                             </tr>
-                        </tfoot>
+                        </tfoot> -->
 
                     </table>
 
