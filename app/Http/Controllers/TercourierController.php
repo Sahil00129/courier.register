@@ -382,10 +382,11 @@ class TercourierController extends Controller
         $amount=$data['amount'];
         $id=$data['selected_id'];
         if (Auth::check()) {
-            $user = Auth::user();
+            $user = Auth::user()->roles()->get();
             $data = json_decode(json_encode($user));
-            $name=$data->name;
-            // return $name;
+            
+            // $name=$data->name;
+            $name = $data[0]->name;
             if($name === "tr admin")
             {
                 $add_data = Tercourier::add_data($voucher_code,$amount,$id);
