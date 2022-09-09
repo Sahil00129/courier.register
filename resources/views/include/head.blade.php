@@ -4,8 +4,8 @@
  
     <link rel="icon" type="image/x-icon" href="{{asset('assets/img/favicon.ico')}}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{asset('assets/css/loader.css')}}" rel="stylesheet" type="text/css" />
-    <script src="{{asset('assets/js/loader.js')}}"></script>
+    <!-- <link href="{{asset('assets/css/loader.css')}}" rel="stylesheet" type="text/css" />
+    <script src="{{asset('assets/js/loader.js')}}"></script> -->
 
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet">
