@@ -438,10 +438,12 @@ class TercourierController extends Controller
         $tercourier_table = $query->where('id',$id)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
        if($tercourier_table[0]->payable_amount == "" && $tercourier_table[0]->voucher_code == "")
        {
+        $tercourier_table['status_of_data']="0";
         return $tercourier_table;
        }
        else{
-        return 0;
+        $tercourier_table['status_of_data']="1";
+        return $tercourier_table;
        }
     }
 

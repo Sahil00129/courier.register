@@ -87,36 +87,36 @@
                     </div>
                     <div class="widget-content widget-content-area">
                         <h5><b>Sender Details</b></h5>
-                       
 
-                            <div class="form-row mb-2">
-                                <div class="form-group col-md-6">
-                                    <label for="inputPassword4">From</label>
-                                    <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name" disabled>
-                                </div>
-                                <!-- <input type="hidden" class="form-control" name="sender_id"  id="senderID"> -->
-                                <!--------------- Date of Receipt ---------->
-                                <div class="form-group col-md-6">
-                                    <label for="inputPassword4">Date of Receipt</label>
-                                    <input type="date" class="form-control" name="date_of_receipt" :value="this.all_data.date_of_receipt" disabled>
-                                </div>
-                                <!--------------- end ------------------>
+
+                        <div class="form-row mb-2">
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">From</label>
+                                <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name" disabled>
                             </div>
+                            <!-- <input type="hidden" class="form-control" name="sender_id"  id="senderID"> -->
+                            <!--------------- Date of Receipt ---------->
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Date of Receipt</label>
+                                <input type="date" class="form-control" name="date_of_receipt" :value="this.all_data.date_of_receipt" disabled>
+                            </div>
+                            <!--------------- end ------------------>
+                        </div>
 
-                            <div class="form-row mb-2">
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Location</label>
-                                    <input type="text" class="form-control" id="location" name="location" :value="this.all_data.sender_detail.location" readonly="readonly">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Telephone No.</label>
-                                    <input type="text" class="form-control mbCheckNm" id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly" :value="this.all_data.sender_detail.telephone_no">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Status</label>
-                                        <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" :value="this.all_data.sender_detail.status " />
-                                   
-                                    <!-- <div v-if="this.all_data.sender_detail.status === 1">
+                        <div class="form-row mb-2">
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" :value="this.all_data.sender_detail.location" readonly="readonly">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Telephone No.</label>
+                                <input type="text" class="form-control mbCheckNm" id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly" :value="this.all_data.sender_detail.telephone_no">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Status</label>
+                                <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" :value="this.all_data.sender_detail.status " />
+
+                                <!-- <div v-if="this.all_data.sender_detail.status === 1">
                                         <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" value="Received" />
                                     </div>
                                     <div v-if="this.all_data.sender_detail.status === 2">
@@ -126,83 +126,83 @@
                                         <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" value="Unpaid" />
                                     </div> -->
 
-                                </div>
+                            </div>
+                        </div>
+
+                        <h5><b>Courier Details</b></h5>
+                        <div class="form-row mb-2">
+                            <div class="form-group col-md-4">
+                                <label for="inputState">Courier Name</label>
+                                <input type="text" class="form-control" id="courier_name" autocomplete="off" readonly="readonly" :value="this.all_data.courier_company.courier_name">
                             </div>
 
-                            <h5><b>Courier Details</b></h5>
-                            <div class="form-row mb-2">
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Courier Name</label>
-                                    <input type="text" class="form-control" id="courier_name" autocomplete="off" readonly="readonly" :value="this.all_data.courier_company.courier_name">
-                                </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Docket No.</label>
+                                <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" readonly="readonly" :value="this.all_data.docket_no">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Docket Date</label>
+                                <input type="date" class="form-control" id="docket_date" name="docket_date" readonly="readonly" :value="this.all_data.docket_date">
+                                <!-- <p class="docketdate_error text-danger" style="display: none; color: #ff0000; font-weight: 500;">Docket date invalid.</p> -->
+                            </div>
+                        </div>
+                        <!------------Document details --------->
+                        <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;">    -->
+                        <h5><b>Document Details</b></h5>
+                        <div class="form-row mb-0">
+                            <div class="form-group col-md-4">
+                                <label for="inputState">Location</label>
+                                <input type="text" class="form-control location1" id="location" name="location" readonly="readonly" :value="this.all_data.location">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputState">Company Name</label>
+                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.company_name">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputState">TER Amount</label>
+                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.amount">
+                            </div>
+                        </div>
+                        <div class="form-row mb-0">
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">TER Period From</label>
+                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" readonly="readonly" :value="this.all_data.terfrom_date">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">TER Period To</label>
+                                <input type="date" class="form-control" id="terto_date" name="terto_date" readonly="readonly" :value="this.all_data.terto_date">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Other Details</label>
+                                <input type="text" class="form-control" id="details" name="details" readonly="readonly" :value="this.all_data.details">
+                            </div>
+                        </div>
 
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" readonly="readonly" :value="this.all_data.docket_no">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Docket Date</label>
-                                    <input type="date" class="form-control" id="docket_date" name="docket_date" readonly="readonly" :value="this.all_data.docket_date">
-                                    <!-- <p class="docketdate_error text-danger" style="display: none; color: #ff0000; font-weight: 500;">Docket date invalid.</p> -->
-                                </div>
+                        <!--------------- Remarks ---------->
+                        <div class="form-row mb-0">
+                            <div class="form-group col-md-6">
+                                <label for="remarks">Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="1" cols="70" readonly="readonly" :value="this.all_data.remarks"></textarea>
                             </div>
-                            <!------------Document details --------->
-                            <!--  <div class="insertRowAfter" style="border-bottom: 3px solid #ffa69e; margin-bottom: 10px;">    -->
-                            <h5><b>Document Details</b></h5>
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Location</label>
-                                    <input type="text" class="form-control location1" id="location" name="location" readonly="readonly" :value="this.all_data.location">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Company Name</label>
-                                    <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.company_name">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">TER Amount</label>
-                                    <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.amount">
-                                </div>
+                        </div>
+                        <!--------------- end ------------------>
+                        <h5><b>Add Details</b></h5>
+                        <div class="form-row mb-0">
+                            <div class="form-group col-md-6">
+                                <label for="payable_">Payable Amount</label>
+                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
                             </div>
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">TER Period From</label>
-                                    <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" readonly="readonly" :value="this.all_data.terfrom_date">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">TER Period To</label>
-                                    <input type="date" class="form-control" id="terto_date" name="terto_date" readonly="readonly" :value="this.all_data.terto_date">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Other Details</label>
-                                    <input type="text" class="form-control" id="details" name="details" readonly="readonly" :value="this.all_data.details">
-                                </div>
+                            <div class="form-group col-md-6">
+                                <label for="voucher_c">Voucher Code</label>
+                                <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
                             </div>
+                        </div>
 
-                            <!--------------- Remarks ---------->
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-6">
-                                    <label for="remarks">Remarks</label>
-                                    <textarea name="remarks" class="form-control" rows="1" cols="70" readonly="readonly" :value="this.all_data.remarks"></textarea>
-                                </div>
-                            </div>
-                            <!--------------- end ------------------>
-                            <h5><b>Add Details</b></h5>
-                            <div class="form-row mb-0">
-                                <div class="form-group col-md-6">
-                                    <label for="payable_">Payable Amount</label>
-                                    <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="voucher_c">Voucher Code</label>
-                                    <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
-                                </div>
-                            </div>
-         
-                            <button type=" submit" class="btn btn-primary" v-on:click="update_data_ter()" :disabled="update_ter_flag">
-                                    <span class="indicator-label">Save</span>
-                                    </span>
+                        <button type=" submit" class="btn btn-primary" v-on:click="update_data_ter()" :disabled="update_ter_flag">
+                            <span class="indicator-label">Save</span>
+                            </span>
                         </button>
-                       
+
                     </div>
                 </div>
             </div>
@@ -336,9 +336,9 @@
             button_text: "Search",
             payable_amount: "",
             voucher_code: "",
-            flag:false,
-            update_ter_flag:false,
-            amount:"",
+            flag: false,
+            update_ter_flag: false,
+            amount: "",
 
         },
         created: function() {
@@ -349,79 +349,90 @@
         },
         methods: {
             update_data_ter: function() {
-                if(this.voucher_code!="" && this.payable_amount !="")
-                {
-              if (this.payable_amount <= this.amount ) {
-                axios.post('/update_data_ter', {
-                        'voucher_code': this.voucher_code,
-                        'payable_amount': this.payable_amount,
-                        'unique_id': this.all_data.id,
-                    })
-                    .then(response => {
-                        // console.log(response.data);
-                        if (response.data) {
-                            this.button_text = "Search";
-                            this.flag=true;
-                            this.update_ter_flag=true;
-                            swal('success', "Record has been updated Successfully!!!", 'success')
-                        } else {
-                            this.button_text = "Search";
-                            swal('error', "Either Record is already updated or not selected", 'error')
-                        }
+                if (this.voucher_code != "" && this.payable_amount != "") {
+                    // alert(this.payable_amount);
+                    // alert(this.amount);
+                    if (this.payable_amount <= this.amount) {
+                        axios.post('/update_data_ter', {
+                                'voucher_code': this.voucher_code,
+                                'payable_amount': this.payable_amount,
+                                'unique_id': this.all_data.id,
+                            })
+                            .then(response => {
+                                // console.log(response.data);
+                                if (response.data) {
+                                    this.button_text = "Search";
+                                    this.flag = true;
+                                    this.update_ter_flag = true;
+                                    swal('success', "Record has been updated Successfully!!!", 'success')
+                                } else {
+                                    this.button_text = "Search";
+                                    swal('error', "Either Record is already updated or not selected", 'error')
+                                }
 
-                    }).catch(error => {
+                            }).catch(error => {
 
+                                this.button_text = "Search";
+
+
+                            })
+                    } else {
+                        // alert(this.amount)
+                        // alert(this.payable_amount)
                         this.button_text = "Search";
-
-
-                    })
+                        swal('error', "Amount can't be greater than total amount", 'error')
+                    }
+                } else {
+                    swal('error', "Fields are empty", 'error')
                 }
-                else 
-                {
-                    // alert(this.amount)
-                    // alert(this.payable_amount)
-                    this.button_text = "Search";
-                    swal('error', "Amount can't be greater than total amount", 'error')
-                }
-            }
-            else{
-                swal('error', "Fields are empty", 'error')
-            }
             },
             get_data_by_id: function() {
                 this.button_text = "Searching...";
                 this.got_data = false;
-                this.all_data={};
-                this.flag=false;
-                this.update_ter_flag=false;
-                this.payable_amount="",
-                this.voucher_code="",
-                //  alert(this.unique_id);
+                this.all_data = {};
+                this.flag = false;
+                this.update_ter_flag = false;
+                this.payable_amount = "",
+                this.voucher_code = "",
+                    //  alert(this.unique_id);
 
-                axios.post('/get_all_data', {
+                    axios.post('/get_all_data', {
                         'unique_id': this.unique_id
                     })
                     .then(response => {
                         console.log(response.data);
-                        if (response.data!="") {
+                        if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
-                            this.amount=this.all_data.amount;
+                            this.amount = this.all_data.amount;
+                            this.payable_amount=this.all_data.payable_amount;
+                            this.voucher_code=this.all_data.voucher_code;
+
+                            // console.log(this.all_data.courier_company)
+                        } else if (response.data[0] != "" && response.data.status_of_data === "1") {
+                            this.got_data = true;
+                            this.flag = true;
+                            this.update_ter_flag = true;
+                            this.button_text = "Search";
+                            this.all_data = response.data[0];
+                            this.amount = this.all_data.amount;
+                            this.payable_amount=this.all_data.payable_amount;
+                            this.voucher_code=this.all_data.voucher_code;
 
                             // console.log(this.all_data.courier_company)
                         } else {
                             this.got_data = false;
                             this.button_text = "Search";
-                            this.flag=false;
-                            this.update_ter_flag=false;
+                            this.flag = false;
+                            this.update_ter_flag = false;
                             swal('error', "Either Details already updated or No record Found", 'error')
                         }
 
                     }).catch(error => {
                         this.got_data = false;
-                        this.flag=false;
-                        this.update_ter_flag=false;
+                        this.flag = false;
+                        this.update_ter_flag = false;
                         this.button_text = "Search";
 
 
