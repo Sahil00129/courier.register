@@ -436,7 +436,7 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id',$id)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-       if($tercourier_table[0]->payable_amount === "" && $tercourier_table[0]->voucher_code === "")
+       if($tercourier_table[0]->payable_amount == "" && $tercourier_table[0]->voucher_code == "")
        {
         return $tercourier_table;
        }
