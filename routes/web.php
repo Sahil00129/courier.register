@@ -94,17 +94,21 @@ Route::any('create-terrow', [TercourierController::class, 'createRow']);
 Route::any('get_employees', [TercourierController::class, 'getEmployees']);
 Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
 
+// Dhruv routes
 
+Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
+Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
+Route::post('add_multiple_data', [TercourierController::class, 'add_multi_details_to_DB']);
+Route::get('update_ter', [TercourierController::class, 'update_ter']);
+Route::post('get_all_data', [TercourierController::class, 'get_all_data']);
+Route::post('update_data_ter', [TercourierController::class, 'update_data_ter']);
 
 
 });
 
 
 
-// Dhruv routes
 
-Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
-Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
-Route::post('add_multiple_data', [TercourierController::class, 'add_multi_details_to_DB']);
+
 
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

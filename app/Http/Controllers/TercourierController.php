@@ -194,7 +194,7 @@ class TercourierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+ 
     }
 
     /**
@@ -385,11 +385,14 @@ class TercourierController extends Controller
             $user = Auth::user()->roles()->get();
             $data = json_decode(json_encode($user));
             
-            // $name=$data->name;
+            $details=Auth::user();
+            $log_in_user_name=$details->name;
+            $log_in_user_id=$details->id;
+
             $name = $data[0]->name;
             if($name === "tr admin")
             {
-                $add_data = Tercourier::add_data($voucher_code,$amount,$id);
+                $add_data = Tercourier::add_data($voucher_code,$amount,$id,$log_in_user_id,$log_in_user_name);
                 return $add_data;
             }
             else{
@@ -411,8 +414,36 @@ class TercourierController extends Controller
         $voucher_code = explode("|",$data['coupon_code']);
         $amount = explode("|",$data['amount']);
         $id = explode("|",$data['selected_id']);
-        $add_multiple_data = Tercourier::add_multiple_data($voucher_code,$amount,$id);
+        $details=Auth::user();
+        $log_in_user_name=$details->name;
+        $log_in_user_id=$details->id;
+        $add_multiple_data = Tercourier::add_multiple_data($voucher_code,$amount,$id,$log_in_user_id,$log_in_user_name);
         return $add_multiple_data;
+    }
+
+    public function update_ter()
+    {
+        return view('tercouriers.update-tercourier');
+    }
+
+    public function get_all_data(Request $request)
+    {
+        $data= $request->all();
+        $id = $data['unique_id'];
+        $query = Tercourier::query();
+        // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
+        $tercourier_table = $query->where('id',$id)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+        return $tercourier_table;
+    }
+
+    public function update_data_ter(Request $request)
+    {
+        $data=$request->all();
+        $id = $data['unique_id'];
+        $voucher_code=$data['voucher_code'];
+        $payable_amount=$data['payable_amount'];
+        $response= Tercourier::add_voucher_payable($voucher_code,$payable_amount,$id);
+        return $response;
     }
 
 }

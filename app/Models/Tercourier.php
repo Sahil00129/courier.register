@@ -38,27 +38,30 @@ class Tercourier extends Model
         
     }
 
-   public static function add_data($voucher,$amount,$unique_ids)
+   public static function add_data($voucher,$amount,$unique_ids,$user_id,$user_name)
    {
     $data['voucher_code'] = $voucher;
     $data['payable_amount'] = $amount;
     $data['status']=3;
+    $data['saved_by_id']=$user_id;
+    $data['saved_by_name']=$user_name;
     $data['updated_at'] = date('Y-m-d H:i:s');
     $query =  DB::table('tercouriers')->where('id', $unique_ids)
     ->update($data);
-
-    // if($query)
-    // {
-    //     $new_query_data=DB::table('tercouriers')->whereIn('status',[2,3])->get()->toArray();
-    // }else{
-    //     $new_query_data=0;
-    // }
-
-    // return $new_query_data;
     return $query;
    }
 
-   public static function add_multiple_data($voucher,$amount,$unique_ids)
+   public static function add_voucher_payable($voucher,$amount,$unique_ids)
+   {
+    $data['voucher_code'] = $voucher;
+    $data['payable_amount'] = $amount;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $query =  DB::table('tercouriers')->where('id', $unique_ids)
+    ->update($data);
+    return $query;
+   }
+
+   public static function add_multiple_data($voucher,$amount,$unique_ids,$user_id,$user_name)
    {
 
     $data['voucher_code'] = $voucher;
@@ -74,12 +77,13 @@ class Tercourier extends Model
         $id=$newdata;
         $checkquery=DB::table('tercouriers')->select('amount','id')->where('id',$id)->get();
 
+
         if($checkquery[0]->amount > $payable_amount)
         {
             $query= DB::table('tercouriers')->
             where('id', $id)->
             update(array('payable_amount'=>$payable_amount,'voucher_code'=> $coupon,
-            'status'=>3, 'updated_at'=>date('Y-m-d H:i:s')));
+            'status'=>3,'saved_by_id'=>$user_id,'saved_by_name'=>$user_name,'updated_at'=>date('Y-m-d H:i:s')));
         }else {
             return 0;
         }
