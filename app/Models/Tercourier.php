@@ -26,10 +26,12 @@ class Tercourier extends Model
     }
 
     // Dhruv's Code
-    public static function get_details_of_employee($unique_ids)
+    public static function get_details_of_employee($unique_ids,$user_id,$user_name)
     {
         $change['status'] = 2;
         $change['given_to'] = 'TR-Department';
+        $change['saved_by_id']=$user_id;
+        $change['saved_by_name']=$user_name;
         $change['delivery_date'] = date('Y-m-d');
         // $change['status'] = 1;
         $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->where('status',1)->update($change);
@@ -51,12 +53,14 @@ class Tercourier extends Model
     return $query;
    }
 
-   public static function add_voucher_payable($voucher,$amount,$unique_ids)
+   public static function add_voucher_payable($voucher,$amount,$unique_id,$user_id,$user_name)
    {
     $data['voucher_code'] = $voucher;
     $data['payable_amount'] = $amount;
+    $data['saved_by_id']=$user_id;
+    $data['saved_by_name']=$user_name;
     $data['updated_at'] = date('Y-m-d H:i:s');
-    $query =  DB::table('tercouriers')->where('id', $unique_ids)
+    $query =  DB::table('tercouriers')->where('id', $unique_id)
     ->update($data);
     return $query;
    }

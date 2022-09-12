@@ -114,7 +114,9 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Status</label>
-                                    <div v-if="this.all_data.sender_detail.status === 1">
+                                        <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" :value="this.all_data.sender_detail.status " />
+                                   
+                                    <!-- <div v-if="this.all_data.sender_detail.status === 1">
                                         <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" value="Received" />
                                     </div>
                                     <div v-if="this.all_data.sender_detail.status === 2">
@@ -122,7 +124,7 @@
                                     </div>
                                     <div v-if="this.all_data.sender_detail.status === 3">
                                         <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" value="Unpaid" />
-                                    </div>
+                                    </div> -->
 
                                 </div>
                             </div>
@@ -188,7 +190,7 @@
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-6">
                                     <label for="payable_">Payable Amount</label>
-                                    <input type="text" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
+                                    <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="voucher_c">Voucher Code</label>
@@ -196,7 +198,7 @@
                                 </div>
                             </div>
          
-                            <button type=" submit" class="btn btn-primary" v-on:click="update_data_ter()">
+                            <button type=" submit" class="btn btn-primary" v-on:click="update_data_ter()" :disabled="update_ter_flag">
                                     <span class="indicator-label">Save</span>
                                     </span>
                         </button>
@@ -335,6 +337,8 @@
             payable_amount: "",
             voucher_code: "",
             flag:false,
+            update_ter_flag:false,
+            amount:"",
 
         },
         created: function() {
@@ -345,7 +349,9 @@
         },
         methods: {
             update_data_ter: function() {
-              if (this.payable_amount!="" && this.voucher_code!="" && this.all_data.amount >= this.payable_amount  ) {
+                if(this.voucher_code!="" && this.payable_amount !="")
+                {
+              if (this.payable_amount <= this.amount ) {
                 axios.post('/update_data_ter', {
                         'voucher_code': this.voucher_code,
                         'payable_amount': this.payable_amount,
@@ -356,6 +362,7 @@
                         if (response.data) {
                             this.button_text = "Search";
                             this.flag=true;
+                            this.update_ter_flag=true;
                             swal('success', "Record has been updated Successfully!!!", 'success')
                         } else {
                             this.button_text = "Search";
@@ -371,13 +378,24 @@
                 }
                 else 
                 {
+                    // alert(this.amount)
+                    // alert(this.payable_amount)
                     this.button_text = "Search";
                     swal('error', "Amount can't be greater than total amount", 'error')
                 }
+            }
+            else{
+                swal('error', "Fields are empty", 'error')
+            }
             },
             get_data_by_id: function() {
                 this.button_text = "Searching...";
-                this.got_data = true;
+                this.got_data = false;
+                this.all_data={};
+                this.flag=false;
+                this.update_ter_flag=false;
+                this.payable_amount="",
+                this.voucher_code="",
                 //  alert(this.unique_id);
 
                 axios.post('/get_all_data', {
@@ -385,17 +403,25 @@
                     })
                     .then(response => {
                         console.log(response.data);
-                        if (response.data) {
+                        if (response.data!="") {
+                            this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
-                            console.log(this.all_data.courier_company)
+                            this.amount=this.all_data.amount;
+
+                            // console.log(this.all_data.courier_company)
                         } else {
+                            this.got_data = false;
                             this.button_text = "Search";
-                            swal('error', "Either Record is already updated or not selected", 'error')
+                            this.flag=false;
+                            this.update_ter_flag=false;
+                            swal('error', "Either Details already updated or No record Found", 'error')
                         }
 
                     }).catch(error => {
-
+                        this.got_data = false;
+                        this.flag=false;
+                        this.update_ter_flag=false;
                         this.button_text = "Search";
 
 

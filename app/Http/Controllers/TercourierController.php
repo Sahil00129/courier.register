@@ -23,6 +23,7 @@ class TercourierController extends Controller
         // $this->middleware('auth');
         $this->middleware('permission:tercouriers/create' ,['only' => ['create']]);
         $this->middleware('permission:tercouriers' ,['only' => ['index']]);
+        $this->middleware('permission:ter_list_edit_user' ,['only' => ['update_ter']]);
 
     }
     /**
@@ -368,8 +369,10 @@ class TercourierController extends Controller
         // return 'hello'; die;
         $data=$request->all();
         $new_data = explode("|",$data['selected_value']);
-        // return $new_data;
-        $info=Tercourier::get_details_of_employee($new_data);
+        $details=Auth::user();
+        $log_in_user_name=$details->name;
+        $log_in_user_id=$details->id;
+        $info=Tercourier::get_details_of_employee($new_data,$log_in_user_id,$log_in_user_name);
         // $info=Tercourier::get_details_of_employee($data['selected_value']);
         return $info;
     }
@@ -433,7 +436,13 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id',$id)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
+       if($tercourier_table[0]->payable_amount === "" && $tercourier_table[0]->voucher_code === "")
+       {
         return $tercourier_table;
+       }
+       else{
+        return 0;
+       }
     }
 
     public function update_data_ter(Request $request)
@@ -442,7 +451,10 @@ class TercourierController extends Controller
         $id = $data['unique_id'];
         $voucher_code=$data['voucher_code'];
         $payable_amount=$data['payable_amount'];
-        $response= Tercourier::add_voucher_payable($voucher_code,$payable_amount,$id);
+        $details=Auth::user();
+        $log_in_user_name=$details->name;
+        $log_in_user_id=$details->id;
+        $response= Tercourier::add_voucher_payable($voucher_code,$payable_amount,$id,$log_in_user_id,$log_in_user_name);
         return $response;
     }
 
