@@ -351,8 +351,10 @@
             update_data_ter: function() {
                 if (this.voucher_code != "" && this.payable_amount != "") {
                     // alert(this.payable_amount);
-                    // alert(this.amount);
-                    if (this.payable_amount <= this.amount) {
+                    alert(this.amount);
+                    alert(this.payable_amount)
+                    if (this.payable_amount <= parseInt(this.amount)) {
+
                         axios.post('/update_data_ter', {
                                 'voucher_code': this.voucher_code,
                                 'payable_amount': this.payable_amount,
