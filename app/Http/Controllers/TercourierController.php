@@ -14,6 +14,7 @@ use URL;
 use Helper;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Update_table_data;
 
 
 class TercourierController extends Controller
@@ -21,10 +22,10 @@ class TercourierController extends Controller
     public function __construct()
     {
         // $this->middleware('auth');
-        $this->middleware('permission:tercouriers/create' ,['only' => ['create']]);
-        $this->middleware('permission:tercouriers' ,['only' => ['index']]);
-        $this->middleware('permission:ter_list_edit_user' ,['only' => ['update_ter']]);
-
+        $this->middleware('permission:tercouriers/create', ['only' => ['create']]);
+        $this->middleware('permission:tercouriers', ['only' => ['index']]);
+        $this->middleware('permission:ter_list_edit_user', ['only' => ['update_ter']]);
+        $this->middleware('permission:hr_admin_edit_ter_list', ['only' => ['admin_update_ter']]);
     }
     /**
      * Display a listing of the resource.
@@ -33,31 +34,28 @@ class TercourierController extends Controller
      */
     public function index(Request $request)
     {
-     
+
         if (Auth::check()) {
             $query = Tercourier::query();
             $user = Auth::user();
             $data = json_decode(json_encode($user));
-            $name=$data->roles[0]->name;
+            $name = $data->roles[0]->name;
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
-            if($name === "tr admin")
-            {
-                $tercouriers = $query->whereIn('status',['2','3'])->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-                $role="Tr Admin";
+            if ($name === "tr admin") {
+                $tercouriers = $query->whereIn('status', ['2', '3'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
-                return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers, 'role' => $role]);
+                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
+            } else {
+                $tercouriers = $query->whereIn('status', ['1', '2'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
-            else
-            {
-                $tercouriers = $query->whereIn('status',['1','2'])->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-            }
-        //    echo'<pre>'; print_r($name); die;
+            //    echo'<pre>'; print_r($name); die;
         }
-       
-      
+
+
         // echo'<pre>';print_r($query); die;
-        return view('tercouriers.tercourier-list',['tercouriers'=>$tercouriers, 'role' => $role]);
+        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
     }
 
     /**
@@ -68,13 +66,13 @@ class TercourierController extends Controller
     public function create()
     {
         $senders =  DB::table('sender_details')->get();
-        $couriers = DB::table('courier_companies')->select ('id','courier_name')->distinct()->get();
-        $categorys = DB::table('catagories')->select ('catagories')->distinct()->get();
-        $forcompany = DB::table('for_companies')->select ('for_company')->distinct()->get();
+        $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
+        $categorys = DB::table('catagories')->select('catagories')->distinct()->get();
+        $forcompany = DB::table('for_companies')->select('for_company')->distinct()->get();
         //$lastdate = DB::table('tercouriers')->select('date_of_receipt')->latest()->distinct();
-        $lastdate = DB::table('tercouriers')->select('date_of_receipt','docket_no')->orderby('id', 'desc')->first();
+        $lastdate = DB::table('tercouriers')->select('date_of_receipt', 'docket_no')->orderby('id', 'desc')->first();
         //echo'<pre>'; print_r($lastdate);die;
-        return view('tercouriers.create-tercourier',  ['senders'=>$senders, 'couriers' => $couriers ,'categorys' => $categorys ,'forcompany' => $forcompany,'lastdate' => $lastdate]);
+        return view('tercouriers.create-tercourier',  ['senders' => $senders, 'couriers' => $couriers, 'categorys' => $categorys, 'forcompany' => $forcompany, 'lastdate' => $lastdate]);
     }
 
     /**
@@ -88,12 +86,11 @@ class TercourierController extends Controller
         $rules = array(
             // 'name' => 'required',
             // 'phone' => 'required|unique:drivers',
-            
+
         );
-        $validator = Validator::make($request->all(),$rules);
-    
-        if($validator->fails())
-        {
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
             $errors                  = $validator->errors();
             $response['success']     = false;
             $response['validation']  = false;
@@ -120,9 +117,8 @@ class TercourierController extends Controller
 
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier->id);
-        if($tercourier)
-        {
-            $getsender = Sender::where('id',$tercourier->sender_id)->first();
+        if ($tercourier) {
+            $getsender = Sender::where('id', $tercourier->sender_id)->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
             $peid = "1201159713185947382"; // Get Key from DLT 
@@ -134,25 +130,24 @@ class TercourierController extends Controller
             $to_period = Helper::ShowFormat($tercourier->terto_date);
 
             $UNID = $tercourier->id;
-            $umsg= "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
+            $umsg = "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
 
-            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey='.$API.'&senderid='.$sender_id.'&channel=Trans&DCS=0&flashsms=0&number='.urlencode($mob).'&text='.urlencode($umsg).'&route=2&peid='.urlencode($peid).'';
+            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey=' . $API . '&senderid=' . $sender_id . '&channel=Trans&DCS=0&flashsms=0&number=' . urlencode($mob) . '&text=' . urlencode($umsg) . '&route=2&peid=' . urlencode($peid) . '';
 
             $this->SendTSMS($url);
 
             $response['success'] = true;
             $response['messages'] = 'Succesfully Submitted';
             $response['redirect_url'] = URL::to('/tercouriers');
-        }
-        else
-        {
+        } else {
             $response['success'] = false;
             $response['messages'] = 'Can not created TER Courier please try again';
         }
-        return Response::json($response);  
+        return Response::json($response);
     }
 
-    public function SendTSMS($hostUrl){
+    public function SendTSMS($hostUrl)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $hostUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -195,7 +190,6 @@ class TercourierController extends Controller
      */
     public function update(Request $request, $id)
     {
- 
     }
 
     /**
@@ -211,33 +205,34 @@ class TercourierController extends Controller
 
     public function addTrRow()
     {
-        if(isset($_REQUEST['action']) and $_REQUEST['action']=="addDataRow"){
+        if (isset($_REQUEST['action']) and $_REQUEST['action'] == "addDataRow") {
             $senders =  DB::table('sender_details')->get();
-            $couriers = DB::table('courier_companies')->select ('id','courier_name')->distinct()->get();
+            $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
 
             $decode  = json_decode(json_encode($senders));
             $decode_couriers  = json_decode(json_encode($couriers));
             //echo "<pre>";print_r($decode);die;
-            ?>
+?>
             <tr>
-                <td></td><td></td>
+                <td></td>
+                <td></td>
                 <td>
-                    <input type="date" class="form-control" name="date_of_receipt" id="date_of_receipt" Required>                                          
+                    <input type="date" class="form-control" name="date_of_receipt" id="date_of_receipt" Required>
                 </td>
                 <td colspan="3">
                     <select class="form-control  basic" name="sender_id" id="select_employee">
                         <option selected disabled>search..</option>
                         <?php
-                         foreach($decode as $sender){?>
-                          <option value="<?= $sender->id ?>"><?= $sender->name ?> : <?= $sender->ax_id ?> : <?= $sender->employee_id ?></option>
-                         <?php
+                        foreach ($decode as $sender) { ?>
+                            <option value="<?= $sender->id ?>"><?= $sender->name ?> : <?= $sender->ax_id ?> : <?= $sender->employee_id ?></option>
+                        <?php
                         }
-                        ?>        
-                    </select>                      
+                        ?>
+                    </select>
                 </td>
                 <td>
-                <input type="text" class="form-control" id="location" name="location" Required>                
-                </td> 
+                    <input type="text" class="form-control" id="location" name="location" Required>
+                </td>
                 <td>
                     <select id="for" name="company_name" class="form-control" onchange="receveCheck(this);">
                         <option selected disabled>Select...</option>
@@ -245,14 +240,14 @@ class TercourierController extends Controller
                         <option value="Corteva">Corteva</option>
                         <option value="Unit-HSB">Unit-HSB</option>
                         <option value="Remainco">Remainco</option>
-                    </select>                               
-                </td> 
+                    </select>
+                </td>
                 <td>
-                <input type="text" class="form-control" id="amount" name="amount" Required>                   
-                </td> 
+                    <input type="text" class="form-control" id="amount" name="amount" Required>
+                </td>
                 <td><input type="date" class="form-control" id="terfrom_date" name="terfrom_date" Required></td>
                 <td><input type="date" class="form-control" id="terto_date" name="terto_date" Required></td>
-                <td><input type="text" class="form-control"  id="details" name="details"></td>
+                <td><input type="text" class="form-control" id="details" name="details"></td>
                 <td width=""><textarea name="remarks" id="remarks" placeholder="" class="form-control" rows="1" cols=""></textarea></td>
                 <td>
                     <select style="padding:6px 0px 8px 0px;" class="form-control" id="given_to" name="given_to">
@@ -262,19 +257,19 @@ class TercourierController extends Controller
                 </td>
                 <td><input type="date" class="form-control" id="delivery_date" name="delivery_date"></td>
                 <td>
-                <select id="slct" name="courier_id" class="form-control" onchange="yesnoCheck(this);">
-                     <option selected disabled>Select..</option>
-                      <?php
-                         foreach($decode_couriers as $courier){?>
-                          <option value="<?= $courier->id ?>"><?= $courier->courier_name ?></option>
-                         <?php
+                    <select id="slct" name="courier_id" class="form-control" onchange="yesnoCheck(this);">
+                        <option selected disabled>Select..</option>
+                        <?php
+                        foreach ($decode_couriers as $courier) { ?>
+                            <option value="<?= $courier->id ?>"><?= $courier->courier_name ?></option>
+                        <?php
                         }
-                        ?> 
+                        ?>
                         <option>Other</option>
-                    </select>                           
+                    </select>
                 </td>
                 <td><input type="text" class="form-control" placeholder="Docket No" id="docket_no" name="docket_no" autocomplete="off"></td>
-                <td><input type="date" placeholder="Docket Date" class="form-control" id="docket_date" name="docket_date"></td>                
+                <td><input type="date" placeholder="Docket Date" class="form-control" id="docket_date" name="docket_date"></td>
             </tr>
             <tr>
                 <th>UN ID</th>
@@ -297,10 +292,9 @@ class TercourierController extends Controller
                 <th>Docket Date</th>
                 <!-- <th class="dt-no-sorting">Actions</th> -->
             </tr>
-            <?php
+<?php
             echo '|***|addmore';
         }
-        
     }
 
     public function createRow(Request $request)
@@ -321,45 +315,41 @@ class TercourierController extends Controller
         $terdata['given_to'] = $request->given_to;
         $terdata['delivery_date'] = $request->delivery_date;
         $terdata['status'] = '1';
-        
+
         $tercourier = Tercourier::create($terdata);
-        if($tercourier)
-        {
+        if ($tercourier) {
             $response['success'] = true;
             $response['messages'] = 'Succesfully Submitted';
             $response['redirect_url'] = URL::to('/tercouriers');
-        }
-        else
-        {
+        } else {
             $response['success'] = false;
             $response['messages'] = 'Can not created TER Courier please try again';
         }
-        return Response::json($response);  
+        return Response::json($response);
     }
 
     // get Employees on change
     public function getEmployees(Request $request)
     {
-        $getempoloyees = Sender::where('id',$request->emp_id)->first();
-        if($getempoloyees)
-        {
+        $getempoloyees = Sender::where('id', $request->emp_id)->first();
+        if ($getempoloyees) {
             $response['success']         = true;
             $response['success_message'] = "Employees list fetch successfully";
             $response['error']           = false;
             $response['data']            = $getempoloyees;
-        }else{
+        } else {
             $response['success']         = false;
             $response['error_message']   = "Can not fetch employee list please try again";
             $response['error']           = true;
         }
-    	return response()->json($response);
+        return response()->json($response);
     }
 
     public function terBundles(Request $request)
     {
         $query = Tercourier::query();
-        $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-        return view('tercouriers.terbundles-list',['tercouriers'=>$tercouriers]);
+        $tercouriers = $query->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+        return view('tercouriers.terbundles-list', ['tercouriers' => $tercouriers]);
     }
 
 
@@ -367,12 +357,12 @@ class TercourierController extends Controller
     public function change_status_to_handover(Request $request)
     {
         // return 'hello'; die;
-        $data=$request->all();
-        $new_data = explode("|",$data['selected_value']);
-        $details=Auth::user();
-        $log_in_user_name=$details->name;
-        $log_in_user_id=$details->id;
-        $info=Tercourier::get_details_of_employee($new_data,$log_in_user_id,$log_in_user_name);
+        $data = $request->all();
+        $new_data = explode("|", $data['selected_value']);
+        $details = Auth::user();
+        $log_in_user_name = $details->name;
+        $log_in_user_id = $details->id;
+        $info = Tercourier::get_details_of_employee($new_data, $log_in_user_id, $log_in_user_name);
         // $info=Tercourier::get_details_of_employee($data['selected_value']);
         return $info;
     }
@@ -380,47 +370,44 @@ class TercourierController extends Controller
     public function add_details_to_DB(Request $request)
     {
         // return [$amount,$voucher_code];
-        $data=$request->all();
-        $voucher_code=$data['coupon_code'];
-        $amount=$data['amount'];
-        $id=$data['selected_id'];
+        $data = $request->all();
+        $voucher_code = $data['coupon_code'];
+        $amount = $data['amount'];
+        $id = $data['selected_id'];
         if (Auth::check()) {
             $user = Auth::user()->roles()->get();
             $data = json_decode(json_encode($user));
-            
-            $details=Auth::user();
-            $log_in_user_name=$details->name;
-            $log_in_user_id=$details->id;
+
+            $details = Auth::user();
+            $log_in_user_name = $details->name;
+            $log_in_user_id = $details->id;
 
             $name = $data[0]->name;
-            if($name === "tr admin")
-            {
-                $add_data = Tercourier::add_data($voucher_code,$amount,$id,$log_in_user_id,$log_in_user_name);
+            if ($name === "tr admin") {
+                $add_data = Tercourier::add_data($voucher_code, $amount, $id, $log_in_user_id, $log_in_user_name);
                 return $add_data;
-            }
-            else{
+            } else {
                 return "You don't have rights for this step";
             }
             // else
             // {
             //     $tercouriers = $query->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
             // }
-        //    echo'<pre>'; print_r(); die;
-        // return [$amount,$voucher_code];
+            //    echo'<pre>'; print_r(); die;
+            // return [$amount,$voucher_code];
         }
-        
     }
 
     public function add_multi_details_to_DB(Request $request)
     {
-        $data=$request->all();
-        $voucher_code = explode("|",$data['coupon_code']);
-        $amount = explode("|",$data['amount']);
-        $id = explode("|",$data['selected_id']);
-        $details=Auth::user();
-        $log_in_user_name=$details->name;
-        $log_in_user_id=$details->id;
-        $add_multiple_data = Tercourier::add_multiple_data($voucher_code,$amount,$id,$log_in_user_id,$log_in_user_name);
+        $data = $request->all();
+        $voucher_code = explode("|", $data['coupon_code']);
+        $amount = explode("|", $data['amount']);
+        $id = explode("|", $data['selected_id']);
+        $details = Auth::user();
+        $log_in_user_name = $details->name;
+        $log_in_user_id = $details->id;
+        $add_multiple_data = Tercourier::add_multiple_data($voucher_code, $amount, $id, $log_in_user_id, $log_in_user_name);
         return $add_multiple_data;
     }
 
@@ -429,35 +416,100 @@ class TercourierController extends Controller
         return view('tercouriers.update-tercourier');
     }
 
+    public function admin_update_ter()
+    {
+        return view('tercouriers.admin-update-tercourier');
+    }
+
+    public function update_by_hr_admin(Request $request)
+    {
+        $data = $request->all();
+        $amount = $data['amount'];
+        $company_name = $data['company_name'];
+        $sender_id = $data['sender_id'];
+        $sender_emp_id = $data['sender_emp_id'];
+        $unique_id = $data['unique_id'];
+        $sender_table = DB::table('sender_details')->where('id', $sender_id)->get();
+        $tercourier = DB::table('tercouriers')->where('id', $unique_id)->get();
+        $details = Auth::user();
+        $updated_details['user_id'] = $details->id;
+        $updated_details['user_name'] = $details->name;
+        $updated_details['updated_id'] = $unique_id;
+        $updated_details['updated_date'] = date('Y-m-d');
+        $updated_details['created_at'] = date('Y-m-d H:i:s');
+        $updated_details['updated_at'] = date('Y-m-d H:i:s');
+        $test="";
+        if ($sender_emp_id ==  $sender_table[0]->employee_id) {
+            //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
+
+            if ((int)$tercourier[0]->amount != $amount) {
+                // dd("gggf");
+                $test="hello";
+                $updated_details['updated_field'] = 'Amount Changed from ' . $tercourier[0]->amount . ' to ' . $amount;
+                $tercourier_update_amount = DB::table('tercouriers')->where('id', $unique_id)->update(array('amount' => $amount));
+                if($tercourier_update_amount){
+                $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
+                }
+                // $response=Update_table_data::where('updated_id',$unique_id)->with('SaveUpdatedData')->get();
+                // return $response;
+                // return $updated_record_detail;
+            }
+
+            // echo "<pre>"; print_r($tercourier['0']->company_name); die;
+            if ($tercourier[0]->company_name != $company_name) {
+                // dd("ggg");
+                $tercourier_update_company = DB::table('tercouriers')->where('id', $unique_id)->update(array('company_name' => $company_name));
+                $updated_details['updated_field'] = 'Company Name Changed from ' . $tercourier[0]->company_name . ' to ' .$company_name;
+                if($tercourier_update_company){
+                $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
+                }
+                
+            }
+            if($tercourier[0]->sender_id != $sender_id)
+            {
+                $tercourier_update_sender_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_id' => $sender_id));
+                $updated_details['updated_field'] = 'Sender id Changed from ' . $tercourier[0]->sender_id . ' to ' .$sender_id;
+                if($tercourier_update_sender_id){
+                $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
+                }
+
+            }
+            return $updated_record_detail;
+            // $tercourier=DB::table('tercouriers')->where('id',$unique_id)->update('sender_id',$sender_id);
+            //   return $tercourier;
+        } else {
+            return 'error';
+        }
+    }
+
     public function get_all_data(Request $request)
     {
-        $data= $request->all();
+        $data = $request->all();
         $id = $data['unique_id'];
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
-        $tercourier_table = $query->where('id',$id)->with('CourierCompany','SenderDetail')->orderby('id','DESC')->get();
-       if($tercourier_table[0]->payable_amount == "" && $tercourier_table[0]->voucher_code == "")
-       {
-        $tercourier_table['status_of_data']="0";
-        return $tercourier_table;
-       }
-       else{
-        $tercourier_table['status_of_data']="1";
-        return $tercourier_table;
-       }
+        $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+        $senders =  DB::table('sender_details')->get();
+        $tercourier_table['all_senders_data'] = $senders;
+        if ($tercourier_table[0]->payable_amount == "" && $tercourier_table[0]->voucher_code == "") {
+            $tercourier_table['status_of_data'] = "0";
+            return $tercourier_table;
+        } else {
+            $tercourier_table['status_of_data'] = "1";
+            return $tercourier_table;
+        }
     }
 
     public function update_data_ter(Request $request)
     {
-        $data=$request->all();
+        $data = $request->all();
         $id = $data['unique_id'];
-        $voucher_code=$data['voucher_code'];
-        $payable_amount=$data['payable_amount'];
-        $details=Auth::user();
-        $log_in_user_name=$details->name;
-        $log_in_user_id=$details->id;
-        $response= Tercourier::add_voucher_payable($voucher_code,$payable_amount,$id,$log_in_user_id,$log_in_user_name);
+        $voucher_code = $data['voucher_code'];
+        $payable_amount = $data['payable_amount'];
+        $details = Auth::user();
+        $log_in_user_name = $details->name;
+        $log_in_user_id = $details->id;
+        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name);
         return $response;
     }
-
 }

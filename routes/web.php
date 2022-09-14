@@ -103,6 +103,8 @@ Route::get('update_ter', [TercourierController::class, 'update_ter']);
 Route::post('get_all_data', [TercourierController::class, 'get_all_data']);
 Route::post('update_data_ter', [TercourierController::class, 'update_data_ter']);
 
+Route::get('admin_update_ter', [TercourierController::class, 'admin_update_ter']);
+Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
 
 });
 
