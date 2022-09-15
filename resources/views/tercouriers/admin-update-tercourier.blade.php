@@ -96,9 +96,9 @@
                                 <!-- <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name"  disabled> -->
                                 <input type="text" class="form-control" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
                                 <datalist class="select2-selection__rendered" id="sender_data">
-                                    <option v-for="sender_all_info in senders_data" :key="sender_all_info.id">
+                                    <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
 
-                                        @{{sender_all_info.id}} : @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.employee_id}} : @{{sender_all_info.status}}
+                                    @{{sender_all_info.employee_id}} :   @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
                                     </option>
                                 </datalist>
                                 <!-- <select
@@ -401,20 +401,16 @@
                     })
             },
             update_data_by_admin: function() {
-                var sender_id;
                 var sender_emp_id
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
-                    sender_id = sender_data_split[0];
-                    sender_emp_id = sender_data_split[3];
+                    sender_emp_id = sender_data_split[0];
                 } else {
-                    sender_id = this.all_data.sender_detail.id;
                     sender_emp_id = this.all_data.sender_detail.employee_id;
                 }
-                if (this.amount != "" && this.company_name != "" && sender_emp_id != "" && sender_id != "") {
+                if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
                     if (this.payable_amount <= parseInt(this.amount)) {
                         axios.post('/update_by_hr_admin', {
-                                'sender_id': sender_id,
                                 'sender_emp_id': sender_emp_id,
                                 'company_name': this.company_name,
                                 'amount': this.amount,
