@@ -331,7 +331,7 @@ class TercourierController extends Controller
     // get Employees on change
     public function getEmployees(Request $request)
     {
-        $getempoloyees = Sender::where('id', $request->emp_id)->first();
+        $getempoloyees = Sender::where('employee_id', $request->emp_id)->first();
         if ($getempoloyees) {
             $response['success']         = true;
             $response['success_message'] = "Employees list fetch successfully";
@@ -339,7 +339,7 @@ class TercourierController extends Controller
             $response['data']            = $getempoloyees;
         } else {
             $response['success']         = false;
-            $response['error_message']   = "Can not fetch employee list please try again";
+            $response['error_message']   = "Employee Id does not exist";
             $response['error']           = true;
         }
         return response()->json($response);
@@ -426,10 +426,10 @@ class TercourierController extends Controller
         $data = $request->all();
         $amount = $data['amount'];
         $company_name = $data['company_name'];
-        $sender_id = $data['sender_id'];
+        // $sender_id = $data['sender_id'];
         $sender_emp_id = $data['sender_emp_id'];
         $unique_id = $data['unique_id'];
-        $sender_table = DB::table('sender_details')->where('id', $sender_id)->get();
+        $sender_table = DB::table('sender_details')->where('employee_id', $sender_emp_id)->get();
         $tercourier = DB::table('tercouriers')->where('id', $unique_id)->get();
         $details = Auth::user();
         $updated_details['user_id'] = $details->id;
@@ -465,10 +465,10 @@ class TercourierController extends Controller
                 }
                 
             }
-            if($tercourier[0]->sender_id != $sender_id)
+            if($tercourier[0]->sender_id != $sender_table[0]->id)
             {
-                $tercourier_update_sender_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_id' => $sender_id));
-                $updated_details['updated_field'] = 'Sender id Changed from ' . $tercourier[0]->sender_id . ' to ' .$sender_id;
+                $tercourier_update_sender_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_id' => $sender_table[0]->id));
+                $updated_details['updated_field'] = 'Sender id Changed from ' . $tercourier[0]->sender_id . ' to ' .$sender_table[0]->id;
                 if($tercourier_update_sender_id){
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
                 }
