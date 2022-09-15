@@ -98,7 +98,7 @@
                                 <datalist class="select2-selection__rendered" id="sender_data">
                                     <option v-for="sender_all_info in senders_data" :key="sender_all_info.id">
 
-                                        @{{sender_all_info.id}} : @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.employee_id}} : @{{sender_all_info.status}}
+                                     @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
                                     </option>
                                 </datalist>
                                 <!-- <select
