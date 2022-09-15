@@ -25,7 +25,7 @@ class TercourierController extends Controller
         $this->middleware('permission:tercouriers/create', ['only' => ['create']]);
         $this->middleware('permission:tercouriers', ['only' => ['index']]);
         $this->middleware('permission:ter_list_edit_user', ['only' => ['update_ter']]);
-        $this->middleware('permission:hr_admin_edit_ter_list', ['only' => ['admin_update_ter']]);
+        $this->middleware('permission:hr_admin_edit_ter', ['only' => ['admin_update_ter']]);
     }
     /**
      * Display a listing of the resource.
@@ -438,7 +438,7 @@ class TercourierController extends Controller
         $updated_details['updated_date'] = date('Y-m-d');
         $updated_details['created_at'] = date('Y-m-d H:i:s');
         $updated_details['updated_at'] = date('Y-m-d H:i:s');
-        $test="";
+      
         if ($sender_emp_id ==  $sender_table[0]->employee_id) {
             //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
 

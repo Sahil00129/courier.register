@@ -139,7 +139,7 @@
                 </li>
                 @endcan
                 
-                @can('hr_admin_edit_ter_list')
+                @can('hr_admin_edit_ter')
                 <li class="menu single-menu">
                     <a href="{{url('admin_update_ter')}}">
                         <div class="">
