@@ -24,10 +24,12 @@
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Sr No.</th>
+                            <th>ID</th>
                             <th>Ax Id</th>
                             <th>Employee Id</th>
+                            <th>Type</th>
                             <th>Sender Name</th>
+                            <th>Location</th>
                             <th>Telephone No</th>
                             <th>Last Working Date</th>
                             <th>Status</th>
@@ -38,10 +40,12 @@
                     @foreach ($sends as $send)
                      <?php //echo '<pre>'; print_r($send); die; ?>
                         <tr>
-                            <td>{{ ++$i }}</td>
+                            <td>{{ $send->id }}</td>
                             <td>{{$send->ax_id}}</td>
                             <td>{{$send->employee_id}}</td>
-                            <td>{{$send->name}}</td>                      
+                            <td>{{$send->type}}</td>
+                            <td>{{$send->name}}</td> 
+                            <td>{{$send->location}}</td>                      
                             <td>{{$send->telephone_no}}</td>
                             <td>{{Helper::ShowFormatDate($send->last_working_date)}}</td>
                             <td>{{ucfirst($send->status)}}</td>
