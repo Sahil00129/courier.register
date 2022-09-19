@@ -80,6 +80,7 @@ Route::put('updated-company', [TableController::class, 'updateforCompany']);
 Route::any('delete-forcompany/{id}', [TableController::class, 'destroyforCompany']);
 ////////
 Route::get('/sample-sender',[SampleDownloadController::class, 'senderSample']);
+Route::get('/sample-spine-hr-dump',[SampleDownloadController::class, 'spinehrSample']);
 Route::get('/sample-courier',[SampledownloadController::class, 'courierCompaniesSample']);
 Route::get('/sample-category',[SampleDownloadController::class, 'catagoreisSample']);
 Route::get('/sample-for',[SampleDownloadController::class, 'forSample']);

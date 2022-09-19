@@ -60,10 +60,12 @@
                                                 <label for="inputState">Import Type</label>
                                                 <select id="itype" class="form-control" name="import_type">
                                                     <option selected disabled>Choose...</option>
+                                                    <option value="5">Spine HR dump</option>
                                                     <option value="1">Sender Name & Details</option>
                                                     <option value="2">Courier Companies</option>
                                                     <option value="3">Document Catagories</option>
                                                     <option value="4">Receiving Company</option>
+                                                    <option value="6">Update Old Ids</option>
                                                 </select>  
                                             </div>
                                             <div class="custom-file-container" data-upload-id="myFirstImage">
@@ -105,6 +107,7 @@
                 </button>
             </div>
             <div class="modal-body">
+            <a class="btn btn-primary" href="{{url('/sample-spine-hr-dump')}}" role="button" style="margin-left: 103px;">Spine HR Dump</a> ||
                 <a class="btn btn-primary" href="{{url('/sample-sender')}}" role="button" style="margin-left: 103px;">Sender Import</a> ||
                 <a class="btn btn-primary" href="{{url('/sample-courier')}}" role="button">Courier Companies</a> ||
                 <a class="btn btn-primary" href="{{url('/sample-category')}}" role="button">Catagories</a> ||

@@ -12,6 +12,12 @@ class SampleDownloadController extends Controller
         return response()->download($path);
     }
 
+    public function spinehrSample()
+    {
+        $path = public_path('sample/Spine HR dump.xlsx');
+        return response()->download($path);
+    }
+
     public function courierCompaniesSample()
     {
         $path = public_path('sample/courier_company.xlsx');

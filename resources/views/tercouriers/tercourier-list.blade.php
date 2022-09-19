@@ -52,6 +52,7 @@
                             <tr>
                                 <th>UN IDs</th>
                                 <th>Status</th>
+                                <th>Date of Receipt</th>
                                 <th>Sender Name</th>
                                 <th>AX ID</th>
                                 <th>Employee ID</th>
@@ -60,6 +61,10 @@
                                 <th>TER Amount</th>
                                 <th>TER Period From</th>
                                 <th>TER Period To</th>
+                                <th>Handover Date</th>
+                                <th>Courier Name</th>
+                                <th>Docket No</th>
+                                <th>Docket Date</th>
                                 <th>AX Payble Amount</th>
                                 <th>AX Voucher Code</th>
                                 <th> <input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
@@ -100,6 +105,7 @@
 
 
                                     </td>
+                                    <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
                                     <td>{{ ucwords(@$tercourier->SenderDetail->name) ?? '-' }}</td>
                                     <td>{{ $tercourier->SenderDetail->ax_id ?? '-' }}</td>
                                     <td>{{ $tercourier->SenderDetail->employee_id ?? '-' }}</td>
@@ -108,6 +114,10 @@
                                     <td>{{ $tercourier->amount ?? '-' }}</td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }}</td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->terto_date) }}</td>
+                                    <td>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</td>
+                                    <td>{{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}</td>
+                                    <td>{{ $tercourier->docket_no ?? '-' }}</td>
+                                    <td>{{ Helper::ShowFormatDate($tercourier->docket_date) }}</td>
                                     <?php if ($tercourier->payable_amount != "") { ?>
                                         <td>
                                             <?php echo $tercourier->payable_amount; ?>

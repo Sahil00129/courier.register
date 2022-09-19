@@ -52,7 +52,12 @@ $(document).ready(function (e) {
                          
                           swal("Success!", "File has been imported successfully", "success");
                           window.location.href = "for-company"; 
-                         }else{
+                         }else if(data.import_type == 5) {
+                            // alert('5');
+                            swal("Success!", "File has been imported successfully", "success");
+                            window.location.href = "sender-table"; 
+                           }
+                         else{
                       swal("Error", data.messages, "error");
                       }
                       

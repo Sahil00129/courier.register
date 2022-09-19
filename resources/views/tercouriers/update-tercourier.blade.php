@@ -353,6 +353,14 @@
                     // alert(this.payable_amount);
                     // alert(this.amount);
                     // alert(this.payable_amount)
+                    // this.all_data.terto_date
+                    // this.all_data.sender_detail.last_working_date
+                    var terto_date = new Date(this.all_data.terto_date);
+                    var last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+
+                    if (terto_date.getTime() <= last_working_date.getTime())
+                    {
+
                     if (this.payable_amount <= parseInt(this.amount)) {
 
                         axios.post('/update_data_ter', {
@@ -384,6 +392,10 @@
                         this.button_text = "Search";
                         swal('error', "Amount can't be greater than total amount", 'error')
                     }
+                }
+                else{
+            swal('error', "TER Dates needs update", 'error')
+                }
                 } else {
                     swal('error', "Fields are empty", 'error')
                 }
