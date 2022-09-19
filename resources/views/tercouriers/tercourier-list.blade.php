@@ -45,8 +45,6 @@
                 // print_r($role);exit;
                 if ($role === 'Tr Admin') { ?>
 
-
-
                     <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                         <thead>
                             <tr>
@@ -264,7 +262,8 @@
 
                     </table>
                 <?php  } ?>
-
+                <h5>Pagination:</h5>
+             {{ $tercouriers->links() }}
             </div>
         </div>
 
