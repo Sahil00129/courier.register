@@ -416,6 +416,11 @@ class TercourierController extends Controller
         return view('tercouriers.update-tercourier');
     }
 
+    public function edit_ter_reception()
+    {
+        return view('tercouriers.reception-edit-tercourier');
+    }
+
     public function admin_update_ter()
     {
         return view('tercouriers.admin-update-tercourier');
