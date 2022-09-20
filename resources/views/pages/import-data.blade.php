@@ -66,6 +66,7 @@
                                                     <option value="3">Document Catagories</option>
                                                     <option value="4">Receiving Company</option>
                                                     <option value="6">Update Old Ids</option>
+                                                    <option value="7">Save Old AX-Code</option>
                                                 </select>  
                                             </div>
                                             <div class="custom-file-container" data-upload-id="myFirstImage">

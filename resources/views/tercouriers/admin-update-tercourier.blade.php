@@ -92,7 +92,7 @@
                         <div class="form-row mb-2">
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">From</label>
-                                <div>Actual Entry - @{{this.all_data.sender_detail.name}} : @{{this.all_data.sender_detail.ax_id}} : @{{this.all_data.sender_detail.employee_id}} : @{{this.all_data.sender_detail.status}} </div>
+                                <div>Actual Entry - @{{this.all_data.employee_id}}: @{{this.all_data.sender_name}} : @{{this.all_data.ax_id}}  </div>
                                 <!-- <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name"  disabled> -->
                                 <input type="text" class="form-control" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
                                 <datalist class="select2-selection__rendered" id="sender_data">
@@ -401,12 +401,16 @@
                     })
             },
             update_data_by_admin: function() {
-                var sender_emp_id
+                var sender_emp_id,sender_name,ax_code
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
                     sender_emp_id = sender_data_split[0];
+                    sender_name = sender_data_split[1];
+                    ax_code=sender_data_split[2];
                 } else {
-                    sender_emp_id = this.all_data.sender_detail.employee_id;
+                    sender_emp_id = this.all_data.employee_id;
+                    sender_name = this.all_data.sender_name;
+                    ax_code=this.all_data.ax_id;;
                 }
                 if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
                     if (this.payable_amount <= parseInt(this.amount)) {
@@ -415,6 +419,8 @@
                                 'company_name': this.company_name,
                                 'amount': this.amount,
                                 'unique_id': this.unique_id,
+                                'sender_name':sender_name,
+                                'ax_id':ax_code
                             })
                             .then(response => {
                                 // console.log(response.data);

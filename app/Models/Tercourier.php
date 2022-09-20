@@ -12,7 +12,7 @@ class Tercourier extends Model
     use HasFactory;
     protected $table = 'tercouriers';
     protected $fillable = [
-        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at'
+        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name','ax_id','employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at'
     ];
 
     public function CourierCompany()

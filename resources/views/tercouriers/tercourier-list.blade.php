@@ -106,9 +106,9 @@
 
                                     </td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
-                                    <td>{{ ucwords(@$tercourier->SenderDetail->name) ?? '-' }}</td>
-                                    <td>{{ $tercourier->SenderDetail->ax_id ?? '-' }}</td>
-                                    <td>{{ $tercourier->SenderDetail->employee_id ?? '-' }}</td>
+                                    <td>{{ ucwords(@$tercourier->sender_name) ?? '-' }}</td>
+                                    <td>{{ $tercourier->ax_id ?? '-' }}</td>
+                                    <td>{{ $tercourier->employee_id ?? '-' }}</td>
                                     <td>{{ ucwords($tercourier->location) ?? '-' }}</td>
                                     <td>{{ $tercourier->company_name ?? '-' }}</td>
                                     <td>{{ $tercourier->amount ?? '-' }}</td>
@@ -231,9 +231,9 @@
                                         @endif
                                     </td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
-                                    <td>{{ ucwords(@$tercourier->SenderDetail->name) ?? '-' }}</td>
-                                    <td>{{ $tercourier->SenderDetail->ax_id ?? '-' }}</td>
-                                    <td>{{ $tercourier->SenderDetail->employee_id ?? '-' }}</td>
+                                    <td>{{ ucwords(@$tercourier->sender_name) ?? '-' }}</td>
+                                    <td>{{ $tercourier->ax_id ?? '-' }}</td>
+                                    <td>{{ $tercourier->employee_id ?? '-' }}</td>
                                     <td>{{ ucwords($tercourier->location) ?? '-' }}</td>
                                     <td>{{ $tercourier->company_name ?? '-' }}</td>
                                     <td>{{ $tercourier->amount ?? '-' }}</td>
