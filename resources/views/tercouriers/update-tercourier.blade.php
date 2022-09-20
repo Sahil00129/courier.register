@@ -339,6 +339,7 @@
             flag: false,
             update_ter_flag: false,
             amount: "",
+            allow_flag:false,
 
         },
         created: function() {
@@ -356,9 +357,15 @@
                     // this.all_data.terto_date
                     // this.all_data.sender_detail.last_working_date
                     var terto_date = new Date(this.all_data.terto_date);
-                    var last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                    var last_working_date,last_working_time;
+                    if(this.all_data.sender_detail.last_working_date){
+                     last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                     last_working_time=last_working_date.getTime();
+                    }else{
+                        allow_flag=true;
+                    }
 
-                    if (terto_date.getTime() <= last_working_date.getTime())
+                    if (terto_date.getTime() <= last_working_time || allow_flag)
                     {
 
                     if (this.payable_amount <= parseInt(this.amount)) {
@@ -374,9 +381,11 @@
                                     this.button_text = "Search";
                                     this.flag = true;
                                     this.update_ter_flag = true;
+                                    this.allow_flag=false;
                                     swal('success', "Record has been updated Successfully!!!", 'success')
                                 } else {
                                     this.button_text = "Search";
+                                    this.allow_flag=false;
                                     swal('error', "Either Record is already updated or not selected", 'error')
                                 }
 
