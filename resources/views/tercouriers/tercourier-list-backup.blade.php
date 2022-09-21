@@ -34,7 +34,9 @@
     // print_r($role);exit;
     if ($role != 'Tr Admin') { ?>
         <button class="btn btn-success" v-on:click="change_to_handover()">Handover</button>
-    <?php }?>
+    <?php } else if ($role === 'Tr Admin') { ?>
+        <button class="btn btn-success" v-on:click="change_to_unpaid()">Unpaid</button>
+    <?php } ?>
 
     <div class="row layout-top-spacing" id="cancel-row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
@@ -65,9 +67,9 @@
                                 <th>Docket Date</th>
                                 <th>AX Payble Amount</th>
                                 <th>AX Voucher Code</th>
-                                <!-- <th> <input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
+                                <th> <input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
                                 </th>
-                                <th>Action</th> -->
+                                <th>Action</th>
 
 
 
@@ -116,9 +118,38 @@
                                     <td>{{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}</td>
                                     <td>{{ $tercourier->docket_no ?? '-' }}</td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->docket_date) }}</td>
-                                    <td>{{ $tercourier->payable_amount ?? '-' }}</td>
-                                    <td>{{ $tercourier->voucher_code ?? '-' }}</td>
-                            
+                                    <?php if ($tercourier->payable_amount != "") { ?>
+                                        <td>
+                                            <?php echo $tercourier->payable_amount; ?>
+                                            <!-- <input type="number" placeholder="Enter Amount" id="existing_amount" class="existing_amount" name="amount" value="<?php echo $tercourier->payable_amount; ?>" disabled /> -->
+                                        </td>
+                                    <?php  } else { ?>
+                                        <td>
+                                            <input type="number" placeholder="Enter Amount" v-on:keyup=check_amount_id(<?php echo $tercourier->id; ?>) id="amount" class="amount" name="amount"  />
+                                        </td>
+                                    <?php } ?>
+
+                                    <?php if ($tercourier->voucher_code != "") { ?>
+                                        <td>
+                                            <?php echo $tercourier->voucher_code; ?>
+                                            <!-- <input type="text" placeholder="Enter Coupan" id="existing_voucher_code" class="existing_voucher_code" name="voucher_code" value="<?php echo $tercourier->voucher_code; ?>" disabled /> -->
+                                        </td>
+                                    <?php  } else { ?>
+                                        <td>
+                                            <input type="text" placeholder="Enter Coupan" id="voucher_code" v-on:keyup=check_coupon_id(<?php echo $tercourier->id; ?>) name="voucher_code" class="voucher_code" />
+                                        </td>
+                                    <?php } ?>
+
+                                    <?php if ($tercourier->voucher_code != "" && $tercourier->payable_amount != "") { ?>
+
+                                        <td><input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box_filled" disabled /></td>
+                                        <td><button type="button" class="btn btn-warning adddetails btn-sm" disabled>Save</button></td>
+                                    <?php  } else { ?>
+
+                                        <td><input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>"></td>
+                                        <td><button type="button" class="btn btn-warning adddetails btn-sm" v-on:click="add_details(<?php echo $tercourier->id; ?>,<?php echo $tercourier->amount; ?>)" value="<?php echo $tercourier->id; ?>">Save</button></td>
+
+                                    <?php } ?>
 
 
 

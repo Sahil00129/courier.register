@@ -40,9 +40,10 @@ class TercourierController extends Controller
             $user = Auth::user();
             $data = json_decode(json_encode($user));
             $name = $data->roles[0]->name;
+            // print_r($name);exit;
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
-            if ($name === "tr admin") {
+            if ($name === "tr admin" || $name === "Hr Admin") {
                 $tercouriers = $query->whereIn('status', ['2', '3'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
