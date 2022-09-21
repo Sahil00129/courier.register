@@ -221,7 +221,11 @@ class BulkImport implements ToModel, WithHeadingRow
                     'address_3' => $row['address_3'],
                     'address_district' => $row['address_district'],
                     'address_state' => $row['address_state'],
-                    'address_pin_code' => $row['address_pin_code']
+                    'address_pin_code' => $row['address_pin_code'],
+                    'beneficiary_name'=>$row['beneficiary_name'],
+                    'account_base_type'=>$row['account_base_type'],
+                    'transfer_type'=>$row['transfer_type'],
+                    'account_type'=>$row['type']
 
                 ]);
             }else{
