@@ -67,6 +67,7 @@
                                                     <option value="4">Receiving Company</option>
                                                     <!-- <option value="6">Update Old Ids</option>
                                                     <option value="7">Save Old AX-Code</option> -->
+                                                    <option value="8">Update Beneficiary Details</option>
                                                 </select>  
                                             </div>
                                             <div class="custom-file-container" data-upload-id="myFirstImage">
