@@ -53,10 +53,12 @@ class Tercourier extends Model
     return $query;
    }
 
-   public static function add_voucher_payable($voucher,$amount,$unique_id,$user_id,$user_name)
+   public static function add_voucher_payable($voucher,$amount,$unique_id,$user_id,$user_name,$payment_status)
    {
+    //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later.
     $data['voucher_code'] = $voucher;
     $data['payable_amount'] = $amount;
+    $data['payment_status']=$payment_status;
     $data['saved_by_id']=$user_id;
     $data['saved_by_name']=$user_name;
     $data['updated_at'] = date('Y-m-d H:i:s');

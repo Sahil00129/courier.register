@@ -118,9 +118,9 @@ class TercourierController extends Controller
 
         // echo "<pre>";print_r($terdata);
 
-        $senders =  DB::table('sender_details')->where('id',$terdata['sender_id'])->get()->toArray();
+        $senders =  DB::table('sender_details')->where('id', $terdata['sender_id'])->get()->toArray();
         $terdata['ax_id']    = $senders[0]->ax_id;
-        $terdata['employee_id']=$senders[0]->employee_id;
+        $terdata['employee_id'] = $senders[0]->employee_id;
         $terdata['sender_name']  = $senders[0]->name;
         // echo "<pre>";print_r($senders[0]->ax_id);die;
         // echo "<pre>";print_r($terdata);
@@ -248,7 +248,7 @@ class TercourierController extends Controller
                         <option value="FMC">FMC</option>
                         <option value="Corteva">Corteva</option>
                         <option value="Unit-HSB">Unit-HSB</option>
-                        <option value="Remainco">Remainco</option>   
+                        <option value="Remainco">Remainco</option>
                     </select>
                 </td>
                 <td>
@@ -437,8 +437,8 @@ class TercourierController extends Controller
         $company_name = $data['company_name'];
         // $sender_id = $data['sender_id'];
         $sender_emp_id = $data['sender_emp_id'];
-        $sender_name=$data['sender_name'];
-        $ax_code=$data['ax_id'];
+        $sender_name = $data['sender_name'];
+        $ax_code = $data['ax_id'];
         $unique_id = $data['unique_id'];
         $sender_table = DB::table('sender_details')->where('employee_id', $sender_emp_id)->get();
         $tercourier = DB::table('tercouriers')->where('id', $unique_id)->get();
@@ -449,84 +449,75 @@ class TercourierController extends Controller
         $updated_details['updated_date'] = date('Y-m-d');
         $updated_details['created_at'] = date('Y-m-d H:i:s');
         $updated_details['updated_at'] = date('Y-m-d H:i:s');
-      
+
         // if ($sender_emp_id ==  $sender_table[0]->employee_id) {
-            //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
+        //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
 
-            if ((int)$tercourier[0]->amount != $amount) {
-                // dd("gggf");
-                // $test="hello";
-                $updated_details['updated_field'] = 'Amount Changed from ' . $tercourier[0]->amount . ' to ' . $amount;
-                $tercourier_update_amount = DB::table('tercouriers')->where('id', $unique_id)->update(array('amount' => $amount));
-                if($tercourier_update_amount){
+        if ((int)$tercourier[0]->amount != $amount) {
+            // dd("gggf");
+            // $test="hello";
+            $updated_details['updated_field'] = 'Amount Changed from ' . $tercourier[0]->amount . ' to ' . $amount;
+            $tercourier_update_amount = DB::table('tercouriers')->where('id', $unique_id)->update(array('amount' => $amount));
+            if ($tercourier_update_amount) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-                // $response=Update_table_data::where('updated_id',$unique_id)->with('SaveUpdatedData')->get();
-                // return $response;
-                // return $updated_record_detail;
             }
+            // $response=Update_table_data::where('updated_id',$unique_id)->with('SaveUpdatedData')->get();
+            // return $response;
+            // return $updated_record_detail;
+        }
 
-            // echo "<pre>"; print_r($tercourier['0']->company_name); die;
-            if ($tercourier[0]->company_name != $company_name) {
-                // dd("ggg");
-                $tercourier_update_company = DB::table('tercouriers')->where('id', $unique_id)->update(array('company_name' => $company_name));
-                $updated_details['updated_field'] = 'Company Name Changed from ' . $tercourier[0]->company_name . ' to ' .$company_name;
-                if($tercourier_update_company){
+        // echo "<pre>"; print_r($tercourier['0']->company_name); die;
+        if ($tercourier[0]->company_name != $company_name) {
+            // dd("ggg");
+            $tercourier_update_company = DB::table('tercouriers')->where('id', $unique_id)->update(array('company_name' => $company_name));
+            $updated_details['updated_field'] = 'Company Name Changed from ' . $tercourier[0]->company_name . ' to ' . $company_name;
+            if ($tercourier_update_company) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-                
             }
-            if($tercourier[0]->sender_id != $sender_table[0]->id)
-            {
-                $tercourier_update_sender_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_id' => $sender_table[0]->id));
-                $updated_details['updated_field'] = 'Sender id Changed from ' . $tercourier[0]->sender_id . ' to ' .$sender_table[0]->id;
-                if($tercourier_update_sender_id){
+        }
+        if ($tercourier[0]->sender_id != $sender_table[0]->id) {
+            $tercourier_update_sender_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_id' => $sender_table[0]->id));
+            $updated_details['updated_field'] = 'Sender id Changed from ' . $tercourier[0]->sender_id . ' to ' . $sender_table[0]->id;
+            if ($tercourier_update_sender_id) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-
             }
-            if($tercourier[0]->sender_name != $sender_name)
-            {
-                $tercourier_update_sender_name = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_name' => $sender_name));
-                if(!empty($tercourier[0]->sender_name)){
-                $updated_details['updated_field'] = 'Sender Name Changed from ' . $tercourier[0]->sender_name . ' to ' .$sender_name;
-                }else{
-                    $updated_details['updated_field'] = 'Sender Name Added as ' .$sender_name;
-                }
-                if($tercourier_update_sender_name){
+        }
+        if ($tercourier[0]->sender_name != $sender_name) {
+            $tercourier_update_sender_name = DB::table('tercouriers')->where('id', $unique_id)->update(array('sender_name' => $sender_name));
+            if (!empty($tercourier[0]->sender_name)) {
+                $updated_details['updated_field'] = 'Sender Name Changed from ' . $tercourier[0]->sender_name . ' to ' . $sender_name;
+            } else {
+                $updated_details['updated_field'] = 'Sender Name Added as ' . $sender_name;
+            }
+            if ($tercourier_update_sender_name) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-
             }
-            if($tercourier[0]->ax_id != $ax_code)
-            {
-                $tercourier_update_sender_ax_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('ax_id' => $ax_code));
-                if(!empty($tercourier[0]->ax_id)){
-                $updated_details['updated_field'] = 'Ax Code Changed from ' . $tercourier[0]->ax_id . ' to ' .$ax_code;
-                }else{
-                    $updated_details['updated_field'] = 'Ax Code added as ' .$ax_code;
-                }
-                if($tercourier_update_sender_ax_id){
+        }
+        if ($tercourier[0]->ax_id != $ax_code) {
+            $tercourier_update_sender_ax_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('ax_id' => $ax_code));
+            if (!empty($tercourier[0]->ax_id)) {
+                $updated_details['updated_field'] = 'Ax Code Changed from ' . $tercourier[0]->ax_id . ' to ' . $ax_code;
+            } else {
+                $updated_details['updated_field'] = 'Ax Code added as ' . $ax_code;
+            }
+            if ($tercourier_update_sender_ax_id) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-
             }
-            if($tercourier[0]->employee_id != $sender_emp_id)
-            {
-                $tercourier_update_sender_emp_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('employee_id' => $sender_emp_id));
-                if(!empty($tercourier[0]->employee_id )){
-                $updated_details['updated_field'] = 'Employee ID Changed from ' . $tercourier[0]->employee_id . ' to ' .$sender_emp_id;
-                }else{
-                    $updated_details['updated_field'] = 'Employee ID added as '.$sender_emp_id;
-                }
-                if($tercourier_update_sender_emp_id){
+        }
+        if ($tercourier[0]->employee_id != $sender_emp_id) {
+            $tercourier_update_sender_emp_id = DB::table('tercouriers')->where('id', $unique_id)->update(array('employee_id' => $sender_emp_id));
+            if (!empty($tercourier[0]->employee_id)) {
+                $updated_details['updated_field'] = 'Employee ID Changed from ' . $tercourier[0]->employee_id . ' to ' . $sender_emp_id;
+            } else {
+                $updated_details['updated_field'] = 'Employee ID added as ' . $sender_emp_id;
+            }
+            if ($tercourier_update_sender_emp_id) {
                 $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-
             }
-            return $updated_record_detail;
-            // $tercourier=DB::table('tercouriers')->where('id',$unique_id)->update('sender_id',$sender_id);
-            //   return $tercourier;
+        }
+        return $updated_record_detail;
+        // $tercourier=DB::table('tercouriers')->where('id',$unique_id)->update('sender_id',$sender_id);
+        //   return $tercourier;
         // } else {
         //     return 'error';
         // }
@@ -550,16 +541,79 @@ class TercourierController extends Controller
         }
     }
 
-    public function update_data_ter(Request $request)
+    public function ter_pay_now(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['unique_id'];
+        $voucher_code = $data['voucher_code'];
+        $payable_amount = $data['payable_amount'];
+        $payment_status=$data['payment_status'];
+        $details = Auth::user();
+        $log_in_user_name = $details->name;
+        $log_in_user_id = $details->id;
+        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
+        if ($response) {
+            $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+            $tercourier_data = $all_data[0];
+            $sender_id = $tercourier_data->sender_id;
+            $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
+            $sender_data = $sender_table[0];
+
+            $curl = curl_init();
+            $due_date = date('d-m-Y');
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://stagging.finfect.biz/payments/non_finvendors_payments',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => "{
+                                \"employee_id\": \"$tercourier_data->employee_id\",
+                                \"employee_name\": \"$tercourier_data->sender_name\",
+                                \"beneficiary_name\": \"$tercourier_data->sender_name\",
+                                \"account_number\": \"$sender_data->account_number\",
+                                \"bank_name\": \"$sender_data->bank_name\",
+                                \"ifsc\": \"$sender_data->ifsc\",
+                                \"due_data\": \"$due_date\",
+                                \"payable_amount\": \"$tercourier_data->payable_amount\",
+                                \"voucher_code\": \"$tercourier_data->voucher_code\",
+                                \"company_name\": \"$tercourier_data->company_name\",
+                                \"ter_amount\": \"$tercourier_data->amount\"  
+                                }",
+
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+            echo "<pre>";
+            print_r($response);
+            exit;
+        }
+        // return $response;
+    }
+
+    public function ter_pay_later(Request $request)
     {
         $data = $request->all();
         $id = $data['unique_id'];
         $voucher_code = $data['voucher_code'];
         $payable_amount = $data['payable_amount'];
         $details = Auth::user();
+        $payment_status=$data['payment_status'];
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
-        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name);
+        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
         return $response;
+
     }
+
+
 }

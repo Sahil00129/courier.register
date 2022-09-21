@@ -102,7 +102,8 @@ Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
 Route::post('add_multiple_data', [TercourierController::class, 'add_multi_details_to_DB']);
 Route::get('update_ter', [TercourierController::class, 'update_ter']);
 Route::post('get_all_data', [TercourierController::class, 'get_all_data']);
-Route::post('update_data_ter', [TercourierController::class, 'update_data_ter']);
+Route::post('ter_pay_now', [TercourierController::class, 'ter_pay_now']);
+Route::post('ter_pay_later', [TercourierController::class, 'ter_pay_later']);
 
 Route::get('admin_update_ter', [TercourierController::class, 'admin_update_ter']);
 Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);

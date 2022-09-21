@@ -198,8 +198,13 @@
                             </div>
                         </div>
 
-                        <button type=" submit" class="btn btn-primary" v-on:click="update_data_ter()" :disabled="update_ter_flag">
-                            <span class="indicator-label">Save</span>
+                        <button type=" submit" class="btn btn-primary" v-on:click="ter_pay_now()" :disabled="update_ter_flag">
+                            <span class="indicator-label">Pay Now</span>
+                            </span>
+                        </button>
+
+                        <button type=" submit" class="btn btn-primary" v-on:click="ter_pay_later()" :disabled="update_ter_flag">
+                            <span class="indicator-label">Pay Later</span>
                             </span>
                         </button>
 
@@ -348,8 +353,8 @@
             this.button_text = "Search";
 
         },
-        methods: {
-            update_data_ter: function() {
+        methods: {   
+            ter_pay_later: function() {
                 if (this.voucher_code != "" && this.payable_amount != "") {
                     // alert(this.payable_amount);
                     // alert(this.amount);
@@ -370,10 +375,73 @@
 
                     if (this.payable_amount <= parseInt(this.amount)) {
 
-                        axios.post('/update_data_ter', {
+                        axios.post('/ter_pay_later', {
                                 'voucher_code': this.voucher_code,
                                 'payable_amount': this.payable_amount,
                                 'unique_id': this.all_data.id,
+                                'payment_status':"2",
+                            })
+                            .then(response => {
+                                // console.log(response.data);
+                                if (response.data) {
+                                    this.button_text = "Search";
+                                    this.flag = true;
+                                    this.update_ter_flag = true;
+                                    this.allow_flag=false;
+                                    swal('success', "Record has been updated Successfully!!!", 'success')
+                                } else {
+                                    this.button_text = "Search";
+                                    this.allow_flag=false;
+                                    swal('error', "Either Record is already updated or not selected", 'error')
+                                }
+
+                            }).catch(error => {
+
+                                this.button_text = "Search";
+
+
+                            })
+                    } else {
+                        // alert(this.amount)
+                        // alert(this.payable_amount)
+                        this.button_text = "Search";
+                        swal('error', "Amount can't be greater than total amount", 'error')
+                    }
+                }
+                else{
+            swal('error', "TER Dates needs update", 'error')
+                }
+                } else {
+                    swal('error', "Fields are empty", 'error')
+                }
+            },
+
+            ter_pay_now: function() {
+                if (this.voucher_code != "" && this.payable_amount != "") {
+                    // alert(this.payable_amount);
+                    // alert(this.amount);
+                    // alert(this.payable_amount)
+                    // this.all_data.terto_date
+                    // this.all_data.sender_detail.last_working_date
+                    var terto_date = new Date(this.all_data.terto_date);
+                    var last_working_date,last_working_time;
+                    if(this.all_data.sender_detail.last_working_date){
+                     last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                     last_working_time=last_working_date.getTime();
+                    }else{
+                        allow_flag=true;
+                    }
+
+                    if (terto_date.getTime() <= last_working_time || allow_flag)
+                    {
+
+                    if (this.payable_amount <= parseInt(this.amount)) {
+
+                        axios.post('/ter_pay_now', {
+                                'voucher_code': this.voucher_code,
+                                'payable_amount': this.payable_amount,
+                                'unique_id': this.all_data.id,
+                                'payment_status':"1",
                             })
                             .then(response => {
                                 // console.log(response.data);
