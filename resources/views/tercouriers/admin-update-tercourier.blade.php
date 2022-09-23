@@ -191,11 +191,11 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period From</label>
-                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" readonly="readonly" :value="this.all_data.terfrom_date">
+                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date"  v-model="terfrom">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period To</label>
-                                <input type="date" class="form-control" id="terto_date" name="terto_date" readonly="readonly" :value="this.all_data.terto_date">
+                                <input type="date" class="form-control" id="terto_date" name="terto_date"  v-model="terto">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Other Details</label>
@@ -215,11 +215,11 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-6">
                                 <label for="payable_">Payable Amount</label>
-                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" disabled>
+                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="voucher_c">Voucher Code</label>
-                                <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" disabled>
+                                <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code">
                             </div>
                         </div>
 
@@ -369,6 +369,8 @@
             sender_telephone: "",
             sender_status: "",
             company_name: "",
+            terfrom:"",
+            terto:"",
 
         },
         created: function() {
@@ -420,7 +422,13 @@
                                 'amount': this.amount,
                                 'unique_id': this.unique_id,
                                 'sender_name':sender_name,
-                                'ax_id':ax_code
+                                'ax_id':ax_code,
+                                'voucher_code':this.voucher_code,
+                                'payable_amount':this.payable_amount,
+                                'terfrom_date':this.terfrom,
+                                'terto_date':this.terto
+
+
                             })
                             .then(response => {
                                 // console.log(response.data);
@@ -431,7 +439,16 @@
                                     document.getElementById("search_item").value = "";
                                     this.unique_id = "";
                                     this.sender_all_info="";
-                                } else {
+                                } else if(response.data == 0){
+
+                                    this.button_text = "Search";
+                                    this.got_data = false;
+                                    this.unique_id = "";
+                                    this.sender_all_info="";
+                                    document.getElementById("search_item").value = "";
+                                    swal('error', "Request Already Submitted to finfect", 'error')
+                                }
+                                else {
                                     this.button_text = "Search";
                                     this.got_data = false;
                                     this.unique_id = "";
@@ -486,6 +503,8 @@
                             this.sender_telephone = this.all_data.sender_detail.telephone_no;
                             this.sender_status = this.all_data.sender_detail.status;
                             this.company_name = this.all_data.company_name;
+                            this.terfrom=this.all_data.terfrom_date;
+                            this.terto=this.all_data.terto_date;
 
 
                             // console.log(this.all_data.courier_company)
@@ -501,6 +520,8 @@
                             this.sender_telephone = this.all_data.sender_detail.telephone_no;
                             this.sender_status = this.all_data.sender_detail.status;
                             this.company_name = this.all_data.company_name;
+                            this.terfrom=this.all_data.terfrom_date;
+                            this.terto=this.all_data.terto_date;
 
                             // console.log(this.all_data.courier_company)
                         } else {

@@ -410,7 +410,18 @@
                                     this.unique_id = "";
                                     this.sender_all_info="";
                                     this.all_data={};
-                                } else {
+                                }
+                                else if(response.data == 0)
+                                {
+                                    this.button_text = "Search";
+                                    swal('error', "Record has been Already changed to Handover", 'error')
+                                    this.got_data = false;
+                                    this.unique_id = "";
+                                    this.sender_all_info="";
+                                    this.all_data={};
+                                    document.getElementById("search_item").value = "";
+                                }
+                                 else {
                                     this.button_text = "Search";
                                     this.got_data = false;
                                     this.unique_id = "";

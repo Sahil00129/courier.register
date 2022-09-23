@@ -92,7 +92,8 @@
                         <div class="form-row mb-2">
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">From</label>
-                                <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name" disabled>
+                                <!-- <div>@{{this.all_data.sender_name}} : @{{this.all_data.employee_id}} : @{{this.all_data.ax_id}} </div> -->
+                                <input type="text" class="form-control" name="from" v-model="emp_details" disabled>
                             </div>
                             <!-- <input type="hidden" class="form-control" name="sender_id"  id="senderID"> -->
                             <!--------------- Date of Receipt ---------->
@@ -345,6 +346,7 @@
             update_ter_flag: false,
             amount: "",
             allow_flag:false,
+            emp_details:"",
 
         },
         created: function() {
@@ -506,6 +508,7 @@
                             this.amount = this.all_data.amount;
                             this.payable_amount=this.all_data.payable_amount;
                             this.voucher_code=this.all_data.voucher_code;
+                            this.emp_details = this.all_data.sender_name+" : "+this.all_data.employee_id+" : "+this.all_data.ax_id;
 
                             // console.log(this.all_data.courier_company)
                         } else if (response.data[0] != "" && response.data.status_of_data === "1") {
