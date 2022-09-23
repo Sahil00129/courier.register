@@ -12,7 +12,8 @@ class Tercourier extends Model
     use HasFactory;
     protected $table = 'tercouriers';
     protected $fillable = [
-        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name','ax_id','employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at','finfect_response','refrence_transaction_id'
+        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name','ax_id','employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at','finfect_response','refrence_transaction_id',
+        'saved_by_id','saved_by_name'
     ];
 
     public function CourierCompany()
@@ -67,8 +68,8 @@ class Tercourier extends Model
     $data['voucher_code'] = $voucher;
     $data['payable_amount'] = $amount;
     $data['payment_status']=$payment_status;
-    $data['saved_by_id']=$user_id;
-    $data['saved_by_name']=$user_name;
+    $data['updated_by_id']=$user_id;
+    $data['updated_by_name']=$user_name;
     $data['updated_at'] = date('Y-m-d H:i:s');
     $query =  DB::table('tercouriers')->where('id', $unique_id)
     ->update($data);

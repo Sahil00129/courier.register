@@ -101,7 +101,9 @@ class TercourierController extends Controller
             return response()->json($response);
         }
 
-
+        $details = Auth::user();
+        $terdata['saved_by_name'] = $details->name;
+        $terdata['saved_by_id'] = $details->id;
         $terdata['employee_id']    = $request->sender_id;
         $terdata['date_of_receipt'] = $request->date_of_receipt;
         $terdata['courier_id']  = $request->courier_id;
@@ -130,8 +132,8 @@ class TercourierController extends Controller
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier->id);
         if ($tercourier) {
-            // return  $tercourier->id;
-            // exit;
+            return  $tercourier->id;
+            exit;
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
@@ -463,7 +465,7 @@ class TercourierController extends Controller
 
         // if ($sender_emp_id ==  $sender_table[0]->employee_id) {
         //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
-        if($tercourier[0]->status == 2){
+        if($tercourier[0]->status == 2 || $tercourier[0]->status == 4){
 
         if ((int)$tercourier[0]->amount != $amount) {
             // dd("gggf");
@@ -779,7 +781,11 @@ class TercourierController extends Controller
     public function edit_tercourier(Request $request)
     {
         $data=$request->all();
+
         $id=$data['unique_id'];
+        $details = Auth::user();
+        $data['saved_by_name'] = $details->name;
+        $data['saved_by_id'] = $details->id;
         unset($data['unique_id']);
         $senders =  DB::table('sender_details')->where('employee_id', $data['employee_id'])->get()->toArray();
         $data['sender_id'] = $senders[0]->id;

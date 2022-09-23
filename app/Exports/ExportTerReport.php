@@ -13,16 +13,13 @@ class ExportTerReport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Tercourier::all();
+        return Tercourier::select('id','saved_by_id','saved_by_name','created_at','updated_by_id','updated_by_name','updated_at')->get();
     }
 
     public function headings(): array
     {
         return [
-            "ID", "Date_of_receipt", "Docket_no", "Docket_date", "Courier_id", "Unique_id", "Employee_name", "Ax_id", "Employee_id",
-            "Location", "Company_name", "Terfrom_date", "Terto_date", "Details", "Amount", "Payable_amount", "Voucher_code", "Payment_status",
-            "Refrence_transaction_id", "Finfect_response", "Saved_by_id", "Saved_by_name", "Delivery_date", "Remarks", "Given_to", "Status",
-            "Created_at", "Updated_at"
+            "ID","Created_by_user_id","Created_by_user_name", "Created_at","Updated_by_user_id","Updated_by_user_name", "Updated_at"
         ];
     }
 }
