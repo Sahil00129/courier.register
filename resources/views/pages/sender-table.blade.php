@@ -47,7 +47,8 @@
                             <th>Telephone No</th>
                             <th>Last Working Date</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <?php
+    if (!$flag) { ?>    <th>Actions</th> <?php }?>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,10 +64,11 @@
                             <td>{{$send->telephone_no}}</td>
                             <td>{{Helper::ShowFormatDate($send->last_working_date)}}</td>
                             <td>{{ucfirst($send->status)}}</td>
-                            <td>
+                            <?php
+    if (!$flag) { ?>     <td>
                                 <a href="{{url('edit-sender/'.Crypt::encrypt($send->id))}}" class="btn btn-primary">Edit</a>
                                 <a href="Javascript:void();" class="btn btn-danger delete_sender" data-id="{{ $send->id }}" data-action="<?php echo URL::to('senders/delete-sender'); ?>">Delete</a>
-                            </td>
+                            </td><?php }?>
                         </tr>
                         @endforeach
                     </tbody>
