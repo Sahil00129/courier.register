@@ -140,7 +140,8 @@ $('#new_sender_add').submit(function(e) {
         /////////////////////////New TERCourier Create//////////////////////////
 		$('#new_tercourier_create').submit(function(e) {
             e.preventDefault();
-            document.getElementById("save_ter_btn").disabled = true;
+            // document.getElementById("save_ter_btn").disabled = true;
+            jQuery('#save_ter_btn').prop('disabled', true);
 
             $.ajax({
                 url: "/tercouriers", 
