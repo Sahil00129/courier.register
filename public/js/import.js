@@ -140,6 +140,7 @@ $('#new_sender_add').submit(function(e) {
         /////////////////////////New TERCourier Create//////////////////////////
 		$('#new_tercourier_create').submit(function(e) {
             e.preventDefault();
+            document.getElementById("save_ter_btn").disabled = true;
 
             $.ajax({
                 url: "/tercouriers", 
@@ -186,6 +187,7 @@ $('#new_sender_add').submit(function(e) {
                 success: (data) => {
                     $(".indicator-progress").hide();
                     $(".indicator-label").show();
+                    // $("#save_ter_btn").disabled();
                     $('#new_tercourier_create').trigger('reset');       
                     //this.reset();
                     if(data.success === true) {     

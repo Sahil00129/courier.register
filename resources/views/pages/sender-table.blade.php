@@ -15,7 +15,21 @@
                 
             </ol>
         </nav>
+        <?php
+    if (!$flag) { ?>
         <a class="btn btn-primary" href="{{url('add-sender')}}" >Add Sender</a>
+        <?php }?>
+        <?php
+    if ($flag) { ?>
+    <a class="btn btn-primary" href="{{url('export_emp_table')}}" style="margin-left:50%" >Download Employee Table</a>
+    
+    <?php }?>
+
+    <?php
+    if ($flag_hr) { ?>
+    <a class="btn btn-primary" href="{{url('export_ter_user_entry')}}" >Download Ter Report</a>
+    <?php }?>
+    
     </div>
                 
     <div class="row layout-top-spacing" id="cancel-row">

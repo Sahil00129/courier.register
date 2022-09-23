@@ -12,7 +12,7 @@ class Tercourier extends Model
     use HasFactory;
     protected $table = 'tercouriers';
     protected $fillable = [
-        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name','ax_id','employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at'
+        'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name','ax_id','employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at','finfect_response','refrence_transaction_id'
     ];
 
     public function CourierCompany()
@@ -56,6 +56,14 @@ class Tercourier extends Model
    public static function add_voucher_payable($voucher,$amount,$unique_id,$user_id,$user_name,$payment_status)
    {
     //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later.
+    // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later Status=4 is Pay, Status=0 is Failed Payment
+    if($payment_status == 1)
+    {
+        $data['status'] = 3;
+    }else if($payment_status == 2)
+    {
+        $data['status'] = 4;
+    }
     $data['voucher_code'] = $voucher;
     $data['payable_amount'] = $amount;
     $data['payment_status']=$payment_status;

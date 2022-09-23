@@ -84,7 +84,7 @@
                                     <select class="form-control  basic" name="sender_id" id="select_employee">
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
-                                        <option value="{{$sender->id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}} : {{$sender->status}}</option>
+                                        <option value="{{$sender->employee_id}}">{{$sender->name}} : {{$sender->ax_id}} : {{$sender->employee_id}} : {{$sender->status}}</option>
                                       @endforeach
                                     </select>
                                     <!-- <div id="product_list"></div> -->
@@ -143,7 +143,7 @@
                             <div class="form-row mb-0">
                                 <div class="form-group col-md-4">
                                     <label for="inputState">Location</label>
-                                    <input type="text" class="form-control location1" id="location" name="location" Required>
+                                    <input type="text" class="form-control location1" id="locations" name="location" Required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputState">Company Name</label>
@@ -198,7 +198,7 @@
                                 </div>
                             </div>
          
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="save_ter_btn">
                                 <span class="indicator-label">Save</span>
 	                            <span class="indicator-progress" style="display: none;">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -274,6 +274,7 @@
     //// get employee data on change
     $('#select_employee').on('change', function() {
         var emp_id = $(this).val();
+        // alert(emp_id);
         
         $.ajax({
             type      : 'GET',

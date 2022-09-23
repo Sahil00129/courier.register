@@ -90,10 +90,15 @@
                                         $class = 'btn-warning';
                                     } elseif ($tercourier->status == 3) {
 
-                                        $status = 'Unpaid';
+                                        $status = 'Sent to Finfect';
                                         $class = 'btn-success';
-                                    } else {
-                                        $status = 'Cancel';
+                                    }elseif ($tercourier->status == 4) {
+
+                                        $status = 'Pay';
+                                        $class = 'btn-success';
+                                    }
+                                     else {
+                                        $status = 'Failed';
                                         $class = 'btn-danger';
                                     }
                                     ?>

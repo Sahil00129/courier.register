@@ -108,6 +108,18 @@ Route::post('ter_pay_later', [TercourierController::class, 'ter_pay_later']);
 Route::get('admin_update_ter', [TercourierController::class, 'admin_update_ter']);
 Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
 
+Route::get('show_pay_later_data', [TercourierController::class, 'show_pay_later_data']);
+Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
+Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
+
+Route::get('/export_emp_table', [ImportExportController::class,'ExportSender']);
+Route::get('/export_ter_user_entry', [ImportExportController::class,'ExportSavedEntry']);
+
+Route::get('edit_ter_reception', [TercourierController::class, 'edit_ter_reception']);
+Route::post('edit_tercourier', [TercourierController::class, 'edit_tercourier']);
+
+
+
 });
 
 

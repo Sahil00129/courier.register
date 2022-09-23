@@ -40,11 +40,12 @@ class TercourierController extends Controller
             $user = Auth::user();
             $data = json_decode(json_encode($user));
             $name = $data->roles[0]->name;
+            // echo'<pre>'; print_r($name); die;
             // print_r($name);exit;
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['2', '3'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['2', '3', '4'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
@@ -100,8 +101,8 @@ class TercourierController extends Controller
             return response()->json($response);
         }
 
-   
-        $terdata['sender_id']    = $request->sender_id;
+
+        $terdata['employee_id']    = $request->sender_id;
         $terdata['date_of_receipt'] = $request->date_of_receipt;
         $terdata['courier_id']  = $request->courier_id;
         $terdata['docket_no']   = $request->docket_no;
@@ -119,22 +120,27 @@ class TercourierController extends Controller
 
         // echo "<pre>";print_r($terdata);
 
-        $senders =  DB::table('sender_details')->where('id', $terdata['sender_id'])->get()->toArray();
+        $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
         $terdata['ax_id']    = $senders[0]->ax_id;
-        $terdata['employee_id'] = $senders[0]->employee_id;
+        $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
+
         // echo "<pre>";print_r($senders[0]->ax_id);die;
-        // echo "<pre>";print_r($terdata);
+        // echo "<pre>";print_r($terdata);die;
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier->id);
         if ($tercourier) {
-            $getsender = Sender::where('id', $tercourier->sender_id)->first();
+            // return  $tercourier->id;
+            // exit;
+            $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
             $peid = "1201159713185947382"; // Get Key from DLT 
             $sender_id = "FAPLHR"; // Approved from DLT
-            $mob = $getsender->telephone_no; // Get Mobile Number from Sender
+            $mob = $getsender->telephone_no; // Get Mobile Number from Sender 
             $name = $getsender->name;
+            // print_r($getsender);
+            // exit;
 
             $from_period = Helper::ShowFormat($tercourier->terfrom_date);
             $to_period = Helper::ShowFormat($tercourier->terto_date);
@@ -548,57 +554,103 @@ class TercourierController extends Controller
         $id = $data['unique_id'];
         $voucher_code = $data['voucher_code'];
         $payable_amount = $data['payable_amount'];
-        $payment_status=$data['payment_status'];
+        $payment_status = $data['payment_status'];
         $details = Auth::user();
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
-        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
-        if ($response) {
-            $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
-            $tercourier_data = $all_data[0];
-            $sender_id = $tercourier_data->sender_id;
-            $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
-            $sender_data = $sender_table[0];
-
-            $curl = curl_init();
-            $due_date = date('d-m-Y');
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://stagging.finfect.biz/payments/non_finvendors_payments',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => "{
-                                \"employee_id\": \"$tercourier_data->employee_id\",
-                                \"employee_name\": \"$tercourier_data->sender_name\",
-                                \"beneficiary_name\": \"$tercourier_data->sender_name\",
-                                \"account_number\": \"$sender_data->account_number\",
-                                \"bank_name\": \"$sender_data->bank_name\",
-                                \"ifsc\": \"$sender_data->ifsc\",
-                                \"due_data\": \"$due_date\",
-                                \"payable_amount\": \"$tercourier_data->payable_amount\",
-                                \"voucher_code\": \"$tercourier_data->voucher_code\",
-                                \"company_name\": \"$tercourier_data->company_name\",
-                                \"ter_amount\": \"$tercourier_data->amount\"  
-                                }",
-
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json'
-                ),
-            ));
-
-            $response = curl_exec($curl);
-
-            curl_close($curl);
-            echo "<pre>";
-            print_r($response);
+        $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        $tercourier_ax_check = $data_ter[0];
+        if ($tercourier_ax_check->ax_id && $tercourier_ax_check->ax_id != 0) {
+            $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name, $payment_status);
+        } else {
             exit;
         }
-        // return $response;
+
+
+        if ($response) {
+            $res = self::api_call_finfect($id);
+        }
+
+        return $res;
+    }
+
+    public function api_call_finfect($id)
+    {
+
+        $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        $tercourier_data = $all_data[0];
+        $sender_id = $tercourier_data->sender_id;
+        $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
+        $sender_data = $sender_table[0];
+        $ax_id = $tercourier_data->ax_id;
+        if (!empty($ax_id)) {
+            $new_data = explode("-", $ax_id);
+            if ($new_data[0] == "FAMA") {
+                $pfu = "MA2";
+            } else if ($new_data[0] == "FAGMA") {
+                $pfu = "MA4";
+            } else if ($new_data[0] == "FAGSD") {
+                $pfu = "SD3";
+            } else if ($new_data[0] == "FAPL") {
+                $pfu = "SD1";
+            } else {
+                exit;
+            }
+        } else {
+            exit;
+        }
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://stagging.finfect.biz/api/non_finvendors_payments',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => "[{
+                            \"unique_code\": \"$tercourier_data->employee_id\",
+                            \"name\": \"$tercourier_data->sender_name\",
+                            \"acc_no\": \"$sender_data->account_number\",
+                            \"beneficiary_name\": \"$sender_data->beneficiary_name\",
+                            \"ifsc\": \"$sender_data->ifsc\",
+                            \"bank_name\": \"$sender_data->bank_name\",
+                            \"payable_amount\": \"$tercourier_data->payable_amount\",
+                            \"claimed_amount\": \"$tercourier_data->amount\" , 
+                            \"pfu\": \"$pfu\",
+                            \"ax_voucher_code\": \"$tercourier_data->voucher_code\",
+                            \"txn_route\": \"TER\"
+                            }]",
+
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $res_data = json_decode($response);
+        if ($res_data->message == "success") {
+            $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
+            $new_data['finfect_response'] = $res_data->message;
+            $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
+                'refrence_transaction_id' => $new_string['refrence_transaction_id'],
+                'finfect_response' => $new_data['finfect_response'],'status'=>3
+            ));
+        } else {
+            $new_data['finfect_response'] = $res_data->message;
+            $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
+                'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
+                'status' => 0
+            ));
+            $res = [0, $new_data['finfect_response']];
+        }
+
+        return $res;
     }
 
     public function ter_pay_later(Request $request)
@@ -608,13 +660,75 @@ class TercourierController extends Controller
         $voucher_code = $data['voucher_code'];
         $payable_amount = $data['payable_amount'];
         $details = Auth::user();
-        $payment_status=$data['payment_status'];
+        $payment_status = $data['payment_status'];
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
-        $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
+        $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        $tercourier_ax_check = $data_ter[0];
+        if ($tercourier_ax_check->ax_id && $tercourier_ax_check->ax_id != 0) {
+            $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name, $payment_status);
+        } else {
+            exit;
+        }
+        // $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
         return $response;
-
     }
 
+    public function show_pay_later_data(Request $request)
+    {
 
+
+        if (Auth::check()) {
+            $query = Tercourier::query();
+
+            $tercouriers = $query->where('payment_status', 2)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+
+            // echo'<pre>'; print_r($tercouriers->status); die;
+            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers]);
+        }
+        //    echo'<pre>'; print_r($name); die;
+    }
+
+    public function pay_later_ter_now(Request $request)
+    {
+        $data=$request->all();
+        $res = self::api_call_finfect($data['selected_id']);
+        return $res;
+    }
+
+    public function group_pay_now(Request $request)
+    {
+        $data = $request->all();
+        $unique_ids = explode("|", $data['selected_id']);
+    
+
+        // $checkquery=DB::table('tercouriers')->select('amount','id')->whereIn('id',$unique_ids)->get()->toArray();
+        // return $checkquery;
+    
+        foreach($unique_ids as $key => $newdata){
+            $id=$newdata;
+          $api_call=self::api_call_finfect($id);
+          
+            }
+    
+            return $api_call;
+    }
+
+    public function edit_ter_reception()
+    {
+        $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
+        return view('tercouriers.reception-edit-tercourier',['couriers'=>$couriers]);
+    }
+
+    public function edit_tercourier(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['unique_id'];
+        unset($data['unique_id']);
+        $senders =  DB::table('sender_details')->where('employee_id', $data['employee_id'])->get()->toArray();
+        $data['sender_id'] = $senders[0]->id;
+        $new=DB::table('tercouriers')->where('id',$id)->update($data);
+        return $new;
+    }
+    
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\BulkImport;
+use App\Exports\ExportEmployee;
+use App\Exports\ExportTerReport;
 use Response;
 
 class ImportExportController extends Controller
@@ -155,5 +157,16 @@ class ImportExportController extends Controller
                 return Response::json($response);
             }
         }
+    }
+
+    public function ExportSender()
+    {
+        return Excel::download(new ExportEmployee, 'employee_report.xlsx');
+
+    }
+
+    public function ExportSavedEntry()
+    {
+        return Excel::download(new ExportTerReport, 'tercourier_report.xlsx');
     }
 }

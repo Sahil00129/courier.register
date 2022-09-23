@@ -8,6 +8,7 @@ use DB;
 use URL;
 use Response;
 use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class SenderController extends Controller
 {
@@ -15,8 +16,9 @@ class SenderController extends Controller
     {
         // $this->middleware('auth');
         $this->middleware('permission:add-sender' ,['only' => ['addSenderIndex']]);
-
+        $this->middleware('permission:sender-table-show', ['only' => ['senderTable']]);
     }
+
 
     public function addSenderIndex()
     {
@@ -26,7 +28,21 @@ class SenderController extends Controller
     public function senderTable(Request $request)
     {
         $sends = Sender::all();
-        return view ('pages.sender-table',  ['sends' => $sends])->with('i', ($request->input('page', 1) - 1) * 5);
+        $user = Auth::user();
+        $data = json_decode(json_encode($user));
+        // echo'<pre>'; print_r($data); die;
+        $name = $data->roles[0]->name;
+        $flag=0;
+        $flag_hr=0;
+        // echo'<pre>'; print_r($name); die;
+        if ($name === "tr admin" || $name === "Hr Admin") {
+          $flag=1;
+        }
+        if ($name === "Hr Admin") {
+            $flag_hr=1;
+          }
+
+        return view ('pages.sender-table',  ['sends' => $sends,'flag'=>$flag,'flag_hr'=>$flag_hr])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function addSender(Request $request) 
