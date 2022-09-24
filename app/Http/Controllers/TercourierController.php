@@ -132,8 +132,8 @@ class TercourierController extends Controller
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier->id);
         if ($tercourier) {
-            return  $tercourier->id;
-            exit;
+            // return  $tercourier->id;
+            // exit;
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
