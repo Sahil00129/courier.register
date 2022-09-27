@@ -681,8 +681,8 @@ class TercourierController extends Controller
                             \"claimed_amount\": \"$tercourier_data->amount\" , 
                             \"pfu\": \"$pfu\",
                             \"ax_voucher_code\": \"$tercourier_data->voucher_code\",
-                            \"txn_route\": \"TER\"
-                            \"email\": \"$sender_data->official_email_id\"
+                            \"txn_route\": \"TER\",
+                            \"email\": \"$sender_data->official_email_id\",
                             \"terid\": \"$tercourier_data->id\"
 
 
