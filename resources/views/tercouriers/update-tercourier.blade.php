@@ -437,7 +437,7 @@
                     if (terto_date.getTime() <= last_working_time || this.allow_flag)
                     {
 
-                    if (this.payable_amount <= parseInt(this.amount)) {
+                    if (this.payable_amount <= parseInt(this.amount)) { 
 
                         axios.post('/ter_pay_now', {
                                 'voucher_code': this.voucher_code,

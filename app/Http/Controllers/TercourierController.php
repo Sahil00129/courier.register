@@ -608,6 +608,7 @@ class TercourierController extends Controller
 
     public function ter_pay_now(Request $request)
     {
+        
         $data = $request->all();
         $id = $data['unique_id'];
         $voucher_code = $data['voucher_code'];
@@ -634,7 +635,6 @@ class TercourierController extends Controller
 
     public function api_call_finfect($id)
     {
-
         $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         $tercourier_data = $all_data[0];
         $sender_id = $tercourier_data->sender_id;
@@ -676,11 +676,17 @@ class TercourierController extends Controller
                             \"beneficiary_name\": \"$sender_data->beneficiary_name\",
                             \"ifsc\": \"$sender_data->ifsc\",
                             \"bank_name\": \"$sender_data->bank_name\",
+                            \"baddress\": \"$sender_data->branch_name\",
                             \"payable_amount\": \"$tercourier_data->payable_amount\",
                             \"claimed_amount\": \"$tercourier_data->amount\" , 
                             \"pfu\": \"$pfu\",
                             \"ax_voucher_code\": \"$tercourier_data->voucher_code\",
                             \"txn_route\": \"TER\"
+                            \"email\": \"$sender_data->official_email_id\"
+                            \"terid\": \"$tercourier_data->id\"
+
+
+
                             }]",
 
             CURLOPT_HTTPHEADER => array(
