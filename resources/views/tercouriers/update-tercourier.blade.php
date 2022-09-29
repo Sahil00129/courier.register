@@ -198,7 +198,7 @@
                                 <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary" name="button" @click="addAnotherpayment">Add Another</button>
+                        <button type="button" class="btn btn-primary" name="button" @click="addAnotherpayment">Add</button>
                         <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
                             <li v-for="(payment_data,index) in pay_data_array" style="font-weight:bold">
                                 @{{index+1}} . Payable Amount : @{{payment_data.payable_amount}} Voucher Code : @{{payment_data.voucher_code}}
@@ -206,6 +206,7 @@
                                 <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button>
                             </li>
                         </ul>
+                        <div v-if="pay_btn_flag">
                         <button type=" submit" class="btn btn-primary" v-on:click="ter_pay_now()" :disabled="update_ter_flag">
                             <span class="indicator-label">Pay Now</span>
                             </span>
@@ -215,6 +216,7 @@
                             <span class="indicator-label">Pay Later</span>
                             </span>
                         </button>
+                        </div>
 
                     </div>
                 </div>
@@ -368,6 +370,7 @@
             company_name: "",
             terfrom: "",
             terto: "",
+            pay_btn_flag:false,
             // sum_flag:true,
 
         },
@@ -379,6 +382,7 @@
         },
         methods: {
             addAnotherpayment() {
+                this.pay_btn_flag="true";
                 // your logic here...
                 if (this.counter > 4) {
                     swal('error', "You should delete one first! only 5 allowed", 'error')
@@ -410,10 +414,14 @@
                 }
             },
             removePayment(payment_data) {
+                if(this.pay_data_array.length == 1)
+                {
+                    this.pay_btn_flag=false;
+                }
                 var getIndex = this.pay_data_array.indexOf(payment_data);
                 var pay_amount_now = this.pay_data_array[getIndex].payable_amount;
                 this.sum_amount = this.sum_amount - pay_amount_now;
-                console.log(this.sum_amount);
+                // console.log(this.sum_amount);
                 this.pay_data_array.splice(this.pay_data_array.indexOf(payment_data), 1);
                 this.counter--;
             },
