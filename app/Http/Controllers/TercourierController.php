@@ -439,6 +439,11 @@ class TercourierController extends Controller
         return view('tercouriers.admin-update-tercourier');
     }
 
+    // public function test()
+    // {
+    //     return view('tercouriers.test');
+    // }
+
     public function update_by_hr_admin(Request $request)
     {
         $data = $request->all();
@@ -465,7 +470,7 @@ class TercourierController extends Controller
 
         // if ($sender_emp_id ==  $sender_table[0]->employee_id) {
         //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
-        if($tercourier[0]->status == 2 || $tercourier[0]->status == 4){
+        if($tercourier[0]->status == 2 || $tercourier[0]->status == 4 || $tercourier[0]->status == 0){
 
         if ((int)$tercourier[0]->amount != $amount) {
             // dd("gggf");
@@ -611,20 +616,32 @@ class TercourierController extends Controller
         
         $data = $request->all();
         $id = $data['unique_id'];
-        $voucher_code = $data['voucher_code'];
-        $payable_amount = $data['payable_amount'];
+        $payable_data=$data['payable_data'];
+        $ter_total_amount=$data['ter_total_amount'];
+        $total_payable_sum=0;
+        $length=sizeof($payable_data);
+        for($i=0;$i<$length;$i++)
+        {
+            $total_payable_sum=$total_payable_sum+$payable_data[$i]['payable_amount'];
+        }
+
+        if($total_payable_sum>$ter_total_amount)
+        {
+            return "error_sum_amount";
+        }
+        // $voucher_code = $data['voucher_code'];
+        // $payable_amount = $data['payable_amount'];
         $payment_status = $data['payment_status'];
         $details = Auth::user();
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         $tercourier_ax_check = $data_ter[0];
-        if ($tercourier_ax_check->ax_id && $tercourier_ax_check->ax_id != 0) {
-            $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name, $payment_status);
+        if ($tercourier_ax_check->ax_id != 0) {
+            $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status);
         } else {
             exit;
         }
-
 
         if ($response) {
             $res = self::api_call_finfect($id);
@@ -658,10 +675,13 @@ class TercourierController extends Controller
             exit;
         }
 
+        // return $tercourier_data->payable_amount;
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://stagging.finfect.biz/api/non_finvendors_payments',
+            // CURLOPT_URL => 'https://stagging.finfect.biz/api/non_finvendors_payments',
+            CURLOPT_URL => 'https://finfect.biz/api/non_finvendors_payments',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -683,10 +703,9 @@ class TercourierController extends Controller
                             \"ax_voucher_code\": \"$tercourier_data->voucher_code\",
                             \"txn_route\": \"TER\",
                             \"email\": \"$sender_data->official_email_id\",
-                            \"terid\": \"$tercourier_data->id\"
-
-
-
+                            \"terid\": \"$tercourier_data->id\",
+                            \"ptype\":\"Regular\",
+                            \"ax_id\":\"$ax_id\"
                             }]",
 
             CURLOPT_HTTPHEADER => array(
@@ -721,16 +740,28 @@ class TercourierController extends Controller
     {
         $data = $request->all();
         $id = $data['unique_id'];
-        $voucher_code = $data['voucher_code'];
-        $payable_amount = $data['payable_amount'];
+        $payable_data=$data['payable_data'];
+        $ter_total_amount=$data['ter_total_amount'];
+        $total_payable_sum=0;
+        $length=sizeof($payable_data);
+        for($i=0;$i<$length;$i++)
+        {
+            $total_payable_sum=$total_payable_sum+$payable_data[$i]['payable_amount'];
+        }
+
+        if($total_payable_sum>$ter_total_amount)
+        {
+            return "error_sum_amount";
+        }
+
         $details = Auth::user();
         $payment_status = $data['payment_status'];
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         $tercourier_ax_check = $data_ter[0];
-        if ($tercourier_ax_check->ax_id && $tercourier_ax_check->ax_id != 0) {
-            $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name, $payment_status);
+        if ($tercourier_ax_check->ax_id  != 0) {
+            $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status);
         } else {
             exit;
         }
@@ -803,6 +834,12 @@ class TercourierController extends Controller
          else{
             return 0;
          }
+    }
+
+    public function sent_payment_response(Request $request)
+    {
+        $data=$request->all();
+        
     }
     
 }

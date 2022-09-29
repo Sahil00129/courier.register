@@ -54,7 +54,7 @@ class Tercourier extends Model
     return $query;
    }
 
-   public static function add_voucher_payable($voucher,$amount,$unique_id,$user_id,$user_name,$payment_status)
+   public static function add_voucher_payable($payable_data,$unique_id,$user_id,$user_name,$payment_status)
    {
     //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later.
     // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later Status=4 is Pay, Status=0 is Failed Payment
@@ -65,14 +65,26 @@ class Tercourier extends Model
     {
         $data['status'] = 4;
     }
-    $data['voucher_code'] = $voucher;
-    $data['payable_amount'] = $amount;
+
     $data['payment_status']=$payment_status;
     $data['updated_by_id']=$user_id;
     $data['updated_by_name']=$user_name;
     $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $length=sizeof($payable_data);
+    for($i=0;$i<$length;$i++)
+    {
+        $pay_data[$i]=$payable_data[$i]['payable_amount'];
+        $voucher_data[$i] =$payable_data[$i]['voucher_code'];
+   
+    }
+
+    $data['payable_amount']=$pay_data;
+    $data['voucher_code']=$voucher_data;
+
     $query =  DB::table('tercouriers')->where('id', $unique_id)
     ->update($data);
+
     return $query;
    }
 

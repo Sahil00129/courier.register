@@ -99,7 +99,7 @@
                             <!--------------- Date of Receipt ---------->
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">Date of Receipt</label>
-                                <input type="date" class="form-control" name="date_of_receipt" :value="this.all_data.date_of_receipt" disabled>
+                                <input type="date" class="form-control" name="date_of_receipt" v-model="date_of_receipt" disabled>
                             </div>
                             <!--------------- end ------------------>
                         </div>
@@ -107,15 +107,15 @@
                         <div class="form-row mb-2">
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Location</label>
-                                <input type="text" class="form-control" id="location" name="location" :value="this.all_data.sender_detail.location" readonly="readonly">
+                                <input type="text" class="form-control" id="location" name="location" v-model="location" readonly="readonly">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Telephone No.</label>
-                                <input type="text" class="form-control mbCheckNm" id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly" :value="this.all_data.sender_detail.telephone_no">
+                                <input type="text" class="form-control mbCheckNm" id="telephone_no" name="telephone_no" autocomplete="off" maxlength="10" readonly="readonly" v-model="telephone_no">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Status</label>
-                                <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" :value="this.all_data.sender_detail.status " />
+                                <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" v-model="status" />
 
                                 <!-- <div v-if="this.all_data.sender_detail.status === 1">
                                         <input type="text" class="form-control" id="emp_status" name="emp_status" autocomplete="off" readonly="readonly" value="Received" />
@@ -134,16 +134,16 @@
                         <div class="form-row mb-2">
                             <div class="form-group col-md-4">
                                 <label for="inputState">Courier Name</label>
-                                <input type="text" class="form-control" id="courier_name" autocomplete="off" readonly="readonly" :value="this.all_data.courier_company.courier_name">
+                                <input type="text" class="form-control" id="courier_name" autocomplete="off" readonly="readonly" v-model="courier_name">
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Docket No.</label>
-                                <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" readonly="readonly" :value="this.all_data.docket_no">
+                                <input type="text" class="form-control" id="docket_no" name="docket_no" autocomplete="off" readonly="readonly" v-model="docket_no">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Docket Date</label>
-                                <input type="date" class="form-control" id="docket_date" name="docket_date" readonly="readonly" :value="this.all_data.docket_date">
+                                <input type="date" class="form-control" id="docket_date" name="docket_date" readonly="readonly" v-model="docket_date">
                                 <!-- <p class="docketdate_error text-danger" style="display: none; color: #ff0000; font-weight: 500;">Docket date invalid.</p> -->
                             </div>
                         </div>
@@ -153,25 +153,25 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-4">
                                 <label for="inputState">Location</label>
-                                <input type="text" class="form-control location1" id="location" name="location" readonly="readonly" :value="this.all_data.location">
+                                <input type="text" class="form-control location1" id="location" name="location" readonly="readonly" v-model="doc_location">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputState">Company Name</label>
-                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.company_name">
+                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" v-model="company_name">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputState">TER Amount</label>
-                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" :value="this.all_data.amount">
+                                <input type="text" class="form-control" id="amount" name="amount" readonly="readonly" v-model="amount">
                             </div>
                         </div>
                         <div class="form-row mb-0">
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period From</label>
-                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" readonly="readonly" :value="this.all_data.terfrom_date">
+                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" readonly="readonly" v-model="terfrom">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period To</label>
-                                <input type="date" class="form-control" id="terto_date" name="terto_date" readonly="readonly" :value="this.all_data.terto_date">
+                                <input type="date" class="form-control" id="terto_date" name="terto_date" readonly="readonly" v-model="terto">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Other Details</label>
@@ -191,14 +191,21 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-6">
                                 <label for="payable_">Payable Amount</label>
-                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
+                                <input type="text" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="voucher_c">Voucher Code</label>
                                 <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
                             </div>
                         </div>
+                        <button type="button" class="btn btn-primary" name="button" @click="addAnotherpayment">Add Another</button>
+                        <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
+                            <li v-for="(payment_data,index) in pay_data_array" style="font-weight:bold">
+                                @{{index+1}} . Payable Amount : @{{payment_data.payable_amount}} Voucher Code : @{{payment_data.voucher_code}}
 
+                                <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button>
+                            </li>
+                        </ul>
                         <button type=" submit" class="btn btn-primary" v-on:click="ter_pay_now()" :disabled="update_ter_flag">
                             <span class="indicator-label">Pay Now</span>
                             </span>
@@ -340,13 +347,28 @@
             unique_id: "",
             all_data: {},
             button_text: "Search",
-            payable_amount: "",
+            payable_amount: 0,
             voucher_code: "",
             flag: false,
             update_ter_flag: false,
             amount: "",
-            allow_flag:false,
-            emp_details:"",
+            allow_flag: false,
+            emp_details: "",
+            counter: 0,
+            pay_data_array: [],
+            sum_amount:0,
+            date_of_receipt: "",
+            location: "",
+            telephone_no: "",
+            status: "",
+            courier_name: "",
+            docket_no: "",
+            docket_date: "",
+            doc_location: "",
+            company_name: "",
+            terfrom: "",
+            terto: "",
+            // sum_flag:true,
 
         },
         created: function() {
@@ -355,136 +377,171 @@
             this.button_text = "Search";
 
         },
-        methods: {   
+        methods: {
+            addAnotherpayment() {
+                // your logic here...
+                if (this.counter > 4) {
+                    swal('error', "You should delete one first! only 5 allowed", 'error')
+                } else {
+                    if (this.payable_amount != "" && this.voucher_code != "" && this.voucher_code != null) {
+                        const payment_data = {
+                            payable_amount: this.payable_amount, //name here
+                            voucher_code: this.voucher_code //location here
+                        }
+                        
+
+                    //    this.sum_amount.push(payment_data.payable_amount);
+                       
+                    //   console.log(this.pay_data_array)
+                    
+
+                        if (this.payable_amount <= parseInt(this.amount)) {
+                                this.counter++;
+                                this.pay_data_array.push(payment_data)
+                                this.payable_amount = '';
+                                this.voucher_code = '';
+                        } else {
+                            // this.sum_flag=false;
+                            swal('error', "Amount can't be greater than total amount", 'error')
+                        }
+                    } else {
+                        swal('error', "Fields are empty", 'error')
+                    }
+                }
+            },
+            removePayment(payment_data) {
+                var getIndex = this.pay_data_array.indexOf(payment_data);
+                var pay_amount_now = this.pay_data_array[getIndex].payable_amount;
+                this.sum_amount = this.sum_amount - pay_amount_now;
+                console.log(this.sum_amount);
+                this.pay_data_array.splice(this.pay_data_array.indexOf(payment_data), 1);
+                this.counter--;
+            },
             ter_pay_later: function() {
-                if (this.voucher_code != "" && this.payable_amount != "") {
+                // if (this.voucher_code != "" && this.payable_amount != "") {
                     // alert(this.payable_amount);
                     // alert(this.amount);
                     // alert(this.payable_amount)
                     // this.all_data.terto_date
                     // this.all_data.sender_detail.last_working_date
+                    var i,len;
                     var terto_date = new Date(this.all_data.terto_date);
-                    var last_working_date,last_working_time;
-                    if(this.all_data.sender_detail.last_working_date){
-                     last_working_date = new Date(this.all_data.sender_detail.last_working_date);
-                     last_working_time=last_working_date.getTime();
-                    }else{
-                        this.allow_flag=true;
+                    var last_working_date, last_working_time;
+                    if (this.all_data.sender_detail.last_working_date) {
+                        last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                        last_working_time = last_working_date.getTime();
+                    } else {
+                        this.allow_flag = true;
                     }
 
-                    if (terto_date.getTime() <= last_working_time || this.allow_flag)
+                    len=this.pay_data_array.length;
+                    for(i=0;i<len;i++)
                     {
+                        this.sum_amount= this.sum_amount +" "+this.pay_data_array[i].payable_amount;
+                        // console.log(this.pay_data_array[i].payable_amount);
+                    }
 
-                    if (this.payable_amount <= parseInt(this.amount)) {
+                    if (terto_date.getTime() <= last_working_time || this.allow_flag) {
 
-                        axios.post('/ter_pay_later', {
-                                'voucher_code': this.voucher_code,
-                                'payable_amount': this.payable_amount,
-                                'unique_id': this.all_data.id,
-                                'payment_status':"2",
-                            })
-                            .then(response => {
-                                // console.log(response.data);
-                                if (response.data) {
-                                    this.button_text = "Search";
-                                    this.flag = true;
-                                    this.update_ter_flag = true;
-                                    this.allow_flag=false;
-                                    swal('success', "Record has been updated Successfully!!!", 'success')
-                                } else {
-                                    this.button_text = "Search";
-                                    this.allow_flag=false;
-                                    swal('error', "AX-ID missing in DB for this record", 'error')
+                            axios.post('/ter_pay_later', {
+                                    // 'voucher_code': this.voucher_code,
+                                    // 'payable_amount': this.sum_amount,
+                                    'payable_data': this.pay_data_array,
+                                    'unique_id': this.all_data.id,
+                                    'payment_status': "2",
+                                    "ter_total_amount":this.amount
+                                })
+                                .then(response => {
+                                    // console.log(response.data);
+                                    if(response.data == "error_sum_amount")
+                                    {
+                                        swal('error', "Amount can't be greater than total amount", 'error')
+                                        // window.location.reload();
+                                    }else{
+                                    if (response.data) {
+                                        this.button_text = "Search";
+                                        this.flag = true;
+                                        this.update_ter_flag = true;
+                                        this.allow_flag = false;
+                                        swal('success', "Record has been updated Successfully!!!", 'success')
+                                        window.location.reload();
+                                    } else {
+                                        this.button_text = "Search";
+                                        this.allow_flag = false;
+                                        swal('error', "AX-ID missing in DB for this record", 'error')
+                                    }
                                 }
 
-                            }).catch(error => {
+                                }).catch(error => {
 
-                                this.button_text = "Search";
+                                    this.button_text = "Search";
 
 
-                            })
+                                })
+  
                     } else {
-                        // alert(this.amount)
-                        // alert(this.payable_amount)
-                        this.button_text = "Search";
-                        swal('error', "Amount can't be greater than total amount", 'error')
+                        swal('error', "TER Dates needs update", 'error')
                     }
-                }
-                else{
-            swal('error', "TER Dates needs update", 'error')
-                }
-                } else {
-                    swal('error', "Fields are empty", 'error')
-                }
+                // } else {
+                //     swal('error', "Fields are empty", 'error')
+                // }
             },
 
             ter_pay_now: function() {
-                if (this.voucher_code != "" && this.payable_amount != "") {
-                    // alert(this.payable_amount);
-                    // alert(this.amount);
-                    // alert(this.payable_amount)
-                    // this.all_data.terto_date
-                    // this.all_data.sender_detail.last_working_date
+                    var i,len;
                     var terto_date = new Date(this.all_data.terto_date);
-                    var last_working_date,last_working_time;
-                    if(this.all_data.sender_detail.last_working_date){
-                     last_working_date = new Date(this.all_data.sender_detail.last_working_date);
-                     last_working_time=last_working_date.getTime();
-                    }else{
-                        this.allow_flag=true;
-                    }
-
-                    if (terto_date.getTime() <= last_working_time || this.allow_flag)
-                    {
-
-                    if (this.payable_amount <= parseInt(this.amount)) { 
-
-                        axios.post('/ter_pay_now', {
-                                'voucher_code': this.voucher_code,
-                                'payable_amount': this.payable_amount,
-                                'unique_id': this.all_data.id,
-                                'payment_status':"1",
-                            })
-                            .then(response => {
-                                // console.log(response.data);
-                                if (response.data === 1) {
-                                    this.button_text = "Search";
-                                    this.flag = true;
-                                    this.update_ter_flag = true;
-                                    this.allow_flag=false;
-                                    swal('success', "Record has been updated Successfully!!!", 'success')
-                                } else if(response.data[0] === 0)
-                                {
-                                    this.button_text = "Search";
-                                    this.allow_flag=false;
-                                    swal('error', response.data[1], 'error')
-
-                                }
-                                else {
-                                    this.button_text = "Search";
-                                    this.allow_flag=false;
-                                    swal('error', "AX-ID missing in DB for this record", 'error')
-                                }
-
-                            }).catch(error => {
-
-                                this.button_text = "Search";
-
-
-                            })
+                    var last_working_date, last_working_time;
+                    if (this.all_data.sender_detail.last_working_date) {
+                        last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                        last_working_time = last_working_date.getTime();
                     } else {
-                        // alert(this.amount)
-                        // alert(this.payable_amount)
-                        this.button_text = "Search";
-                        swal('error', "Amount can't be greater than total amount", 'error')
+                        this.allow_flag = true;
                     }
-                }
-                else{
-            swal('error', "TER Dates needs update", 'error')
-                }
-                } else {
-                    swal('error', "Fields are empty", 'error')
-                }
+
+                    len=this.pay_data_array.length;
+                    for(i=0;i<len;i++)
+                    {
+                        this.sum_amount= this.sum_amount +" "+this.pay_data_array[i].payable_amount;
+                        // console.log(this.pay_data_array[i].payable_amount);
+                    }
+
+                    if (terto_date.getTime() <= last_working_time || this.allow_flag) {
+
+
+                            axios.post('/ter_pay_now', {
+                                    'payable_data': this.pay_data_array,
+                                    'unique_id': this.all_data.id,
+                                    'payment_status': "1",
+                                    "ter_total_amount":this.amount
+                                })
+                                .then(response => {
+                                    // console.log(response.data);
+                                    if (response.data === 1) {
+                                        this.button_text = "Search";
+                                        this.flag = true;
+                                        this.update_ter_flag = true;
+                                        this.allow_flag = false;
+                                        swal('success', "Record has been updated Successfully!!!", 'success')
+                                    } else if (response.data[0] === 0) {
+                                        this.button_text = "Search";
+                                        this.allow_flag = false;
+                                        swal('error', response.data[1], 'error')
+
+                                    } else {
+                                        this.button_text = "Search";
+                                        this.allow_flag = false;
+                                        swal('error', "AX-ID missing in DB for this record", 'error')
+                                    }
+
+                                }).catch(error => {
+
+                                    this.button_text = "Search";
+
+
+                                })
+                    } else {
+                        swal('error', "TER Dates needs update", 'error')
+                    }
             },
             get_data_by_id: function() {
                 this.button_text = "Searching...";
@@ -494,9 +551,12 @@
                 this.update_ter_flag = false;
                 this.payable_amount = "",
                 this.voucher_code = "",
-                    //  alert(this.unique_id);
+                this.pay_data_array = [];
+                this.sum_amount = "";
+                this.counter=0;
+                //  alert(this.unique_id);
 
-                    axios.post('/get_all_data', {
+                axios.post('/get_all_data', {
                         'unique_id': this.unique_id
                     })
                     .then(response => {
@@ -506,9 +566,20 @@
                             this.button_text = "Search";
                             this.all_data = response.data[0];
                             this.amount = this.all_data.amount;
-                            this.payable_amount=this.all_data.payable_amount;
-                            this.voucher_code=this.all_data.voucher_code;
-                            this.emp_details = this.all_data.sender_name+" : "+this.all_data.employee_id+" : "+this.all_data.ax_id;
+                            this.payable_amount = this.all_data.payable_amount;
+                            this.voucher_code = this.all_data.voucher_code;
+                            this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id;
+                            this.date_of_receipt = this.all_data.date_of_receipt;
+                            this.location = this.all_data.sender_detail.location;
+                            this.telephone_no = this.all_data.sender_detail.telephone_no;
+                            this.status = this.all_data.sender_detail.status;
+                            this.courier_name = this.all_data.courier_company.courier_name;
+                            this.docket_no = this.all_data.docket_no;
+                            this.docket_date = this.all_data.docket_date;
+                            this.doc_location = this.all_data.location;
+                            this.company_name = this.all_data.company_name;
+                            this.terfrom = this.all_data.terfrom_date;
+                            this.terto = this.all_data.terto_date;
 
                             // console.log(this.all_data.courier_company)
                         } else if (response.data[0] != "" && response.data.status_of_data === "1") {
@@ -518,8 +589,20 @@
                             this.button_text = "Search";
                             this.all_data = response.data[0];
                             this.amount = this.all_data.amount;
-                            this.payable_amount=this.all_data.payable_amount;
-                            this.voucher_code=this.all_data.voucher_code;
+                            this.payable_amount = this.all_data.payable_amount;
+                            this.voucher_code = this.all_data.voucher_code;
+                            this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id;
+                            this.date_of_receipt = this.all_data.date_of_receipt;
+                            this.location = this.all_data.sender_detail.location;
+                            this.telephone_no = this.all_data.sender_detail.telephone_no;
+                            this.status = this.all_data.sender_detail.status;
+                            this.courier_name = this.all_data.courier_company.courier_name;
+                            this.docket_no = this.all_data.docket_no;
+                            this.docket_date = this.all_data.docket_date;
+                            this.doc_location = this.all_data.location;
+                            this.company_name = this.all_data.company_name;
+                            this.terfrom = this.all_data.terfrom_date;
+                            this.terto = this.all_data.terto_date;
 
                             // console.log(this.all_data.courier_company)
                         } else {
