@@ -193,7 +193,7 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-6">
                                 <label for="payable_">Payable Amount</label>
-                                <input type="text" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
+                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="voucher_c">Voucher Code</label>
@@ -417,9 +417,11 @@
                         } else {
                             // this.sum_flag=false;
                             swal('error', "Amount can't be greater than total amount", 'error')
+                            this.pay_btn_flag=false;
                         }
                     } else {
                         swal('error', "Fields are empty", 'error')
+                        this.pay_btn_flag=false;
                     }
                 }
             },
@@ -569,7 +571,12 @@
                         var string_pay, split_data_pay_amt, pay_data_len, string_voucher, split_data_voucher, voucher_data_len,i;
                         // console.log(response.data);
                         // if voucher code and payable amount is not available in DB
-                        if (response.data[0] != "" && response.data.status_of_data === "0") {
+                        if(response.data.status_of_data === "3")
+                        {
+                            this.button_text = "Search";
+                            swal('error', "Record Already submitted to Finfect", 'error')
+                        }
+                       else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];

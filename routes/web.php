@@ -109,6 +109,7 @@ Route::get('admin_update_ter', [TercourierController::class, 'admin_update_ter']
 Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
 
 Route::get('show_pay_later_data', [TercourierController::class, 'show_pay_later_data']);
+Route::get('show_full_and_final_data', [TercourierController::class, 'show_full_and_final_data']);
 Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
 

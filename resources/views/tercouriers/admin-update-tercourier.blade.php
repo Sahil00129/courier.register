@@ -92,13 +92,13 @@
                         <div class="form-row mb-2">
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">From</label>
-                                <div>Actual Entry - @{{this.all_data.employee_id}}: @{{this.all_data.sender_name}} : @{{this.all_data.ax_id}}  </div>
+                                <div>Actual Entry - @{{this.all_data.employee_id}}: @{{this.all_data.sender_name}} : @{{this.all_data.ax_id}} </div>
                                 <!-- <input type="text" class="form-control" name="from" :value="this.all_data.sender_detail.name"  disabled> -->
                                 <input type="text" class="form-control" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
                                 <datalist class="select2-selection__rendered" id="sender_data">
                                     <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
 
-                                    @{{sender_all_info.employee_id}} :   @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
+                                        @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} : @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
                                     </option>
                                 </datalist>
                                 <!-- <select
@@ -191,11 +191,11 @@
                         <div class="form-row mb-0">
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period From</label>
-                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date"  v-model="terfrom">
+                                <input type="date" class="form-control" id="terfrom_date" name="terfrom_date" v-model="terfrom">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">TER Period To</label>
-                                <input type="date" class="form-control" id="terto_date" name="terto_date"  v-model="terto">
+                                <input type="date" class="form-control" id="terto_date" name="terto_date" v-model="terto">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="inputPassword4">Other Details</label>
@@ -211,8 +211,8 @@
                             </div>
                         </div>
                         <!--------------- end ------------------>
-                        <h5><b>Add Details</b></h5>
-                        <div class="form-row mb-0">
+                        <!-- <h5><b>Add Details</b></h5> -->
+                        <!-- <div class="form-row mb-0">
                             <div class="form-group col-md-6">
                                 <label for="payable_">Payable Amount</label>
                                 <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount">
@@ -221,9 +221,52 @@
                                 <label for="voucher_c">Voucher Code</label>
                                 <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code">
                             </div>
+                        </div> -->
+                        <!--------------- Remarks ---------->
+                        <div class="form-row mb-0">
+                            <div class="form-group col-md-6">
+                                <label for="remarks">Admin Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="1" cols="70" v-model="admin_remarks"></textarea>
+                            </div>
                         </div>
 
-                        <button type=" submit" class="btn btn-primary" v-on:click="update_data_by_admin()" :disabled="update_ter_flag">
+                        <div v-if="!update_ter_flag">
+                            <h5><b>Add Details</b></h5>
+                            <div class="form-row mb-0">
+                                <div class="form-group col-md-6">
+                                    <label for="payable_">Payable Amount</label>
+                                    <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="voucher_c">Voucher Code</label>
+                                    <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="update_ter_flag">
+                            <h5><b>Details</b></h5>
+                            <button type="button" class="btn btn-primary" name="button" @click="edit_payable_func" v-if="edit_btn_flag">Edit</button>
+                            <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
+                                <li v-for="(payment_data_new,index) in db_pay_data_array" style="font-weight:bold;font-size:17px"><b>
+                                        @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}} , Voucher Code : @{{payment_data_new.voucher_code}}</b>
+
+                                    <!-- <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button> -->
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" name="button" @click="addAnotherpayment" v-if="edit_payable">Add</button>
+                        <button type="button" class="btn btn-primary" name="button" @click="cancel_payable_func" v-if="edit_payable">Cancel</button>
+                        <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
+                            <li v-for="(payment_data,index) in pay_data_array" style="font-weight:bold">
+                                @{{index+1}} . Payable Amount : @{{payment_data.payable_amount}} Voucher Code : @{{payment_data.voucher_code}}
+
+                                <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button>
+                            </li>
+                        </ul>
+
+                        <button type=" submit" class="btn btn-primary" v-on:click="update_data_by_admin()">
                             <span class="indicator-label">Save</span>
                             </span>
                         </button>
@@ -369,8 +412,16 @@
             sender_telephone: "",
             sender_status: "",
             company_name: "",
-            terfrom:"",
-            terto:"",
+            terfrom: "",
+            terto: "",
+            pay_btn_flag: false,
+            db_pay_data_array: [],
+            counter: 0,
+            pay_data_array: [],
+            flag: false,
+            edit_payable: false,
+            edit_btn_flag: true,
+            admin_remarks:"",
 
         },
         created: function() {
@@ -380,6 +431,62 @@
 
         },
         methods: {
+            edit_payable_func() {
+                this.update_ter_flag = false;
+                this.edit_payable = true;
+                this.edit_btn_flag = false;
+                this.payable_amount = "",
+                    this.voucher_code = "";
+
+            },
+            cancel_payable_func() {
+                this.update_ter_flag = true;
+                this.edit_payable = false;
+                this.edit_btn_flag = true;
+                this.payable_amount = "",
+                    this.voucher_code = "";
+                this.pay_data_array = [];
+
+            },
+            addAnotherpayment() {
+                this.pay_btn_flag = "true";
+                // your logic here...
+                if (this.counter > 4) {
+                    swal('error', "You should delete one first! only 5 allowed", 'error')
+                } else {
+                    if (this.payable_amount != "" && this.voucher_code != "" && this.voucher_code != null) {
+                        const payment_data = {
+                            payable_amount: this.payable_amount, //name here
+                            voucher_code: this.voucher_code //location here
+                        }
+
+                        //   console.log(this.pay_data_array)
+
+
+                        if (this.payable_amount <= parseInt(this.amount)) {
+                            this.counter++;
+                            this.pay_data_array.push(payment_data)
+                            this.payable_amount = '';
+                            this.voucher_code = '';
+                        } else {
+                            // this.sum_flag=false;
+                            swal('error', "Amount can't be greater than total amount", 'error')
+                            this.pay_btn_flag = false;
+                        }
+                    } else {
+                        swal('error', "Fields are empty", 'error')
+                        this.pay_btn_flag = false;
+                    }
+                }
+            },
+            removePayment(payment_data) {
+                if (this.pay_data_array.length == 1) {
+                    this.pay_btn_flag = false;
+                }
+                var getIndex = this.pay_data_array.indexOf(payment_data);
+                this.pay_data_array.splice(this.pay_data_array.indexOf(payment_data), 1);
+                this.counter--;
+            },
             get_sender_data: function(data) {
                 const emp_id = data.split(" : ");
                 axios.post('/get_employees', {
@@ -403,76 +510,83 @@
                     })
             },
             update_data_by_admin: function() {
-                var sender_emp_id,sender_name,ax_code
+                var sender_emp_id, sender_name, ax_code, pay_data;
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
                     sender_emp_id = sender_data_split[0];
                     sender_name = sender_data_split[1];
-                    ax_code=sender_data_split[2];
+                    ax_code = sender_data_split[2];
                 } else {
                     sender_emp_id = this.all_data.employee_id;
                     sender_name = this.all_data.sender_name;
-                    ax_code=this.all_data.ax_id;;
+                    ax_code = this.all_data.ax_id;;
                 }
+                pay_data = this.pay_data_array;
+
+                if (this.pay_data_array.length == 0) {
+                    pay_data = this.db_pay_data_array;
+                }
+                if(this.db_pay_data_array.length == 0)
+                {
+                    pay_data = "";
+                }
+                // console.log(this.payable_amount);
+                // return 1;
                 if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
-                    if (this.payable_amount <= parseInt(this.amount)) {
-                        axios.post('/update_by_hr_admin', {
-                                'sender_emp_id': sender_emp_id,
-                                'company_name': this.company_name,
-                                'amount': this.amount,
-                                'unique_id': this.unique_id,
-                                'sender_name':sender_name,
-                                'ax_id':ax_code,
-                                'voucher_code':this.voucher_code,
-                                'payable_amount':this.payable_amount,
-                                'terfrom_date':this.terfrom,
-                                'terto_date':this.terto
+                    axios.post('/update_by_hr_admin', {
+                            'sender_emp_id': sender_emp_id,
+                            'company_name': this.company_name,
+                            'amount': this.amount,
+                            'unique_id': this.unique_id,
+                            'sender_name': sender_name,
+                            'ax_id': ax_code,
+                            'payable_data': pay_data,
+                            'admin_remarks':this.admin_remarks,
+                            'terfrom_date': this.terfrom,
+                            'terto_date': this.terto
 
 
-                            })
-                            .then(response => {
-                                // console.log(response.data);
-                                if (response.data) {
-                                    // this.update_ter_flag = true;
-                                    swal('success', "Record has been updated Successfully!!!", 'success')
-                                    this.got_data = false;
-                                    document.getElementById("search_item").value = "";
-                                    this.unique_id = "";
-                                    this.sender_all_info="";
-                                } else if(response.data == 0){
-
-                                    this.button_text = "Search";
-                                    this.got_data = false;
-                                    this.unique_id = "";
-                                    this.sender_all_info="";
-                                    document.getElementById("search_item").value = "";
-                                    swal('error', "Request Already Submitted to finfect", 'error')
-                                }
-                                else {
-                                    this.button_text = "Search";
-                                    this.got_data = false;
-                                    this.unique_id = "";
-                                    this.sender_all_info="";
-                                    document.getElementById("search_item").value = "";
-                                    swal('error', "Either Record is already updated or not selected", 'error')
-                                }
-
-                            }).catch(error => {
-
-                                this.button_text = "Search";
+                        })
+                        .then(response => {
+                            // console.log(response.data);
+                            if (response.data == "error_sum_amount") {
+                                swal('error', "Amount can't be greater than total amount", 'error')
+                                // window.location.reload();
+                            } else if (response.data) {
+                                // this.update_ter_flag = true;
+                                swal('success', "Record has been updated Successfully!!!", 'success')
                                 this.got_data = false;
                                 document.getElementById("search_item").value = "";
                                 this.unique_id = "";
-                                this.sender_all_info="";
+                                this.sender_all_info = "";
+                            } else if (response.data == 0) {
+
+                                this.button_text = "Search";
+                                this.got_data = false;
+                                this.unique_id = "";
+                                this.sender_all_info = "";
+                                document.getElementById("search_item").value = "";
+                                swal('error', "Request Already Submitted to finfect", 'error')
+                            } else {
+                                this.button_text = "Search";
+                                this.got_data = false;
+                                this.unique_id = "";
+                                this.sender_all_info = "";
+                                document.getElementById("search_item").value = "";
+                                swal('error', "Either Record is already updated or not selected", 'error')
+                            }
+
+                        }).catch(error => {
+
+                            this.button_text = "Search";
+                            this.got_data = false;
+                            document.getElementById("search_item").value = "";
+                            this.unique_id = "";
+                            this.sender_all_info = "";
 
 
-                            })
-                    } else {
-                        // alert(this.amount)
-                        // alert(this.payable_amount)
-                        this.button_text = "Search";
-                        swal('error', "Amount can't be greater than total amount", 'error')
-                    }
+                        })
+
                 } else {
                     swal('error', "Fields are empty", 'error')
                 }
@@ -481,17 +595,30 @@
                 this.button_text = "Searching...";
                 this.got_data = false;
                 this.all_data = {};
+                this.flag = false;
                 this.update_ter_flag = false;
                 this.payable_amount = "",
-                    this.voucher_code = "",
-                    //  alert(this.unique_id);
+                this.voucher_code = "",
+                this.pay_data_array = [];
+                this.counter = 0;
+                this.pay_btn_flag = false;
+                this.db_pay_data_array = [];
+                this.edit_payable = false;
+                this.edit_btn_flag = true;
+                this.admin_remarks="";
 
-                    axios.post('/get_all_data', {
+                //  alert(this.unique_id);
+
+                axios.post('/get_all_data', {
                         'unique_id': this.unique_id
                     })
                     .then(response => {
+                        var string_pay, split_data_pay_amt, pay_data_len, string_voucher, split_data_voucher, voucher_data_len, i;
                         // console.log(response.data);
-                        if (response.data[0] != "" && response.data.status_of_data === "0") {
+                        if (response.data.status_of_data === "3") {
+                            this.button_text = "Search";
+                            swal('error', "Record Already submitted to Finfect", 'error')
+                        } else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
@@ -503,25 +630,48 @@
                             this.sender_telephone = this.all_data.sender_detail.telephone_no;
                             this.sender_status = this.all_data.sender_detail.status;
                             this.company_name = this.all_data.company_name;
-                            this.terfrom=this.all_data.terfrom_date;
-                            this.terto=this.all_data.terto_date;
+                            this.terfrom = this.all_data.terfrom_date;
+                            this.terto = this.all_data.terto_date;
+                            this.admin_remarks=this.all_data.hr_admin_remark;
 
 
                             // console.log(this.all_data.courier_company)
                         } else if (response.data[0] != "" && response.data.status_of_data === "1") {
                             this.got_data = true;
+                            this.flag = true;
+                            this.update_ter_flag = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
                             this.amount = this.all_data.amount;
                             this.payable_amount = this.all_data.payable_amount;
                             this.voucher_code = this.all_data.voucher_code;
+                            string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,]/g, '');
+                            split_data_pay_amt = string_pay.split(",");
+                            pay_data_len = split_data_pay_amt.length;
+                            // console.log(pay_data_len)
+                            string_voucher = this.voucher_code.replace(/[^a-zA-Z0-9,]/g, '');
+                            split_data_voucher = string_voucher.split(",");
+                            voucher_data_len = split_data_voucher.length;
+                            if (pay_data_len == voucher_data_len) {
+                                for (i = 0; i < pay_data_len; i++) {
+                                    // if(this.db_pay_data_array.length === 0)
+                                    // {
+                                    var payment_data_new = {
+                                        payable_amount: split_data_pay_amt[i],
+                                        voucher_code: split_data_voucher[i]
+                                    }
+                                    this.db_pay_data_array.push(payment_data_new);
+                                    // }
+                                }
+                            }
                             this.senders_data = response.data.all_senders_data;
                             this.sender_location = this.all_data.sender_detail.location;
                             this.sender_telephone = this.all_data.sender_detail.telephone_no;
                             this.sender_status = this.all_data.sender_detail.status;
                             this.company_name = this.all_data.company_name;
-                            this.terfrom=this.all_data.terfrom_date;
-                            this.terto=this.all_data.terto_date;
+                            this.terfrom = this.all_data.terfrom_date;
+                            this.terto = this.all_data.terto_date;
+                            this.admin_remarks=this.all_data.hr_admin_remark;
 
                             // console.log(this.all_data.courier_company)
                         } else {
