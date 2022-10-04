@@ -831,11 +831,11 @@ class TercourierController extends Controller
 // $URL=config('services.FINFECT_KEY.FINFECT_API_URL');
 // $url=env('FINFECT_API_URL');
 $url=    config('services.finfect_key.finfect_url');
-print_r($url);
-print_r('hello');
-exit;
+// print_r($url);
+// print_r('hello');
+// exit;
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://stagging.finfect.biz/api/non_finvendors_payments',
+            CURLOPT_URL => $url,
             // CURLOPT_URL => 'https://finfect.biz/api/non_finvendors_payments',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
