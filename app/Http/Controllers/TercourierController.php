@@ -48,7 +48,7 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
@@ -494,10 +494,10 @@ class TercourierController extends Controller
                         // $sms_lib->send_paid_sms($get_data_db[$i]->id);
                     }
                     // return $res;
-                } 
+                }
             }
         }
-    return 1;
+        return 1;
     }
 
     // public function test()
@@ -828,12 +828,12 @@ class TercourierController extends Controller
 
         $curl = curl_init();
         // $URL = \Config::get('services.FINFECT_KEY.finfect_url');
-// $URL=config('services.FINFECT_KEY.FINFECT_API_URL');
-// $url=env('FINFECT_API_URL');
-$url=    config('services.finfect_key.finfect_url');
-// print_r($url);
-// print_r('hello');
-// exit;
+        // $URL=config('services.FINFECT_KEY.FINFECT_API_URL');
+        // $url=env('FINFECT_API_URL');
+        $url = config('services.finfect_key.finfect_url');
+        // print_r($url);
+        // print_r('hello');
+        // exit;
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
             // CURLOPT_URL => 'https://finfect.biz/api/non_finvendors_payments',

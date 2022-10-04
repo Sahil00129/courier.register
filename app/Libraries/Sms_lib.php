@@ -8,7 +8,7 @@ class Sms_lib {
 
 	public static function send_paid_sms($id,$amount){
      
-        return 1;
+      //   return 1;
         $get_data=DB::table('tercouriers')->where('id',$id)->get()->toArray();
         $get_emp_id=$get_data[0]->employee_id;
         $get_sender_data=DB::table('sender_details')->where('employee_id',$get_emp_id)->get()->toArray();
@@ -17,8 +17,7 @@ class Sms_lib {
         $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
         $peid = "1201159713185947382"; // Get Key from DLT 
         $sender_id = "FAPLHR"; // Approved from DLT
-        $mob='7997263365';
-        // $mob = $get_sender_data[0]->telephone_no; // Get Mobile Number from Sender 
+        $mob = $get_sender_data[0]->telephone_no; // Get Mobile Number from Sender 
         $name = $get_sender_data[0]->name;
         // print_r($getsender);
         // exit;
