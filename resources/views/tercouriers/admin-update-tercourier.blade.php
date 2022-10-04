@@ -530,6 +530,11 @@
                 {
                     pay_data = "";
                 }
+                if(this.admin_remarks === "")
+                {
+                    swal('error', "Admin Remark is mandatory", 'error')
+                    return 
+                }
                 // console.log(this.payable_amount);
                 // return 1;
                 if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
@@ -618,7 +623,10 @@
                         if (response.data.status_of_data === "3") {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
-                        } else if (response.data[0] != "" && response.data.status_of_data === "0") {
+                        } else if(isNaN(response.data[0].sender_id)){
+                            this.button_text = "Search";
+                            swal('error', "Sender Details are missing for this record", 'error')
+                        }else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];

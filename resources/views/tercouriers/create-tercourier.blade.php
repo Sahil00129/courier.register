@@ -123,7 +123,6 @@
                                         @foreach($couriers as $courier)
                                         <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
                                         @endforeach
-                                        <option>Other</option>
                                     </select>
                                 </div>
                         

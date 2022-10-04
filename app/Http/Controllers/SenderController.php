@@ -45,6 +45,14 @@ class SenderController extends Controller
         return view ('pages.sender-table',  ['sends' => $sends,'flag'=>$flag,'flag_hr'=>$flag_hr])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
+    public function get_emp_data(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['sender_id'];
+        $get_db_data=DB::table('sender_details')->where('id',$id)->get()->toArray();
+        return $get_db_data;
+    }
+
     public function addSender(Request $request) 
     {
         $sender = new Sender;

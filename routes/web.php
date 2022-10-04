@@ -119,6 +119,9 @@ Route::get('/export_ter_user_entry', [ImportExportController::class,'ExportSaved
 Route::get('edit_ter_reception', [TercourierController::class, 'edit_ter_reception']);
 Route::post('edit_tercourier', [TercourierController::class, 'edit_tercourier']);
 
+Route::get('payment_sheet', [TercourierController::class, 'payment_sheet']);
+Route::post('/get_emp_data', [SenderController::class,'get_emp_data']);
+Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 
 
 });

@@ -525,13 +525,14 @@
                                 this.flag = true;
                                 this.update_ter_flag = true;
                                 this.allow_flag = false;
-                                swal('success', "Record has been updated Successfully!!!", 'success')
-                                this.get_data_by_id();
+                                this.pay_data_array=[];
+                                swal('success', "Record has been updated Successfully!!!", 'success')       
+                                // this.get_data_by_id();
                             } else if (response.data[0] === 0) {
                                 swal('error', response.data[1], 'error')
                                 this.button_text = "Search";
                                 this.allow_flag = false;
-                                this.get_data_by_id();
+                                // this.get_data_by_id();
                             //  window.location.reload();
 
                             } else {
@@ -575,6 +576,9 @@
                         {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
+                        }else if(isNaN(response.data[0].sender_id)){
+                            this.button_text = "Search";
+                            swal('error', "Sender Details are missing for this record", 'error')
                         }
                        else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;

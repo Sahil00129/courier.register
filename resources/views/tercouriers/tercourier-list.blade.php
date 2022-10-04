@@ -97,6 +97,11 @@
                                         $status = 'Pay';
                                         $class = 'btn-success';
                                     }
+                                    elseif ($tercourier->status == 5) {
+
+                                        $status = 'Paid';
+                                        $class = 'btn-success';
+                                    }
                                      else {
                                         $status = 'Failed';
                                         $class = 'btn-danger';

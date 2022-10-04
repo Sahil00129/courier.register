@@ -56,7 +56,7 @@ class Tercourier extends Model
     public static function add_voucher_payable($payable_data, $unique_id, $user_id, $user_name, $payment_status)
     {
         //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final.
-        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full and final Status=4 is Pay, Status=0 is Failed Payment,
+        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full and final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid
         if ($payment_status == 1) {
             $data['status'] = 3;
             $data['payment_type'] = "regular_payment";
