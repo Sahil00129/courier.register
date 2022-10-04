@@ -61,14 +61,14 @@
 ?>
 
 <div id="edit_ter">
-    <div class="container">
+    <!-- <div class="container"> -->
        
-        <div class="row">
-            <div id="flFormsGrid" class="col-lg-12 layout-spacing">
+        <!-- <div class="row"> -->
+            <div id="flFormsGrid" class="col-lg-12 layout-spacing" style="margin-top: -54px;">
             <div id="widgetIframe"><iframe width="100%" height="800" src="https://finfect.biz/emp-payments-list/AIzaSyCEzojx1_dyy0ACDIF5zP5dt7hk4RggtOg" scrolling="yes" frameborder="0" marginheight="0" marginwidth="0"></iframe></div>
             </div>
-        </div>
-    </div>
+        <!-- </div> -->
+    <!-- </div> -->
 </div>
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 <script>

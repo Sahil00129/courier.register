@@ -4,11 +4,10 @@
 <style>
     .widget-four .widget-content .w-summary-info .summary-count {
         display: block;
-        /* font-size: 16px; */
+        / font-size: 16px; /
         margin-top: 4px;
         font-weight: 600;
         color: #515365;
-        background: #03a9f4 ! important;
 
     }
 
@@ -21,7 +20,7 @@
 
     .widget-four .widget-content .summary-list:nth-child(1) .w-icon svg {
         color: #ffffff;
-        /* fill: rgb(255 255 255 / 16%); */
+        fill: rgb(255 255 255 / 16%);
     }
 
     .widget-four .widget-content .w-icon {
@@ -54,128 +53,164 @@
     </div>
 
     <div class="row layout-top-spacing">
-        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <div class="widget widget-four">
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+                        <div class="widget widget-four">
+                            <div class="widget-content">
 
-                <div class="widget-content">
+                                <div class="order-summary">
 
-                    <div class="order-summary">
+                                    <div class="summary-list summary-income" style="background-color: #22beef; height: 81px;">
 
-                        <div class="summary-list summary-income" style="background-color: #22beef; height: 81px;">
+                                        <div class="summery-info">
 
-                            <div class="summery-info">
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                            </div>
 
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
-                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                    </svg>
-                                </div>
+                                            <div class="w-summary-details">
 
-                                <div class="w-summary-details">
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">(0)(0)</span><span class="summary-count smry"> </span>Today Unprocessed TER Received</h6>
+                                                </div>
 
-                                    <div class="w-summary-info">
-                                        <h5 style="color:white; margin-top:-27px; margin-left:62px;">
-                                            <span class="summary-count smry"></span>Unprocessed TER
-                                        </h5>
-                                        <span style="font-size: 23px;color:white;margin-left:97px"><?php echo $unprocessed_ter ?></span>
-                                        <!-- <p class="summary-average" style="margin-top: 10px;"></p> -->
+                                            </div>
+
+                                        </div>
+
                                     </div>
+
+                                    <div class="summary-list summary-profit" style="background-color: #a2d200; height: 81px;">
+
+                                        <div class="summery-info">
+
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+                                            </div>
+                                            <div class="w-summary-details">
+
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">0</span><span class="summary-count smry"> </span>Current Month Unprocessed TER Received</h6>
+                                                  
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
+
                             </div>
                         </div>
-
-                        <div class="summary-list summary-profit" style="background-color: #a2d200; height: 81px;">
-
-                            <div class="summery-info">
-
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
-                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                    </svg>
-                                </div>
-
-                                <div class="w-summary-details">
-
-                                    <div class="w-summary-info">
-                                        <h5 style="color:white; margin-top:-27px; margin-left:62px;">
-                                            <span class="summary-count smry"></span>Today Received TER
-                                        </h5>
-                                        <span style="font-size: 23px;color:white;margin-left:97px"><?php echo $received_ter ?></span>
-                                        <!-- <p class="summary-average" style="margin-top: 10px;"></p> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <div class="widget widget-four">
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+                        <div class="widget widget-four">
+                            <div class="widget-content">
 
-                <div class="widget-content">
-                    <div class="order-summary">
-                        <div class="summary-list summary-income" style="background-color: #00a2ae;">
-                            <div class="summery-info">
+                                <div class="order-summary">
 
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
-                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                    </svg>
-                                </div>
+                                    <div class="summary-list summary-income" style="background-color: #00a2ae;">
 
-                                <div class="w-summary-details">
+                                        <div class="summery-info">
 
-                                    <div class="w-summary-info">
-                                        <h5 style="color:white; margin-top:-27px; margin-left:62px;">
-                                            <span class="summary-count smry"></span>Today Processed TER
-                                        </h5>
-                                        <span style="font-size: 23px;color:white;margin-left:97px"><?php echo $processed_ter ?></span>
-                                        <!-- <p class="summary-average" style="margin-top: 10px;"></p> -->
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                            </div>
+
+                                            <div class="w-summary-details">
+
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">0</span><span class="summary-count smry"> </span>Today Processed TER </h6>
+                                                    
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
+
+                                    <div class="summary-list summary-profit" style="background-color: #ff4a43;">
+
+                                        <div class="summery-info">
+
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+                                            </div>
+                                            <div class="w-summary-details">
+
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">0</span><span class="summary-count smry"> </span>Current Month Processed TER </h6>
+                                                   
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
+
                             </div>
                         </div>
-
-                        <div class="summary-list summary-profit" style="background-color: #ff4a43;">
-
-                            <div class="summery-info">
-
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
-                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                    </svg>
-                                </div>
-
-                                <div class="w-summary-details">
-
-                                    <div class="w-summary-info">
-                                        <h5 style="color:white; margin-top:-27px; margin-left:62px;">
-                                            <span class="summary-count smry"></span>Today Paid TER
-                                        </h5>
-                                        <span style="font-size: 23px;color:white;margin-left:97px"></span>
-                                        <!-- <p class="summary-average" style="margin-top: 10px;"></p> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
-                </div>
-            </div>
-        </div>
+
+
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+                        <div class="widget widget-four">
+                            <div class="widget-content">
+
+                                <div class="order-summary">
+
+                                    <div class="summary-list summary-income" style="background-color: #8f44ad;">
+
+                                        <div class="summery-info">
+
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                            </div>
+
+                                            <div class="w-summary-details">
+
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">0</span><span class="summary-count smry"> </span>Today Paid TER</h6>
+                                                    
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="summary-list summary-profit" style="background-color: #685aee;;">
+
+                                        <div class="summery-info">
+
+                                            <div class="w-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+                                            </div>
+                                            <div class="w-summary-details">
+
+                                                <div class="w-summary-info">
+                                                    <h6><span  style="font-size: 23px;">0</span><span class="summary-count smry"> </span>Current Month Paid TER</h6>
+                                                    
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
 
         <!-- <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
             <div class="widget widget-four">
