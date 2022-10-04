@@ -8,7 +8,7 @@ class Sms_lib {
 
 	public static function send_paid_sms($id,$amount){
      
-      //   return 1;
+        return 1;
         $get_data=DB::table('tercouriers')->where('id',$id)->get()->toArray();
         $get_emp_id=$get_data[0]->employee_id;
         $get_sender_data=DB::table('sender_details')->where('employee_id',$get_emp_id)->get()->toArray();
