@@ -52,6 +52,7 @@
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/dashboard/dash_2.js')}}"></script>
+    <script src="{{asset('assets/js/widgets/modules-widgets.js')}}"></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{ asset('js/custom.js') }}"></script>
     <script src="{{ asset('js/import.js') }}"></script>

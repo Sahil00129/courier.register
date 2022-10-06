@@ -32,6 +32,9 @@
         width: 50px;
         margin-right: 12px;
     }
+    #chart-2 path {
+    stroke: #ffffff;
+}
 </style>
 <div class="layout-px-spacing">
 
@@ -211,6 +214,20 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                        <div class="widget widget-chart-two">
+                            <div class="widget-heading">
+                                <h5 class="">Sales by Category</h5>
+                            </div>
+                            <div class="widget-content">
+                                <div id="chart-2" class=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" id="current_month" value="">
+                    <input type="text" id="previous_month" value="">
+                    <input type="text" id="old" value="">
 
         <!-- <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
             <div class="widget widget-four">
