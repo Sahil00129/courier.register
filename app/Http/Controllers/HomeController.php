@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DB;
 
 class HomeController extends Controller
@@ -25,44 +24,84 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $count_unprocessed_ter=DB::table('tercouriers')->select('id')->where('status',2)->count();
-        // $today_tercourier_handover_count = DB::table('tercouriers')->select('id')->where('status',2)->where('created_at','=',date("Y-m-d"))->count();
-        $data= DB::table('tercouriers')->select('id','updated_at')->where('status',2)->get();
-        $size=sizeof($data);
-        // $val="";
-         $count=0;
-        for($i=0;$i<$size;$i++)
-        {
-            $val= explode(" ",$data[$i]->updated_at);
-            $date1=$val[0];
-            // $id=$data[$i]->id;
-               if($date1 == date("Y-m-d"))
-               {
-                $count++;
-               }
+
+        // ===================widget 1
+        $current_day_handover_ter_count = DB::table('tercouriers')->select('id')->where('status', 2)->whereDate('updated_at', date("Y-m-d"))->count();
+
+        $current_day_handover_ter_sum = DB::table('tercouriers')->where('status', 2)->whereDate('updated_at', date("Y-m-d"))->sum('amount');
+
+        $current_month_handover_ter_count = DB::table('tercouriers')->select('id')->where('status', 2)->whereMonth('updated_at', date("m"))->count();
+        $current_month_handover_ter_sum = DB::table('tercouriers')->where('status', 2)->whereMonth('updated_at', date("m"))->sum('amount');
+        // return $current_month_handover_ter_sum;
+
+        // ===========================widget 2
+        $current_day_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('status', 3)->whereDate('updated_at', date("Y-m-d"))->count();
+        // echo $current_day_sent_to_finfect_ter_count ; die;
+        $current_day_sent_to_finfect_ter_sum = 0;
+        $sum1 = 0;
+        $sum2 = array();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereDate('updated_at', date("Y-m-d"))->get();
+
+        $current_day_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
+
+        /////////////////////Current Month Processed//////////////////////////
+        $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('status', 3)->whereMonth('updated_at', date("m"))->count();
+        // echo $current_day_sent_to_finfect_ter_count ; die;
+        $current_month_sent_to_finfect_ter_sum = 0;
+        $sum1 = 0;
+        $sum2 = array();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereMonth('updated_at', date("m"))->get();
+
+        $current_month_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
+
+        // widget 3 =================
+        $current_day_paid_ter_count = DB::table('tercouriers')->select('id')->where('status', 5)->whereDate('updated_at', date("Y-m-d"))->count();
+
+        $current_day_paid_ter_sum = DB::table('tercouriers')->where('status', 5)->whereDate('updated_at', date("Y-m-d"))->sum('amount');
+        //////====== Current Month Paid Ter
+        $current_month_paid_ter_count = DB::table('tercouriers')->select('id')->where('status', 5)->whereMonth('updated_at', date("m"))->count();
+
+        $current_month_paid_ter_sum = 0;
+        $sum1 = 0;
+        $sum2 = array();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 5)->whereMonth('updated_at', date("m"))->get();
+
+        $current_month_paid_ter_sum = self::totalSum($data_sent_to_finfect);
+
+        return view('pages.dashboard', ['current_day_handover_ter_count' => $current_day_handover_ter_count, 'current_day_handover_ter_sum' => $current_day_handover_ter_sum,
+            'current_month_handover_ter_count' => $current_month_handover_ter_count, 'current_month_handover_ter_sum' => $current_month_handover_ter_sum,
+            'current_day_sent_to_finfect_ter_count' => $current_day_sent_to_finfect_ter_count,
+            'current_day_sent_to_finfect_ter_sum' => $current_day_sent_to_finfect_ter_sum, 'current_month_sent_to_finfect_ter_count' => $current_month_sent_to_finfect_ter_count, 'current_month_sent_to_finfect_ter_sum' => $current_month_sent_to_finfect_ter_sum, 'current_day_paid_ter_count' => $current_day_paid_ter_count,
+            'current_day_paid_ter_sum' => $current_day_paid_ter_sum,
+            'current_month_paid_ter_count' => $current_month_paid_ter_count,
+            'current_month_paid_ter_sum' => $current_month_paid_ter_sum]);
+
+    }
+
+    public function totalSum($data)
+    {
+
+        $sum1 = 0;
+        $sum2 = array();
+
+        $decode1 = json_decode($data);
+        $decode2 = array();
+        for ($i = 0; $i < sizeof($decode1); $i++) {
+            $decode2[$i] = json_decode($decode1[$i]->payable_amount);
+
         }
-     $today_received_ter_count = $count;
 
-     $data_processed= DB::table('tercouriers')->select('id','updated_at')->where('status',3)->get();
-     $size_processed=sizeof($data_processed);
-     // $val="";
-      $count_processed=0;
-     for($i=0;$i<$size_processed;$i++)
-     {
-         $val= explode(" ",$data_processed[$i]->updated_at);
-         $date_processed=$val[0];
-         // $id=$data[$i]->id;
-            if($date_processed == date("Y-m-d"))
-            {
-             $count_processed++;
+        for ($j = 0, $n = 0; $j < sizeof($decode2); $j++) {
+
+            if (sizeof($decode2[$j]) > 1) {
+                $sum1 = array_sum($decode2[$j]);
+            } else {
+                $sum2[$n] = $decode2[$j][0];
+                $n++;
+
             }
-     }
-
-
-     $today_processed_ter_count = $count_processed;
-
-    //  Today Paid TER left 
-    
-        return view('pages.dashboard',['unprocessed_ter'=>$count_unprocessed_ter,'received_ter'=>$today_received_ter_count,'processed_ter'=>$today_processed_ter_count]);
+        }
+        $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2);
+        return $current_month_sent_to_finfect_ter_sum;
     }
 }
