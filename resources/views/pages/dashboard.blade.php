@@ -70,7 +70,7 @@
                                             <div class="w-summary-details">
 
                                                 <div class="w-summary-info">
-                                                    <h6><span  style="font-size: 23px;">{{$current_day_handover_ter_count}}(₹ {{$current_day_handover_ter_sum}})</span><span class="summary-count smry"> </span>Today Unprocessed TER Received</h6>
+                                                    <h6><span  style="font-size: 23px;">{{$current_day_handover_ter_count}}(₹ {{$current_day_handover_ter_sum}})</span><span class="summary-count smry"> </span>Today Received TER</h6>
                                                 </div>
 
                                             </div>
@@ -89,7 +89,7 @@
                                             <div class="w-summary-details">
 
                                                 <div class="w-summary-info">
-                                                    <h6><span  style="font-size: 23px;">{{$current_month_handover_ter_count}}(₹ {{Helper::rupee_format((int)$current_month_handover_ter_sum)}})</span><span class="summary-count smry"> </span>Current Month Unprocessed TER Received</h6>
+                                                    <h6><span  style="font-size: 23px;">{{$current_month_handover_ter_count}}(₹ {{Helper::rupee_format((int)$current_month_handover_ter_sum)}})</span><span class="summary-count smry"> </span>Current Month Received TER</h6>
                                                   
                                                 </div>
 
