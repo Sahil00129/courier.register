@@ -122,7 +122,8 @@ Route::post('edit_tercourier', [TercourierController::class, 'edit_tercourier'])
 Route::get('payment_sheet', [TercourierController::class, 'payment_sheet']);
 Route::post('/get_emp_data', [SenderController::class,'get_emp_data']);
 
-
+//sahil route
+Route::get('ter-widgets', [HomeController::class, 'widgets']);
 
 });
 
