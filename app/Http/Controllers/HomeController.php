@@ -72,8 +72,8 @@ class HomeController extends Controller
         $current_month_paid_ter_sum = self::totalSum($data_sent_to_finfect);
 
         // =============== User Percentage ===============
-        $total_ter = Tercourier::select('id')->where('status',5)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
-        echo $total_ter;
+        $total_ter = Tercourier::select('id')->where('status',3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+        // echo $total_ter; die;
         
         $user_array = array (
             array("id" => 7, "name" =>'Vipin'),
@@ -84,11 +84,12 @@ class HomeController extends Controller
        
         foreach($user_array as $key => $user){
             
-            $user1_ter = Tercourier::select('id')->where('status',5)->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+            $user1_ter = Tercourier::select('id')->where('status',3)->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
            
             $percentage[$user['name']][] = ($user1_ter / $total_ter) * 100 ;
             
         }
+       
 
         return view('pages.dashboard', ['current_day_handover_ter_count' => $current_day_handover_ter_count, 'current_day_handover_ter_sum' => $current_day_handover_ter_sum,
             'current_month_handover_ter_count' => $current_month_handover_ter_count, 'current_month_handover_ter_sum' => $current_month_handover_ter_sum,
