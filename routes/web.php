@@ -122,14 +122,17 @@ Route::post('edit_tercourier', [TercourierController::class, 'edit_tercourier'])
 Route::get('payment_sheet', [TercourierController::class, 'payment_sheet']);
 Route::post('/get_emp_data', [SenderController::class,'get_emp_data']);
 
-//sahil route
-Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWidgets']);
+Route::get('/employee_detail_passbook/{emp_id}', [SenderController::class, 'emp_passbook_view']);
+Route::post('/add_advance_payment', [SenderController::class,'add_advance_payment']);
+Route::post('/get_employee_passbook', [SenderController::class,'get_employee_passbook']);
+
+
 
 });
 
 
-Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 
+Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 
 
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

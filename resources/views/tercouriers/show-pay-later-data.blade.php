@@ -33,7 +33,7 @@
 
 
 
-    <button class="btn btn-success" v-on:click="group_pay_now()">Group Pay Now</button>
+    <button class="btn btn-success" v-on:click="group_pay_now()" disabled>Group Pay Now</button>
 
 
     <div class="row layout-top-spacing" id="cancel-row">

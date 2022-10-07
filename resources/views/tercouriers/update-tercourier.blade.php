@@ -185,6 +185,11 @@
                                 <label for="remarks">Remarks</label>
                                 <textarea name="remarks" class="form-control" rows="1" cols="70" readonly="readonly" :value="this.all_data.remarks"></textarea>
                             </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="remarks">Advance Amount</label>
+                                <input type="text" class="form-control" id="details" name="details" readonly="readonly" v-model="current_balance">
+                            </div>
                         </div>
                         <!--------------- end ------------------>
                        
@@ -385,6 +390,7 @@
             terto: "",
             pay_btn_flag: false,
             db_pay_data_array: [],
+            current_balance:"",
             // sum_flag:true,
         },
         created: function() {
@@ -512,7 +518,8 @@
                             'payable_data': this.pay_data_array,
                             'unique_id': this.all_data.id,
                             'payment_status': "1",
-                            "ter_total_amount": this.amount
+                            "ter_total_amount": this.amount,
+                            "current_balance":this.current_balance
                         })
                         .then(response => {
                             // console.log(response.data);
@@ -563,6 +570,7 @@
                 this.counter = 0;
                 this.pay_btn_flag=false;
                 this.db_pay_data_array=[];
+                this.current_balance="";
                 //  alert(this.unique_id);
 
                 axios.post('/get_all_data', {
@@ -599,6 +607,7 @@
                             this.company_name = this.all_data.company_name;
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
+                            this.current_balance=response.data.current_balance;
 
                             // console.log(this.all_data.courier_company)
                         } else if (response.data[0] != "" && response.data.status_of_data === "1") {
@@ -610,6 +619,7 @@
                             this.amount = this.all_data.amount;
                             this.payable_amount = this.all_data.payable_amount;
                             this.voucher_code = this.all_data.voucher_code;
+                            this.current_balance=response.data.current_balance;
                             string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,]/g, '');
                             split_data_pay_amt = string_pay.split(",");
                             pay_data_len = split_data_pay_amt.length;

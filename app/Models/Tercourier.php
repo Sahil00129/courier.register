@@ -53,13 +53,21 @@ class Tercourier extends Model
         return $query;
     }
 
-    public static function add_voucher_payable($payable_data, $unique_id, $user_id, $user_name, $payment_status)
+    public static function add_voucher_payable($payable_data, $unique_id, $user_id, $user_name, $payment_status,$final_payable)
     {
-        //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final.
-        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full and final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid
+        //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final,payment_status=4 is advance_payment and status=5 is paid.
+        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid
+       $check_pay_type=DB::table('tercouriers')->select('payment_type')->where('id',$unique_id)->get();
         if ($payment_status == 1) {
             $data['status'] = 3;
             $data['payment_type'] = "regular_payment";
+            if($check_pay_type[0]->payment_type == "pay_later_payment" )
+            {
+                $data['payment_type'] = "pay_later_payment";
+            }else if($check_pay_type[0]->payment_type == "full_and_final_payment" )
+            {
+                $data['payment_type'] = "full_and_final_payment";
+            }
         } else if ($payment_status == 2) {
             $data['status'] = 4;
             $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
@@ -72,12 +80,21 @@ class Tercourier extends Model
                 $data['payment_type'] = "pay_later_payment";
             }
         }
+        else if ($payment_status == 4) {
+            $data['status'] = 5;
+            $data['payment_type'] = "advance_payment";
+        }
 
-        $data['payment_status'] = $payment_status;
+        // $data['payment_status'] = $payment_status;
+        $data['final_payable'] =$final_payable;
         $data['updated_by_id'] = $user_id;
         $data['updated_by_name'] = $user_name;
         $data['updated_at'] = date('Y-m-d H:i:s');
 
+        if(!empty($payable_data))
+        {
+          
+        $data['payment_status'] = $payment_status;
         $length = sizeof($payable_data);
         for ($i = 0; $i < $length; $i++) {
             $pay_data[$i] = $payable_data[$i]['payable_amount'];
@@ -86,7 +103,8 @@ class Tercourier extends Model
 
         $data['payable_amount'] = $pay_data;
         $data['voucher_code'] = $voucher_data;
-
+        }
+// return $data;
         $query =  DB::table('tercouriers')->where('id', $unique_id)
             ->update($data);
 

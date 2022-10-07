@@ -36,7 +36,7 @@
         <button class="btn btn-success" disabled>Group Pay Now</button>
     <?php   } else { ?>
 
-        <button class="btn btn-success" v-on:click="group_pay_now()">Group Pay Now</button>
+        <button class="btn btn-success" v-on:click="group_pay_now()" disabled>Group Pay Now</button>
     <?php   }
     ?>
 
