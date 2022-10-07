@@ -79,7 +79,7 @@ class HomeController extends Controller
             array("id" => 7, "name" =>'Vipin'),
             array("id" => 9, "name" =>'Veena'),
             array("id" => 10, "name" =>'Harpreet'),
-            array("id" => 11, "name" =>'Jagroop')
+            array("id" => 11, "name" =>'Rameshwer')
           );
        
         foreach($user_array as $key => $user){
