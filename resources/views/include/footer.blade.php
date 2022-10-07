@@ -52,10 +52,12 @@
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/dashboard/dash_2.js')}}"></script>
+    <script src="{{asset('assets/js/widgets/modules-widgets.js')}}"></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{ asset('js/custom.js') }}"></script>
     <script src="{{ asset('js/import.js') }}"></script>
     <script src="{{ asset('js/hideshow.js') }}"></script>
+    <script src="{{ asset('js/dashboard-widget.js') }}"></script>
 
     <script> 
         $('#html5-extension').DataTable( {
@@ -221,6 +223,7 @@ var ss = $(".basic").select2({
         document.getElementById("ifYes_type").style.display = "none";
     }
 }
+
 </script>
 </body>
 </html>

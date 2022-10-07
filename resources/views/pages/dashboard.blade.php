@@ -32,6 +32,9 @@
         width: 50px;
         margin-right: 12px;
     }
+    #chart-2 path {
+    stroke: #ffffff;
+}
 </style>
 <div class="layout-px-spacing">
 
@@ -212,54 +215,56 @@
                         </div>
                     </div>
 
-        <!-- <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <div class="widget widget-four">
-
-                <div class="widget-content">
-                    <div class="order-summary">
-                        <div class="summary-list summary-income" style="background-color: #8f44ad;">
-                            <div class="summery-info">
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
-                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                    </svg>
-                                </div>
-
-                                <div class="w-summary-details">
-                                    <div class="w-summary-info">
-                                        <h6><span style="font-size: 23px;"> (MT)</span><span class="summary-count"> </span>Today's Gross Weight Lifted</h6>
-                                        <p class="summary-average"></p>
-                                    </div>
-                                </div>
+                    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                        <div class="widget widget-chart-two">
+                            <div class="widget-heading">
+                                <h5 class="">Unprocessed TERs</h5>
+                            </div>
+                            <div class="widget-content">
+                                <div id="chart-2" class=""></div>
                             </div>
                         </div>
-
-                        <div class="summary-list summary-profit" style="background-color: #685aee;;">
-
-                            <div class="summery-info">
-
-                                <div class="w-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag">
-                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" style="border: #ffffff;"></path>
-                                        <line x1="7" y1="7" x2="7" y2="7"></line>
-                                    </svg>
-                                </div>
-                                <div class="w-summary-details">
-
-                                    <div class="w-summary-info">
-                                        <h6><span style="font-size: 23px;">' (MT)</span><span class="summary-count"> </span>Monthly Gross Weight Lifted</h6>
-                                        <p class="summary-average"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
-                </div>
-            </div>
-        </div> -->
+
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                        <div class="widget-four">
+                            <div class="widget-heading">
+                                <h5 class="">User Wise TER Processed  	(Current Month)</h5>
+                            </div>
+                            <div class="widget-content">
+                                <div class="vistorsBrowser">
+                                    <?php $i=0;  $class = array('danger','success','info' ,'warning'); ?>
+                                    @foreach($percentage as $key => $value)
+                                   
+                                    <div class="browser-list">
+                                        <div class="w-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chrome"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" y1="8" x2="12" y2="8"></line><line x1="3.95" y1="6.06" x2="8.54" y2="14"></line><line x1="10.88" y1="21.94" x2="15.46" y2="14"></line></svg>
+                                        </div>
+                                        <div class="w-browser-details">
+                                            <div class="w-browser-info">
+                                                <h6>{{$key}}</h6>
+                                                <p class="browser-count">{{number_format($value[0] ,2)}}%</p>
+                                            </div>
+                                            <div class="w-browser-stats">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-gradient-{{$class[$i]}}" role="progressbar" style="width: {{number_format($value[0] ,2)}}%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $i++;
+                                    ?>
+                                    @endforeach
+
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
 
     </div>
     @endsection
