@@ -126,7 +126,7 @@ Route::get('/employee_detail_passbook/{emp_id}', [SenderController::class, 'emp_
 Route::post('/add_advance_payment', [SenderController::class,'add_advance_payment']);
 Route::post('/get_employee_passbook', [SenderController::class,'get_employee_passbook']);
 
-
+Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWidgets']);
 
 });
 
