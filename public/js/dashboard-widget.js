@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     $.ajax({
                  type: "GET",
-                 url: "ter-widgets",
+                 url: "unprosessed-ter-widgets",
                  success: function(response){
                      var current_month = parseInt(response.current_month_ter_count);
                      var previous_month = parseInt(response.previous_ter_count);

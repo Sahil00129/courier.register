@@ -240,7 +240,7 @@
                                         <div class="w-browser-details">
                                             <div class="w-browser-info">
                                                 <h6>Chrome</h6>
-                                                <p class="browser-count">65%</p>
+                                                <p class="browser-count">25%</p>
                                             </div>
                                             <div class="w-browser-stats">
                                                 <div class="progress">
@@ -279,12 +279,33 @@
                                             
                                             <div class="w-browser-info">
                                                 <h6>Others</h6>
-                                                <p class="browser-count">15%</p>
+                                                <p class="browser-count">50%</p>
                                             </div>
 
                                             <div class="w-browser-stats">
                                                 <div class="progress">
-                                                    <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 55%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="browser-list">
+                                        <div class="w-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-compass"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                                        </div>
+                                        <div class="w-browser-details">
+                                            
+                                            <div class="w-browser-info">
+                                                <h6>Safari</h6>
+                                                <p class="browser-count">25%</p>
+                                            </div>
+
+                                            <div class="w-browser-stats">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 35%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                             </div>
 

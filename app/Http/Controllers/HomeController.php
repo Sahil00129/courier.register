@@ -106,7 +106,7 @@ class HomeController extends Controller
         return $current_month_sent_to_finfect_ter_sum;
     }
 
-    public function widgets()
+    public function unprocessedTerWidgets()
     {
         $get_previous_month = date('m', strtotime('-1 months'));
 
