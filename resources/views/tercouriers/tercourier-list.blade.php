@@ -80,7 +80,11 @@
                                 // echo'<pre>'; print_r($tercourier);
                             ?>
                                 <tr>
+                                <?php if($tercourier->status==1 || $tercourier->status==2 || $tercourier->status==0){?>
+                                    <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
+                                    <?php } else {?>
                                     <td>{{ $tercourier->id }}</td>
+                                    <?php } ?>
                                     <?php
                                     if ($tercourier->status == 1) {
                                         $status = 'Received';
@@ -101,6 +105,10 @@
 
                                         $status = 'Paid';
                                         $class = 'btn-success';
+                                    }elseif ($tercourier->status == 6) {
+
+                                        $status = 'Cancel';
+                                        $class = 'btn-danger';
                                     }
                                      else {
                                         $status = 'Failed';
@@ -184,8 +192,12 @@
                             ?>
                                 <tr>
                                     <td><input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>"></td>
+                                    <?php if($tercourier->status==1 || $tercourier->status==2 || $tercourier->status==0 ){?>
+                                    <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
+                                   <?php } else {?>
                                     <td>{{ $tercourier->id }}</td>
-                                    <?php
+                                    <?php } ?>
+                                   <?php
                                     if ($tercourier->status == 1) {
                                         $status = 'Received';
                                         $class = 'btn-success';
@@ -196,6 +208,10 @@
 
                                         $status = 'Unpaid';
                                         $class = 'btn-success';
+                                    } elseif ($tercourier->status == 6) {
+
+                                        $status = 'Cancel';
+                                        $class = 'btn-danger';
                                     } else {
                                         $status = 'Cancel';
                                         $class = 'btn-danger';
@@ -243,7 +259,37 @@
 
                     </table>
                 <?php  } ?>
-
+   <!-- Modal -->
+   <div class="modal fade show" id="exampleModal"  v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Cancel TER</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Ter ID:</label>
+                                            <input type="text" class="form-control" id="recipient-name" v-model="ter_id" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                            <input type="text" class="form-control" id="recipient-name" v-model="cancel_remarks">
+                                        </div>
+                                    </form>
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" @click="cancel_ter()" data-dismiss="modal" >Save changes</button>
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
 
@@ -263,12 +309,45 @@
         data: {
             unique_amount_id: "",
             unique_coupon_id: "",
+            ter_modal:false,
+            ter_id:"",
+            cancel_remarks:"",
         },
         created: function() {
             // alert(this.got_details)
             //   alert('hello');
         },
         methods: {
+            cancel_ter:function(){
+                if(this.cancel_remarks != ""){
+                axios.post('/cancel_ter', {
+                        'ter_id': this.ter_id,
+                        'remarks':this.cancel_remarks
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            swal('success', "Ter Id :"+this.ter_id+" has been cancelled", 'success')
+                            location.reload();
+                        } else {
+                            swal('error', "System Error", 'error')
+                            this.ter_modal=false;
+                            this.ter_id="";
+                        }
+
+                    }).catch(error => {
+
+                        swal('error', error , 'error')
+                            this.ter_modal=false;
+                            this.ter_id="";
+                    })
+                }else{
+                    swal('error', "Remarks needs to be added", 'error')
+                }
+            },
+            open_ter_modal:function(ter_id){
+                this.ter_id=ter_id;
+                this.ter_modal = true;
+            },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
                 var y = this.$el.querySelectorAll(".selected_box");

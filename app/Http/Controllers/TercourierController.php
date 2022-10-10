@@ -48,12 +48,12 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['1', '2','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
             //    echo'<pre>'; print_r($name); die;
         }
@@ -481,7 +481,7 @@ class TercourierController extends Controller
                 if ($status_code == 2) {
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
-                        'utr' => $received_data->bank_refrence_no
+                        'utr' => $received_data->bank_refrence_no,'updated_at'=>date('Y-m-d H:i:s')
                     ]);
 
                     if ($update_ter_data) {
@@ -522,6 +522,7 @@ class TercourierController extends Controller
         // $payable_amount = $data['payable_amount'];
         $payable_data = $data['payable_data'];
         $ter_total_amount = $data['amount'];
+        $manaully_paid=$data['manually_paid'];
         $total_payable_sum = 0;
         if (!empty($payable_data)) {
             $length = sizeof($payable_data);
@@ -603,30 +604,6 @@ class TercourierController extends Controller
 
             $updated_record_detail = DB::table('tercouriers')->where('id', $unique_id)->update(array('hr_admin_remark' => $admin_remarks));
 
-            if (!empty($pay_data)) {
-                $tercourier_update_payable = DB::table('tercouriers')->where('id', $unique_id)->update(array('payable_amount' => $pay_data));
-                if (!empty($tercourier[0]->payable_amount)) {
-                    $updated_details['updated_field'] = 'Payable Amount Changed from ' . $tercourier[0]->payable_amount . ' to ' . $pay_encode;
-                } else {
-                    $updated_details['updated_field'] = 'Payable Amount added as ' . $pay_encode;
-                }
-                if ($tercourier_update_payable) {
-                    $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-
-
-
-                $tercourier_update_voucher = DB::table('tercouriers')->where('id', $unique_id)->update(array('voucher_code' => $voucher_data));
-                if (!empty($tercourier[0]->voucher_code)) {
-                    $updated_details['updated_field'] = 'Voucher Code Changed from ' . $tercourier[0]->voucher_code . ' to ' . $voucher_encode;
-                } else {
-                    $updated_details['updated_field'] = 'Voucher Code added as ' . $voucher_encode;
-                }
-                if ($tercourier_update_voucher) {
-                    $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
-                }
-            }
-
 
             if ($tercourier[0]->company_name != $company_name) {
                 // dd("ggg");
@@ -679,6 +656,35 @@ class TercourierController extends Controller
                     $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
                 }
             }
+            if (!empty($pay_data)) {
+                $tercourier_update_payable = DB::table('tercouriers')->where('id', $unique_id)->update(array('payable_amount' => $pay_data));
+                if (!empty($tercourier[0]->payable_amount)) {
+                    $updated_details['updated_field'] = 'Payable Amount Changed from ' . $tercourier[0]->payable_amount . ' to ' . $pay_encode;
+                } else {
+                    $updated_details['updated_field'] = 'Payable Amount added as ' . $pay_encode;
+                }
+                if ($tercourier_update_payable) {
+                    $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
+                }
+
+
+
+                $tercourier_update_voucher = DB::table('tercouriers')->where('id', $unique_id)->update(array('voucher_code' => $voucher_data));
+                if (!empty($tercourier[0]->voucher_code)) {
+                    $updated_details['updated_field'] = 'Voucher Code Changed from ' . $tercourier[0]->voucher_code . ' to ' . $voucher_encode;
+                } else {
+                    $updated_details['updated_field'] = 'Voucher Code added as ' . $voucher_encode;
+                }
+                if ($tercourier_update_voucher) {
+                    $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
+                }
+                if($manaully_paid)
+                {
+                    $updated_record_detail = DB::table('tercouriers')->where('id', $unique_id)->update(array('status' => '5','payment_status'=>'5',
+                    'payment_type'=>'manually_paid_payment','updated_by_id'=> $updated_details['user_id'],
+                    'updated_by_name'=> $updated_details['user_name'],'updated_at'=>$updated_details['updated_at']));
+                }
+            }
             return $updated_record_detail;
         } else {
             return 0;
@@ -700,6 +706,10 @@ class TercourierController extends Controller
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
         if ($tercourier_table[0]->status == 3) {
             $data_error['status_of_data'] = "3";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 5) {
+            $data_error['status_of_data'] = "5";
             return $data_error;
         }
         $senders =  DB::table('sender_details')->get();
@@ -1045,6 +1055,7 @@ class TercourierController extends Controller
         //   }';
 
         // print_r($send_data);
+        // exit;
         //$sen_data_encode=json_encode($send_data);
         // return $sen_data_encode;
 
@@ -1083,7 +1094,8 @@ $url=    config('services.finfect_key.finfect_url');
                             \"email\": \"$sender_data->official_email_id\",
                             \"terid\": \"$tercourier_data->id\",
                             \"ptype\": \"$tercourier_data->payment_type\",
-                            \"ax_id\":\"$ax_id\"
+                            \"ax_id\":\"$ax_id\",
+                            \"territory\":\"$sender_data->territory\"
                             }]",
 
             CURLOPT_HTTPHEADER => array(
@@ -1129,6 +1141,30 @@ $url=    config('services.finfect_key.finfect_url');
             return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers]);
         }
         //    echo'<pre>'; print_r($name); die;
+    }
+
+    public function cancel_ter(Request $request)
+    {
+        $req_param=$request->all();
+        $data['remarks']=$req_param['remarks'];
+        $data['updated_id']=$req_param['ter_id'];
+        $data['updated_date']=date('Y-m-d');
+        $details = Auth::user();
+        $data['updated_by_user_id'] = $details->id;
+        $data['updated_by_user_name'] = $details->name;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        if($data['remarks']!=""){
+            $response=DB::table('tercouriers')->where('id',$req_param['ter_id'])->update(["status"=>"6","updated_by_id"=>$data['updated_by_user_id'],
+        "updated_by_name"=> $data['updated_by_user_name'],'updated_at'=>$data['updated_at']]);
+            if($response){
+        $res = DB::table('ter_data_cancel')->insert($data);
+        return $res;
+            }
+        }else{
+            $res=0;
+            return $res;
+        }
     }
 
     public function show_full_and_final_data(Request $request)
