@@ -48,12 +48,12 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['1', '2','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
             //    echo'<pre>'; print_r($name); die;
         }
@@ -1129,6 +1129,30 @@ $url=    config('services.finfect_key.finfect_url');
             return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers]);
         }
         //    echo'<pre>'; print_r($name); die;
+    }
+
+    public function cancel_ter(Request $request)
+    {
+        $req_param=$request->all();
+        $data['remarks']=$req_param['remarks'];
+        $data['updated_id']=$req_param['ter_id'];
+        $data['updated_date']=date('Y-m-d');
+        $details = Auth::user();
+        $data['updated_by_user_id'] = $details->id;
+        $data['updated_by_user_name'] = $details->name;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        if($data['remarks']!=""){
+            $response=DB::table('tercouriers')->where('id',$req_param['ter_id'])->update(["status"=>"6","updated_by_id"=>$data['updated_by_user_id'],
+        "updated_by_name"=> $data['updated_by_user_name'],'updated_at'=>$data['updated_at']]);
+            if($response){
+        $res = DB::table('ter_data_cancel')->insert($data);
+        return $res;
+            }
+        }else{
+            $res=0;
+            return $res;
+        }
     }
 
     public function show_full_and_final_data(Request $request)
