@@ -452,5 +452,28 @@ class BulkImport implements ToModel, WithHeadingRow
             //     ]);
             // }
         }
+
+        if ($_POST['import_type'] == 9) {
+            // echo "<pre>"; print_r($row);exit;
+            $get_data_ter_courier=DB::table('tercouriers')->where('id',$row['id'])->get()->toArray();
+            if(!empty($get_data_ter_courier)){
+            if($row['id'] == $get_data_ter_courier[0]->id)
+            {
+                $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['hr_admin_remark'=>'manually paid','status' => '5','payment_status'=>'5','payment_type'=>'manually_paid_payment']);
+                // print_r($updated_data);
+            }
+            print_r("Done");
+            // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+            }
+            // die;
+            // $for = DB::table('for_companies')
+            //     ->where('for_company', '=', $row['for_company'])
+            //     ->first();
+            // if (is_null($for)) {
+            //     return new ForCompany([
+            //         'for_company'  => $row['for_company']
+            //     ]);
+            // }
+        }
     }
 }
