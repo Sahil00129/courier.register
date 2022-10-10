@@ -266,6 +266,13 @@
                             </li>
                         </ul>
 
+                        <div class="form-check">
+                        <label class="form-check-label" for="flexCheckChecked">
+                        <input class="form-check-input" type="checkbox"  v-model="manually_paid">
+                           Manually Paid
+                        </label>
+                        </div><br/>
+
                         <button type=" submit" class="btn btn-primary" v-on:click="update_data_by_admin()">
                             <span class="indicator-label">Save</span>
                             </span>
@@ -422,6 +429,7 @@
             edit_payable: false,
             edit_btn_flag: true,
             admin_remarks:"",
+            manually_paid:"",
 
         },
         created: function() {
@@ -511,6 +519,22 @@
             },
             update_data_by_admin: function() {
                 var sender_emp_id, sender_name, ax_code, pay_data;
+                if(this.manually_paid)
+                {
+                    this.manually_paid=1;
+                }else{
+                    this.manually_paid=0;
+                }
+                if(this.all_data.payable_amount == "" && this.payable_amount !="")
+                {
+                    swal('error', "TER User can add payable Amount", 'error')
+                    return 1;
+                }
+                if(this.all_data.voucher_code == "" && this.voucher_code !="")
+                {
+                    swal('error', "TER User can add Voucher Code", 'error')
+                    return 1;
+                }
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
                     sender_emp_id = sender_data_split[0];
@@ -530,14 +554,16 @@
                 {
                     pay_data = "";
                 }
-                if(this.admin_remarks === "")
+                if(this.admin_remarks == null)
                 {
                     swal('error', "Admin Remark is mandatory", 'error')
-                    return 
+                    return 1;
                 }
                 // console.log(this.payable_amount);
+                // alert(this.admin_remarks)
                 // return 1;
                 if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
+                    if(this.admin_remarks != null){
                     axios.post('/update_by_hr_admin', {
                             'sender_emp_id': sender_emp_id,
                             'company_name': this.company_name,
@@ -548,8 +574,8 @@
                             'payable_data': pay_data,
                             'admin_remarks':this.admin_remarks,
                             'terfrom_date': this.terfrom,
-                            'terto_date': this.terto
-
+                            'terto_date': this.terto,
+                            'manually_paid': this.manually_paid
 
                         })
                         .then(response => {
@@ -580,6 +606,7 @@
                                 document.getElementById("search_item").value = "";
                                 swal('error', "Either Record is already updated or not selected", 'error')
                             }
+                            this.manually_paid=false;
 
                         }).catch(error => {
 
@@ -591,6 +618,9 @@
 
 
                         })
+                    }else{
+                        swal('error', "Remarks needs to be added", 'error')  
+                    }
 
                 } else {
                     swal('error', "Fields are empty", 'error')
@@ -611,6 +641,7 @@
                 this.edit_payable = false;
                 this.edit_btn_flag = true;
                 this.admin_remarks="";
+                this.manually_paid=false;
 
                 //  alert(this.unique_id);
 
@@ -623,7 +654,10 @@
                         if (response.data.status_of_data === "3") {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
-                        } else if(isNaN(response.data[0].sender_id)){
+                        }  if (response.data.status_of_data === "5") {
+                            this.button_text = "Search";
+                            swal('error', "Record has been Already Paid", 'error')
+                        }else if(isNaN(response.data[0].sender_id)){
                             this.button_text = "Search";
                             swal('error', "Sender Details are missing for this record", 'error')
                         }else if (response.data[0] != "" && response.data.status_of_data === "0") {
@@ -641,6 +675,10 @@
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
                             this.admin_remarks=this.all_data.hr_admin_remark;
+                            if(this.all_data.payment_status == 5)
+                            {
+                                this.manually_paid=true;
+                            }
 
 
                             // console.log(this.all_data.courier_company)
@@ -680,12 +718,17 @@
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
                             this.admin_remarks=this.all_data.hr_admin_remark;
+                            if(this.all_data.payment_status == 5)
+                            {
+                                this.manually_paid=true;
+                            }
 
                             // console.log(this.all_data.courier_company)
                         } else {
                             this.got_data = false;
                             this.button_text = "Search";
                             this.update_ter_flag = false;
+                            this.manually_paid=false;
                             swal('error', "Either Details already updated or No record Found", 'error')
                         }
 
@@ -693,6 +736,7 @@
                         this.got_data = false;
                         this.update_ter_flag = false;
                         this.button_text = "Search";
+                        this.manually_paid=false;
 
 
                     })
