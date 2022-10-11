@@ -44,8 +44,12 @@ class HomeController extends Controller
         $sum1 = 0;
         $sum2 = array();
         $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereDate('updated_at', date("Y-m-d"))->get();
-
+        // echo"<pre>";
+       if(sizeof($data_sent_to_finfect)>0){
         $current_day_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
+       }else{
+       $current_day_sent_to_finfect_ter_sum=0;
+       }
 
         /////////////////////Current Month Processed//////////////////////////
         $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('status', 3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
@@ -54,8 +58,14 @@ class HomeController extends Controller
         $sum1 = 0;
         $sum2 = array();
         $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
-
+        // echo"<pre>";
+        // print_r($data_sent_to_finfect);
+        if(sizeof($data_sent_to_finfect)>0){
         $current_month_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
+        // print_r("Ds");
+        }else{
+            $current_month_sent_to_finfect_ter_sum=0;
+        }
 
         // widget 3 =================
         $current_day_paid_ter_count = DB::table('tercouriers')->select('id')->where('status', 5)->whereDate('updated_at', date("Y-m-d"))->count();
@@ -68,11 +78,16 @@ class HomeController extends Controller
         $sum1 = 0;
         $sum2 = array();
         $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 5)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
-
+        // echo"<pre>";
+        // print_r($data_sent_to_finfect);
+        if(sizeof($data_sent_to_finfect)>0){
         $current_month_paid_ter_sum = self::totalSum($data_sent_to_finfect);
+        }else{
+            $current_month_paid_ter_sum=0;
+        }
 
         // =============== User Percentage ===============
-        $total_ter = Tercourier::select('id')->where('status',3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+        $total_ter = Tercourier::select('id')->whereIn('status',[3,5])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
         // echo $total_ter; die;
         
         $user_array = array (
@@ -84,7 +99,7 @@ class HomeController extends Controller
        
         foreach($user_array as $key => $user){
             
-            $user1_ter = Tercourier::select('id')->where('status',3)->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+            $user1_ter = Tercourier::select('id')->whereIn('status',[3,5])->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
            
             $percentage[$user['name']][] = ($user1_ter / $total_ter) * 100 ;
             
@@ -107,16 +122,19 @@ class HomeController extends Controller
 
         $sum1 = 0;
         $sum2 = array();
-
         $decode1 = json_decode($data);
         $decode2 = array();
         for ($i = 0; $i < sizeof($decode1); $i++) {
             $decode2[$i] = json_decode($decode1[$i]->payable_amount);
 
         }
-
+        // echo"<pre>";
+        // print_r($decode2);
+        
         for ($j = 0, $n = 0; $j < sizeof($decode2); $j++) {
-
+            // print_r(sizeof($decode2[$j]));
+            // print_r($decode2[$j]);
+            if(!empty($decode2[$j])){
             if (sizeof($decode2[$j]) > 1) {
                 $sum1 = array_sum($decode2[$j]);
             } else {
@@ -124,6 +142,7 @@ class HomeController extends Controller
                 $n++;
 
             }
+        }
         }
         $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2);
         return $current_month_sent_to_finfect_ter_sum;
