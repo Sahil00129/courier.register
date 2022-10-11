@@ -793,6 +793,11 @@ class TercourierController extends Controller
         $res=0;
         $id = $data['unique_id'];
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        $check_ifsc=DB::table('sender_details')->select('ifsc')->where('employee_id',$data_ter[0]->employee_id)->get();
+        if(strlen($check_ifsc[0]->ifsc) != 11)
+        {
+        return "ifsc_error";
+        }
        $response= self::advance_payment_check($data,$total_payable_sum);
 
        if($response[1]=='4')
@@ -1097,16 +1102,19 @@ $url=    config('services.finfect_key.finfect_url');
                             \"ax_id\":\"$ax_id\",
                             \"territory\":\"$sender_data->territory\"
                             }]",
-
+                           
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json'
             ),
         ));
 
         $response = curl_exec($curl);
-
+        // echo "<pre>";
+        // print_r($response);
+        // die;
         curl_close($curl);
         $res_data = json_decode($response);
+     
         if ($res_data->message == "success") {
             $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
             $new_data['finfect_response'] = $res_data->message;

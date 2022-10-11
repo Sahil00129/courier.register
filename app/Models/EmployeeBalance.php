@@ -10,7 +10,7 @@ class EmployeeBalance extends Model
     use HasFactory;
     protected $table = 'employee_balance';
     protected $fillable = [
-        'employee_id', 'current_balance', 'advance_amount', 'ter_id','utilize_amount','action_done','user_id','user_name'
+        'employee_id', 'current_balance', 'advance_amount', 'ter_id','utilize_amount','action_done','user_id','user_name','created_at','updated_at'
     ];
 
     public function SenderDetailsTable()

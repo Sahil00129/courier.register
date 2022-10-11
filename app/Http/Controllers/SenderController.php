@@ -50,7 +50,7 @@ class SenderController extends Controller
     {
         $data=$request->all();
         $id=$data['sender_id'];
-        $get_db_data=DB::table('sender_details')->where('id',$id)->get()->toArray();
+        $get_db_data=DB::table('sender_details')->where('employee_id',$id)->get()->toArray();
         $balance_data=DB::table('employee_balance')->select('current_balance')->where('employee_id',$get_db_data[0]->employee_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
         if(!empty($balance_data))
@@ -92,7 +92,9 @@ class SenderController extends Controller
     public function get_employee_passbook(Request $request)
     {
         $data=$request->all();
-        $emp_id=$data['emp_id'];
+        $id=$data['id'];
+        $db_data=DB::table('sender_details')->select('employee_id')->where('id',$id)->get();
+        $emp_id=$db_data[0]->employee_id;;
         $res= URL::to('/employee_detail_passbook/'.$emp_id);
         return $res;
     }
@@ -119,7 +121,8 @@ class SenderController extends Controller
       }
     //   return $employee_name;
     // return [$current_balance,$employee_name,$employee_balance_data];
-        return view ('pages.employee-passbook',['current_balance'=>$current_balance,'employee_name'=>$employee_name,'employee_balance_data'=>$employee_balance_data]);
+        return view ('pages.employee-passbook',['current_balance'=>$current_balance,'employee_name'=>$employee_name,'employee_balance_data'=>$employee_balance_data,
+                                                    'emp_id'=>$emp_id]);
     }
 
     public function addSender(Request $request) 

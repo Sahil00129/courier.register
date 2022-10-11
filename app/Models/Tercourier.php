@@ -13,7 +13,7 @@ class Tercourier extends Model
     protected $table = 'tercouriers';
     protected $fillable = [
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
-        'saved_by_id', 'saved_by_name'
+        'saved_by_id', 'saved_by_name','created_at','updated_at'
     ];
 
     public function CourierCompany()
