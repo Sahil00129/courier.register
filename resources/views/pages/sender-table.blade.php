@@ -5,6 +5,43 @@
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/datatables.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/custom_dt_html5.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/table/datatable/dt-global_style.css')}}">
+<style>
+#cover-spin {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(255,255,255,0.7);
+    z-index:9999;
+    display:none;
+}
+
+@-webkit-keyframes spin {
+	from {-webkit-transform:rotate(0deg);}
+	to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+    content:'';
+    display:block;
+    position:absolute;
+    left:48%;top:40%;
+    width:40px;height:40px;
+    border-style:solid;
+    border-color:black;
+    border-top-color:transparent;
+    border-width: 4px;
+    border-radius:50%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+}
+
+</style>
+
 <!-- END PAGE LEVEL CUSTOM STYLES -->
 <div class="layout-px-spacing" id="sender_table_show">
     <div class="page-header">
@@ -58,7 +95,7 @@
                         <tr>
                             <td>{{ $send->id }}</td>
                             <td>{{$send->ax_id}}</td>
-                            <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_emp_modal(<?php echo $send->id ?>)">{{$send->employee_id}}</td>
+                            <td style="cursor:pointer" v-on:click="get_employee_passbook(<?php echo $send->id ?>)">{{$send->employee_id}}</td>
                             <td>{{$send->type}}</td>
                             <td>{{$send->name}}</td>
                             <td>{{$send->location}}</td>
@@ -73,47 +110,9 @@
                         </tr>
                         @endforeach
                     </tbody>
-
-                    <!-- Modal -->
-                    <div class="modal fade show" id="exampleModal"  v-if="emp_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Add Advance for Employee</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="emp_modal=false;emp_advance_amount=''">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">Employee ID:</label>
-                                            <input type="text" class="form-control" id="recipient-name" v-model="emp_id" disabled>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="recipient-name" class="col-form-label">Employee Name:</label>
-                                            <input type="text" class="form-control" id="recipient-name" v-model="emp_name" disabled>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="col-form-label">Current Balance:</label>
-                                            <input type="number" class="form-control" id="recipient-name"  v-model="current_balance" disabled>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="col-form-label">Add Advance Amount:</label>
-                                            <input type="number" class="form-control" id="recipient-name" v-model="emp_advance_amount">
-                                        </div>
-                                    </form>
-                                    </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary"  data-dismiss="modal" @click="add_advance_payment()">Save changes</button>
-                                    <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="get_employee_passbook()">Get Passbook</button>
-                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                                </div>
-                              
-                            </div>
-                        </div>
-                    </div>
                 </table>
+                <div class="d-flex justify-content-center" id="cover-spin" v-if="loader">
+                </div>
             </div>
         </div>
     </div>
@@ -126,80 +125,29 @@
         //   ValidationProvider
         // },
         data: {
-            emp_id: "",
-            emp_name: "",
-            emp_all_data: "",
-            emp_modal: false,
-            emp_advance_amount:"",
-            unique_id:"",
-            current_balance:"",
+            unique_id: "",
+            loader: "",
         },
         created: function() {
 
 
         },
         methods: {
-            get_employee_passbook(){
+            get_employee_passbook(id) {
+                this.unique_id = id;
+                this.loader = true;
                 // window.location="/pages/employee-passbook";
                 // setTimeout(() => {window.location.href = "/employee-passbook"},2000);
                 axios.post('/get_employee_passbook', {
-                        'emp_id':this.emp_id
+                        'id': this.unique_id
                     })
                     .then(response => {
                         if (response.data) {
-                           window.location=response.data;
+                            window.location = response.data;
                         } else {
-                            this.emp_modal=false;
-                            this.emp_advance_amount="";
+                            this.loader = false;
                             swal('error', "System Error", 'error')
-                        }
-
-                    }).catch(error => {
-
-
-
-                    })
-            },
-            add_advance_payment(){
-                axios.post('/add_advance_payment', {
-                        'emp_advance_amount': this.emp_advance_amount,
-                        'emp_id':this.emp_id
-                    })
-                    .then(response => {
-                        if (response.data) {
-                            swal('success', "Advance Added Successfully!!!", 'success')
-                            this.emp_modal=false;
-                            this.emp_advance_amount="";
-                        } else {
-                            this.emp_modal=false;
-                            this.emp_advance_amount="";
-                            swal('error', "System Error", 'error')
-                        }
-
-                    }).catch(error => {
-
-
-
-                    })
-            },
-            open_emp_modal(id) {
-                this.unique_id=id;
-                this.emp_modal = true;
-                axios.post('/get_emp_data', {
-                        'sender_id': this.unique_id
-                    })
-                    .then(response => {
-                        if (response.data) {
-                            this.emp_all_data = response.data[0];
-                            this.emp_name = this.emp_all_data.name;
-                            this.emp_id = this.emp_all_data.employee_id;
-                            this.current_balance=response.data.current_balance;
-                            // alert(this.current_balance)
-                            // alert(this.emp_name)
-                            // alert(this.emp_id)
-                            // console.log(response.data)
-                        } else {
-                            swal('error', "Not able to fetch employee details", 'error')
+                            location.reload();
                         }
 
                     }).catch(error => {
@@ -214,6 +162,5 @@
 
     })
 </script>
-
 @include('models.delete-sender')
 @endsection

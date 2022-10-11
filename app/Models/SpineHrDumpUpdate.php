@@ -10,7 +10,7 @@ class SpineHrDumpUpdate extends Model
     use HasFactory;
     protected $table = 'spine_updates_table';
     protected $fillable = [
-        'user_id', 'user_name', 'updated_field', 'updated_id'
+        'user_id', 'user_name', 'updated_field', 'updated_id','created_at','updated_at'
     ];
 
     public function SaveUpdatedData()

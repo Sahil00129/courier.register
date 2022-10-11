@@ -15,7 +15,7 @@ class Sender extends Model
        'gender','marital_status','official_email_id','personal_email_id','uan_number','esic_status',
         'esic_no','compliance_branch','department','pan','aadhar_number','account_number','ifsc','bank_name','branch_name','address_1',
         'address_2','address_3','address_district','address_state','address_pin_code','beneficiary_name','account_base_type','transfer_type',
-        'account_type'
+        'account_type','created_at','updated_at'
     ];
 }
 

@@ -501,18 +501,16 @@
             },
 
             ter_pay_now: function() {
-                var i;
+                var i,myArray,ter_to;
                 var terto_date = new Date(this.all_data.terto_date);
-                var last_working_date, last_working_time;
                 if (this.all_data.sender_detail.last_working_date) {
-                    last_working_date = new Date(this.all_data.sender_detail.last_working_date);
-                    last_working_time = last_working_date.getTime();
+                    myArray = this.all_data.terto_date.split("-");
+                 ter_to=myArray[2]+"-"+myArray[1]+"-"+myArray[0]
                 } else {
                     this.allow_flag = true;
                 }
-// console.log(terto_date)
-// console.log(last_working_date)
-                if  (terto_date <= last_working_date || this.allow_flag) {
+         
+                if  (ter_to <= this.all_data.sender_detail.last_working_date || this.allow_flag) {
 
                     axios.post('/ter_pay_now', {
                             'payable_data': this.pay_data_array,
@@ -526,6 +524,10 @@
                             if(response.data === "error_sum_amount")
                             {
                                 swal('error', "Payable Amount is Greater than TER Amount", 'error')
+                            } 
+                            else if(response.data === "ifsc_error")
+                            {
+                                swal('error', "IFSC for this employee is not valid", 'error')
                             }
                            else if (response.data === 1) {
                                 this.button_text = "Search";
@@ -584,7 +586,11 @@
                         {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
-                        }else if(isNaN(response.data[0].sender_id)){
+                        } if (response.data.status_of_data === "5") {
+                            this.button_text = "Search";
+                            swal('error', "Record has been Already Paid", 'error')
+                        }
+                        else if(isNaN(response.data[0].sender_id)){
                             this.button_text = "Search";
                             swal('error', "Sender Details are missing for this record", 'error')
                         }
