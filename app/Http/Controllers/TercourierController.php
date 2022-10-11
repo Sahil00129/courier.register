@@ -751,6 +751,12 @@ class TercourierController extends Controller
         if ($total_payable_sum > $ter_total_amount) {
             return "error_sum_amount";
         }
+        $data_ter_check = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        $check_ifsc=DB::table('sender_details')->select('ifsc')->where('employee_id',$data_ter_check[0]->employee_id)->get();
+        if(strlen($check_ifsc[0]->ifsc) != 11)
+        {
+        return "ifsc_error";
+        }
 
         $details = Auth::user();
         $payment_status = $data['payment_status'];

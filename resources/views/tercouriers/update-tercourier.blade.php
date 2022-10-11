@@ -470,7 +470,12 @@
                             if (response.data == "error_sum_amount") {
                                 swal('error', "Amount can't be greater than total amount", 'error')
                                 // window.location.reload();
-                            } else {
+                            }
+                            else if(response.data === "ifsc_error")
+                            {
+                                swal('error', "IFSC for this employee is not valid", 'error')
+                            }
+                            else {
                                 if (response.data) {
                                     this.button_text = "Search";
                                     this.flag = true;
