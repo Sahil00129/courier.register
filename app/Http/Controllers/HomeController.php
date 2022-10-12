@@ -150,7 +150,7 @@ class HomeController extends Controller
          }
          else{
             // echo"<pre>";
-            $sum3=$sum3+$decode1[$j]->payable_amount;
+            $sum3=$sum3+(int)$decode1[$j]->payable_amount;
          }
         }
         $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2)+$sum3;
