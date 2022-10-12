@@ -65,8 +65,9 @@
                                                     <option value="2">Courier Companies</option>
                                                     <option value="3">Document Catagories</option>
                                                     <option value="4">Receiving Company</option>
+                                                    <option value="11">Update Employee ID</option>
                                                     <!-- <option value="9">Manually Paid TER</option> -->
-                                                    <option value="10">Finfect to Paid TER</option>
+                                                    <!-- <option value="10">Finfect to Paid TER</option> -->
                                                     <!-- <option value="6">Update Old Ids</option>
                                                     <option value="7">Save Old AX-Code</option> -->
                                                     <!-- <option value="8">Update Beneficiary Details</option> -->
