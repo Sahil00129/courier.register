@@ -475,6 +475,10 @@
                             {
                                 swal('error', "IFSC for this employee is not valid", 'error')
                             }
+                            else if(response.data[0] === "duplicate_voucher")
+                            {
+                                swal('error', "Voucher Code : "+response.data[1]+" has been Already used", 'error')
+                            }
                             else {
                                 if (response.data) {
                                     this.button_text = "Search";
@@ -533,6 +537,10 @@
                             else if(response.data === "ifsc_error")
                             {
                                 swal('error', "IFSC for this employee is not valid", 'error')
+                            }
+                            else if(response.data[0] === "duplicate_voucher")
+                            {
+                                swal('error', "Voucher Code : "+response.data[1]+" has been Already used", 'error')
                             }
                            else if (response.data === 1) {
                                 this.button_text = "Search";

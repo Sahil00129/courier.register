@@ -122,6 +122,7 @@ class HomeController extends Controller
 
         $sum1 = 0;
         $sum2 = array();
+        $sum3=0;
         $decode1 = json_decode($data);
         $decode2 = array();
         for ($i = 0; $i < sizeof($decode1); $i++) {
@@ -134,6 +135,8 @@ class HomeController extends Controller
         for ($j = 0, $n = 0; $j < sizeof($decode2); $j++) {
             // print_r(sizeof($decode2[$j]));
             // print_r($decode2[$j]);
+            // print_r() . "<br>";
+            if(gettype($decode2[$j])== "array"){
             if(!empty($decode2[$j])){
             if (sizeof($decode2[$j]) > 1) {
                 $sum1 = array_sum($decode2[$j]);
@@ -142,9 +145,16 @@ class HomeController extends Controller
                 $n++;
 
             }
+            
         }
+         }
+         else{
+            // echo"<pre>";
+            $sum3=$sum3+$decode1[$j]->payable_amount;
+         }
         }
-        $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2);
+        $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2)+$sum3;
+        // $current_month_sent_to_finfect_ter_sum = $sum1 + array_sum($sum2);
         return $current_month_sent_to_finfect_ter_sum;
     }
 

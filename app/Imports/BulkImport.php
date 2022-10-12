@@ -497,5 +497,50 @@ class BulkImport implements ToModel, WithHeadingRow
             //     ]);
             // }
         }
+        if ($_POST['import_type'] == 11) {
+            // echo "<pre>"; print_r($row);exit;
+            $get_data_ter_courier=DB::table('tercouriers')->where('id',$row['id'])->get()->toArray();
+            if(!empty($get_data_ter_courier)){
+            if($row['id'] == $get_data_ter_courier[0]->id)
+            {
+               if(strlen($get_data_ter_courier[0]->employee_id) != 5)
+               {
+                // echo "<pre>";
+                if(strlen($row['employee_id'])== 4)
+                {
+                    $row['employee_id']='0'.$row['employee_id'];
+                }
+                else if(strlen($row['employee_id'])== 3)
+                {
+                    $row['employee_id']='00'.$row['employee_id'];
+                }
+                else if(strlen($row['employee_id'])== 2)
+                {
+                    $row['employee_id']='000'.$row['employee_id'];
+                }
+                // print_r($row['employee_id']);
+                // exit;
+                $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['employee_id'=>$row['employee_id'],'updated_at' => date('Y-m-d H:i:s')]);
+                // return $updated_data;
+               }
+                // print_r($get_data_ter_courier[0]->employee_id);
+                // print_r($row['employee_id']);
+                // exit;
+              
+                // print_r($updated_data);
+            }
+            print_r("Done");
+            // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+            }
+            // die;
+            // $for = DB::table('for_companies')
+            //     ->where('for_company', '=', $row['for_company'])
+            //     ->first();
+            // if (is_null($for)) {
+            //     return new ForCompany([
+            //         'for_company'  => $row['for_company']
+            //     ]);
+            // }
+        }
     }
 }

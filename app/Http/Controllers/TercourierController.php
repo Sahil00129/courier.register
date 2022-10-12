@@ -48,12 +48,12 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4','5','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2','6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['1', '2', '6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
             //    echo'<pre>'; print_r($name); die;
         }
@@ -453,10 +453,12 @@ class TercourierController extends Controller
         ini_set('max_execution_time', 0); // 0 = Unlimited
         $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->get()->toArray();
         $size = sizeof($get_data_db);
-
+        // $size=1;
+        // return $get_data_db;
         for ($i = 0; $i < $size; $i++) {
             // print_r($get_data_db[$i]->id);
             $id = $get_data_db[$i]->id;
+            // $id="1508";
             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
             $curl = curl_init();
 
@@ -481,7 +483,7 @@ class TercourierController extends Controller
                 if ($status_code == 2) {
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
-                        'utr' => $received_data->bank_refrence_no,'updated_at'=>date('Y-m-d H:i:s')
+                        'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s')
                     ]);
 
                     if ($update_ter_data) {
@@ -495,10 +497,10 @@ class TercourierController extends Controller
                         // $sms_lib->send_paid_sms($get_data_db[$i]->id);
                     }
                     // return $res;
-                } 
+                }
             }
         }
-    return 1;
+        return 1;
     }
 
     // public function test()
@@ -522,7 +524,7 @@ class TercourierController extends Controller
         // $payable_amount = $data['payable_amount'];
         $payable_data = $data['payable_data'];
         $ter_total_amount = $data['amount'];
-        $manaully_paid=$data['manually_paid'];
+        $manaully_paid = $data['manually_paid'];
         $total_payable_sum = 0;
         if (!empty($payable_data)) {
             $length = sizeof($payable_data);
@@ -678,11 +680,12 @@ class TercourierController extends Controller
                 if ($tercourier_update_voucher) {
                     $updated_record_detail = DB::table('update_table_data_details')->insert($updated_details);
                 }
-                if($manaully_paid)
-                {
-                    $updated_record_detail = DB::table('tercouriers')->where('id', $unique_id)->update(array('status' => '5','payment_status'=>'5',
-                    'payment_type'=>'manually_paid_payment','updated_by_id'=> $updated_details['user_id'],
-                    'updated_by_name'=> $updated_details['user_name'],'updated_at'=>$updated_details['updated_at']));
+                if ($manaully_paid) {
+                    $updated_record_detail = DB::table('tercouriers')->where('id', $unique_id)->update(array(
+                        'status' => '5', 'payment_status' => '5',
+                        'payment_type' => 'manually_paid_payment', 'updated_by_id' => $updated_details['user_id'],
+                        'updated_by_name' => $updated_details['user_name'], 'updated_at' => $updated_details['updated_at']
+                    ));
                 }
             }
             return $updated_record_detail;
@@ -713,18 +716,16 @@ class TercourierController extends Controller
             return $data_error;
         }
         $senders =  DB::table('sender_details')->get();
-        $balance_data=DB::table('employee_balance')->select('current_balance')->where('employee_id',$tercourier_table[0]->employee_id)->orderBy('id', 'DESC')->first();;
+        $balance_data = DB::table('employee_balance')->select('current_balance')->where('employee_id', $tercourier_table[0]->employee_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
-        if(empty($balance_data))
-        {
-            $e_id='0'.$tercourier_table[0]->employee_id;
-            $balance_data=DB::table('employee_balance')->select('current_balance')->where('employee_id',$e_id)->orderBy('id', 'DESC')->first();;
+        if (empty($balance_data)) {
+            $e_id = '0' . $tercourier_table[0]->employee_id;
+            $balance_data = DB::table('employee_balance')->select('current_balance')->where('employee_id', $e_id)->orderBy('id', 'DESC')->first();;
         }
-        if(!empty($balance_data))
-        {
-            $tercourier_table['current_balance']=$balance_data->current_balance;
-        }else{
-            $tercourier_table['current_balance']=0;
+        if (!empty($balance_data)) {
+            $tercourier_table['current_balance'] = $balance_data->current_balance;
+        } else {
+            $tercourier_table['current_balance'] = 0;
         }
         $tercourier_table['all_senders_data'] = $senders;
         if ($tercourier_table[0]->payable_amount == "" && $tercourier_table[0]->voucher_code == "") {
@@ -736,7 +737,7 @@ class TercourierController extends Controller
         }
     }
 
-        public function ter_pay_later(Request $request)
+    public function ter_pay_later(Request $request)
     {
         $data = $request->all();
         $id = $data['unique_id'];
@@ -744,6 +745,51 @@ class TercourierController extends Controller
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
+
+        /////////////////////////////////////////////// Start of duplicate voucher check /////////////////////////////////////////////////////////////////////////
+
+        if (!empty($payable_data)) {
+            for ($i = 0; $i < $length; $i++) {
+                $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+            }
+            $data['voucher_code'] = $voucher_data;
+        }
+
+        $decode2 = array();
+        $check_duplicate = DB::table('tercouriers')->select('voucher_code')->whereIn('status', [3, 5])->get();
+        $voucher_code_size = sizeof($check_duplicate);
+        for ($l = 0; $l < sizeof($data['voucher_code']); $l++) {
+            // this is for previous flow
+            for ($i = 0; $i < $voucher_code_size; $i++) {
+                if ($check_duplicate[$i]->voucher_code == $data['voucher_code'][$l]) {
+                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                }
+            }
+            for ($i = 0; $i < $voucher_code_size; $i++) {
+                $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
+                // print_r($decode2[$i]);
+                if (!empty($decode2[$i])) {
+                    if (sizeof($decode2[$i]) > 1) {
+                        // print_r("rt");
+                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                            if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                                return ["duplicate_voucher", $data['voucher_code'][$l]];
+                            }
+                        }
+                    } else {
+                        // echo "<pre>";
+                        // print_r($data['voucher_code'][$l]);
+                        // print_r($decode2[$i][0]);
+                        if ($decode2[$i][0] == $data['voucher_code'][$l]) {
+                            return ["duplicate_voucher", $data['voucher_code'][$l]];
+                            // exit;
+                        }
+                    }
+                }
+            }
+        }
+        //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
+
         for ($i = 0; $i < $length; $i++) {
             $total_payable_sum = $total_payable_sum + $payable_data[$i]['payable_amount'];
         }
@@ -752,21 +798,20 @@ class TercourierController extends Controller
             return "error_sum_amount";
         }
         $data_ter_check = DB::table('tercouriers')->where('id', $id)->get()->toArray();
-        $check_ifsc=DB::table('sender_details')->select('ifsc')->where('employee_id',$data_ter_check[0]->employee_id)->get();
-        if(strlen($check_ifsc[0]->ifsc) != 11)
-        {
-        return "ifsc_error";
+        $check_ifsc = DB::table('sender_details')->select('ifsc')->where('employee_id', $data_ter_check[0]->employee_id)->get();
+        if (strlen($check_ifsc[0]->ifsc) != 11) {
+            return "ifsc_error";
         }
 
         $details = Auth::user();
         $payment_status = $data['payment_status'];
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
-        $final_payable=$total_payable_sum;
+        $final_payable = $total_payable_sum;
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         $tercourier_ax_check = $data_ter[0];
         if ($tercourier_ax_check->ax_id  != 0) {
-            $response = Tercourier::add_voucher_payable($payable_data,$id, $log_in_user_id, $log_in_user_name, $payment_status,$final_payable);
+            $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
             // $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status);
         } else {
             exit;
@@ -784,7 +829,51 @@ class TercourierController extends Controller
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
-     
+
+        //////////////////////////////////////////////////// Start of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (!empty($payable_data)) {
+            for ($i = 0; $i < $length; $i++) {
+                $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+            }
+            $data['voucher_code'] = $voucher_data;
+        }
+
+        $decode2 = array();
+        $check_duplicate = DB::table('tercouriers')->select('voucher_code')->whereIn('status', [3, 5])->get();
+        $voucher_code_size = sizeof($check_duplicate);
+        for ($l = 0; $l < sizeof($data['voucher_code']); $l++) {
+            // this is for previous flow
+            for ($i = 0; $i < $voucher_code_size; $i++) {
+                if ($check_duplicate[$i]->voucher_code == $data['voucher_code'][$l]) {
+                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                }
+            }
+            for ($i = 0; $i < $voucher_code_size; $i++) {
+                $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
+                // print_r($decode2[$i]);
+                if (!empty($decode2[$i])) {
+                    if (sizeof($decode2[$i]) > 1) {
+                        // print_r("rt");
+                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                            if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                                return ["duplicate_voucher", $data['voucher_code'][$l]];
+                            }
+                        }
+                    } else {
+                        // echo "<pre>";
+                        // print_r($data['voucher_code'][$l]);
+                        // print_r($decode2[$i][0]);
+                        if ($decode2[$i][0] == $data['voucher_code'][$l]) {
+                            return ["duplicate_voucher", $data['voucher_code'][$l]];
+                            // exit;
+                        }
+                    }
+                }
+            }
+        }
+        //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
+
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         // return $data_ter[0]->employee_id;
         for ($i = 0; $i < $length; $i++) {
@@ -794,22 +883,21 @@ class TercourierController extends Controller
         if ($total_payable_sum > $ter_total_amount) {
             return "error_sum_amount";
         }
-        $res=0;
-        // return $data;
-        $res=0;
+
+        $res = 0;
         $id = $data['unique_id'];
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
-        $check_ifsc=DB::table('sender_details')->select('ifsc')->where('employee_id',$data_ter[0]->employee_id)->get();
-        if(strlen($check_ifsc[0]->ifsc) != 11)
-        {
-        return "ifsc_error";
+        $check_ifsc = DB::table('sender_details')->select('ifsc')->where('employee_id', $data_ter[0]->employee_id)->get();
+        // return $check_ifsc;
+        if (strlen($check_ifsc[0]->ifsc) != 11) {
+            return "ifsc_error";
         }
-       $response= self::advance_payment_check($data,$total_payable_sum);
+        $response = self::advance_payment_check($data, $total_payable_sum);
+        // return $response;
 
-       if($response[1]=='4')
-       {
-        return $response[0];
-       }
+        if ($response[1] == '4') {
+            return $response[0];
+        }
         // return $final_payable;
         // $voucher_code = $data['voucher_code'];
         // $payable_amount = $data['payable_amount'];
@@ -817,164 +905,147 @@ class TercourierController extends Controller
         if ($response) {
             $emp_sender_id = $data_ter[0]->employee_id;
             $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
-                if (!empty($check_last_working[0]->last_working_date)) {
+            if (!empty($check_last_working[0]->last_working_date)) {
                 $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                     'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3
                 ));
-                return $change_status;     
-            } 
-        else {
-            $res = self::api_call_finfect($id);
-            return $res;
+                return $change_status;
+            } else {
+                $res = self::api_call_finfect($id);
+                return $res;
+            }
         }
-        }
-
-    
     }
 
 
-    public function advance_payment_check($data,$total_payable_sum)
+    public function advance_payment_check($data, $total_payable_sum)
     {
         $id = $data['unique_id'];
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
-        $current_balance=$data['current_balance'];
+        $current_balance = $data['current_balance'];
         // return $data;
-        $final_payable=0;
+        $final_payable = 0;
         $details = Auth::user();
         $log_in_user_name = $details->name;
         $log_in_user_id = $details->id;
-        $flag=0;
-        $emp_id=$data_ter[0]->employee_id;
-        $new_emp_id='0'.$emp_id;
+        $flag = 0;
+        $emp_id = $data_ter[0]->employee_id;
+        $new_emp_id = '0' . $emp_id;
         $payable_data = $data['payable_data'];
+
         // return $data_ter[0]->employee_id;
-        $check=DB::table('sender_details')->where('employee_id',$emp_id)->get();
 
-        if(sizeof($check) == 0)
-        {
-            $check=DB::table('sender_details')->where('employee_id',$new_emp_id)->get();
-            if(sizeof($check) != 0)
-            {
-                $emp_id=$new_emp_id;
+        $check = DB::table('sender_details')->where('employee_id', $emp_id)->get();
+
+        if (sizeof($check) == 0) {
+            $check = DB::table('sender_details')->where('employee_id', $new_emp_id)->get();
+            if (sizeof($check) != 0) {
+                $emp_id = $new_emp_id;
             }
-           
         }
-// return $emp_id;
-        $get_current_balance=EmployeeBalance::select('current_balance')->where('employee_id',$emp_id)->orderBy('id', 'DESC')->first();;
-    //   return $get_current_balance;
-    if(!empty($get_current_balance)){
-    if($current_balance!=$get_current_balance->current_balance)
-    {
-       $current_balance=$get_current_balance->current_balance;
-    }
-}
-        if($current_balance!=0)
-        {
-            if($total_payable_sum > $current_balance)
-            {
-                $flag=1;
-                $final_payable=$total_payable_sum-$current_balance;
-            }else if($total_payable_sum == $current_balance)
-            {
-                $final_payable=0;
-                $flag=1;
+        // return $emp_id;
+        $get_current_balance = EmployeeBalance::select('current_balance')->where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();;
+        //   return $get_current_balance;
+        if (!empty($get_current_balance)) {
+            if ($current_balance != $get_current_balance->current_balance) {
+                $current_balance = $get_current_balance->current_balance;
             }
-            else{
-                $final_payable=$current_balance-$total_payable_sum;
-                $final_payable=0;
+        }
+        if ($current_balance != 0) {
+            if ($total_payable_sum > $current_balance) {
+                $flag = 1;
+                $final_payable = $total_payable_sum - $current_balance;
+            } else if ($total_payable_sum == $current_balance) {
+                $final_payable = 0;
+                $flag = 1;
+            } else {
+                $final_payable = $current_balance - $total_payable_sum;
+                $final_payable = 0;
             }
-            if($flag){
-            $utlized_amount=$current_balance;
-            }else{
-                $utlized_amount=$total_payable_sum;
+            if ($flag) {
+                $utlized_amount = $current_balance;
+            } else {
+                $utlized_amount = $total_payable_sum;
             }
-       
-                $emp_sender_id = $data_ter[0]->employee_id;
-                
 
-                $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
-                if(!empty($check_last_working)){
+            $emp_sender_id = $data_ter[0]->employee_id;
+
+
+            $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
+            if (!empty($check_last_working)) {
                 if ($check_last_working[0]->last_working_date) {
                     // return "Dsa";
                     $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                         'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3
                     ));
                     return $change_status;
-                }             
+                }
             }
-            $update_employee_table=EmployeeBalance::utilized_advance($log_in_user_id,$log_in_user_name,$emp_id,$utlized_amount,$id);
-           
-         if($current_balance >$total_payable_sum)
-         {
-            $payment_status="4";
-            $response = Tercourier::add_voucher_payable($payable_data,$id, $log_in_user_id, $log_in_user_name, $payment_status,$final_payable);
-            $p_status=4;
-            return [$response,$p_status];
-         }
-          else
-            {
+            $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id);
+
+            if ($current_balance > $total_payable_sum) {
+                $payment_status = "4";
+                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                $p_status = 4;
+                return [$response, $p_status];
+            } else {
                 $tercourier_ax_check = $data_ter[0];
                 if ($tercourier_ax_check->ax_id != 0) {
-                $payment_status=1;
-                $response = Tercourier::add_voucher_payable($payable_data,$id, $log_in_user_id, $log_in_user_name, $payment_status,$final_payable);
-                $p_status=1;  
-                // return [$response,$p_status];
-            }
-                else {
+                    $payment_status = 1;
+                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                    $p_status = 1;
+                    // return [$response,$p_status];
+                } else {
                     exit;
                 }
             }
-        }else{
-            $final_payable=$total_payable_sum;
-                 
-        $payment_status = $data['payment_status'];
-        $tercourier_ax_check = $data_ter[0];
-        if ($tercourier_ax_check->ax_id != 0) {
-            $p_status=1;
-            $response = Tercourier::add_voucher_payable($payable_data,$id, $log_in_user_id, $log_in_user_name, $payment_status,$final_payable);
         } else {
-            exit;
+            $final_payable = $total_payable_sum;
+
+            $payment_status = $data['payment_status'];
+            $tercourier_ax_check = $data_ter[0];
+            if ($tercourier_ax_check->ax_id != 0) {
+                $p_status = 1;
+                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+            } else {
+                exit;
+            }
         }
-        }
-        return [$response,$p_status];
+        return [$response, $p_status];
     }
 
     public function pay_later_ter_now(Request $request)
     {
         $data = $request->all();
         // $payment_status = 2;
-        $data['unique_id']=$data['selected_id'];
-        $data_ter = DB::table('tercouriers')->where('id',$data['unique_id'])->get()->toArray();
-        $new_emp_id='0'.$data_ter[0]->employee_id;
-        $emp_id=$data_ter[0]->employee_id;
-        $total_payable_sum=$data_ter[0]->final_payable;
-        $check=DB::table('sender_details')->where('employee_id',$emp_id)->get();
-        $data['payment_status']=2;
+        $data['unique_id'] = $data['selected_id'];
+        $data_ter = DB::table('tercouriers')->where('id', $data['unique_id'])->get()->toArray();
+        $new_emp_id = '0' . $data_ter[0]->employee_id;
+        $emp_id = $data_ter[0]->employee_id;
+        $total_payable_sum = $data_ter[0]->final_payable;
+        $check = DB::table('sender_details')->where('employee_id', $emp_id)->get();
+        $data['payment_status'] = 2;
 
-        if(sizeof($check) == 0)
-        {
-            $check=DB::table('sender_details')->where('employee_id',$new_emp_id)->get();
-            if(sizeof($check) != 0)
-            {
-                $emp_id=$new_emp_id;
+        if (sizeof($check) == 0) {
+            $check = DB::table('sender_details')->where('employee_id', $new_emp_id)->get();
+            if (sizeof($check) != 0) {
+                $emp_id = $new_emp_id;
             }
-           
         }
-        $get_current_balance=EmployeeBalance::select('current_balance')->where('employee_id',$emp_id)->orderBy('id', 'DESC')->first();
-        if(!empty($get_current_balance)){
-        $data['current_balance']=$get_current_balance->current_balance;
-        }else{
-            $data['current_balance']=0;
+        $get_current_balance = EmployeeBalance::select('current_balance')->where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+        if (!empty($get_current_balance)) {
+            $data['current_balance'] = $get_current_balance->current_balance;
+        } else {
+            $data['current_balance'] = 0;
         }
-        $data['payable_data']="";
-        $response= self::advance_payment_check($data,$total_payable_sum);
+        $data['payable_data'] = "";
+        $response = self::advance_payment_check($data, $total_payable_sum);
         // return $response;
 
-        if($response[1]=='4')
-        {
-         return $response[0];
-        }else{
-        $res = self::api_call_finfect($data['selected_id']);
+        if ($response[1] == '4') {
+            return $response[0];
+        } else {
+            $res = self::api_call_finfect($data['selected_id']);
         }
         return $res;
     }
@@ -1022,7 +1093,7 @@ class TercourierController extends Controller
         }
         $encoded_data = json_encode($ax_data);
 
-        $payable_sum=$tercourier_data->final_payable;
+        $payable_sum = $tercourier_data->final_payable;
 
         $sender_id = $tercourier_data->sender_id;
         $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
@@ -1072,12 +1143,12 @@ class TercourierController extends Controller
 
         $curl = curl_init();
         // $URL = \Config::get('services.FINFECT_KEY.finfect_url');
-// $URL=config('services.FINFECT_KEY.FINFECT_API_URL');
-// $url=env('FINFECT_API_URL');
-$url=    config('services.finfect_key.finfect_url');
-// print_r($url);
-// print_r('hello');
-// exit;
+        // $URL=config('services.FINFECT_KEY.FINFECT_API_URL');
+        // $url=env('FINFECT_API_URL');
+        $url =    config('services.finfect_key.finfect_url');
+        // print_r($url);
+        // print_r('hello');
+        // exit;
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
             // CURLOPT_URL => 'https://finfect.biz/api/non_finvendors_payments',
@@ -1108,7 +1179,7 @@ $url=    config('services.finfect_key.finfect_url');
                             \"ax_id\":\"$ax_id\",
                             \"territory\":\"$sender_data->territory\"
                             }]",
-                           
+
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json'
             ),
@@ -1120,7 +1191,7 @@ $url=    config('services.finfect_key.finfect_url');
         // die;
         curl_close($curl);
         $res_data = json_decode($response);
-     
+
         if ($res_data->message == "success") {
             $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
             $new_data['finfect_response'] = $res_data->message;
@@ -1159,24 +1230,26 @@ $url=    config('services.finfect_key.finfect_url');
 
     public function cancel_ter(Request $request)
     {
-        $req_param=$request->all();
-        $data['remarks']=$req_param['remarks'];
-        $data['updated_id']=$req_param['ter_id'];
-        $data['updated_date']=date('Y-m-d');
+        $req_param = $request->all();
+        $data['remarks'] = $req_param['remarks'];
+        $data['updated_id'] = $req_param['ter_id'];
+        $data['updated_date'] = date('Y-m-d');
         $details = Auth::user();
         $data['updated_by_user_id'] = $details->id;
         $data['updated_by_user_name'] = $details->name;
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
-        if($data['remarks']!=""){
-            $response=DB::table('tercouriers')->where('id',$req_param['ter_id'])->update(["status"=>"6","updated_by_id"=>$data['updated_by_user_id'],
-        "updated_by_name"=> $data['updated_by_user_name'],'updated_at'=>$data['updated_at']]);
-            if($response){
-        $res = DB::table('ter_data_cancel')->insert($data);
-        return $res;
+        if ($data['remarks'] != "") {
+            $response = DB::table('tercouriers')->where('id', $req_param['ter_id'])->update([
+                "status" => "6", "updated_by_id" => $data['updated_by_user_id'],
+                "updated_by_name" => $data['updated_by_user_name'], 'updated_at' => $data['updated_at']
+            ]);
+            if ($response) {
+                $res = DB::table('ter_data_cancel')->insert($data);
+                return $res;
             }
-        }else{
-            $res=0;
+        } else {
+            $res = 0;
             return $res;
         }
     }
