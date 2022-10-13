@@ -129,6 +129,8 @@ Route::post('/get_employee_passbook', [SenderController::class,'get_employee_pas
 Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWidgets']);
 
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
+
+// Route::redirect('/test','/tercouriers');
 });
 
 
