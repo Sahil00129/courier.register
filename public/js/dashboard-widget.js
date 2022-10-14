@@ -123,7 +123,6 @@ $(document).ready(function() {
                type: "GET",
                url: "daily-work-performance",
                success: function(response){
-
                 var vipin = response.user1.split(',');
                 var veena = response.user2.split(',');
                 var harpreet = response.user3.split(',');
@@ -243,10 +242,10 @@ $(document).ready(function() {
                   }]
                   },
                   subtitle: {
-                    text: '$10,840',
+                    text: response.total_ter,
                     align: 'left',
                     margin: 0,
-                    offsetX: 95,
+                    offsetX: 45,
                     offsetY: 0,
                     floating: false,
                     style: {
@@ -255,7 +254,7 @@ $(document).ready(function() {
                     }
                   },
                   title: {
-                    text: 'Total Profit',
+                    text: 'Total:',
                     align: 'left',
                     margin: 0,
                     offsetX: -10,

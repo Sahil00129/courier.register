@@ -38,12 +38,12 @@ class HomeController extends Controller
         // return $current_month_handover_ter_sum;
 
         // ===========================widget 2
-        $current_day_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('status', 3)->whereDate('updated_at', date("Y-m-d"))->count();
+        $current_day_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status',['3','5'])->whereDate('updated_at', date("Y-m-d"))->count();
         // echo $current_day_sent_to_finfect_ter_count ; die;
         $current_day_sent_to_finfect_ter_sum = 0;
         $sum1 = 0;
         $sum2 = array();
-        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereDate('updated_at', date("Y-m-d"))->get();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status',['3','5'])->whereDate('updated_at', date("Y-m-d"))->get();
         // echo"<pre>";
         if (sizeof($data_sent_to_finfect) > 0) {
             $current_day_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
@@ -52,12 +52,12 @@ class HomeController extends Controller
         }
 
         /////////////////////Current Month Processed//////////////////////////
-        $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('status', 3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+        $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status',['3','5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
         // echo $current_day_sent_to_finfect_ter_count ; die;
         $current_month_sent_to_finfect_ter_sum = 0;
         $sum1 = 0;
         $sum2 = array();
-        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('status', 3)->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status',['3','5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
         // echo"<pre>";
         // print_r($data_sent_to_finfect);
         if (sizeof($data_sent_to_finfect) > 0) {
@@ -190,6 +190,7 @@ class HomeController extends Controller
         $users = Tercourier::select('id', 'updated_at')
             ->where('updated_by_id', 7)
             ->whereMonth('updated_at', date("m"))
+            ->whereYear('updated_at', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
@@ -218,6 +219,7 @@ class HomeController extends Controller
         $users = Tercourier::select('id', 'updated_at')
             ->where('updated_by_id', 9)
             ->whereMonth('updated_at', date("m"))
+            ->whereYear('updated_at', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
@@ -245,6 +247,7 @@ class HomeController extends Controller
         $users = Tercourier::select('id', 'updated_at')
             ->where('updated_by_id', 10)
             ->whereMonth('updated_at', date("m"))
+            ->whereYear('updated_at', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
@@ -272,6 +275,7 @@ class HomeController extends Controller
         $users = Tercourier::select('id', 'updated_at')
             ->where('updated_by_id', 11)
             ->whereMonth('updated_at', date("m"))
+            ->whereYear('updated_at', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
@@ -306,43 +310,12 @@ class HomeController extends Controller
         $response['user3'] = $user3;
         $response['user4'] = $user4;
         $response['countloop'] = $countloop;
+        $response['total_ter'] = $total_ter;
         $response['success'] = true;
         $response['messages'] = 'load_data';
 
         return Response::json($response);
-        ////////////////////////////
-        // foreach ($user_array as $key => $user) {
-
-        //     $data = Tercourier::select('updated_by_id', 'updated_at')
-        //         ->whereIn('status', ['3', '5'])
-        //         ->whereMonth('updated_at', date("m"))
-        //         ->whereYear('updated_at', date("Y"))
-        //         ->where('updated_by_id', $user['id'])
-        //         ->get();
-        //     $simple = json_decode(json_encode($data), true);
-        //     $dd[] = $simple;
-
-        // }
-        // $d = array();
-        // $c = 0;
-        // foreach ($dd as $key => $value) {
-        //     // echo'<pre>'; print_r($value); die;
-        //    //$d['ter_count'][] = count($value);
-        //     foreach ($value as $sub_key => $sub_val) {
-
-        //         //$d['date'][] = $sub_val['updated_at'];
-        //         $d[$sub_val['updated_by_id']]['date'][] = $sub_val['updated_at'];
-        //         $d[$sub_val['updated_by_id']]['count'][] = $sub_val['updated_at'];
-        //         //echo '<pre>';
-        //       //  print_r($sub_val);
-        //         //die;
-
-        //     }
-        //     $c++;
-        // }
-        // echo '<pre>';
-        // print_r($d);
-        // die;
+        
 
     }
 }
