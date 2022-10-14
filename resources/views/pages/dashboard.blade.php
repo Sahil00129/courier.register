@@ -220,7 +220,7 @@
                     <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                         <div class="widget widget-chart-one">
                             <div class="widget-heading">
-                                <h5 class="">Daily Work performance: </h5>
+                                <h5 class="">Current Month Work Performance: </h5>
                                 <div class="task-action">
                                     
                                 </div>
@@ -231,20 +231,6 @@
                             </div>
                         </div>
                     </div>
-
-                    
-                    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-                        <div class="widget widget-chart-two">
-                            <div class="widget-heading">
-                                <h5 class="">Unprocessed TERs</h5>
-                            </div>
-                            <div class="widget-content">
-                                <div id="chart-2" class=""></div>
-                            </div>
-                        </div>
-                    </div>
-
-                   
 
                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                         <div class="widget-four">
@@ -285,6 +271,21 @@
                         </div>
                     </div>
 
+                    
+                    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                        <div class="widget widget-chart-two">
+                            <div class="widget-heading">
+                                <h5 class="">Unprocessed TERs</h5>
+                            </div>
+                            <div class="widget-content">
+                                <div id="chart-2" class=""></div>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+
+                 
 
     </div>
     @endsection
