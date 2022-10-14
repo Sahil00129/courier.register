@@ -38,12 +38,12 @@ class HomeController extends Controller
         // return $current_month_handover_ter_sum;
 
         // ===========================widget 2
-        $current_day_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status',['3','5'])->whereDate('updated_at', date("Y-m-d"))->count();
+        $current_day_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status', ['3', '5'])->whereDate('updated_at', date("Y-m-d"))->count();
         // echo $current_day_sent_to_finfect_ter_count ; die;
         $current_day_sent_to_finfect_ter_sum = 0;
         $sum1 = 0;
         $sum2 = array();
-        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status',['3','5'])->whereDate('updated_at', date("Y-m-d"))->get();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status', ['3', '5'])->whereDate('updated_at', date("Y-m-d"))->get();
         // echo"<pre>";
         if (sizeof($data_sent_to_finfect) > 0) {
             $current_day_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
@@ -52,12 +52,12 @@ class HomeController extends Controller
         }
 
         /////////////////////Current Month Processed//////////////////////////
-        $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status',['3','5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+        $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->whereIn('status', ['3', '5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
         // echo $current_day_sent_to_finfect_ter_count ; die;
         $current_month_sent_to_finfect_ter_sum = 0;
         $sum1 = 0;
         $sum2 = array();
-        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status',['3','5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
+        $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->whereIn('status', ['3', '5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
         // echo"<pre>";
         // print_r($data_sent_to_finfect);
         if (sizeof($data_sent_to_finfect) > 0) {
@@ -299,11 +299,21 @@ class HomeController extends Controller
         }
         $user4 = implode(',', $userArr4);
         //////////////////////////
+        $days = date('d');
+        $month = date('n');
         $countdate = array();
-        for ($i = 1; $i <= $date; $i++) {
-            $countdate[] = $i;
+        for ($day = 1; $day <= $days; $day++) {
+            $countdate[] = $day . '(' . date('D', strtotime($month . '/' . $day)) . ')';
         }
+        //    echo'<pre>'; print_r($sd);
+        //     die;
+        //
+        // for ($i = 1; $i <= $date; $i++) {
+        //     $countdate[] = $i;
+        // }
         $countloop = implode(',', $countdate);
+        // echo '<pre>';
+        // print_r($countdate);die;
 
         $response['user1'] = $user1;
         $response['user2'] = $user2;
@@ -315,7 +325,6 @@ class HomeController extends Controller
         $response['messages'] = 'load_data';
 
         return Response::json($response);
-        
 
     }
 }
