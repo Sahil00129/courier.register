@@ -225,8 +225,18 @@
                         <!--------------- Remarks ---------->
                         <div class="form-row mb-0">
                             <div class="form-group col-md-6">
-                                <label for="remarks">Admin Remarks</label>
-                                <textarea name="remarks" class="form-control" rows="1" cols="70" v-model="admin_remarks"></textarea>
+                                <!-- <label for="remarks">Admin Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="1" cols="70" v-model="admin_remarks"></textarea> -->
+                                <label for="inputState">Admin Remarks</label>
+                                <select id="itype" class="form-control" v-model="admin_remarks">
+                                    <option disabled>Choose...</option>
+                                    <option>Employee doesn't exist</option>
+                                    <option>Wrong TER Amount</option>
+                                    <option>Wrong TER Period</option>
+                                    <option>Change in Company Name</option>
+                                    <option>Change in Payable Amount</option>
+                                    <option>Change in Voucher Code</option>
+                                </select>
                             </div>
                         </div>
 
@@ -267,11 +277,11 @@
                         </ul>
 
                         <div class="form-check">
-                        <label class="form-check-label" for="flexCheckChecked">
-                        <input class="form-check-input" type="checkbox"  v-model="manually_paid">
-                           Manually Paid
-                        </label>
-                        </div><br/>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                <input class="form-check-input" type="checkbox" v-model="manually_paid">
+                                Manually Paid
+                            </label>
+                        </div><br />
 
                         <button type=" submit" class="btn btn-primary" v-on:click="update_data_by_admin()">
                             <span class="indicator-label">Save</span>
@@ -428,8 +438,8 @@
             flag: false,
             edit_payable: false,
             edit_btn_flag: true,
-            admin_remarks:"",
-            manually_paid:"",
+            admin_remarks: "",
+            manually_paid: "",
 
         },
         created: function() {
@@ -519,19 +529,16 @@
             },
             update_data_by_admin: function() {
                 var sender_emp_id, sender_name, ax_code, pay_data;
-                if(this.manually_paid)
-                {
-                    this.manually_paid=1;
-                }else{
-                    this.manually_paid=0;
+                if (this.manually_paid) {
+                    this.manually_paid = 1;
+                } else {
+                    this.manually_paid = 0;
                 }
-                if(this.all_data.payable_amount == "" && this.payable_amount !="")
-                {
+                if (this.all_data.payable_amount == "" && this.payable_amount != "") {
                     swal('error', "TER User can add payable Amount", 'error')
                     return 1;
                 }
-                if(this.all_data.voucher_code == "" && this.voucher_code !="")
-                {
+                if (this.all_data.voucher_code == "" && this.voucher_code != "") {
                     swal('error', "TER User can add Voucher Code", 'error')
                     return 1;
                 }
@@ -550,12 +557,10 @@
                 if (this.pay_data_array.length == 0) {
                     pay_data = this.db_pay_data_array;
                 }
-                if(this.db_pay_data_array.length == 0)
-                {
+                if (this.db_pay_data_array.length == 0) {
                     pay_data = "";
                 }
-                if(this.admin_remarks == null)
-                {
+                if (this.admin_remarks == null) {
                     swal('error', "Admin Remark is mandatory", 'error')
                     return 1;
                 }
@@ -563,63 +568,63 @@
                 // alert(this.admin_remarks)
                 // return 1;
                 if (this.amount != "" && this.company_name != "" && sender_emp_id != "") {
-                    if(this.admin_remarks != null){
-                    axios.post('/update_by_hr_admin', {
-                            'sender_emp_id': sender_emp_id,
-                            'company_name': this.company_name,
-                            'amount': this.amount,
-                            'unique_id': this.unique_id,
-                            'sender_name': sender_name,
-                            'ax_id': ax_code,
-                            'payable_data': pay_data,
-                            'admin_remarks':this.admin_remarks,
-                            'terfrom_date': this.terfrom,
-                            'terto_date': this.terto,
-                            'manually_paid': this.manually_paid
+                    if (this.admin_remarks != null) {
+                        axios.post('/update_by_hr_admin', {
+                                'sender_emp_id': sender_emp_id,
+                                'company_name': this.company_name,
+                                'amount': this.amount,
+                                'unique_id': this.unique_id,
+                                'sender_name': sender_name,
+                                'ax_id': ax_code,
+                                'payable_data': pay_data,
+                                'admin_remarks': this.admin_remarks,
+                                'terfrom_date': this.terfrom,
+                                'terto_date': this.terto,
+                                'manually_paid': this.manually_paid
 
-                        })
-                        .then(response => {
-                            // console.log(response.data);
-                            if (response.data == "error_sum_amount") {
-                                swal('error', "Amount can't be greater than total amount", 'error')
-                                // window.location.reload();
-                            } else if (response.data) {
-                                // this.update_ter_flag = true;
-                                swal('success', "Record has been updated Successfully!!!", 'success')
-                                this.got_data = false;
-                                document.getElementById("search_item").value = "";
-                                this.unique_id = "";
-                                this.sender_all_info = "";
-                            } else if (response.data == 0) {
+                            })
+                            .then(response => {
+                                // console.log(response.data);
+                                if (response.data == "error_sum_amount") {
+                                    swal('error', "Amount can't be greater than total amount", 'error')
+                                    // window.location.reload();
+                                } else if (response.data) {
+                                    // this.update_ter_flag = true;
+                                    swal('success', "Record has been updated Successfully!!!", 'success')
+                                    this.got_data = false;
+                                    document.getElementById("search_item").value = "";
+                                    this.unique_id = "";
+                                    this.sender_all_info = "";
+                                } else if (response.data == 0) {
+
+                                    this.button_text = "Search";
+                                    this.got_data = false;
+                                    this.unique_id = "";
+                                    this.sender_all_info = "";
+                                    document.getElementById("search_item").value = "";
+                                    swal('error', "Request Already Submitted to finfect", 'error')
+                                } else {
+                                    this.button_text = "Search";
+                                    this.got_data = false;
+                                    this.unique_id = "";
+                                    this.sender_all_info = "";
+                                    document.getElementById("search_item").value = "";
+                                    swal('error', "Either Record is already updated or not selected", 'error')
+                                }
+                                this.manually_paid = false;
+
+                            }).catch(error => {
 
                                 this.button_text = "Search";
                                 this.got_data = false;
+                                document.getElementById("search_item").value = "";
                                 this.unique_id = "";
                                 this.sender_all_info = "";
-                                document.getElementById("search_item").value = "";
-                                swal('error', "Request Already Submitted to finfect", 'error')
-                            } else {
-                                this.button_text = "Search";
-                                this.got_data = false;
-                                this.unique_id = "";
-                                this.sender_all_info = "";
-                                document.getElementById("search_item").value = "";
-                                swal('error', "Either Record is already updated or not selected", 'error')
-                            }
-                            this.manually_paid=false;
-
-                        }).catch(error => {
-
-                            this.button_text = "Search";
-                            this.got_data = false;
-                            document.getElementById("search_item").value = "";
-                            this.unique_id = "";
-                            this.sender_all_info = "";
 
 
-                        })
-                    }else{
-                        swal('error', "Remarks needs to be added", 'error')  
+                            })
+                    } else {
+                        swal('error', "Remarks needs to be added", 'error')
                     }
 
                 } else {
@@ -633,15 +638,15 @@
                 this.flag = false;
                 this.update_ter_flag = false;
                 this.payable_amount = "",
-                this.voucher_code = "",
-                this.pay_data_array = [];
+                    this.voucher_code = "",
+                    this.pay_data_array = [];
                 this.counter = 0;
                 this.pay_btn_flag = false;
                 this.db_pay_data_array = [];
                 this.edit_payable = false;
                 this.edit_btn_flag = true;
-                this.admin_remarks="";
-                this.manually_paid=false;
+                this.admin_remarks = "";
+                this.manually_paid = false;
 
                 //  alert(this.unique_id);
 
@@ -654,13 +659,14 @@
                         if (response.data.status_of_data === "3") {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
-                        }  if (response.data.status_of_data === "5") {
+                        }
+                        if (response.data.status_of_data === "5") {
                             this.button_text = "Search";
                             swal('error', "Record has been Already Paid", 'error')
-                        }else if(isNaN(response.data[0].sender_id)){
+                        } else if (isNaN(response.data[0].sender_id)) {
                             this.button_text = "Search";
                             swal('error', "Sender Details are missing for this record", 'error')
-                        }else if (response.data[0] != "" && response.data.status_of_data === "0") {
+                        } else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
@@ -674,10 +680,9 @@
                             this.company_name = this.all_data.company_name;
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
-                            this.admin_remarks=this.all_data.hr_admin_remark;
-                            if(this.all_data.payment_status == 5)
-                            {
-                                this.manually_paid=true;
+                            this.admin_remarks = this.all_data.hr_admin_remark;
+                            if (this.all_data.payment_status == 5) {
+                                this.manually_paid = true;
                             }
 
 
@@ -717,10 +722,9 @@
                             this.company_name = this.all_data.company_name;
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
-                            this.admin_remarks=this.all_data.hr_admin_remark;
-                            if(this.all_data.payment_status == 5)
-                            {
-                                this.manually_paid=true;
+                            this.admin_remarks = this.all_data.hr_admin_remark;
+                            if (this.all_data.payment_status == 5) {
+                                this.manually_paid = true;
                             }
 
                             // console.log(this.all_data.courier_company)
@@ -728,7 +732,7 @@
                             this.got_data = false;
                             this.button_text = "Search";
                             this.update_ter_flag = false;
-                            this.manually_paid=false;
+                            this.manually_paid = false;
                             swal('error', "Either Details already updated or No record Found", 'error')
                         }
 
@@ -736,7 +740,7 @@
                         this.got_data = false;
                         this.update_ter_flag = false;
                         this.button_text = "Search";
-                        this.manually_paid=false;
+                        this.manually_paid = false;
 
 
                     })

@@ -192,31 +192,31 @@
                             </div>
                         </div>
                         <!--------------- end ------------------>
-                       
-                        <div v-if="!update_ter_flag">
-                        <h5><b>Add Details</b></h5>
-                        <div class="form-row mb-0">
-                            <div class="form-group col-md-6">
-                                <label for="payable_">Payable Amount</label>
-                                <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="voucher_c">Voucher Code</label>
-                                <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
-                            </div>
-                        </div>
-                        </div>
-                     <div v-if="update_ter_flag">
-                     <h5><b>Details</b></h5>
-                        <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
-                            <li v-for="(payment_data_new,index) in db_pay_data_array" style="font-weight:bold;font-size:17px"><b>
-                                @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}}  ,  Voucher Code : @{{payment_data_new.voucher_code}}</b>
 
-                                <!-- <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button> -->
-                            </li>
-                        </ul>
-                     </div>
-                     
+                        <div v-if="!update_ter_flag">
+                            <h5><b>Add Details</b></h5>
+                            <div class="form-row mb-0">
+                                <div class="form-group col-md-6">
+                                    <label for="payable_">Payable Amount</label>
+                                    <input type="number" class="form-control" id="payable_" name="payable_" v-model="payable_amount" placeholder="Enter Payable Amount" :disabled="flag">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="voucher_c">Voucher Code</label>
+                                    <input type="text" class="form-control" id="voucher_c" name="voucher_c" v-model="voucher_code" placeholder="Enter Voucher Code" :disabled="flag">
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="update_ter_flag">
+                            <h5><b>Details</b></h5>
+                            <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
+                                <li v-for="(payment_data_new,index) in db_pay_data_array" style="font-weight:bold;font-size:17px"><b>
+                                        @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}} , Voucher Code : @{{payment_data_new.voucher_code}}</b>
+
+                                    <!-- <button @click="removePayment(payment_data)" style="margin-top:10px">remove</button> -->
+                                </li>
+                            </ul>
+                        </div>
+
                         <button type="button" class="btn btn-primary" name="button" @click="addAnotherpayment" :disabled="update_ter_flag">Add</button>
                         <ul class="schools" style="list-style-type: none; -webkit-columns: 1;-moz-columns: 1;columns: 1;">
                             <li v-for="(payment_data,index) in pay_data_array" style="font-weight:bold">
@@ -390,7 +390,7 @@
             terto: "",
             pay_btn_flag: false,
             db_pay_data_array: [],
-            current_balance:"",
+            current_balance: "",
             // sum_flag:true,
         },
         created: function() {
@@ -423,11 +423,11 @@
                         } else {
                             // this.sum_flag=false;
                             swal('error', "Amount can't be greater than total amount", 'error')
-                            this.pay_btn_flag=false;
+                            this.pay_btn_flag = false;
                         }
                     } else {
                         swal('error', "Fields are empty", 'error')
-                        this.pay_btn_flag=false;
+                        this.pay_btn_flag = false;
                     }
                 }
             },
@@ -440,25 +440,24 @@
                 this.counter--;
             },
             ter_pay_later: function() {
-                // if (this.voucher_code != "" && this.payable_amount != "") {
-                // alert(this.payable_amount);
-                // alert(this.amount);
-                // alert(this.payable_amount)
-                // this.all_data.terto_date
-                // this.all_data.sender_detail.last_working_date
+                var i, myArray, ter_to, myArray2, last_date_array,month_number,d1,d2;
                 var terto_date = new Date(this.all_data.terto_date);
-                var last_working_date;
                 if (this.all_data.sender_detail.last_working_date) {
-                    last_working_date = new Date(this.all_data.sender_detail.last_working_date);
+                    myArray = this.all_data.terto_date.split("-");
+                    myArray2 = this.all_data.sender_detail.last_working_date.split("-");
+                    ter_to = myArray[0] + "-" + myArray[1] + "-" + myArray[2]
+                    month_number = this.get_month_number(myArray2[1]);
+                    if(month_number)
+                    {
+                        last_date_array= myArray2[2] + "-" + month_number + "-" + myArray2[0]
+                    }
                 } else {
                     this.allow_flag = true;
                 }
-                if (!this.all_data.sender_detail.last_working_date) {
-                    this.allow_flag = true;
-                } 
-            
-                if (terto_date <= last_working_date || this.allow_flag) {
-
+                d1 = new Date(ter_to);
+                d2 = new Date(last_date_array);
+                
+                if (d1 <= d2 || this.allow_flag) {
                     axios.post('/ter_pay_later', {
                             'payable_data': this.pay_data_array,
                             'unique_id': this.all_data.id,
@@ -470,16 +469,11 @@
                             if (response.data == "error_sum_amount") {
                                 swal('error', "Amount can't be greater than total amount", 'error')
                                 // window.location.reload();
-                            }
-                            else if(response.data === "ifsc_error")
-                            {
+                            } else if (response.data === "ifsc_error") {
                                 swal('error', "IFSC for this employee is not valid", 'error')
-                            }
-                            else if(response.data[0] === "duplicate_voucher")
-                            {
-                                swal('error', "Voucher Code : "+response.data[1]+" has been Already used", 'error')
-                            }
-                            else {
+                            } else if (response.data[0] === "duplicate_voucher") {
+                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                            } else {
                                 if (response.data) {
                                     this.button_text = "Search";
                                     this.flag = true;
@@ -509,53 +503,97 @@
                 // }
             },
 
+            get_month_number: function(month) {
+                var number;
+                switch (month) {
+                    case "Jan":
+                        number = '01';
+                        break;
+                    case "Feb":
+                        number = '02';
+                        break;
+                    case "Mar":
+                        number = '03';
+                        break;
+                    case "Apr":
+                        number = '04';
+                        break;
+                    case "May":
+                        number = '05';
+                        break;
+                    case "Jun":
+                        number = '06';
+                        break;
+                    case "Jul":
+                        number = '07';
+                        break;
+                    case "Aug":
+                        number = '08';
+                        break;
+                    case "Sep":
+                        number = '09';
+                        break;
+                    case "Oct":
+                        number = '10';
+                        break;
+                    case "Nov":
+                        number = '11';
+                        break;
+                    case "Dec":
+                        number = '12';
+                        break;
+                }
+                return number;
+            },
             ter_pay_now: function() {
-                var i,myArray,ter_to;
+                var i, myArray, ter_to, myArray2, last_date_array,month_number,d1,d2;
                 var terto_date = new Date(this.all_data.terto_date);
                 if (this.all_data.sender_detail.last_working_date) {
                     myArray = this.all_data.terto_date.split("-");
-                 ter_to=myArray[2]+"-"+myArray[1]+"-"+myArray[0]
+                    myArray2 = this.all_data.sender_detail.last_working_date.split("-");
+                    ter_to = myArray[0] + "-" + myArray[1] + "-" + myArray[2]
+                    month_number = this.get_month_number(myArray2[1]);
+                    if(month_number)
+                    {
+                        last_date_array= myArray2[2] + "-" + month_number + "-" + myArray2[0]
+                    }
                 } else {
                     this.allow_flag = true;
                 }
-         
-                if  (ter_to <= this.all_data.sender_detail.last_working_date || this.allow_flag) {
+                d1 = new Date(ter_to);
+                d2 = new Date(last_date_array);
+                
+                if (d1 <= d2 || this.allow_flag) {
 
                     axios.post('/ter_pay_now', {
                             'payable_data': this.pay_data_array,
                             'unique_id': this.all_data.id,
                             'payment_status': "1",
                             "ter_total_amount": this.amount,
-                            "current_balance":this.current_balance
+                            "current_balance": this.current_balance
                         })
                         .then(response => {
                             // console.log(response.data);
-                            if(response.data === "error_sum_amount")
-                            {
+                            if (response.data === "error_sum_amount") {
                                 swal('error', "Payable Amount is Greater than TER Amount", 'error')
-                            } 
-                            else if(response.data === "ifsc_error")
-                            {
+                            } else if (response.data === "ifsc_error") {
                                 swal('error', "IFSC for this employee is not valid", 'error')
-                            }
-                            else if(response.data[0] === "duplicate_voucher")
-                            {
-                                swal('error', "Voucher Code : "+response.data[1]+" has been Already used", 'error')
-                            }
-                           else if (response.data === 1) {
+                            } else if (response.data[0] === "duplicate_voucher") {
+                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                            } else if (response.data === 1) {
                                 this.button_text = "Search";
                                 this.flag = true;
                                 this.update_ter_flag = true;
                                 this.allow_flag = false;
-                                this.pay_data_array=[];
-                                swal('success', "Record has been updated Successfully!!!", 'success')       
+                                this.pay_data_array = [];
+                                swal('success', "Record has been updated Successfully!!!", 'success')
                                 // this.get_data_by_id();
                             } else if (response.data[0] === 0) {
                                 swal('error', response.data[1], 'error')
                                 this.button_text = "Search";
                                 this.allow_flag = false;
                                 // this.get_data_by_id();
-                            //  window.location.reload();
+                                //  window.location.reload();
 
                             } else {
                                 this.button_text = "Search";
@@ -580,34 +618,32 @@
                 this.flag = false;
                 this.update_ter_flag = false;
                 this.payable_amount = "",
-                this.voucher_code = "",
-                this.pay_data_array = [];
+                    this.voucher_code = "",
+                    this.pay_data_array = [];
                 this.counter = 0;
-                this.pay_btn_flag=false;
-                this.db_pay_data_array=[];
-                this.current_balance="";
+                this.pay_btn_flag = false;
+                this.db_pay_data_array = [];
+                this.current_balance = "";
                 //  alert(this.unique_id);
 
                 axios.post('/get_all_data', {
                         'unique_id': this.unique_id
                     })
                     .then(response => {
-                        var string_pay, split_data_pay_amt, pay_data_len, string_voucher, split_data_voucher, voucher_data_len,i;
+                        var string_pay, split_data_pay_amt, pay_data_len, string_voucher, split_data_voucher, voucher_data_len, i;
                         // console.log(response.data);
                         // if voucher code and payable amount is not available in DB
-                        if(response.data.status_of_data === "3")
-                        {
+                        if (response.data.status_of_data === "3") {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
-                        } if (response.data.status_of_data === "5") {
+                        }
+                        if (response.data.status_of_data === "5") {
                             this.button_text = "Search";
                             swal('error', "Record has been Already Paid", 'error')
-                        }
-                        else if(isNaN(response.data[0].sender_id)){
+                        } else if (isNaN(response.data[0].sender_id)) {
                             this.button_text = "Search";
                             swal('error', "Sender Details are missing for this record", 'error')
-                        }
-                       else if (response.data[0] != "" && response.data.status_of_data === "0") {
+                        } else if (response.data[0] != "" && response.data.status_of_data === "0") {
                             this.got_data = true;
                             this.button_text = "Search";
                             this.all_data = response.data[0];
@@ -626,7 +662,7 @@
                             this.company_name = this.all_data.company_name;
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
-                            this.current_balance=response.data.current_balance;
+                            this.current_balance = response.data.current_balance;
 
                             // console.log(this.all_data.courier_company)
                         } else if (response.data[0] != "" && response.data.status_of_data === "1") {
@@ -638,7 +674,7 @@
                             this.amount = this.all_data.amount;
                             this.payable_amount = this.all_data.payable_amount;
                             this.voucher_code = this.all_data.voucher_code;
-                            this.current_balance=response.data.current_balance;
+                            this.current_balance = response.data.current_balance;
                             string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,]/g, '');
                             split_data_pay_amt = string_pay.split(",");
                             pay_data_len = split_data_pay_amt.length;
@@ -650,12 +686,12 @@
                                 for (i = 0; i < pay_data_len; i++) {
                                     // if(this.db_pay_data_array.length === 0)
                                     // {
-                                  var  payment_data_new = {
-                                        payable_amount: split_data_pay_amt[i], 
-                                        voucher_code: split_data_voucher[i] 
+                                    var payment_data_new = {
+                                        payable_amount: split_data_pay_amt[i],
+                                        voucher_code: split_data_voucher[i]
                                     }
                                     this.db_pay_data_array.push(payment_data_new);
-                                // }
+                                    // }
                                 }
                             }
                             this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id;

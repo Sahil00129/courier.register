@@ -13,7 +13,7 @@ class Tercourier extends Model
     protected $table = 'tercouriers';
     protected $fillable = [
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
-        'saved_by_id', 'saved_by_name','created_at','updated_at'
+        'saved_by_id', 'saved_by_name','received_date','handover_date','sent_to_finfect_date','paid_date','created_at','updated_at'
     ];
 
     public function CourierCompany()
@@ -33,6 +33,7 @@ class Tercourier extends Model
         $change['given_to'] = 'TR-Department';
         $change['saved_by_id'] = $user_id;
         $change['saved_by_name'] = $user_name;
+        $change['handover_date']=date('Y-m-d');
         $change['delivery_date'] = date('Y-m-d');
         // $change['status'] = 1;
         $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->where('status', 1)->update($change);
@@ -58,31 +59,51 @@ class Tercourier extends Model
         //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final,payment_status=4 is advance_payment, payment_status=5 is manually_paid.
         // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter
        $check_pay_type=DB::table('tercouriers')->select('payment_type')->where('id',$unique_id)->get();
+    //    echo "<pre>";
+    //    print_r($payment_status);
+    //    exit;
         if ($payment_status == 1) {
             $data['status'] = 3;
-            $data['payment_type'] = "regular_payment";
             if($check_pay_type[0]->payment_type == "pay_later_payment" )
             {
                 $data['payment_type'] = "pay_later_payment";
+                $data['sent_to_finfect_date']="";
             }else if($check_pay_type[0]->payment_type == "full_and_final_payment" )
             {
                 $data['payment_type'] = "full_and_final_payment";
+                $data['sent_to_finfect_date']="";
             }
-        } else if ($payment_status == 2) {
-            $data['status'] = 4;
             $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
             $id_sender = $data_ter[0]->sender_id;
             $check_last_working = DB::table('sender_details')->where('id', $id_sender)->get()->toArray();
             if ($check_last_working[0]->last_working_date) {
                 $data['payment_type'] = "full_and_final_payment";
                 $payment_status=3;
+                $data['sent_to_finfect_date']="";
+            } else {
+                $data['payment_type'] = "regular_payment";
+                $data['sent_to_finfect_date']=date('Y-m-d');
+            }
+        } else if ($payment_status == 2) {
+            $data['status'] = 4;
+            $data['sent_to_finfect_date']="";
+            $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
+            $id_sender = $data_ter[0]->sender_id;
+            $check_last_working = DB::table('sender_details')->where('id', $id_sender)->get()->toArray();
+            if ($check_last_working[0]->last_working_date) {
+                $data['payment_type'] = "full_and_final_payment";
+                $payment_status=3;
+                $data['sent_to_finfect_date']="";
             } else {
                 $data['payment_type'] = "pay_later_payment";
+                $data['sent_to_finfect_date']="";
             }
         }
         else if ($payment_status == 4) {
             $data['status'] = 5;
             $data['payment_type'] = "advance_payment";
+            $data['paid_date']=date('Y-m-d');
+            $data['sent_to_finfect_date']="";
         }
 
         // $data['payment_status'] = $payment_status;
@@ -90,6 +111,7 @@ class Tercourier extends Model
         $data['updated_by_id'] = $user_id;
         $data['updated_by_name'] = $user_name;
         $data['updated_at'] = date('Y-m-d H:i:s');
+        
 
         if(!empty($payable_data))
         {

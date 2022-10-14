@@ -15,6 +15,6 @@ class Update_table_data extends Model
 
     public function SaveUpdatedData()
     {
-        return $this->hasMany('App\Models\Tercourier', 'id','updated_id');
+        return $this->hasOne('App\Models\Tercourier', 'id','updated_id');
     }
 }
