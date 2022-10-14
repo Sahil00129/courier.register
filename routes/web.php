@@ -130,6 +130,10 @@ Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWid
 
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
 
+Route::view('/reports','pages/export-data');
+
+Route::get('download_report/{type}',[ImportExportController::class,'download_report']);
+
 // Route::redirect('/test','/tercouriers');
 });
 
