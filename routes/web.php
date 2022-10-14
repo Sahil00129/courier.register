@@ -127,6 +127,7 @@ Route::post('/add_advance_payment', [SenderController::class,'add_advance_paymen
 Route::post('/get_employee_passbook', [SenderController::class,'get_employee_passbook']);
 
 Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWidgets']);
+Route::get('daily-work-performance', [HomeController::class, 'dailyworkPerformance']);
 
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
 });
