@@ -123,6 +123,7 @@ class TercourierController extends Controller
         $terdata['given_to'] = $request->given_to;
         $terdata['delivery_date'] = $request->delivery_date;
         $terdata['status'] = '1';
+        $terdata['received_date'] = date('Y-m-d');
 
         // echo "<pre>";print_r($terdata);
 
@@ -443,6 +444,7 @@ class TercourierController extends Controller
         return view('tercouriers.admin-update-tercourier');
     }
 
+
     public function payment_sheet()
     {
         return view('tercouriers.open-payment-sheet');
@@ -453,7 +455,7 @@ class TercourierController extends Controller
         ini_set('max_execution_time', 0); // 0 = Unlimited
         $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->get()->toArray();
         $size = sizeof($get_data_db);
-        // $size=1;
+        // $size=3;
         // return $get_data_db;
         for ($i = 0; $i < $size; $i++) {
             // print_r($get_data_db[$i]->id);
@@ -483,7 +485,8 @@ class TercourierController extends Controller
                 if ($status_code == 2) {
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
-                        'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s')
+                        'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
+                        'paid_date' => date('Y-m-d')
                     ]);
 
                     if ($update_ter_data) {
@@ -1072,6 +1075,18 @@ class TercourierController extends Controller
     {
         // return 1;
         $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+        if ($all_data[0]->payment_type == "full_and_final_payment") {
+            $data['sent_to_finfect_date'] = date('Y-m-d');
+            $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
+                ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+        } else if ($all_data[0]->payment_type == "pay_later_payment") {
+            $data['sent_to_finfect_date'] = date('Y-m-d');
+            $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
+                ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+        }
+
+        // print_r($all_data[0]->payment_type);
+        // exit;
         $tercourier_data = $all_data[0];
         $pay_amount = $tercourier_data->payable_amount;
         $voucher_code = $tercourier_data->voucher_code;
@@ -1233,6 +1248,14 @@ class TercourierController extends Controller
         $req_param = $request->all();
         $data['remarks'] = $req_param['remarks'];
         $data['updated_id'] = $req_param['ter_id'];
+        $get_old_status = DB::table('tercouriers')->select('status')->where('id', $req_param['ter_id'])->get();
+        if ($get_old_status[0]->status == 1) {
+            $data['old_status'] = "Received";
+        } else if ($get_old_status[0]->status == 2) {
+            $data['old_status'] = "Handover";
+        } else if ($get_old_status[0]->status == 0) {
+            $data['old_status'] = "Failed";
+        }
         $data['updated_date'] = date('Y-m-d');
         $details = Auth::user();
         $data['updated_by_user_id'] = $details->id;

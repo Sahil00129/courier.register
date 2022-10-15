@@ -7,6 +7,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\BulkImport;
 use App\Exports\ExportEmployee;
 use App\Exports\ExportTerReport;
+use App\Exports\ExportTerTimeline;
+use App\Exports\ExportTerCancel;
+use App\Exports\ExportTerUpdates;
+use App\Exports\ExportTerUserWise;
+use App\Exports\ExportTerEmpLedger;
 use Response;
 
 class ImportExportController extends Controller
@@ -225,5 +230,32 @@ class ImportExportController extends Controller
     public function ExportSavedEntry()
     {
         return Excel::download(new ExportTerReport, 'tercourier_report.xlsx');
+    }
+
+    public function download_report($type)
+    {
+    //   print_r($type);
+    //   exit;
+      if($type == "ter_timeline")
+      {
+        return Excel::download(new ExportTerTimeline,'tertimeline_report.xlsx');
+      }
+      else if($type == "ter_cancel")
+      {
+        return Excel::download(new ExportTerCancel,'ter_cancel_report.xlsx');
+        // return Excel::download(new ExportTerReport, 'tercourier_report.xlsx');
+      }
+      else if($type=="ter_updates")
+      {
+        return Excel::download(new ExportTerUpdates,'ter_updates_report.xlsx');
+      }
+      else if($type=="ter_user_wise")
+      {
+        return Excel::download(new ExportTerUserWise,'ter_user_wise_report.xlsx');
+      }
+      else if($type=="emp_ledger")
+      {
+        return Excel::download(new ExportTerEmpLedger,'ter_emp_ledger_report.xlsx');
+      }
     }
 }
