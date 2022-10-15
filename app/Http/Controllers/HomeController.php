@@ -105,6 +105,35 @@ class HomeController extends Controller
 
         }
 
+        // =============================Ter Processed By User =============================
+        foreach ($user_array as $key => $user) {
+
+            $user1_ter = Tercourier::select('id')->whereIn('status', [3, 5])->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+
+            
+           
+
+
+            $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('updated_by_id', $user['id'])->whereIn('status', ['3', '5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+            // echo $current_day_sent_to_finfect_ter_count ; die;
+            $current_month_sent_to_finfect_ter_sum = 0;
+            $sum1 = 0;
+            $sum2 = array();
+            $data_sent_to_finfect = DB::table('tercouriers')->select('payable_amount')->where('updated_by_id', $user['id'])->whereIn('status', ['3', '5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->get();
+            // echo"<pre>";
+            // print_r($data_sent_to_finfect);
+            if (sizeof($data_sent_to_finfect) > 0) {
+                $current_month_sent_to_finfect_ter_sum = self::totalSum($data_sent_to_finfect);
+                // print_r("Ds");
+            } else {
+                $current_month_sent_to_finfect_ter_sum = 0;
+            }
+            $totals[$user['name']][] = $user1_ter;
+            $totals[$user['name']][] = $current_month_sent_to_finfect_ter_sum;
+        }
+
+       
+        // print_r($totals); die;
         return view('pages.dashboard', ['current_day_handover_ter_count' => $current_day_handover_ter_count, 'current_day_handover_ter_sum' => $current_day_handover_ter_sum,
             'current_month_handover_ter_count' => $current_month_handover_ter_count, 'current_month_handover_ter_sum' => $current_month_handover_ter_sum,
             'current_day_sent_to_finfect_ter_count' => $current_day_sent_to_finfect_ter_count,
@@ -112,7 +141,8 @@ class HomeController extends Controller
             'current_day_paid_ter_sum' => $current_day_paid_ter_sum,
             'current_month_paid_ter_count' => $current_month_paid_ter_count,
             'current_month_paid_ter_sum' => $current_month_paid_ter_sum,
-            'percentage' => $percentage]);
+            'percentage' => $percentage,
+            'totals' => $totals]);
 
     }
 
