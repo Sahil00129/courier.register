@@ -207,7 +207,7 @@ class HomeController extends Controller
 
     public function dailyworkPerformance()
     {
-        $total_ter = Tercourier::select('id')->whereIn('status', [3, 5])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
+        $total_ter = Tercourier::select('id')->whereIn('status', [3, 5])->whereMonth('sent_to_finfect_date', date("m"))->whereYear('sent_to_finfect_date', date("Y"))->count();
 
         $user_array = array(
             array("id" => 7, "name" => 'Vipin'),
@@ -217,14 +217,14 @@ class HomeController extends Controller
         );
 
         // ==========user 1 Vipin======
-        $users = Tercourier::select('id', 'updated_at')
+        $users = Tercourier::select('id', 'sent_to_finfect_date')
             ->where('updated_by_id', 7)
-            ->whereMonth('updated_at', date("m"))
-            ->whereYear('updated_at', date("Y"))
+            ->whereMonth('sent_to_finfect_date', date("m"))
+            ->whereYear('sent_to_finfect_date', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
-                return Carbon::parse($date->updated_at)->format('d'); // grouping by months
+                return Carbon::parse($date->sent_to_finfect_date)->format('d'); // grouping by months
             });
         $date = date('d');
 
@@ -246,14 +246,14 @@ class HomeController extends Controller
         // echo'<pre>';print_r([$user1]); die;
         // =========================
         // ==========user 2 Veena======
-        $users = Tercourier::select('id', 'updated_at')
+        $users = Tercourier::select('id', 'sent_to_finfect_date')
             ->where('updated_by_id', 9)
-            ->whereMonth('updated_at', date("m"))
-            ->whereYear('updated_at', date("Y"))
+            ->whereMonth('sent_to_finfect_date', date("m"))
+            ->whereYear('sent_to_finfect_date', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
-                return Carbon::parse($date->updated_at)->format('d'); // grouping by months
+                return Carbon::parse($date->sent_to_finfect_date)->format('d'); // grouping by months
             });
         $date = date('d');
 
@@ -274,14 +274,14 @@ class HomeController extends Controller
         $user2 = implode(',', $userArr2);
 
         // ==========user 3 Harpreet======
-        $users = Tercourier::select('id', 'updated_at')
+        $users = Tercourier::select('id', 'sent_to_finfect_date')
             ->where('updated_by_id', 10)
-            ->whereMonth('updated_at', date("m"))
-            ->whereYear('updated_at', date("Y"))
+            ->whereMonth('sent_to_finfect_date', date("m"))
+            ->whereYear('sent_to_finfect_date', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
-                return Carbon::parse($date->updated_at)->format('d'); // grouping by months
+                return Carbon::parse($date->sent_to_finfect_date)->format('d'); // grouping by months
             });
         $date = date('d');
 
@@ -302,14 +302,14 @@ class HomeController extends Controller
         $user3 = implode(',', $userArr3);
 
         // ==========user 4 Rameshwer======
-        $users = Tercourier::select('id', 'updated_at')
+        $users = Tercourier::select('id', 'sent_to_finfect_date')
             ->where('updated_by_id', 11)
-            ->whereMonth('updated_at', date("m"))
-            ->whereYear('updated_at', date("Y"))
+            ->whereMonth('sent_to_finfect_date', date("m"))
+            ->whereYear('sent_to_finfect_date', date("Y"))
             ->get()
             ->groupBy(function ($date) {
                 //return Carbon::parse($date->created_at)->format('Y'); // grouping by years
-                return Carbon::parse($date->updated_at)->format('d'); // grouping by months
+                return Carbon::parse($date->sent_to_finfect_date)->format('d'); // grouping by months
             });
         $date = date('d');
 
