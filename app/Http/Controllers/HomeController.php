@@ -110,9 +110,6 @@ class HomeController extends Controller
 
             $user1_ter = Tercourier::select('id')->whereIn('status', [3, 5])->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
 
-            
-           
-
 
             $current_month_sent_to_finfect_ter_count = DB::table('tercouriers')->select('id')->where('updated_by_id', $user['id'])->whereIn('status', ['3', '5'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
             // echo $current_day_sent_to_finfect_ter_count ; die;
