@@ -1131,7 +1131,10 @@ class TercourierController extends Controller
             exit;
         }
 
-
+   $url_header= $_SERVER['HTTP_HOST'];   
+   
+   // Append the requested resource location to the URL   
+//    $url.= $_SERVER['REQUEST_URI'];    
         // $send_data = '{
         //     "unique_code":"'.$tercourier_data->employee_id.'",
         //     "name":"'.$tercourier_data->sender_name.'",
@@ -1196,6 +1199,7 @@ class TercourierController extends Controller
                             }]",
 
             CURLOPT_HTTPHEADER => array(
+                'Access-Control-Request-Headers:'.$url_header,
                 'Content-Type: application/json'
             ),
         ));
