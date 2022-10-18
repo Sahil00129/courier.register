@@ -954,6 +954,20 @@ class TercourierController extends Controller
                 $current_balance = $get_current_balance->current_balance;
             }
         }
+        $length = sizeof($payable_data);
+        for ($i = 0; $i < $length; $i++) {
+            $pay_amount[$i] = $payable_data[$i]['payable_amount'];
+            $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+        }
+        $payable_size = sizeof($pay_amount);
+        if ($payable_size > 1) {
+            $ter_pay_amount = array_sum($pay_amount);
+        } else {
+            $ter_pay_amount = $pay_amount[0];
+        }
+
+        $voucher_codes=$voucher_data[0];
+
         if ($current_balance != 0) {
             if ($total_payable_sum > $current_balance) {
                 $flag = 1;
@@ -984,7 +998,13 @@ class TercourierController extends Controller
                     return $change_status;
                 }
             }
-            $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id);
+
+        
+            // print_r($voucher_codes);
+            // exit;
+
+
+            $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
 
             if ($current_balance > $total_payable_sum) {
                 $payment_status = "4";
@@ -1003,8 +1023,9 @@ class TercourierController extends Controller
                 }
             }
         } else {
+           $utlized_amount=0;
             $final_payable = $total_payable_sum;
-
+            $update_employee_table = EmployeeBalance::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
             $payment_status = $data['payment_status'];
             $tercourier_ax_check = $data_ter[0];
             if ($tercourier_ax_check->ax_id != 0) {
@@ -1131,10 +1152,10 @@ class TercourierController extends Controller
             exit;
         }
 
-   $url_header= $_SERVER['HTTP_HOST'];   
-   
-   // Append the requested resource location to the URL   
-//    $url.= $_SERVER['REQUEST_URI'];    
+        $url_header = $_SERVER['HTTP_HOST'];
+
+        // Append the requested resource location to the URL   
+        //    $url.= $_SERVER['REQUEST_URI'];    
         // $send_data = '{
         //     "unique_code":"'.$tercourier_data->employee_id.'",
         //     "name":"'.$tercourier_data->sender_name.'",
@@ -1199,7 +1220,7 @@ class TercourierController extends Controller
                             }]",
 
             CURLOPT_HTTPHEADER => array(
-                'Access-Control-Request-Headers:'.$url_header,
+                'Access-Control-Request-Headers:' . $url_header,
                 'Content-Type: application/json'
             ),
         ));
