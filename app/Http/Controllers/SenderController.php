@@ -80,7 +80,7 @@ class SenderController extends Controller
             // $current_balance-$ter_pay_amount+$balance_data->ter_expense_balance;
             // $insert_data['ter_expense_balance'] = $data['emp_advance_amount'];
             $insert_data['ter_expense_balance'] =$data['emp_advance_amount']+$balance_data->ter_expense_balance;
-            $insert_data['current_balance']=$insert_data['current_balance']+$balance_data->ter_expense_balance;
+            $insert_data['current_balance']=0;
         }
     }
        
