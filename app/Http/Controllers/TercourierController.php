@@ -966,7 +966,8 @@ class TercourierController extends Controller
             $ter_pay_amount = $pay_amount[0];
         }
 
-        $voucher_codes=$voucher_data[0];
+        $voucher_codes=$voucher_data;
+        // return $voucher_codes;
 
         if ($current_balance != 0) {
             if ($total_payable_sum > $current_balance) {
@@ -1026,6 +1027,8 @@ class TercourierController extends Controller
            $utlized_amount=0;
             $final_payable = $total_payable_sum;
             $update_employee_table = EmployeeBalance::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
+        //    print_r($update_employee_table);
+        //    exit;
             $payment_status = $data['payment_status'];
             $tercourier_ax_check = $data_ter[0];
             if ($tercourier_ax_check->ax_id != 0) {

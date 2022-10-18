@@ -20,6 +20,7 @@ class EmployeeBalance extends Model
 
     public static function utilized_advance($user_id,$user_name,$emp_id,$utilized_amount,$ter_id,$ter_pay_amount,$voucher_data)
     {
+        
         $balance_data=EmployeeBalance::where('employee_id',$emp_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
         if($balance_data->current_balance!=0)
@@ -39,7 +40,7 @@ class EmployeeBalance extends Model
         $insert_data['employee_id']=$emp_id;
         $insert_data['advance_amount']=0;
         $insert_data['ter_id']=$ter_id;
-        $insert_data['ax_voucher_number']=$voucher_data;
+        $insert_data['ax_voucher_number']=json_encode($voucher_data);
         $insert_data['ter_paid']=$ter_pay_amount;
         $insert_data['utilize_amount']=$utilized_amount;
         $insert_data['action_done']='Utilize';
@@ -81,7 +82,7 @@ class EmployeeBalance extends Model
         $insert_data['employee_id']=$emp_id;
         $insert_data['advance_amount']=0;
         $insert_data['ter_id']=$ter_id;
-        $insert_data['ax_voucher_number']=$voucher_data;
+        $insert_data['ax_voucher_number']=json_encode($voucher_data);
         $insert_data['ter_paid']=$ter_pay_amount;
         $insert_data['utilize_amount']=$utilized_amount;
         $insert_data['action_done']='Utilize';
