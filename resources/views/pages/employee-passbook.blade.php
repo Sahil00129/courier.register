@@ -282,7 +282,7 @@
         },
         methods: {
             add_advance_payment(){
-                if(this.emp_voucher_number !=""){
+                if(this.emp_voucher_number !="" && this.emp_advance_amount!=""){
                 axios.post('/add_advance_payment', {
                         'emp_advance_amount': this.emp_advance_amount,
                         'ax_voucher_number':this.emp_voucher_number,
@@ -307,7 +307,7 @@
                     })
                 }
                 else{
-                    swal('error', "Voucher Code is Empty", 'error')
+                    swal('error', "Fields are Empty", 'error')
                 }
             },
             open_emp_modal() {
