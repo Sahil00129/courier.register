@@ -48,10 +48,10 @@
                         <thead>
                             <tr>
                                 <th>SNo.</th>
-                                <th>Txn Date</th>
-                                <th>Payment</th>
-                                <th>Expense</th>
-                                <th>Balance</th>
+                                <th>Date</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Closing Balance</th>
                                 <th>Description</th>
                             </tr>
                         </thead>
@@ -66,27 +66,44 @@
                                     <td>{{ $i }}</td>
                                     <td>{{ Helper::ShowFormatDate($data->updated_date) }}</td>
                                     <!-- <td>{{ ucwords(@$data->action_done) ?? '-' }}</td> -->
+                                    <?php if($data->action_done == 'Utilize' || $data->action_done == 'Ledger_Utilize') {
+                                        $amount =  $data->utilize_amount;
+                                    }else if($data->action_done == 'new_emp'){
+                                        $amount =  $data->utilize_amount;
+                                    }
+                                    else{
+                                        $amount="-";
+                                    } ?>
+                                    <td>{{$amount}}</td>
                                     <?php
                                     if ($data->action_done == 'Advance') {
                                         $amount = $data->advance_amount;
-                                    } else{
-                                        $amount="";
+                                    }
+                                     else if($data->action_done == 'new_emp'){
+                                        $amount =  $data->utilize_amount;
+                                    }
+                                    else{
+                                        $amount="-";
                                     }
                                     ?>
-                                    <td>{{$amount}}</td>
-                                    <?php if($data->action_done == 'Utilize') {
-                                        $amount =  $data->utilize_amount;
-                                    }else{
-                                        $amount="";
-                                    } ?>
                                     <td>{{$amount}}</td>
                                     <td>{{$data->current_balance}}</td>
                                     <?php
                                     if ($data->action_done == 'Advance') {
-                                        $status = 'Payment-Advance';
-                                    } elseif ($data->action_done == 'Utilize') {
-                                        $status = 'Expense-TER UNID- '.$data->ter_id;
+                                        $status = 'Imprest Given';
                                     } 
+                                    elseif ($data->action_done == 'Utilize') {
+                                        $status = 'Expense-TER UNID- '.$data->ter_id;
+                                    }elseif ($data->action_done == 'new_emp') {
+                                        $status = 'o/p balance';
+                                        
+                                    } elseif ($data->action_done == 'Ledger_Utilize') {
+                                        $status = 'Imprest Adjusted for UNID '.$data->ter_id;
+                                        
+                                    }
+                                     else{
+                                        $status="";
+                                    }
                                     ?>
                                     <td>
                                        {{$status}}
@@ -127,61 +144,63 @@
                         <thead>
                             <tr>
                                 <th>SNo.</th>
-                                <th>Txn Date</th>
-                                <th>Payment</th>
-                                <th>Expense</th>
-                                <th>Balance</th>
+                                <th>Date</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Closing Balance</th>
                                 <th>Description</th>
                                 <th>AX Voucher Number</th>
                             </tr>
                         </thead>
                         <tbody id="tb">
-                            <td>1</td>
-                            <?php if ($created_date){
-                                        $date_created = Helper::ShowFormatDate($created_date);
-                                    }?>
-                            <td>{{$date_created}}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>New Employee</td>
                             <?php $i = 0;
-                            foreach ($employee_balance_data as $key => $data) {
+                            // dd($ledger_data);
+                            // echo'<pre>'; print_r($ledger_data);die;
+                            foreach ($ledger_data as $key => $data) {
                                 $i++;
                                 // echo'<pre>'; print_r($tercourier);
                             ?>
                                 <tr>
-                                    <td>{{ $i+1 }}</td>
+                                    <td>{{ $i }}</td>
                                     <td>{{ Helper::ShowFormatDate($data->updated_date) }}</td>
                                     <!-- <td>{{ ucwords(@$data->action_done) ?? '-' }}</td> -->
-                                    <?php
-                                    if ($data->action_done == 'Advance') {
-                                        $amount = $data->advance_amount;
-                                    } else{
-                                        $amount="";
+                                    <?php if($data->action_done == 'Ter_Book') {
+                                        $amount =  $data->ter_expense;
+                                    } else if($data->action_done == 'new_emp')
+                                    {
+                                        $amount =  $data->utilize_amount;
                                     }
-                                    ?>
-                                    <td>{{$amount}}</td>
-                                    <?php if($data->action_done == 'Utilize') {
-                                        $amount =  $data->ter_paid;
-                                    }else{
-                                        $amount="";
+                                    else{
+                                        $amount="-";
                                     } ?>
                                     <td>{{$amount}}</td>
-                                    <?php if ($data->ter_expense_balance != "")
+                                    <?php
+                                    if ($data->action_done == 'Imprest') {
+                                        $amount = $data->incoming_payment;
+                                    }else if($data->action_done == 'new_emp')
                                     {
-                                        $ter_expense=$data->ter_expense_balance;
-                                    }else{
-                                        $ter_expense=$data->current_balance;
+                                        $amount =  $data->incoming_payment;
+                                    }  else if($data->action_done == 'Ter_Paid')
+                                    {
+                                        $amount =  $data->incoming_payment;
+                                    } 
+                                     else{
+                                        $amount="-";
                                     }
                                     ?>
-                                    <td>{{$ter_expense}}</td>
+                                    <td>{{$amount}}</td>
+                                    <td>{{$data->ledger_balance}}</td>
                                     <?php
-                                    if ($data->action_done == 'Advance') {
-                                        $status = 'Imprest-Advance';
-                                    } elseif ($data->action_done == 'Utilize') {
+                                    if ($data->action_done == 'Imprest') {
+                                        $status = 'Imprest Added and Adjusted';
+                                    } elseif ($data->action_done == 'Ter_Book') {
                                         $status = 'TER Booked-UNID- '.$data->ter_id;
-                                    } 
+                                    } elseif ($data->action_done == 'Ter_Paid') {
+                                        $status = 'TER Paid-UNID- '.$data->ter_id;
+                                    }
+                                    elseif ($data->action_done == 'new_emp') {
+                                        $status = 'o/p Balance ';
+                                    }
                                     ?>
                                     <td>
                                        {{$status}}

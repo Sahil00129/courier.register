@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Update_table_data;
 use App\Libraries\Sms_lib;
 use App\Models\EmployeeBalance;
+use App\Models\EmployeeLedgerData;
 
 class TercourierController extends Controller
 {
@@ -449,6 +450,62 @@ class TercourierController extends Controller
     {
         return view('tercouriers.open-payment-sheet');
     }
+
+
+//     public function check_paid_status()
+//     {
+//         // ini_set('max_execution_time', 0); // 0 = Unlimited
+//         // $get_data_db = DB::table('tercouriers')->where('status', 3)->get()->toArray();
+//         // $size = sizeof($get_data_db);
+//         // $size=3;
+//         // return $get_data_db;
+//         // for ($i = 0; $i < $size; $i++) {
+//             // print_r($get_data_db[$i]->id);
+//             // $id = $get_data_db[$i]->id;
+//             $id="1508";
+//             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
+//             $curl = curl_init();
+
+//             curl_setopt_array($curl, array(
+//                 CURLOPT_URL => $url,
+//                 CURLOPT_RETURNTRANSFER => true,
+//                 CURLOPT_ENCODING => '',
+//                 CURLOPT_MAXREDIRS => 10,
+//                 CURLOPT_TIMEOUT => 0,
+//                 CURLOPT_FOLLOWLOCATION => true,
+//                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//                 CURLOPT_CUSTOMREQUEST => 'GET',
+//             ));
+
+//             $response = curl_exec($curl);
+
+//             curl_close($curl);
+//             if ($response) {
+//                 $received_data = json_decode($response);
+//                 $status_code = $received_data->status_code;
+
+//                 if ($status_code == 2) {
+//                     $update_ter_data = DB::table('tercouriers')->where('id', '1919')->update([
+//                         'status' => 5, 'finfect_response' => 'Paid',
+//                         'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
+//                         'paid_date' => date('Y-m-d')
+//                     ]);
+
+//                     if ($update_ter_data) {
+// // My Code for updating ledger 
+//                    $ter_id='1919';
+//                    $res= EmployeeLedgerData::finfect_paid_payment($ter_id);
+//                    return $res;
+
+//                     }
+//                     // return $res;
+//                 }
+//             }
+//         // }
+//         return 1;
+//     }
+
+
 
     public function check_paid_status()
     {
@@ -1004,8 +1061,11 @@ class TercourierController extends Controller
             // print_r($voucher_codes);
             // exit;
 
-
+            $update_ledger_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
+            // print_r($update_ledger_table);
+            // exit;
             $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
+          
 
             if ($current_balance > $total_payable_sum) {
                 $payment_status = "4";
@@ -1026,7 +1086,7 @@ class TercourierController extends Controller
         } else {
            $utlized_amount=0;
             $final_payable = $total_payable_sum;
-            $update_employee_table = EmployeeBalance::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
+            $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
         //    print_r($update_employee_table);
         //    exit;
             $payment_status = $data['payment_status'];
