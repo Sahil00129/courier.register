@@ -207,7 +207,7 @@ class SenderController extends Controller
             $employee_name = $get_name[0]->name;
             $employee_balance_data = [];
         }
-        $ledger_data=EmployeeLedgerData::where('employee_id', $emp_id)->orderby('updated_at', 'asc')->get();
+        $ledger_data=EmployeeLedgerData::where('employee_id', $emp_id)->orderby('updated_at', 'desc')->get();
         if(empty($ledger_data))
         {
             $ledger_data = [];
