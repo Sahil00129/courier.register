@@ -142,7 +142,9 @@ class SenderController extends Controller
         // return $balance_data[1]->id;
         $count_rows_balance = $balance_data->count();
         $count_rows_ledger = $ledger_data->count();
-
+// print_r($count_rows_balance);
+// print_r($count_rows_ledger);
+// exit;
         if($count_rows_balance == "2" && $count_rows_ledger < 2 )
         {
             $update_emp_ledger=DB::table('employee_ledger_data')->insert(['incoming_payment'=>$data['emp_advance_amount']
@@ -152,10 +154,11 @@ class SenderController extends Controller
             return $update_emp_ledger;
         }
 
-        $ledger_data = EmployeeLedgerData::where('employee_id', $data['emp_id'])->orderBy('id', 'DESC')->first();
+        // $ledger_data = EmployeeLedgerData::where('employee_id', $data['emp_id'])->orderBy('id', 'DESC')->first();
         if($table_update)
         {
-      $emp_ledger=EmployeeLedgerData::update_advance_in_ledger($insert_data['user_id'],$insert_data['user_name'],$data['emp_id'] , $insert_data['ter_id'], $data['emp_advance_amount'],$insert_data['ax_voucher_number']);
+      $emp_ledger=EmployeeLedgerData::update_advance_in_ledger($insert_data['user_id'],$insert_data['user_name'],$data['emp_id'] , $insert_data['ter_id'], 
+                                                              $data['emp_advance_amount'],$insert_data['ax_voucher_number']);
       return $emp_ledger;
     }
     //     if(!empty($balance_data))
@@ -207,7 +210,7 @@ class SenderController extends Controller
             $employee_name = $get_name[0]->name;
             $employee_balance_data = [];
         }
-        $ledger_data=EmployeeLedgerData::where('employee_id', $emp_id)->orderby('updated_at', 'desc')->get();
+        $ledger_data=EmployeeLedgerData::where('employee_id', $emp_id)->orderby('id', 'asc')->get();
         if(empty($ledger_data))
         {
             $ledger_data = [];
