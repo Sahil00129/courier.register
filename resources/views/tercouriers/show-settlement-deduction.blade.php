@@ -59,6 +59,7 @@
                             <th>Parent Ter Id</th>
                             <th>Sender Name</th>
                             <th>AX ID</th>
+                            <th>Remarks</th>
                             <th>Employee ID</th>
                             <th>Amount Received</th>
                             <th>Amount Paid</th>
@@ -123,6 +124,7 @@
                                 <td>{{$tercourier->parent_ter_id}}</td>
                                 <td>{{ ucwords(@$tercourier->employee_name) ?? '-' }}</td>
                                 <td>{{ $tercourier->ax_code ?? '-' }}</td>
+                                <td>{{ $tercourier->remarks ?? '-' }}</td>
                                 <td>{{ $tercourier->employee_id ?? '-' }}</td>
                                 <td>{{ $tercourier->actual_amount ?? '-' }}</td>
                                 <td>{{ $tercourier->prev_payable_sum ?? '-' }}</td>
