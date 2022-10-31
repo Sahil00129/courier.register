@@ -110,6 +110,7 @@ Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_ad
 
 Route::get('show_pay_later_data', [TercourierController::class, 'show_pay_later_data']);
 Route::get('show_full_and_final_data', [TercourierController::class, 'show_full_and_final_data']);
+Route::get('show_settlement_deduction', [TercourierController::class, 'show_settlement_deduction']);
 Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
 
@@ -130,6 +131,9 @@ Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWid
 Route::get('daily-work-performance', [HomeController::class, 'dailyworkPerformance']);
 
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
+Route::post('/check_deduction', [TercourierController::class,'check_deduction']);
+Route::post('/update_ter_deduction', [TercourierController::class,'update_ter_deduction']);
+
 
 Route::view('/reports','pages/export-data');
 
@@ -139,6 +143,7 @@ Route::get('download_report/{type}',[ImportExportController::class,'download_rep
 
 
 Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
-
+Route::get('/check_deduction_paid_status', [TercourierController::class,'check_deduction_paid_status']);
+Route::get('/check_finfect_status', [TercourierController::class,'check_finfect_status']);
 
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

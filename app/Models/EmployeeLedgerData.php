@@ -66,12 +66,12 @@ class EmployeeLedgerData extends Model
 
             $current_balance = $balance_data->current_balance;
             if ($current_balance != 0) {
-                    $insert_data['ledger_balance'] = $ledger_data->ledger_balance - $ter_pay_amount;
+                    $insert_data['ledger_balance'] = $ledger_data->ledger_balance - (int)$ter_pay_amount;
          
                 // $insert_data['current_balance']=$current_balance-$utilized_amount;
             } else {
                 // $insert_data['current_balance']=$utilized_amount;
-                    $insert_data['ledger_balance'] = $ledger_data->ledger_balance - $ter_pay_amount;
+                $insert_data['ledger_balance'] = $ledger_data->ledger_balance - (int)$ter_pay_amount;
                 $insert_data['wallet_id'] = 0;
                 $insert_data['incoming_payment'] = 0;
             }
@@ -92,6 +92,41 @@ class EmployeeLedgerData extends Model
         // return $insert_data;
         $table_update = EmployeeLedgerData::insert($insert_data);
         return $table_update;
+    }
+    
+
+    public static function finfect_deduction_paid_payment($ter_id)
+    {
+        $get_ter_data=DB::table('ter_deduction_settlements')->where('parent_ter_id',$ter_id)->orderby("book_date","DESC")->first();
+        // echo "<pre>";
+        // print_r($get_ter_data);
+        // exit;
+        $data['employee_id']=$get_ter_data->employee_id;
+        $data['incoming_payment']=$get_ter_data->final_payable;
+        $data['ter_id']=$ter_id;
+        $data['child_ter_id']=$get_ter_data->id;
+        $data['updated_date']= date('Y-m-d');
+        $data['action_done']="Ter_Paid";
+        $data['ax_voucher_number']=$get_ter_data->voucher_code;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $get_ledger_balance=EmployeeLedgerData::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
+        
+        if($get_ledger_balance->ledger_balance > 0)
+        {
+            $data['ledger_balance'] = $data['incoming_payment'] + $get_ledger_balance->ledger_balance;
+        }
+       else if ($get_ledger_balance->ledger_balance) {
+            $data['ledger_balance'] =  $data['incoming_payment'] - abs($get_ledger_balance->ledger_balance);
+        } else {
+            $data['ledger_balance'] =  $data['incoming_payment'];
+        }
+        //   echo "<pre>";
+        // print_r($data);
+        // exit;
+      $res=  EmployeeLedgerData::insert($data);
+      return $res;
+
     }
 
     public static function finfect_paid_payment($ter_id)
@@ -119,7 +154,7 @@ class EmployeeLedgerData extends Model
         } else {
             $data['ledger_balance'] =  $data['incoming_payment'];
         }
-          echo "<pre>";
+        //   echo "<pre>";
         // print_r($data);
         // exit;
       $res=  EmployeeLedgerData::insert($data);

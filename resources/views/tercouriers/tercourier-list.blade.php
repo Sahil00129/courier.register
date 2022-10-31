@@ -82,7 +82,9 @@
                                 <tr>
                                 <?php if($tercourier->status==1 || $tercourier->status==2 || $tercourier->status==0){?>
                                     <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
-                                    <?php } else {?>
+                                    <?php } else if ($tercourier->status == 5) {?>
+                                        <td style="cursor:pointer" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
+                                  <?php }  else {?>
                                     <td>{{ $tercourier->id }}</td>
                                     <?php } ?>
                                     <?php
@@ -290,6 +292,45 @@
                             </div>
                         </div>
                     </div>
+                       <!-- Partial Paid Modal -->
+   <div class="modal fade show" id="partialpaidModal"  v-if="partial_paid_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="partialpaidModalLabel">Partial Paid - TER ID: @{{ter_id}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_paid_modal=false;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                            <input type="text" class="form-control" id="recipient-name" v-model="partial_remarks">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Payable Amount</label>
+                                            <input type="number" class="form-control" id="recipient-name" v-model="payable_amount">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Voucher Code</label>
+                                            <input type="text" class="form-control" id="recipient-name" v-model="voucher_code">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Upload File</label>
+                                            <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
+                                        </div>
+                                    </form>
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal" >Save changes</button>
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
 
@@ -310,14 +351,71 @@
             unique_amount_id: "",
             unique_coupon_id: "",
             ter_modal:false,
+            partial_paid_modal:false,
             ter_id:"",
             cancel_remarks:"",
+            diff_amount:"",
+            partial_remarks:"",
+            payable_amount:"",
+            voucher_code:"",
+            file:"",
+            actual_amount:"",
+            prev_payable_sum:"",
+
         },
         created: function() {
             // alert(this.got_details)
             //   alert('hello');
         },
         methods: {
+            update_payment:function(){
+                if(this.partial_remarks != "" && this.voucher_code !="" && this.payable_amount !="" && this.file !=null){
+                    if(parseInt(this.diff_amount)>=this.payable_amount)
+                    {
+                        const config = {
+                headers: {
+                  'content-type': 'multipart/form-data',
+                }
+              }
+          let formData = new FormData();
+              formData.append('file', this.file);
+              formData.append('ter_id', this.ter_id);
+              formData.append('remarks', this.partial_remarks);
+              formData.append('voucher_code', this.voucher_code);
+              formData.append('payable_amount', this.payable_amount);
+              formData.append('actual_amount', this.actual_amount);
+              formData.append('prev_payable_sum', this.prev_payable_sum);
+              formData.append('left_amount', this.diff_amount);
+
+
+                axios.post('/update_ter_deduction',formData,config)
+                    .then(response => {
+                        if (response.data[0] === "duplicate_voucher") {
+                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                            } 
+                      else if (response.data) {
+                            swal('success', "Ter Id :"+this.ter_id+" has been sent to HR for payment", 'success')
+                            location.reload();
+                        } else {
+                            swal('error', "System Error", 'error')
+                            this.partial_paid_modal=false;
+                            this.ter_id="";
+                            location.reload();
+                        }
+
+                    }).catch(error => {
+
+                        swal('error', error , 'error')
+                            this.partial_paid_modal=false;
+                            this.ter_id="";
+                    })
+                }else{
+                    swal('error', "Payable Amount = "+ this.payable_amount+" can't be greater than Total Amount = "+this.diff_amount, 'error')
+                }
+                }else{
+                    swal('error', "Fields are Empty", 'error')
+                }
+            },
             cancel_ter:function(){
                 if(this.cancel_remarks != ""){
                 axios.post('/cancel_ter', {
@@ -344,9 +442,41 @@
                     swal('error', "Remarks needs to be added", 'error')
                 }
             },
+            upload_file(e){
+          this.file = e.target.files[0];    
+        },
             open_ter_modal:function(ter_id){
                 this.ter_id=ter_id;
                 this.ter_modal = true;
+            },
+            open_partial_paid_modal:function(ter_id){
+                this.partial_paid_modal = true;
+                this.ter_id=ter_id;
+                axios.post('/check_deduction', {
+                        'ter_id': this.ter_id,
+                    })
+                    .then(response => {
+                        if (response.data[0] == "success") {
+                            this.diff_amount=response.data[1];
+                            this.actual_amount=response.data[2];
+                            this.prev_payable_sum=response.data[3];
+                        } else {
+                            swal('error', "All dues are paid", 'error')
+                            this.partial_paid_modal=false;
+                            $('#partialpaidModal').modal('hide');
+                        }
+                        this.partial_remarks="";
+                        this.payable_amount="";
+                        this.voucher_code="";
+                     document.getElementById("fileupload").value="";
+
+                    }).catch(error => {
+
+                        swal('error', error , 'error')
+                            this.ter_modal=false;
+                            this.ter_id="";
+                    })
+                // this.partial_paid_modal = true;
             },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
