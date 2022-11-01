@@ -101,7 +101,11 @@ class HomeController extends Controller
 
             $user1_ter = Tercourier::select('id')->whereIn('status', [3, 5])->where('updated_by_id', $user['id'])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
 
+            if($total_ter!=0){
             $percentage[$user['name']][] = ($user1_ter / $total_ter) * 100;
+            }else{
+                $percentage[$user['name']][]=0;
+            }
 
         }
 
