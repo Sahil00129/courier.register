@@ -285,7 +285,7 @@
                     .then(response => {
                         if (response.data) {
                             swal('success', "Ter Id :"+this.ter_id+" has been successfully updated", 'success')
-                            // location.reload();
+                            location.reload();
                             } 
 
                     }).catch(error => {

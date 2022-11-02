@@ -124,7 +124,7 @@
                                     }
                                     elseif ($tercourier->status == 9) {
 
-                                        $status = 'Pending at HR';
+                                        $status = 'Pending Handover';
                                         $class = 'btn-warning';
                                     }
                                      else {
