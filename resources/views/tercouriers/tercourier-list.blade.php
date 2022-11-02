@@ -209,7 +209,7 @@
                             ?>
                                 <tr>
                                     <td><input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>"></td>
-                                    <?php if($tercourier->status==1 || $tercourier->status==2 || $tercourier->status==0 ){?>
+                                    <?php if($tercourier->status==1 || $tercourier->status==0 ){?>
                                     <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
                                    <?php } else {?>
                                     <td>{{ $tercourier->id }}</td>
