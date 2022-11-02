@@ -266,6 +266,7 @@
                             this.ter_modal=false;
                             this.ter_id="";
                             location.reload();
+                        
                         }
 
                     }).catch(error => {
