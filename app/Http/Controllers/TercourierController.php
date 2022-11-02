@@ -31,7 +31,8 @@ class TercourierController extends Controller
         $this->middleware('permission:ter_list_edit_user', ['only' => ['update_ter']]);
         $this->middleware('permission:hr_admin_edit_ter', ['only' => ['admin_update_ter']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_full_and_final_data']]);
-        $this->middleware('permission:full-and-final-data', ['only' =>['show_settlement_deduction']]);
+        $this->middleware('permission:full-and-final-data', ['only' => ['show_settlement_deduction']]);
+        $this->middleware('permission:full-and-final-data', ['only' => ['show_rejected_ter']]);
         $this->middleware('permission:payment_sheet', ['only' => ['payment_sheet']]);
     }
     /**
@@ -52,12 +53,12 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2', '6'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
             //    echo'<pre>'; print_r($name); die;
         }
@@ -126,10 +127,10 @@ class TercourierController extends Controller
         $terdata['remarks'] = $request->remarks;
         $terdata['given_to'] = $request->given_to;
         $terdata['delivery_date'] = $request->delivery_date;
-        $terdata['status'] = '1';
         $terdata['received_date'] = date('Y-m-d');
+        $terdata['status'] = 1;
 
-        // echo "<pre>";print_r($terdata);
+
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
         $terdata['ax_id']    = $senders[0]->ax_id;
@@ -141,7 +142,7 @@ class TercourierController extends Controller
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier->id);
         if ($tercourier) {
-            // return  $tercourier->id;
+            return  $tercourier->id;
             // exit;
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
@@ -233,12 +234,9 @@ class TercourierController extends Controller
     public function check_finfect_status()
     {
         ini_set('max_execution_time', 0); // 0 = Unlimited
-        $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->
-        where('refrence_transaction_id',NULL)->where('finfect_response',NULL)->get()->toArray();
-        if(empty($get_data_db))
-        {
-            $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->
-            where('refrence_transaction_id',NULL)->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->where('refrence_transaction_id', NULL)->where('finfect_response', NULL)->get()->toArray();
+        if (empty($get_data_db)) {
+            $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->where('refrence_transaction_id', NULL)->get()->toArray();
         }
         // echo "<pre>";
         // print_r($get_data_db);
@@ -253,7 +251,7 @@ class TercourierController extends Controller
             // print_r($id);
             // $id="2577";
 
-            $url = 'https://stagging.finfect.biz/api/check_refrence/'.$id;
+            $url = 'https://stagging.finfect.biz/api/check_refrence/' . $id;
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -268,23 +266,22 @@ class TercourierController extends Controller
             ));
 
             $response = curl_exec($curl);
-            $res=json_decode($response);
+            $res = json_decode($response);
 
             curl_close($curl);
             // echo"<pre>";
             // print_r($res);
             // exit;
             if ($res->status == "success") {
-              
-                    $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
-                        'status' => 3, 'finfect_response' => $res->status,
-                        'refrence_transaction_id' => $res->refrence_transaction_id, 'updated_at' => date('Y-m-d H:i:s'),
-                        'sent_to_finfect_date' => date('Y-m-d')
-                    ]);
-            }
-            else{
+
+                $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                    'status' => 3, 'finfect_response' => $res->status,
+                    'refrence_transaction_id' => $res->refrence_transaction_id, 'updated_at' => date('Y-m-d H:i:s'),
+                    'sent_to_finfect_date' => date('Y-m-d')
+                ]);
+            } else {
                 $update_ter_data = DB::table('tercouriers')->where('id',  $get_data_db[$i]->id)->update(array(
-                    'finfect_response' =>$res->status, 'payment_status' => 2,
+                    'finfect_response' => $res->status, 'payment_status' => 2,
                     'status' => 0
                 ));
             }
@@ -517,58 +514,58 @@ class TercourierController extends Controller
     }
 
 
-//     public function check_paid_status()
-//     {
-//         // ini_set('max_execution_time', 0); // 0 = Unlimited
-//         // $get_data_db = DB::table('tercouriers')->where('status', 3)->get()->toArray();
-//         // $size = sizeof($get_data_db);
-//         // $size=3;
-//         // return $get_data_db;
-//         // for ($i = 0; $i < $size; $i++) {
-//             // print_r($get_data_db[$i]->id);
-//             // $id = $get_data_db[$i]->id;
-//             $id="1508";
-//             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
-//             $curl = curl_init();
+    //     public function check_paid_status()
+    //     {
+    //         // ini_set('max_execution_time', 0); // 0 = Unlimited
+    //         // $get_data_db = DB::table('tercouriers')->where('status', 3)->get()->toArray();
+    //         // $size = sizeof($get_data_db);
+    //         // $size=3;
+    //         // return $get_data_db;
+    //         // for ($i = 0; $i < $size; $i++) {
+    //             // print_r($get_data_db[$i]->id);
+    //             // $id = $get_data_db[$i]->id;
+    //             $id="1508";
+    //             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
+    //             $curl = curl_init();
 
-//             curl_setopt_array($curl, array(
-//                 CURLOPT_URL => $url,
-//                 CURLOPT_RETURNTRANSFER => true,
-//                 CURLOPT_ENCODING => '',
-//                 CURLOPT_MAXREDIRS => 10,
-//                 CURLOPT_TIMEOUT => 0,
-//                 CURLOPT_FOLLOWLOCATION => true,
-//                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//                 CURLOPT_CUSTOMREQUEST => 'GET',
-//             ));
+    //             curl_setopt_array($curl, array(
+    //                 CURLOPT_URL => $url,
+    //                 CURLOPT_RETURNTRANSFER => true,
+    //                 CURLOPT_ENCODING => '',
+    //                 CURLOPT_MAXREDIRS => 10,
+    //                 CURLOPT_TIMEOUT => 0,
+    //                 CURLOPT_FOLLOWLOCATION => true,
+    //                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //                 CURLOPT_CUSTOMREQUEST => 'GET',
+    //             ));
 
-//             $response = curl_exec($curl);
+    //             $response = curl_exec($curl);
 
-//             curl_close($curl);
-//             if ($response) {
-//                 $received_data = json_decode($response);
-//                 $status_code = $received_data->status_code;
+    //             curl_close($curl);
+    //             if ($response) {
+    //                 $received_data = json_decode($response);
+    //                 $status_code = $received_data->status_code;
 
-//                 if ($status_code == 2) {
-//                     $update_ter_data = DB::table('tercouriers')->where('id', '1919')->update([
-//                         'status' => 5, 'finfect_response' => 'Paid',
-//                         'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
-//                         'paid_date' => date('Y-m-d')
-//                     ]);
+    //                 if ($status_code == 2) {
+    //                     $update_ter_data = DB::table('tercouriers')->where('id', '1919')->update([
+    //                         'status' => 5, 'finfect_response' => 'Paid',
+    //                         'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
+    //                         'paid_date' => date('Y-m-d')
+    //                     ]);
 
-//                     if ($update_ter_data) {
-// // My Code for updating ledger 
-//                    $ter_id='1919';
-//                    $res= EmployeeLedgerData::finfect_paid_payment($ter_id);
-//                    return $res;
+    //                     if ($update_ter_data) {
+    // // My Code for updating ledger 
+    //                    $ter_id='1919';
+    //                    $res= EmployeeLedgerData::finfect_paid_payment($ter_id);
+    //                    return $res;
 
-//                     }
-//                     // return $res;
-//                 }
-//             }
-//         // }
-//         return 1;
-//     }
+    //                     }
+    //                     // return $res;
+    //                 }
+    //             }
+    //         // }
+    //         return 1;
+    //     }
 
 
 
@@ -604,7 +601,7 @@ class TercourierController extends Controller
                 $received_data = json_decode($response);
                 $status_code = $received_data->status_code;
 
-                  //    status needs to be checked before updating the finfect_response for deduction table
+                //    status needs to be checked before updating the finfect_response for deduction table
                 if ($status_code == 2) {
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
@@ -617,7 +614,7 @@ class TercourierController extends Controller
                         // print_r($id);
                         // echo "<pre>";
                         // print_r($response);
-                        $res= EmployeeLedgerData::finfect_paid_payment($get_data_db[$i]->id);
+                        $res = EmployeeLedgerData::finfect_paid_payment($get_data_db[$i]->id);
                         $amount = $received_data->amount;
                         $sms_lib = new Sms_lib();
                         $res = $sms_lib->send_paid_sms($id, $amount);
@@ -662,13 +659,13 @@ class TercourierController extends Controller
 
             $response = curl_exec($curl);
 
-// print_r($response);
+            // print_r($response);
             curl_close($curl);
             if ($response) {
                 $received_data = json_decode($response);
                 $status_code = $received_data->status_code;
 
-                  //    status needs to be checked before updating the finfect_response for deduction table
+                //    status needs to be checked before updating the finfect_response for deduction table
                 if ($status_code == 2) {
                     $update_ter_data = DB::table('ter_deduction_settlements')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
@@ -681,31 +678,31 @@ class TercourierController extends Controller
                         // print_r($id);
                         // echo "<pre>";
                         // print_r($response);
-                        $check_ter=DB::table('tercouriers')->where('id',$id)->get();
-                        $new_amount_add=$get_data_db[$i]->final_payable;
-                        $get_prev_amount=$check_ter[$i]->payable_amount;
-                        $prev_amount=json_decode($get_prev_amount);
-                        $arr_num= sizeof($prev_amount);
-                        $prev_amount[$arr_num]=$new_amount_add;
-                        $updated_payable_amount=$prev_amount;
+                        $check_ter = DB::table('tercouriers')->where('id', $id)->get();
+                        $new_amount_add = $get_data_db[$i]->final_payable;
+                        $get_prev_amount = $check_ter[$i]->payable_amount;
+                        $prev_amount = json_decode($get_prev_amount);
+                        $arr_num = sizeof($prev_amount);
+                        $prev_amount[$arr_num] = $new_amount_add;
+                        $updated_payable_amount = $prev_amount;
 
-                        $new_voucher_add=$get_data_db[$i]->voucher_code;
-                        $get_prev_voucher=$check_ter[$i]->voucher_code;
-                        $prev_voucher=json_decode($get_prev_voucher);
-                        $arr_num= sizeof($prev_voucher);
-                        $prev_voucher[$arr_num]=$new_voucher_add;
-                        $updated_voucher=$prev_voucher;
-              
+                        $new_voucher_add = $get_data_db[$i]->voucher_code;
+                        $get_prev_voucher = $check_ter[$i]->voucher_code;
+                        $prev_voucher = json_decode($get_prev_voucher);
+                        $arr_num = sizeof($prev_voucher);
+                        $prev_voucher[$arr_num] = $new_voucher_add;
+                        $updated_voucher = $prev_voucher;
+
                         $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->parent_ter_id)->update([
                             'status' => 5, 'finfect_response' => 'Paid',
-                            'updated_at' => date('Y-m-d H:i:s'),'payable_amount' => $updated_payable_amount,
+                            'updated_at' => date('Y-m-d H:i:s'), 'payable_amount' => $updated_payable_amount,
                             'voucher_code' => $updated_voucher
                         ]);
                         // $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->parent_ter_id)->update([
                         //     'status' => 5, 'finfect_response' => 'Paid',
                         //     'updated_at' => date('Y-m-d H:i:s')
                         // ]);
-                        
+
                         EmployeeLedgerData::finfect_deduction_paid_payment($get_data_db[$i]->parent_ter_id);
 
                         $amount = $received_data->amount;
@@ -932,6 +929,18 @@ class TercourierController extends Controller
             $data_error['status_of_data'] = "5";
             return $data_error;
         }
+        if ($tercourier_table[0]->status == 6) {
+            $data_error['status_of_data'] = "6";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 7) {
+            $data_error['status_of_data'] = "7";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 8) {
+            $data_error['status_of_data'] = "8";
+            return $data_error;
+        }
         $senders =  DB::table('sender_details')->get();
         $balance_data = DB::table('employee_balance')->select('current_balance')->where('employee_id', $tercourier_table[0]->employee_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
@@ -1109,10 +1118,10 @@ class TercourierController extends Controller
         if (strlen($check_ifsc[0]->ifsc) != 11) {
             return "ifsc_error";
         }
-       
+
         $response = self::advance_payment_check($data, $total_payable_sum);
         // return $response;
-      
+
         if ($response[1] == '4') {
             return $response[0];
         }
@@ -1125,7 +1134,7 @@ class TercourierController extends Controller
             $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
             if (!empty($check_last_working[0]->last_working_date)) {
                 $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                    'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3
+                    'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                 ));
                 return $change_status;
             } else {
@@ -1141,24 +1150,22 @@ class TercourierController extends Controller
         // print_r($data);
         // exit;
         $id = $data['unique_id'];
-        $check_deduction_table=DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date","DESC")->first();
-        $settlement_deduction=0;
-        if(!empty($check_deduction_table))
-        {
+        $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
+        $settlement_deduction = 0;
+        if (!empty($check_deduction_table)) {
             $emp_id = $check_deduction_table->employee_id;
-            $payable_amount=$check_deduction_table->payable_amount;
-            $voucher_code=$check_deduction_table->voucher_code;
-            $settlement_deduction=1;
-            $ax_code=$check_deduction_table->ax_code;
-        }
-        else{
+            $payable_amount = $check_deduction_table->payable_amount;
+            $voucher_code = $check_deduction_table->voucher_code;
+            $settlement_deduction = 1;
+            $ax_code = $check_deduction_table->ax_code;
+        } else {
             $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
             $emp_id = $data_ter[0]->employee_id;
-            $payable_amount=$data_ter[0]->payable_amount;
-            $voucher_code=$data_ter[0]->voucher_code;
-            $ax_code=$data_ter[0]->ax_id;
+            $payable_amount = $data_ter[0]->payable_amount;
+            $voucher_code = $data_ter[0]->voucher_code;
+            $ax_code = $data_ter[0]->ax_id;
         }
-       
+
         $current_balance = $data['current_balance'];
         // return $data;
         $final_payable = 0;
@@ -1191,41 +1198,43 @@ class TercourierController extends Controller
             }
         }
         // return $data;
-        if(!empty($payable_data))
-        {
-        $length = sizeof($payable_data);
-        for ($i = 0; $i < $length; $i++) {
-            $pay_amount[$i] = $payable_data[$i]['payable_amount'];
-            $voucher_data[$i] = $payable_data[$i]['voucher_code'];
-        }
-        $payable_size = sizeof($pay_amount);
-        if ($payable_size > 1) {
-            $ter_pay_amount = array_sum($pay_amount);
-        } else {
-            $ter_pay_amount = $pay_amount[0];
-        }
+        if (!empty($payable_data)) {
+            $length = sizeof($payable_data);
+            for ($i = 0; $i < $length; $i++) {
+                $pay_amount[$i] = $payable_data[$i]['payable_amount'];
+                $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+            }
+            $payable_size = sizeof($pay_amount);
+            if ($payable_size > 1) {
+                $ter_pay_amount = array_sum($pay_amount);
+            } else {
+                $ter_pay_amount = $pay_amount[0];
+            }
 
-        $voucher_codes=$voucher_data;
-    }else{
-        if($settlement_deduction)
-        {
-      $ter_pay_amount=$payable_amount;
+            $voucher_codes = $voucher_data;
+        } else {
+            if ($settlement_deduction) {
+                $ter_pay_amount = $payable_amount;
+            } else {
+                if (gettype($payable_amount != "array")) {
+
+                    $ter_pay_amount = $payable_amount;
+                } else {
+                    $decoding_arr = json_decode($payable_amount);
+                    $payable_arr_size = sizeof($decoding_arr);
+                    if ($payable_arr_size > 1) {
+                        $ter_pay_amount = array_sum($decoding_arr);
+                    } else {
+                        $ter_pay_amount = $payable_amount;
+                    }
+                }
+            }
+            $voucher_codes = $voucher_code;
         }
-        else{
-        $decoding_arr=json_decode($payable_amount);
-       $payable_arr_size=sizeof($decoding_arr);
-       if ($payable_arr_size > 1) {
-        $ter_pay_amount = array_sum($decoding_arr);
-    } else {
-        $ter_pay_amount = $payable_amount;
-    }
-    }
-    $voucher_codes=$voucher_code;
-    }
-    // echo "<pre>";
-    // print_r($ter_pay_amount);
-    // print_r($voucher_codes);
-    // exit;
+        // echo "<pre>";
+        // print_r($ter_pay_amount);
+        // print_r($voucher_codes);
+        // exit;
         // return $voucher_codes;
 
         if ($current_balance != 0) {
@@ -1247,62 +1256,62 @@ class TercourierController extends Controller
 
             $emp_sender_id = $emp_id;
 
-            if(!$settlement_deduction)
-            {
-            $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
-            if (!empty($check_last_working)) {
-                if ($check_last_working[0]->last_working_date) {
-                    // return "Dsa";
-                    $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                        'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3
-                    ));
-                    return $change_status;
+            if (!$settlement_deduction) {
+                $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
+                if (!empty($check_last_working)) {
+                    if ($check_last_working[0]->last_working_date) {
+                        // return "Dsa";
+                        $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                            'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                        ));
+                        return $change_status;
+                    }
                 }
             }
-        }
 
-        
+
             // print_r($voucher_codes);
             // exit;
 
-            $update_ledger_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
+            $update_ledger_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
             // print_r($update_ledger_table);
             // exit;
-            $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
-          
+            $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
+
 
             if ($current_balance > $total_payable_sum) {
                 $payment_status = "4";
-                if($settlement_deduction)
-                {
-                    $update_deduction_table=DB::table('ter_deduction_settlements')->where('id',$check_deduction_table->id)->
-                          update(['final_payable'=>0,'status'=>5,'updated_by_id'=>$log_in_user_id,
-                          'updated_by_name'=>$log_in_user_name]);
-                          if($update_deduction_table){
-                    $response = DB::table('tercouriers')->where('id',$id)->update(['status'=>5,'updated_by_id'=>$log_in_user_id,
-                    'updated_by_name'=>$log_in_user_name]);
-                          }
-                }
-                else{
-                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                if ($settlement_deduction) {
+                    $update_deduction_table = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                            'final_payable' => 0, 'status' => 5, 'updated_by_id' => $log_in_user_id, 'book_date' => date('Y-m-d'),
+                            'paid_date' => date('Y-m-d'),
+                            'updated_by_name' => $log_in_user_name
+                        ]);
+                    if ($update_deduction_table) {
+                        $response = DB::table('tercouriers')->where('id', $id)->update([
+                            'status' => 5, 'updated_by_id' => $log_in_user_id,
+                            'updated_by_name' => $log_in_user_name
+                        ]);
+                    }
+                } else {
+                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                 }
                 $p_status = 4;
                 return [$response, $p_status];
             } else {
-              
+
                 if ($ax_code != 0) {
                     $payment_status = 1;
-                    if($settlement_deduction)
-                    {
-                        $update_deduction_table=DB::table('ter_deduction_settlements')->where('id',$check_deduction_table->id)->
-                        update(['final_payable'=>$final_payable,'updated_by_id'=>$log_in_user_id,
-                        'updated_by_name'=>$log_in_user_name]);
-                        if($update_deduction_table)
-                        {
-                            $response=1;
+                    if ($settlement_deduction) {
+                        $update_deduction_table = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                                'final_payable' => $final_payable, 'updated_by_id' => $log_in_user_id,
+                                'updated_by_name' => $log_in_user_name
+                            ]);
+                        if ($update_deduction_table) {
+                            $response = 1;
                         }
-                    }else{
-                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                    } else {
+                        $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                     }
                     $p_status = 1;
                     // return [$response,$p_status];
@@ -1311,26 +1320,24 @@ class TercourierController extends Controller
                 }
             }
         } else {
-           $utlized_amount=0;
+            $utlized_amount = 0;
             $final_payable = $total_payable_sum;
-            $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount,$voucher_codes);
-        //    print_r($update_employee_table);
-        //    exit;
+            $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
+            //    print_r($update_employee_table);
+            //    exit;
             $payment_status = $data['payment_status'];
             if ($ax_code != 0) {
                 $p_status = 1;
-                if($settlement_deduction)
-                {
-                    $update_deduction_table=DB::table('ter_deduction_settlements')->where('id',$check_deduction_table->id)->
-                    update(['final_payable'=>$final_payable,'updated_by_id'=>$log_in_user_id,
-                    'updated_by_name'=>$log_in_user_name]);
-                    if($update_deduction_table)
-                    {
-                        $response=1;
+                if ($settlement_deduction) {
+                    $update_deduction_table = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                            'final_payable' => $final_payable, 'updated_by_id' => $log_in_user_id,  'book_date' => date('Y-m-d'),
+                            'updated_by_name' => $log_in_user_name
+                        ]);
+                    if ($update_deduction_table) {
+                        $response = 1;
                     }
-                }
-                else{
-                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                } else {
+                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                 }
             } else {
                 exit;
@@ -1346,25 +1353,23 @@ class TercourierController extends Controller
         $data = $request->all();
         // $payment_status = 2;
         $data['unique_id'] = $data['selected_id'];
-        $check_deduction_table=DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date","DESC")->first();
+        $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
         // echo "<pre>";
         // print_r($check_deduction_table);
         // exit;
 
-        if(!empty($check_deduction_table))
-        {
+        if (!empty($check_deduction_table)) {
             $total_payable_sum = $check_deduction_table->payable_amount;
             $emp_id = $check_deduction_table->employee_id;
             // echo "<pre>";
             // print_r($emp_id);
             // exit;
 
-        }
-        else{
-        $data_ter = DB::table('tercouriers')->where('id', $data['unique_id'])->get()->toArray();
-        $new_emp_id = '0' . $data_ter[0]->employee_id;
-        $emp_id = $data_ter[0]->employee_id;
-        $total_payable_sum = $data_ter[0]->final_payable;
+        } else {
+            $data_ter = DB::table('tercouriers')->where('id', $data['unique_id'])->get()->toArray();
+            $new_emp_id = '0' . $data_ter[0]->employee_id;
+            $emp_id = $data_ter[0]->employee_id;
+            $total_payable_sum = $data_ter[0]->final_payable;
         }
         $check = DB::table('sender_details')->where('employee_id', $emp_id)->get();
         $data['payment_status'] = 2;
@@ -1416,76 +1421,81 @@ class TercourierController extends Controller
     public function api_call_finfect($id)
     {
         // return "hello";
-        $check_deduction_table=DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->orderby("book_date","DESC")->first();
+        $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->orderby("book_date", "DESC")->first();
 
-        $settlement_deduction=0;
-        if(empty($check_deduction_table))
-        {
-        $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
-        if ($all_data[0]->payment_type == "full_and_final_payment") {
+        $settlement_deduction = 0;
+        if (empty($check_deduction_table)) {
+            $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
+            if ($all_data[0]->payment_type == "full_and_final_payment") {
+                $data['sent_to_finfect_date'] = date('Y-m-d');
+                $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
+                    ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+            } else if ($all_data[0]->payment_type == "pay_later_payment") {
+                $data['sent_to_finfect_date'] = date('Y-m-d');
+                $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
+                    ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+            }
+
+            // print_r($all_data[0]->payment_type);
+            // exit;
+            $tercourier_data = $all_data[0];
+            $pay_amount = $tercourier_data->payable_amount;
+            $voucher_code = $tercourier_data->voucher_code;
+            $string_pay_amount = str_replace(array(
+                '\'', '"', ';', '[', ']'
+            ), ' ', $pay_amount);
+            $string_voucher_code = str_replace(array(
+                '\'', '"', ';', '[', ']'
+            ), ' ', $voucher_code);
+            $payable_new_data = explode(",", $string_pay_amount);
+            $voucher_new_data = explode(",", $string_voucher_code);
+
+            // $payable_sum = 0;
+            $size = sizeof($payable_new_data);
+            for ($i = 0; $i < $size; $i++) {
+                $ax_data[$i]['amount'] = trim($payable_new_data[$i]);
+                $ax_data[$i]['ax_voucher_code'] = trim($voucher_new_data[$i]);
+                // $payable_sum = $payable_sum + $payable_new_data[$i];
+            }
+            $encoded_data = json_encode($ax_data);
+
+            $payable_sum = $tercourier_data->final_payable;
+            if($tercourier_data->txn_type == "rejected_ter")
+            {
+                $payable_sum=$tercourier_data->payable_amount;
+            }
+
+            $sender_id = $tercourier_data->sender_id;
+            $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
+            $sender_data = $sender_table[0];
+            $ax_id = $tercourier_data->ax_id;
+            $emp_id = $tercourier_data->employee_id;
+            $emp_name = $tercourier_data->sender_name;
+            $amount = $tercourier_data->amount;
+            $ter_id = $tercourier_data->id;
+            $payment_type = $tercourier_data->payment_type;
+        } else {
+            $ax_id = $check_deduction_table->ax_code;
+            $payable_sum = $check_deduction_table->final_payable;
+            $voucher_code = $check_deduction_table->voucher_code;
+            $ax_data[0]['amount'] = $check_deduction_table->payable_amount;
+            $ax_data[0]['ax_voucher_code'] = $check_deduction_table->voucher_code;
+            $encoded_data = json_encode($ax_data);
+            $emp_id = $check_deduction_table->employee_id;
+            $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+            $sender_data = $sender_table[0];
+            $emp_name = $check_deduction_table->employee_name;
+            $amount = $check_deduction_table->actual_amount;
+            $ter_id = $check_deduction_table->parent_ter_id;
+            $payment_type = "deduction_settlement";
+            $settlement_deduction = 1;
             $data['sent_to_finfect_date'] = date('Y-m-d');
-            $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
-                ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
-        } else if ($all_data[0]->payment_type == "pay_later_payment") {
-            $data['sent_to_finfect_date'] = date('Y-m-d');
-            $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
-                ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+            $query =  DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)
+                ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'], 'status' => 3]);
         }
 
-        // print_r($all_data[0]->payment_type);
+        // print_r($ax_data);
         // exit;
-        $tercourier_data = $all_data[0];
-        $pay_amount = $tercourier_data->payable_amount;
-        $voucher_code = $tercourier_data->voucher_code;
-        $string_pay_amount = str_replace(array(
-            '\'', '"', ';', '[', ']'
-        ), ' ', $pay_amount);
-        $string_voucher_code = str_replace(array(
-            '\'', '"', ';', '[', ']'
-        ), ' ', $voucher_code);
-        $payable_new_data = explode(",", $string_pay_amount);
-        $voucher_new_data = explode(",", $string_voucher_code);
-
-        // $payable_sum = 0;
-        $size = sizeof($payable_new_data);
-        for ($i = 0; $i < $size; $i++) {
-            $ax_data[$i]['amount'] = trim($payable_new_data[$i]);
-            $ax_data[$i]['ax_voucher_code'] = trim($voucher_new_data[$i]);
-            // $payable_sum = $payable_sum + $payable_new_data[$i];
-        }
-        $encoded_data = json_encode($ax_data);
-
-        $payable_sum = $tercourier_data->final_payable;
-
-        $sender_id = $tercourier_data->sender_id;
-        $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
-        $sender_data = $sender_table[0];
-        $ax_id = $tercourier_data->ax_id;
-        $emp_id=$tercourier_data->employee_id;
-        $emp_name=$tercourier_data->sender_name;
-        $amount=$tercourier_data->amount;
-        $ter_id=$tercourier_data->id;
-        $payment_type=$tercourier_data->payment_type;
-    }else{
-        $ax_id=$check_deduction_table->ax_code;
-        $payable_sum = $check_deduction_table->final_payable;
-        $voucher_code = $check_deduction_table->voucher_code;
-        $ax_data[0]['amount'] = $check_deduction_table->payable_amount;
-        $ax_data[0]['ax_voucher_code'] = $check_deduction_table->voucher_code;
-        $encoded_data = json_encode($ax_data);
-        $emp_id=$check_deduction_table->employee_id;
-        $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
-        $sender_data = $sender_table[0];
-        $emp_name=$check_deduction_table->employee_name;
-        $amount=$check_deduction_table->actual_amount;
-        $ter_id=$check_deduction_table->parent_ter_id;
-        $payment_type="deduction_settlement";
-        $settlement_deduction=1;
-        $data['sent_to_finfect_date'] = date('Y-m-d');
-        $query =  DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)
-            ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'],'status'=>3]);
-
-    }
 
         if (!empty($ax_id)) {
             $new_data = explode("-", $ax_id);
@@ -1509,22 +1519,23 @@ class TercourierController extends Controller
         // Append the requested resource location to the URL   
         //    $url.= $_SERVER['REQUEST_URI'];    
         // $send_data = '{
-        //     "unique_code":"'.$tercourier_data->employee_id.'",
-        //     "name":"'.$tercourier_data->sender_name.'",
+        //     "unique_code":"'.$emp_id.'",
+        //     "name":"'.$emp_name.'",
         //     "acc_no":"'.$sender_data->account_number.'",
         //     "beneficiary_name":"'.$sender_data->beneficiary_name.'",
         //     "ifsc":"'.$sender_data->ifsc.'",
         //     "bank_name":"'.$sender_data->bank_name.'",
         //     "baddress":"'.$sender_data->branch_name.'",
         //     "payable_amount":"'.$payable_sum.'",
-        //     "claimed_amount":"'.$tercourier_data->amount.'",
+        //     "claimed_amount":"'.$amount.'",
         //     "pfu":"'. $pfu .'",
         //     "ax_voucher_code":"'.$encoded_data.'",
         //     "txn_route":"TER",
         //     "email":"'.$sender_data->official_email_id.'",
-        //     "terid":"'.$tercourier_data->id.'",
+        //     "terid":"'.$ter_id.'",
         //     "ptype":"Regular",
-        //     "ax_id":"'.$ax_id.'"        
+        //     "ax_id":"'.$ax_id.'"  
+        //     "territory":"'.$sender_data->territory.'"      
         //   }';
 
         // print_r($send_data);
@@ -1584,60 +1595,57 @@ class TercourierController extends Controller
         curl_close($curl);
         // $response="";
         $res_data = json_decode($response);
-      
-    //    status needs to be checked before updating the finfect_response for deduction table
-        if(!empty($res_data)){
-        if ($res_data->message == "success") {
-            if($settlement_deduction){
-                $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
-                $new_data['finfect_response'] = $res_data->message;
-                $res = DB::table('ter_deduction_settlements')->where('id',$check_deduction_table->id)->update(array(
-                    'reference_transaction_id' => $new_string['refrence_transaction_id'],
-                    'finfect_response' => $new_data['finfect_response'], 'status' => 3
+
+        //    status needs to be checked before updating the finfect_response for deduction table
+        if (!empty($res_data)) {
+            if ($res_data->message == "success") {
+                if ($settlement_deduction) {
+                    $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
+                    $new_data['finfect_response'] = $res_data->message;
+                    $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
+                        'reference_transaction_id' => $new_string['refrence_transaction_id'],
+                        'finfect_response' => $new_data['finfect_response'], 'status' => 3
+                    ));
+                } else {
+                    $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
+                    $new_data['finfect_response'] = $res_data->message;
+                    $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
+                        'refrence_transaction_id' => $new_string['refrence_transaction_id'],
+                        'finfect_response' => $new_data['finfect_response'], 'status' => 3, 'payment_status' => 1
+                    ));
+                }
+            } else {
+                if ($settlement_deduction) {
+                    $new_data['finfect_response'] = $res_data->message;
+                    $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
+                        'finfect_response' => $new_data['finfect_response'],
+                        'status' => 0
+                    ));
+                } else {
+                    $new_data['finfect_response'] = $res_data->message;
+                    $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
+                        'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
+                        'status' => 0
+                    ));
+                }
+                $res = [0, $new_data['finfect_response']];
+            }
+        } else {
+            if ($settlement_deduction) {
+                $new_data['finfect_response'] = "Finfect is not working";
+                $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
+                    'finfect_response' => $new_data['finfect_response'],
+                    'status' => 0
+                ));
+            } else {
+                $new_data['finfect_response'] = "Finfect is not working";
+                $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
+                    'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
+                    'status' => 0
                 ));
             }
-            else{
-            $new_string['refrence_transaction_id'] = $res_data->refrence_transaction_id;
-            $new_data['finfect_response'] = $res_data->message;
-            $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
-                'refrence_transaction_id' => $new_string['refrence_transaction_id'],
-                'finfect_response' => $new_data['finfect_response'], 'status' => 3, 'payment_status' => 1
-            ));
-        }
-        } else {
-            if($settlement_deduction){
-            $new_data['finfect_response'] = $res_data->message;
-            $res = DB::table('ter_deduction_settlements')->where('id',$check_deduction_table->id)->update(array(
-                'finfect_response' => $new_data['finfect_response'],
-                'status' => 0
-            ));
-        }else{
-            $new_data['finfect_response'] = $res_data->message;
-            $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
-                'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
-                'status' => 0
-            ));
-        }
             $res = [0, $new_data['finfect_response']];
         }
-    }
-    else{
-        if($settlement_deduction){
-        $new_data['finfect_response'] = "Finfect is not working";
-        $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
-            'finfect_response' => $new_data['finfect_response'],
-            'status' => 0
-        ));
-    }
-    else{
-        $new_data['finfect_response'] = "Finfect is not working";
-        $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
-            'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
-            'status' => 0
-        ));
-    }
-        $res = [0, $new_data['finfect_response']];
-    }
 
         return $res;
     }
@@ -1695,116 +1703,160 @@ class TercourierController extends Controller
 
     public function check_duplicate_voucher_code($voucher_code)
     {
-                /////////////////////////////////////////////// Start of duplicate voucher check /////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////// Start of duplicate voucher check /////////////////////////////////////////////////////////////////////////
 
-                $data['voucher_code']=$voucher_code;
-        
-                $decode2 = array();
-                $check_duplicate = DB::table('tercouriers')->select('voucher_code')->whereIn('status', [3, 5])->get();
-                // echo "<pre>";
-                // print_r($check_duplicate);
-                // exit;
-                $voucher_code_size = sizeof($check_duplicate);
-                    // this is for previous flow
-                    for ($i = 0; $i < $voucher_code_size; $i++) {
-                        if ($check_duplicate[$i]->voucher_code == $data['voucher_code']) {
+        $data['voucher_code'] = $voucher_code;
+
+        $decode2 = array();
+        $check_duplicate = DB::table('tercouriers')->select('voucher_code')->whereIn('status', [3, 5])->get();
+        // echo "<pre>";
+        // print_r($check_duplicate);
+        // exit;
+        $voucher_code_size = sizeof($check_duplicate);
+        // this is for previous flow
+        for ($i = 0; $i < $voucher_code_size; $i++) {
+            if ($check_duplicate[$i]->voucher_code == $data['voucher_code']) {
+                return ["duplicate_voucher", $data['voucher_code']];
+            }
+        }
+        for ($i = 0; $i < $voucher_code_size; $i++) {
+            $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
+            // print_r($decode2[$i]);
+            if (!empty($decode2[$i])) {
+                if (sizeof($decode2[$i]) > 1) {
+                    // print_r("rt");
+                    for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                        if ($decode2[$i][$j] == $data['voucher_code']) {
                             return ["duplicate_voucher", $data['voucher_code']];
                         }
                     }
-                    for ($i = 0; $i < $voucher_code_size; $i++) {
-                        $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
-                        // print_r($decode2[$i]);
-                        if (!empty($decode2[$i])) {
-                            if (sizeof($decode2[$i]) > 1) {
-                                // print_r("rt");
-                                for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
-                                    if ($decode2[$i][$j] == $data['voucher_code']) {
-                                        return ["duplicate_voucher", $data['voucher_code']];
-                                    }
-                                }
-                            } else {
-                                // echo "<pre>";
-                                // print_r($decode2)
-                                // print_r($data['voucher_code'][$l]);
-                                // print_r($decode2[$i][0]);
-                                // exit;
-                                
-                                if ($decode2[$i][0] == $data['voucher_code']) {
-                                    return ["duplicate_voucher", $data['voucher_code']];
-                                    // exit;
-                                }
-                            }
-                        }
+                } else {
+                    // echo "<pre>";
+                    // print_r($decode2)
+                    // print_r($data['voucher_code'][$l]);
+                    // print_r($decode2[$i][0]);
+                    // exit;
+
+                    if ($decode2[$i][0] == $data['voucher_code']) {
+                        return ["duplicate_voucher", $data['voucher_code']];
+                        // exit;
                     }
-                    // exit;
-                    
+                }
+            }
+        }
+        // exit;
 
-                    // $check_duplicate = DB::table('ter_deduction_settlements')->select('voucher_code')->whereIn('status', [3, 5])->get();
-                    $check_duplicate = DB::table('ter_deduction_settlements')->select('voucher_code')->where('status', 3)->get();
-                    $voucher_code_size = sizeof($check_duplicate);
-                    // print_r($voucher_code_size);
-                    // exit;
-                        // this is for ter_deduction_settlements table check
-                        for ($i = 0; $i < $voucher_code_size; $i++) {
-                            if ($check_duplicate[$i]->voucher_code == $data['voucher_code']) {
-                                return ["duplicate_voucher", $data['voucher_code']];
-                            }
-                        }
 
-                        return 1;
-           
-                //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
+        // $check_duplicate = DB::table('ter_deduction_settlements')->select('voucher_code')->whereIn('status', [3, 5])->get();
+        $check_duplicate = DB::table('ter_deduction_settlements')->select('voucher_code')->where('status', 3)->get();
+        $voucher_code_size = sizeof($check_duplicate);
+        // print_r($voucher_code_size);
+        // exit;
+        // this is for ter_deduction_settlements table check
+        for ($i = 0; $i < $voucher_code_size; $i++) {
+            if ($check_duplicate[$i]->voucher_code == $data['voucher_code']) {
+                return ["duplicate_voucher", $data['voucher_code']];
+            }
+        }
+
+        return 1;
+
+        //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
     }
-    public function update_ter_deduction(Request $request)
+
+
+    public function update_rejected_ter(Request $request)
     {
-        $data=$request->all();
+        $data = $request->all();
         $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
         // echo "<pre>";
         // print_r($check_duplicate);
         // exit;
-        if (gettype($check_duplicate) == "array") 
-        {
+        if (gettype($check_duplicate) == "array") {
+            return $check_duplicate;
+        }
+
+        $image = $request->file('file');
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'rejected_ter_uploads';
+        $image->move($destinationPath, $fileName);
+
+        // $get_ter_data=DB::table('tercouriers')->where('id',$data['ter_id'])->get();
+        $details = Auth::user();
+
+
+        $insert['payable_amount'] = $data['payable_amount'];
+        $insert['voucher_code'] = $data['voucher_code'];
+        $insert['book_date'] = date('Y-m-d');
+        $insert['payment_type'] = "ter_rejected";
+        $insert['remarks'] = $data['remarks'];
+        $insert['file_name'] = $fileName;
+        $insert['saved_by_name'] = $details->name;
+        $insert['saved_by_id'] = $details->id;
+        $insert['created_at'] = date('Y-m-d H:i:s');
+        $insert['updated_at'] = date('Y-m-d H:i:s');
+
+        $update_details = DB::table('tercouriers')->update($insert);
+        //    if($update_details)
+        //    {
+        //  $res=   DB::table('tercouriers')->where('id',$data['ter_id'])->update(['status'=>7,'updated_by_id'=>$details->id,
+        //     'updated_by_name'=>$details->name]);
+        //    }
+
+        // $t=Storage::disk('local')->put($fileName, 'Contents');
+        return $update_details;
+    }
+
+    public function update_ter_deduction(Request $request)
+    {
+        $data = $request->all();
+        $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
+        // echo "<pre>";
+        // print_r($check_duplicate);
+        // exit;
+        if (gettype($check_duplicate) == "array") {
             return $check_duplicate;
         }
         $image = $request->file('file');
         $fileName = $image->getClientOriginalName();
         $destinationPath = 'uploads';
-        $image->move($destinationPath,$fileName);
-        $get_ter_data=DB::table('tercouriers')->where('id',$data['ter_id'])->get();
+        $image->move($destinationPath, $fileName);
+        $get_ter_data = DB::table('tercouriers')->where('id', $data['ter_id'])->get();
         $details = Auth::user();
-     
-        $insert['parent_ter_id']=$data['ter_id'];
-        $insert['employee_name']=$get_ter_data[0]->sender_name;
-        $insert['employee_id']=$get_ter_data[0]->employee_id;
-        $insert['ax_code']=$get_ter_data[0]->ax_id;
-        $insert['terfrom_date']=$get_ter_data[0]->terfrom_date;
-        $insert['terto_date']=$get_ter_data[0]->terto_date;
-        $insert['actual_amount']=$data['actual_amount'];
-        $insert['prev_payable_sum']=$data['prev_payable_sum'];
-        $insert['left_amount']=$data['left_amount'];
-        $insert['payable_amount']=$data['payable_amount'];
-        $insert['voucher_code']=$data['voucher_code'];
-        $insert['book_date']=date('Y-m-d');
-        $insert['payment_type']="deduction_setllement";
-        $insert['remarks']=$data['remarks'];
-        $insert['file_name']=$fileName;
-        $insert['saved_by_name']=$details->name;
-        $insert['saved_by_id']=$details->id;
+
+        $insert['parent_ter_id'] = $data['ter_id'];
+        $insert['employee_name'] = $get_ter_data[0]->sender_name;
+        $insert['employee_id'] = $get_ter_data[0]->employee_id;
+        $insert['ax_code'] = $get_ter_data[0]->ax_id;
+        $insert['terfrom_date'] = $get_ter_data[0]->terfrom_date;
+        $insert['terto_date'] = $get_ter_data[0]->terto_date;
+        $insert['actual_amount'] = $data['actual_amount'];
+        $insert['prev_payable_sum'] = $data['prev_payable_sum'];
+        $insert['left_amount'] = $data['left_amount'];
+        $insert['payable_amount'] = $data['payable_amount'];
+        $insert['voucher_code'] = $data['voucher_code'];
+        $insert['book_date'] = date('Y-m-d');
+        $insert['payment_type'] = "deduction_setllement";
+        $insert['remarks'] = $data['remarks'];
+        $insert['file_name'] = $fileName;
+        $insert['saved_by_name'] = $details->name;
+        $insert['saved_by_id'] = $details->id;
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
 
-       $update_details=TerDeductionSettlement::insert($insert);
-       if($update_details)
-       {
-     $res=   DB::table('tercouriers')->where('id',$data['ter_id'])->update(['status'=>7,'updated_by_id'=>$details->id,
-        'updated_by_name'=>$details->name]);
-       }
+        $update_details = TerDeductionSettlement::insert($insert);
+        if ($update_details) {
+            $res =   DB::table('tercouriers')->where('id', $data['ter_id'])->update([
+                'status' => 7, 'updated_by_id' => $details->id,
+                'updated_by_name' => $details->name
+            ]);
+        }
 
         // $t=Storage::disk('local')->put($fileName, 'Contents');
         return $res;
     }
 
-    
+
 
     public function check_deduction(Request $request)
     {
@@ -1812,35 +1864,50 @@ class TercourierController extends Controller
         $id = $req_param['ter_id'];
         $data = DB::table('tercouriers')->where('id', $id)->get();
         $payable =  $data[0]->payable_amount;
-        $actual_amount= $data[0]->amount;
-        $decode_payable= json_decode($payable);
-        if(gettype($decode_payable) == "array")
-        {
-           $payable_sum = array_sum($decode_payable);
+        $actual_amount = $data[0]->amount;
+        $decode_payable = json_decode($payable);
+        if (gettype($decode_payable) == "array") {
+            $payable_sum = array_sum($decode_payable);
+        } else {
+            $payable_sum = $decode_payable;
         }
-      else
-      {
-        $payable_sum =$decode_payable;
-      }
-      if($actual_amount > $payable_sum)
-      {
-        $difference= $actual_amount - $payable_sum;
-      }else{
-        return 0;
-      }
+        if ($actual_amount > $payable_sum) {
+            $difference = $actual_amount - $payable_sum;
+        } else {
+            return 0;
+        }
 
-      return ["success",$difference,$actual_amount,$payable_sum];
-     
-    //   print_r($actual_amount);
-    //   print_r("payable");
-    //   print_r($payable_sum);
-    //   print_r("difference");
-    //   print_r($difference);
-    //   exit;
+        return ["success", $difference, $actual_amount, $payable_sum];
+
+        //   print_r($actual_amount);
+        //   print_r("payable");
+        //   print_r($payable_sum);
+        //   print_r("difference");
+        //   print_r($difference);
+        //   exit;
 
     }
 
-    
+
+
+    public function show_rejected_ter(Request $request)
+    {
+
+
+        if (Auth::check()) {
+            $query = Tercourier::query();
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->roles[0]->name;
+            // return $name;
+
+            $tercouriers = $query->whereIn('status',[8,0])->where('txn_type','rejected_ter')->orderby('id', 'ASC')->get();
+
+            // echo'<pre>'; print_r($tercouriers->status); die;
+            return view('tercouriers.rejected-tercourier-list', ['tercouriers' => $tercouriers, 'role' => $name]);
+        }
+        //    echo'<pre>'; print_r($name); die;
+    }
 
     public function show_settlement_deduction(Request $request)
     {
@@ -1860,7 +1927,7 @@ class TercourierController extends Controller
         }
         //    echo'<pre>'; print_r($name); die;
     }
-    
+
 
     public function show_full_and_final_data(Request $request)
     {

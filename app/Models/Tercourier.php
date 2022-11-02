@@ -13,7 +13,7 @@ class Tercourier extends Model
     protected $table = 'tercouriers';
     protected $fillable = [
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
-        'saved_by_id', 'saved_by_name','received_date','handover_date','sent_to_finfect_date','paid_date','created_at','updated_at'
+        'saved_by_id', 'saved_by_name','received_date','handover_date','sent_to_finfect_date','paid_date','created_at','updated_at','book_date','file_name'
     ];
 
     public function CourierCompany()
@@ -29,14 +29,44 @@ class Tercourier extends Model
     // Dhruv's Code
     public static function get_details_of_employee($unique_ids, $user_id, $user_name)
     {
+        // return $unique_ids;
+        $res=DB::table('tercouriers')->whereIn('id',$unique_ids)->get();
+        
+        // foreach($res as $r){
+        //     print_r($r->id);
+        //     exit;
+        // }
+
+        for($i=0;$i<sizeof($res);$i++)
+        {
+            
+        $date=date_create($res[$i]->terto_date);
+        date_add($date,date_interval_create_from_date_string("45 days"));
+        $date_check= date_format($date,"Y-m-d");
+
+        $today_date=date('Y-m-d');
+        if($today_date<=$date_check)
+        {
         $change['status'] = 2;
+        }else{
+        $change['status']=8;
+        $change['txn_type']="rejected_ter";
+        }
         $change['given_to'] = 'TR-Department';
         $change['saved_by_id'] = $user_id;
         $change['saved_by_name'] = $user_name;
         $change['handover_date']=date('Y-m-d');
         $change['delivery_date'] = date('Y-m-d');
+        // print_r($today_date);
+        // print_r($date_check);
+        // print_r($change);
+        // exit;
+        $data =  DB::table('tercouriers')->where('id', $res[$i]->id)->update($change);
+        }
+    
+     
         // $change['status'] = 1;
-        $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->where('status', 1)->update($change);
+     
         // $data =  DB::table('tercouriers')->whereIn('id', $unique_ids)->update($change);
         return $data;
     }
@@ -57,8 +87,8 @@ class Tercourier extends Model
     public static function add_voucher_payable($payable_data, $unique_id, $user_id, $user_name, $payment_status,$final_payable)
     {
         //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final,payment_status=4 is advance_payment, payment_status=5 is manually_paid,payment_status=6 deduction_settlement.
-        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter,Status=7 Partially Paid
-       $check_pay_type=DB::table('tercouriers')->select('payment_type')->where('id',$unique_id)->get();
+        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter,Status=7 Partially Paid,Status=8 Rejected TER
+        $check_pay_type=DB::table('tercouriers')->select('payment_type')->where('id',$unique_id)->get();
     //    echo "<pre>";
     //    print_r($payment_status);
     //    exit;
@@ -68,10 +98,12 @@ class Tercourier extends Model
             {
                 $data['payment_type'] = "pay_later_payment";
                 $data['sent_to_finfect_date']="";
+                $data['book_date'] = date('Y-m-d');
             }else if($check_pay_type[0]->payment_type == "full_and_final_payment" )
             {
                 $data['payment_type'] = "full_and_final_payment";
                 $data['sent_to_finfect_date']="";
+                $data['book_date'] = date('Y-m-d');
             }
             $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
             $id_sender = $data_ter[0]->sender_id;
@@ -80,13 +112,16 @@ class Tercourier extends Model
                 $data['payment_type'] = "full_and_final_payment";
                 $payment_status=3;
                 $data['sent_to_finfect_date']="";
+                $data['book_date'] = date('Y-m-d');
             } else {
                 $data['payment_type'] = "regular_payment";
                 $data['sent_to_finfect_date']=date('Y-m-d');
+                $data['book_date'] = date('Y-m-d');
             }
         } else if ($payment_status == 2) {
             $data['status'] = 4;
             $data['sent_to_finfect_date']="";
+            $data['book_date'] = date('Y-m-d');
             $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
             $id_sender = $data_ter[0]->sender_id;
             $check_last_working = DB::table('sender_details')->where('id', $id_sender)->get()->toArray();
@@ -94,9 +129,11 @@ class Tercourier extends Model
                 $data['payment_type'] = "full_and_final_payment";
                 $payment_status=3;
                 $data['sent_to_finfect_date']="";
+                $data['book_date'] = date('Y-m-d');
             } else {
                 $data['payment_type'] = "pay_later_payment";
                 $data['sent_to_finfect_date']="";
+                $data['book_date'] = date('Y-m-d');
             }
         }
         else if ($payment_status == 4) {
@@ -104,6 +141,7 @@ class Tercourier extends Model
             $data['payment_type'] = "advance_payment";
             $data['paid_date']=date('Y-m-d');
             $data['sent_to_finfect_date']="";
+            $data['book_date'] = date('Y-m-d');
         }
 
         // $data['payment_status'] = $payment_status;

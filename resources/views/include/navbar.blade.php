@@ -310,6 +310,9 @@
                         <li>
                             <a href="{{url('show_settlement_deduction')}}">Setllement Deduction</a>
                         </li>
+                        <li>
+                            <a href="{{url('show_rejected_ter')}}">Rejected TER</a>
+                        </li>
                     </ul>
                 </li>
                 @endcan

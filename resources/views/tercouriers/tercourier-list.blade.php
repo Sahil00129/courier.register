@@ -112,6 +112,16 @@
                                         $status = 'Cancel';
                                         $class = 'btn-danger';
                                     }
+                                    elseif ($tercourier->status == 7) {
+
+                                        $status = 'Partially Paid';
+                                        $class = 'btn-success';
+                                    }
+                                    elseif ($tercourier->status == 8) {
+
+                                        $status = 'Rejected';
+                                        $class = 'btn-danger';
+                                    }
                                      else {
                                         $status = 'Failed';
                                         $class = 'btn-danger';
@@ -203,10 +213,15 @@
                                     if ($tercourier->status == 1) {
                                         $status = 'Received';
                                         $class = 'btn-success';
-                                    } elseif ($tercourier->status == 2) {
+                                    }
+                                    elseif ($tercourier->status == 2) {
                                         $status = 'Handover';
                                         $class = 'btn-warning';
-                                    } elseif ($tercourier->status == 3) {
+                                    }elseif ($tercourier->status == 8) {
+                                        $status = 'Handover';
+                                        $class = 'btn-warning';
+                                    }
+                                     elseif ($tercourier->status == 3) {
 
                                         $status = 'Unpaid';
                                         $class = 'btn-success';
@@ -220,12 +235,10 @@
                                     }
                                     ?>
                                     <td>
-                                        @if ($tercourier->status == 1)
-                                        <span class="btn {{ $class }}">{{ $status }}</span>
-                                        @else
+                                       
                                         <span class="btn {{ $class }}">{{ $status }}</span>
                                         <!-- <button type="button" class="btn btn-warning addvoucherbtn btn-sm">Add Voucher</button> -->
-                                        @endif
+                                     
                                     </td>
                                     <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
                                     <td>{{ ucwords(@$tercourier->sender_name) ?? '-' }}</td>
