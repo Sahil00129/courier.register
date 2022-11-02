@@ -241,7 +241,7 @@
                 @endcan
 
 
-                @can('hr_admin_edit_ter')
+                <!-- @can('hr_admin_edit_ter')
                 <li class="menu single-menu">
                     <a href="{{url('admin_update_ter')}}">
                         <div class="">
@@ -253,6 +253,33 @@
                             <span>Edit TER</span>
                         </div>
                     </a>
+                </li>
+                @endcan -->
+
+                @can('hr_admin_edit_ter')
+                <li class="menu single-menu">
+                    <a href="#ter-components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+
+                            <span>TER Options</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </a>
+                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="ter-components" data-parent="#topAccordion">
+                        <li>
+                            <a href="{{url('admin_update_ter')}}">Edit TER</a>
+                        </li>
+                        <li>
+                            <a href="{{url('show_emp_not_exist')}}">Approval TER's</a>
+                        </li>
+                    </ul>
                 </li>
                 @endcan
 

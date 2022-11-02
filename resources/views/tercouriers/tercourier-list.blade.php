@@ -122,6 +122,11 @@
                                         $status = 'Rejected';
                                         $class = 'btn-danger';
                                     }
+                                    elseif ($tercourier->status == 9) {
+
+                                        $status = 'Pending at HR';
+                                        $class = 'btn-warning';
+                                    }
                                      else {
                                         $status = 'Failed';
                                         $class = 'btn-danger';
@@ -218,6 +223,10 @@
                                         $status = 'Handover';
                                         $class = 'btn-warning';
                                     }elseif ($tercourier->status == 8) {
+                                        $status = 'Handover';
+                                        $class = 'btn-warning';
+                                    }
+                                    elseif ($tercourier->status == 9) {
                                         $status = 'Handover';
                                         $class = 'btn-warning';
                                     }

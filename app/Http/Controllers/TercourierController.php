@@ -30,6 +30,7 @@ class TercourierController extends Controller
         $this->middleware('permission:tercouriers', ['only' => ['index']]);
         $this->middleware('permission:ter_list_edit_user', ['only' => ['update_ter']]);
         $this->middleware('permission:hr_admin_edit_ter', ['only' => ['admin_update_ter']]);
+        $this->middleware('permission:hr_admin_edit_ter', ['only' => ['show_emp_not_exist']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_full_and_final_data']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_settlement_deduction']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_rejected_ter']]);
@@ -53,12 +54,12 @@ class TercourierController extends Controller
             $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers->status); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
             }
             //    echo'<pre>'; print_r($name); die;
         }
@@ -1887,8 +1888,57 @@ class TercourierController extends Controller
         //   exit;
 
     }
+    
 
+    public function update_emp_details(Request $request)
+    {
+        $data=$request->all();
+        // $update_data['hr_admin_remark']=$data['remarks'];
+        // $update_data['sender_name']=$data['emp_name'];
+        // $update_data['employee_id']=$data['emp_id'];
+        // $update_data['ax_id']=$data['ax_id'];
+        $id=$data['id'];
+ 
+        $tercourier_table=DB::table('tercouriers')->where('id',$id)->update(['hr_admin_remark'=>$data['remarks'],
+        'sender_name'=>$data['emp_name'],'employee_id'=>$data['emp_id'],'ax_id'=>$data['ax_id'],'status'=>2 ]);
+      
+     return $tercourier_table;
+    }
 
+    public function get_emp_list(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['id'];
+        $tercourier_table=DB::table('tercouriers')->where('id',$id)->get();
+        if($tercourier_table[0]->employee_id == 0)
+        {
+        $senders =  DB::table('sender_details')->get();
+        $tercourier_table['all_senders_data'] = $senders;
+        return $tercourier_table;
+        }
+        else{
+            return 0;
+        }
+     
+    }
+    
+    public function show_emp_not_exist(Request $request)
+    {
+
+        if (Auth::check()) {
+            $query = Tercourier::query();
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->roles[0]->name;
+            // return $name;
+
+            $tercouriers = $query->where('status',9)->where('txn_type',"emp_doesn't_exists")->orderby('id', 'ASC')->get();
+
+            // echo'<pre>'; print_r($tercouriers->status); die;
+            return view('tercouriers.emp-not-exist-tercourier-list', ['tercouriers' => $tercouriers, 'role' => $name]);
+        }
+        //    echo'<pre>'; print_r($name); die;
+    }
 
     public function show_rejected_ter(Request $request)
     {
