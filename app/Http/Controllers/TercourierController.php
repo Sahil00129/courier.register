@@ -51,7 +51,7 @@ class TercourierController extends Controller
             $name = $data->roles[0]->name;
             // echo'<pre>'; print_r($name); die;
             // print_r($name);exit;
-            $role = 'Admin';
+            // $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
             if ($name === "tr admin" || $name === "Hr Admin") {
                 $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
@@ -60,13 +60,14 @@ class TercourierController extends Controller
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
             } else {
                 $tercouriers = $query->whereIn('status', ['1', '2', '6', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+                $role="reception";
             }
             //    echo'<pre>'; print_r($name); die;
         }
 
-
+        $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
         // echo'<pre>';print_r($query); die;
-        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
+        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'couriers'=>$couriers]);
     }
 
     /**
@@ -2017,7 +2018,7 @@ class TercourierController extends Controller
     public function edit_tercourier(Request $request)
     {
         $data = $request->all();
-
+        // return $data;
         $id = $data['unique_id'];
         $details = Auth::user();
         $data['saved_by_name'] = $details->name;
