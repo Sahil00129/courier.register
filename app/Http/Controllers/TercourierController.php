@@ -94,6 +94,8 @@ class TercourierController extends Controller
      */
     public function store(Request $request)
     {
+
+        // echo'<pre>'; print_r($request->all()); die;
         $rules = array(
             // 'name' => 'required',
             // 'phone' => 'required|unique:drivers',
@@ -121,8 +123,6 @@ class TercourierController extends Controller
         $terdata['docket_date'] = $request->docket_date;
         $terdata['location']    = $request->location;
         $terdata['company_name'] = $request->company_name;
-        $terdata['terfrom_date'] = $request->terfrom_date;
-        $terdata['terto_date'] = $request->terto_date;
         $terdata['details'] = $request->details;
         $terdata['amount'] = $request->amount;
         $terdata['remarks'] = $request->remarks;
@@ -130,6 +130,15 @@ class TercourierController extends Controller
         $terdata['delivery_date'] = $request->delivery_date;
         $terdata['received_date'] = date('Y-m-d');
         $terdata['status'] = 1;
+
+        if($request->terfrom_date && $request->terto_date)
+        {
+        $terdata['terfrom_date'] = $request->terfrom_date;
+        $terdata['terto_date'] = $request->terto_date;
+        }else{
+            $terdata['terfrom_date'] = $request->terfrom_date1;
+        $terdata['terto_date'] = $request->terto_date1; 
+        }
 
 
 

@@ -1,16 +1,26 @@
-<a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+<style>
+    ul#topAccordion {
+
+    }
+</style>
+
+<a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg></a>
+    </svg>
+</a>
 
 <?php $authuser = Auth::user(); ?>
 
 <div class="nav-logo align-self-center">
-    <a class="navbar-brand" href="{{url('home')}}"><img alt="logo" src="{{asset('assets/img/f15.png')}}" style="margin-bottom:20px;"> </a>
+    <a class="navbar-brand" href="{{url('home')}}"><img alt="logo" src="{{asset('assets/img/f15.png')}}"
+                                                        style="margin-bottom:20px;"> </a>
 </div>
 
-<ul class="navbar-item topbar-navigation">
+<ul class="navbar-item topbar-navigation flex-grow-1">
 
     <!--  BEGIN TOPBAR  -->
     <div class="topbar-nav header navbar" role="banner">
@@ -26,15 +36,16 @@
                 </li>
             </ul>
 
-            <ul class="list-unstyled menu-categories" id="topAccordion">
+            <ul class="list-unstyled menu-categories justify-content-end" id="topAccordion">
                 <li class="menu single-menu">
                     <a href="{{url('home')}}">
                         <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-home">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
-
                             <span>Dashboard</span>
                         </div>
                     </a>
@@ -64,184 +75,199 @@
                                 <line x1="12" y1="22.08" x2="12" y2="12"></line>
                             </svg>
 
-                            <span>Tables</span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </a>
-                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="components" data-parent="#topAccordion">
-                        <li>
-                            <a href="{{url('sender-table')}}">Sender name & Details</a>
-                        </li>
-                        <li>
-                            <a href="{{url('courier-company')}}"> Courier Companies </a>
-                        </li>
-                        <li>
-                            <a href="{{url('catagories')}}">Document Catagories </a>
-                        </li>
-                        <li>
-                            <a href="{{url('for-company')}}"> Receiving Company</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="menu single-menu">
-                    <a href="{{url('add-sender')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                                <span>Dropdown Masters</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
+                        </a>
+                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="components"
+                            data-parent="#topAccordion">
+                            {{--                            <li><a href="{{url('sender-table')}}">Sender name & Details</a></li>--}}
+                            <li><a href="{{url('courier-company')}}"> Courier Companies </a></li>
+                            {{--                            <li><a href="{{url('catagories')}}">Document Catagories </a></li>--}}
+                            {{--                            <li><a href="{{url('for-company')}}"> Receiving Company</a></li>--}}
+                        </ul>
+                    </li>
 
-                            <span>Add Sender</span>
-                        </div>
-                    </a>
-                </li>
+                    {{--                    <li class="menu single-menu">--}}
+                    {{--                        <a href="{{url('add-sender')}}">--}}
+                    {{--                            <div class="">--}}
+                    {{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
+                    {{--                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"--}}
+                    {{--                                     stroke-linejoin="round" class="feather feather-layout">--}}
+                    {{--                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>--}}
+                    {{--                                    <line x1="3" y1="9" x2="21" y2="9"></line>--}}
+                    {{--                                    <line x1="9" y1="21" x2="9" y2="9"></line>--}}
+                    {{--                                </svg>--}}
+
+                    {{--                                <span>Add Sender</span>--}}
+                    {{--                            </div>--}}
+                    {{--                        </a>--}}
+                    {{--                    </li>--}}
                 @endcan
 
-                @can('create-courier')
-                <li class="menu single-menu">
-                    <a href="{{url('create-courier')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu">
-                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                                <rect x="9" y="9" width="6" height="6"></rect>
-                                <line x1="9" y1="1" x2="9" y2="4"></line>
-                                <line x1="15" y1="1" x2="15" y2="4"></line>
-                                <line x1="9" y1="20" x2="9" y2="23"></line>
-                                <line x1="15" y1="20" x2="15" y2="23"></line>
-                                <line x1="20" y1="9" x2="23" y2="9"></line>
-                                <line x1="20" y1="14" x2="23" y2="14"></line>
-                                <line x1="1" y1="9" x2="4" y2="9"></line>
-                                <line x1="1" y1="14" x2="4" y2="14"></line>
-                            </svg>
+                {{--                @can('create-courier')--}}
+                {{--                    <li class="menu single-menu">--}}
+                {{--                        <a href="{{url('create-courier')}}">--}}
+                {{--                            <div class="">--}}
+                {{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
+                {{--                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"--}}
+                {{--                                     stroke-linejoin="round" class="feather feather-cpu">--}}
+                {{--                                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>--}}
+                {{--                                    <rect x="9" y="9" width="6" height="6"></rect>--}}
+                {{--                                    <line x1="9" y1="1" x2="9" y2="4"></line>--}}
+                {{--                                    <line x1="15" y1="1" x2="15" y2="4"></line>--}}
+                {{--                                    <line x1="9" y1="20" x2="9" y2="23"></line>--}}
+                {{--                                    <line x1="15" y1="20" x2="15" y2="23"></line>--}}
+                {{--                                    <line x1="20" y1="9" x2="23" y2="9"></line>--}}
+                {{--                                    <line x1="20" y1="14" x2="23" y2="14"></line>--}}
+                {{--                                    <line x1="1" y1="9" x2="4" y2="9"></line>--}}
+                {{--                                    <line x1="1" y1="14" x2="4" y2="14"></line>--}}
+                {{--                                </svg>--}}
 
-                            <span>Add New Courier</span>
-                        </div>
-                    </a>
+                {{--                                <span>Add New Courier</span>--}}
+                {{--                            </div>--}}
+                {{--                        </a>--}}
 
-                </li>
-                @endcan
-                @can('courier-table')
-                <li class="menu single-menu">
-                    <a href="{{url('courier-table')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                {{--                    </li>--}}
+                {{--                @endcan--}}
 
-                            <span>Courier List</span>
-                        </div>
-                    </a>
 
-                </li>
-                @endcan
-                @can('tercouriers/create')
-                <li class="menu single-menu">
-                    <a href="{{url('tercouriers/create')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu">
-                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                                <rect x="9" y="9" width="6" height="6"></rect>
-                                <line x1="9" y1="1" x2="9" y2="4"></line>
-                                <line x1="15" y1="1" x2="15" y2="4"></line>
-                                <line x1="9" y1="20" x2="9" y2="23"></line>
-                                <line x1="15" y1="20" x2="15" y2="23"></line>
-                                <line x1="20" y1="9" x2="23" y2="9"></line>
-                                <line x1="20" y1="14" x2="23" y2="14"></line>
-                                <line x1="1" y1="9" x2="4" y2="9"></line>
-                                <line x1="1" y1="14" x2="4" y2="14"></line>
-                            </svg>
+                {{--                @can('courier-table')--}}
+                {{--                    <li class="menu single-menu">--}}
+                {{--                        <a href="{{url('courier-table')}}">--}}
+                {{--                            <div class="">--}}
+                {{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"--}}
+                {{--                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"--}}
+                {{--                                     stroke-linejoin="round" class="feather feather-file">--}}
+                {{--                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>--}}
+                {{--                                    <polyline points="13 2 13 9 20 9"></polyline>--}}
+                {{--                                </svg>--}}
 
-                            <span>Add TER Courier</span>
-                        </div>
-                    </a>
-                </li>
-                @endcan
-
+                {{--                                <span>Courier List</span>--}}
+                {{--                            </div>--}}
+                {{--                        </a>--}}
+                {{--                    </li>--}}
+                {{--                @endcan--}}
 
                 @can('tercouriers')
-                <li class="menu single-menu">
-                    <a href="{{url('tercouriers')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                    <li class="menu single-menu">
+                        <a href="{{url('tercouriers')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
 
-                            <span>TER List</span>
-                        </div>
-                    </a>
-                </li>
+                                <span>TER List</span>
+                            </div>
+                        </a>
+                    </li>
                 @endcan
 
+                @can('tercouriers/create')
+                    <li class="menu single-menu">
+                        <a href="{{url('tercouriers/create')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-cpu">
+                                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                    <rect x="9" y="9" width="6" height="6"></rect>
+                                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                                </svg>
+                                <span>Add TER</span>
+                            </div>
+                        </a>
+                    </li>
+                @endcan
 
                 @can('edit-new-ter')
-                <li class="menu single-menu">
-                    <a href="{{url('edit_ter_reception')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                            <span>Edit TER Courier</span>
-                        </div>
-                    </a>
-                </li>
+                    <li class="menu single-menu">
+                        <a href="{{url('edit_ter_reception')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-box">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                                <span>Edit TER</span>
+                            </div>
+                        </a>
+                    </li>
                 @endcan
 
                 @can('ter-bundles')
-                <li class="menu single-menu">
-                    <a href="{{url('ter-bundles')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                            <span>TER Bundles</span>
-                        </div>
-                    </a>
-                </li>
+                    <li class="menu single-menu">
+                        <a href="{{url('ter-bundles')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-box">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                                <span>TER Bundles</span>
+                            </div>
+                        </a>
+                    </li>
                 @endcan
 
                 @can('ter_list_edit_user')
-                <li class="menu single-menu">
-                    <a href="{{url('update_ter')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                            <span>Update TER</span>
-                        </div>
-                    </a>
-                </li>
+                    <li class="menu single-menu">
+                        <a href="{{url('update_ter')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-box">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                                <span>Update TER</span>
+                            </div>
+                        </a>
+                    </li>
                 @endcan
 
                 @can('pay-later-data')
-                <li class="menu single-menu">
-                    <a href="{{url('show_pay_later_data')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                    <li class="menu single-menu">
+                        <a href="{{url('show_pay_later_data')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
 
-                            <span>Pay Later TER</span>
-                        </div>
-                    </a>
+                                <span>Pay Later TER</span>
+                            </div>
+                        </a>
 
-                </li>
+                    </li>
                 @endcan
 
 
-                <!-- @can('hr_admin_edit_ter')
+            <!-- @can('hr_admin_edit_ter')
                 <li class="menu single-menu">
                     <a href="{{url('admin_update_ter')}}">
                         <div class="">
@@ -257,33 +283,39 @@
                 @endcan -->
 
                 @can('hr_admin_edit_ter')
-                <li class="menu single-menu">
-                    <a href="#ter-components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
+                    <li class="menu single-menu">
+                        <a href="#ter-components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-box">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
 
-                            <span>TER Options</span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </a>
-                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="ter-components" data-parent="#topAccordion">
-                        <li>
-                            <a href="{{url('admin_update_ter')}}">Edit TER</a>
-                        </li>
-                        <li>
-                            <a href="{{url('show_emp_not_exist')}}">Approval TER's</a>
-                        </li>
-                    </ul>
-                </li>
+                                <span>TER Options</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </a>
+                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="ter-components"
+                            data-parent="#topAccordion">
+                            <li>
+                                <a href="{{url('admin_update_ter')}}">Edit TER</a>
+                            </li>
+                            <li>
+                                <a href="{{url('show_emp_not_exist')}}">Approval TER's</a>
+                            </li>
+                        </ul>
+                    </li>
                 @endcan
 
-                <!-- @can('full-and-final-data')
+            <!-- @can('full-and-final-data')
                 <li class="menu single-menu">
                     <a href="{{url('show_full_and_final_data')}}">
                         <div class="">
@@ -300,48 +332,55 @@
                 @endcan -->
 
                 @can('payment_sheet')
-                <li class="menu single-menu">
-                    <a href="{{url('payment_sheet')}}">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                    <li class="menu single-menu">
+                        <a href="{{url('payment_sheet')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
 
-                            <span>Payment Sheet</span>
-                        </div>
-                    </a>
+                                <span>Payment Sheet</span>
+                            </div>
+                        </a>
 
-                </li>
+                    </li>
                 @endcan
 
                 @can('full-and-final-data')
-                <li class="menu single-menu">
-                    <a href="#components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                    <li class="menu single-menu">
+                        <a href="#components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
 
-                            <span>Final TER</span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </a>
-                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="components" data-parent="#topAccordion">
-                        <li>
-                            <a href="{{url('show_full_and_final_data')}}">Full & Final TER</a>
-                        </li>
-                        <li>
-                            <a href="{{url('show_settlement_deduction')}}">Setllement Deduction</a>
-                        </li>
-                        <li>
-                            <a href="{{url('show_rejected_ter')}}">Rejected TER</a>
-                        </li>
-                    </ul>
-                </li>
+                                <span>Final TER</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </a>
+                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="components"
+                            data-parent="#topAccordion">
+                            <li>
+                                <a href="{{url('show_full_and_final_data')}}">Full & Final TER</a>
+                            </li>
+                            <li>
+                                <a href="{{url('show_settlement_deduction')}}">Setllement Deduction</a>
+                            </li>
+                            <li>
+                                <a href="{{url('show_rejected_ter')}}">Rejected TER</a>
+                            </li>
+                        </ul>
+                    </li>
                 @endcan
 
             </ul>
@@ -359,20 +398,26 @@
 
 <ul class="navbar-item flex-row nav-dropdowns">
     @can('admin_import_permission')
-    <li class="nav-item dropdown notification-dropdown">
-        <a href="{{url('import-Data')}}" class="nav-link dropdown-toggle user" aria-haspopup="true" aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard">
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-            </svg>
-        </a>
-    </li>
+        <li class="nav-item dropdown notification-dropdown">
+            <a href="{{url('import-Data')}}" class="nav-link dropdown-toggle user" aria-haspopup="true"
+               aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-clipboard">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+            </a>
+        </li>
     @endcan
 
     <li class="nav-item dropdown notification-dropdown">
         <a href="{{url('reports')}}" class="nav-link dropdown-toggle user" aria-haspopup="true" aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="feather feather-box">
+                <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                 <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg>
@@ -380,9 +425,12 @@
     </li>
 
     <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
-        <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-log-out">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -415,11 +463,14 @@
             </div> -->
             <div class="dropdown-item">
                 <a href="{{url('/logout')}}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather feather-log-out">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg> <span>Log Out</span>
+                    </svg>
+                    <span>Log Out</span>
                 </a>
             </div>
         </div>
