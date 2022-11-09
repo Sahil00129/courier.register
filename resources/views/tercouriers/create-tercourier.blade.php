@@ -9,12 +9,6 @@
             list-style-type: none;
         }
 
-        /* .list-group {
-            max-height: 230px;
-            overflow-y: auto;
-            /* // prevent horizontal scrollbar / */
-        /* overflow-x: hidden;
-      } */
         .list-group {
             max-height: 439px;
             overflow-y: auto;
@@ -28,21 +22,12 @@
             margin-top: 10px;
         }
 
-        /* IE 6 doesn't support max-height
-         * we use height instead, but this forces the menu to always be this tall
-         */
         * html .ui-autocomplete {
             height: 100px;
         }
 
         li:hover {
             color: #1f4eaf;
-        }
-
-        .editlable {
-
-            color: gray;
-
         }
 
         .list-group-item {
@@ -54,17 +39,8 @@
             color: #000;
         }
 
-        .form-control-sm {
-            height: 30px !important;
-        }
-
         .select2 {
             margin-bottom: 0 !important;
-        }
-
-        .select2 span#select2-select_employee-container {
-            height: 30px !important;
-            padding: 7px 13px !important;
         }
 
         .form-group label, label {
@@ -73,7 +49,6 @@
         }
 
         .editTer .form-row {
-            background: #83838315;
             border-radius: 12px;
             padding: 1rem 8px 2px;
             position: relative;
@@ -90,18 +65,13 @@
             box-shadow: 0 2px 2px #83838350;
         }
 
-        .editTer .form-row input {
-            background: #fff !important
-        }
-
-
-        {{--<meta name="csrf-token" content="  {{ csrf_token() }} " /> --}}
     </style>
 
     <div class="container">
         <div class="container">
             <div class="page-header">
-                <nav class="breadcrumb-one" aria-label="breadcrumb">
+                <nav class="breadcrumb-one d-flex justify-content-between align-items-center flex-grow-1"
+                     aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#">Add New TERCourier</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="#">Create New</a></li>
@@ -116,7 +86,7 @@
                                 @csrf
 
                                 <div class="form-row mb-4">
-                                    <h6><b>Sender Details 3</b></h6>
+                                    <h6><b>Sender Details</b></h6>
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">From *</label>
                                         <select class="form-control form-control-sm basic" name="sender_id"
@@ -160,59 +130,9 @@
                                            name="last_working_date">
                                 </div>
 
-                                <div class="form-row mb-4">
-                                    <h6><b>Courier Details</b></h6>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">Courier Name</label>
-                                        <select id="slct" name="courier_id" class="form-control form-control-sm"
-                                                onchange="yesnoCheck(this);">
-                                            <option selected disabled>Select..</option>
-                                            @foreach($couriers as $courier)
-                                                <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Docket No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="docket_no"
-                                               name="docket_no"
-                                               autocomplete="off">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Docket Date</label>
-                                        <input type="date" class="form-control form-control-sm" id="docket_date"
-                                               name="docket_date">
-                                        <p class="docketdate_error text-danger"
-                                           style="display: none; color: #ff0000; font-weight: 500;">Docket date
-                                            invalid.</p>
-                                    </div>
-                                </div>
                                 <!------------Document details --------->
                                 <div class="form-row mb-4">
                                     <h6><b>Document Details</b></h6>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">Location *</label>
-                                        <input type="text" class="form-control form-control-sm location1" id="locations"
-                                               name="location"
-                                               required>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">Company Name</label>
-                                        <select id="for" name="company_name" class="form-control form-control-sm"
-                                                onchange="receveCheck(this);">
-                                            <option selected disabled>Select...</option>
-                                            <option value="FMC">FMC</option>
-                                            <option value="Corteva">Corteva</option>
-                                            <option value="Unit-HSB">Unit-HSB</option>
-                                            <option value="Remainco">Remainco</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">TER Amount *</label>
-                                        <input type="text" class="form-control form-control-sm" id="amount"
-                                               type="number" name="amount" required>
-                                    </div>
-
                                     <div class="form-group col-md-3 n-chk align-self-center">
                                         <label class="new-control new-radio radio-classic-primary">
                                             <input onchange="onChangePeriodType()" id="for_month"
@@ -263,38 +183,67 @@
                                                required>
                                     </div>
 
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">TER Amount *</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                               id="amount" type="number" name="amount" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">Location *</label>
+                                        <input type="text" class="form-control form-control-sm location1"
+                                               id="locations" name="location" required>
+                                    </div>
+
+
                                     <div class="form-group col-md-4">
                                         <label for="inputPassword4">Other Details</label>
-                                        <input type="text" class="form-control form-control-sm" id="details"
-                                               name="details">
+                                        <input type="text" class="form-control form-control-sm"
+                                               id="details" name="details">
                                     </div>
-                                    <!--------------- Remarks ---------->
+
                                     <div class="form-group col-md-8">
                                         <label for="remarks">Remarks</label>
-                                        <textarea name="remarks" class="form-control form-control-sm" rows="1"
-                                                  cols="70"></textarea>
+                                        <input type="text" class="form-control form-control-sm" id="remarks"
+                                               name="remarks">
                                     </div>
                                 </div>
-                                <!--------------- end ------------------>
+
                                 <div class="form-row mb-4">
-                                    <h6><b>Handover Details</b></h6>
-                                    <div class="form-group col-md-6">
-                                        <label for="remarks">Given To</label>
-                                        <select class="form-control form-control-sm" id="given_to" name="given_to">
-                                            <option value="Veena">Veena</option>
+                                    <h6><b>Courier Details</b></h6>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputState">Courier Name *</label>
+                                        <select id="slct" name="courier_id" class="form-control form-control-sm"
+                                                onchange="yesnoCheck(this);" required>
+                                            <option selected disabled>Select..</option>
+                                            @foreach($couriers as $courier)
+                                                <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="remarks">Delivery Date</label>
-                                        <input type="date" class="form-control form-control-sm" id="delivery_date"
-                                               name="delivery_date">
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket No.</label>
+                                        <input type="text" class="form-control form-control-sm" id="docket_no"
+                                               name="docket_no"
+                                               autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket Date *</label>
+                                        <input type="date" class="form-control form-control-sm"
+                                               id="docket_date" name="docket_date" required>
+                                        <p class="docketdate_error text-danger"
+                                           style="display: none; color: #ff0000; font-weight: 500;">
+                                            Docket date invalid.
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-end align-items-center">
+                                <input id="timeTaken" name="timeTaken" hidden>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center" style="gap: 3px;">Time taken:
+                                        <div style="width: 80px;" id="time"></div>
+                                    </div>
 
                                     <button type="submit" class="btn btn-primary" id="save_ter_btn"
-
-                                            style="border-radius: 8px; width: 100px;">
+                                            style="border-radius: 8px; width: 130px;">
                                         <span class="indicator-label">Save</span>
                                         <span class="indicator-progress" style="display: none;">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -461,11 +410,71 @@
         }
 
         function testSubmit() {
-            const t = document.getElementById('terfrom_date').value;
-            const r = document.getElementById('terto_date').value;
-            alert(`${t}, ${r}`)
+            var timeConsumed = document.getElementById('time').innerText;
         }
     </script>
 
+    <script>
+        window.raf = (function () {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+
+        function Timer() {
+            this.start();
+            return this;
+        };
+
+        Timer.prototype = {
+            start: function () {
+                this.startTime = Date.now();
+                return this;
+            },
+            getElapsedTime: function () {
+                var hours = 0;
+                var minutes = 0;
+                var seconds = parseInt((Date.now() - this.startTime) / 1000);
+
+                if (seconds > 60) {
+                    minutes = Math.floor(seconds / 60);
+                    seconds = seconds - minutes * 60;
+                }
+
+                if (minutes > 60) {
+                    hours = Math.floor(seconds / 3600);
+                    minutes = seconds - hours * 60;
+                    seconds = seconds - minutes * 3600;
+                }
+
+                return {
+                    hours: pad(hours, 2),
+                    minutes: pad(minutes, 2),
+                    seconds: pad(seconds, 2)
+                };
+            }
+        };
+
+        function pad(number, length) {
+            var str = '' + number;
+            while (str.length < length) {
+                str = '0' + str;
+            }
+            return str;
+        }
+
+        var timer = new Timer();
+        var output = document.getElementById('time');
+
+        (function update() {
+            var time = timer.getElapsedTime();
+            output.textContent = time.hours + ':' + time.minutes + ':' + time.seconds;
+            raf(update);
+            document.getElementById('timeTaken').value = output.innerText;
+        })();
+    </script>
 
 @endsection

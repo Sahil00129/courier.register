@@ -37,7 +37,7 @@
     <script src="{{asset('plugins/table/datatable/datatables.js')}}"></script>
     <!-- NOTE TO Use Copy CSV Excel PDF Print Options You Must Include These Files  -->
     <script src="{{asset('plugins/table/datatable/button-ext/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('plugins/table/datatable/button-ext/jszip.min.js')}}"></script>    
+    <script src="{{asset('plugins/table/datatable/button-ext/jszip.min.js')}}"></script>
     <script src="{{asset('plugins/table/datatable/button-ext/buttons.html5.min.js')}}"></script>
     <script src="{{asset('plugins/table/datatable/button-ext/buttons.print.min.js')}}"></script>
 
@@ -45,9 +45,9 @@
        <script src="{{asset('assets/js/scrollspyNav.js')}}"></script>
        <script src="{{asset('plugins/sweetalerts/sweetalert2.min.js')}}"></script>
        <script src="{{asset('plugins/sweetalerts/custom-sweetalert.js')}}"></script>
-    <!-- END THEME GLOBAL STYLE --> 
+    <!-- END THEME GLOBAL STYLE -->
     <script src="{{asset('plugins/select2/select2.min.js')}}"></script>
-   
+
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="{{asset('plugins/apex/apexcharts.min.js')}}"></script>
@@ -59,7 +59,7 @@
     <script src="{{ asset('js/hideshow.js') }}"></script>
     <script src="{{ asset('js/dashboard-widget.js') }}"></script>
 
-    <script> 
+    <script>
         $('#html5-extension').DataTable( {
             "dom": "<'dt--top-section'<'row'<'col-sm-12 col-md-6 d-flex justify-content-md-start justify-content-center'B><'col-sm-12 col-md-6 d-flex justify-content-md-end justify-content-center mt-md-0 mt-3'f>>>" +
         "<'table-responsive'tr>" +
@@ -82,7 +82,7 @@
             ordering: false,
             "stripeClasses": [],
             "lengthMenu": [7, 10, 20, 50],
-            "pageLength": 15 
+            "pageLength": 15
         } );
     </script>
     <!-- END PAGE LEVEL CUSTOM SCRIPTS -->
@@ -105,13 +105,13 @@
         });
         multiCheck(c3);
     </script>
-    <!-- END PAGE LEVEL SCRIPTS -->  
+    <!-- END PAGE LEVEL SCRIPTS -->
     <script>
        $(document).ready(function(){
 		//alert('h'); die;
 		$(document).on('click','.editbtn', function(){
 			var cat_id = $(this).val();
-			//alert(cat_id ); 
+			//alert(cat_id );
 			$('#editModal').modal('show');
 			$.ajax({
 				type: "GET",
@@ -122,7 +122,7 @@
 					$('#cat_id').val(cat_id);
 				}
 			});
-			
+
 		});
 	});
 </script>
@@ -146,7 +146,7 @@
 				}
 			});
 		});
-	}); 
+	});
 </script>
 
 
@@ -165,7 +165,7 @@
 					//$('#for_id').val(for_id);
 				}
 			});
-			
+
 		});
 	});
 </script>
@@ -193,19 +193,19 @@ $('.delete-confirm').on('click', function () {
     })
 })
  </script>  -->
- 
+
     @if(Session::has('update'))
     <script>
   	swal("Updated", "Data has been successfully updated","success");
     </script>
     @endif
-   
+
     @if(Session::has('deleted'))
   <script>
 	 swal("Deleted", "Data has been Deleted","success");
   </script>
 	 @endif
-  <!-- courier table --> 
+  <!-- courier table -->
   <script>
     $(".tagging").select2({
     tags: true

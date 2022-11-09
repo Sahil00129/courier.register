@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
+
     <title>@yield('title','') | Eternity - Register</title>
 
     @include('include.head')
@@ -15,7 +15,7 @@
     <!--  END LOADER -->
      <!--  BEGIN NAVBAR  -->
      <div class="header-container">
-        <header class="header navbar navbar-expand-sm"> 
+        <header class="header navbar navbar-expand-sm">
         @include('include.navbar')
         </header>
     </div>
@@ -27,7 +27,7 @@
 <div class="search-overlay"></div>
 
 <!--  BEGIN CONTENT PART  -->
-<div id="content" class="main-content">
+<div id="content" class="main-content" style="margin-top: 44px;">
 @yield('content')
 
 @include('include.footer')

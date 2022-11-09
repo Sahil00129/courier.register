@@ -43,7 +43,6 @@ class TercourierController extends Controller
      */
     public function index(Request $request)
     {
-
         if (Auth::check()) {
             $query = Tercourier::query();
             $user = Auth::user();
@@ -53,11 +52,12 @@ class TercourierController extends Controller
             // print_r($name);exit;
             // $role = 'Admin';
             // echo'<pre>'; print_r($name); die;
+            $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
                 $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(15);
                 $role = "Tr Admin";
-                // echo'<pre>'; print_r($tercouriers->status); die;
-                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role]);
+//                 echo'<pre>'; print_r($tercouriers); die;
+                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'couriers'=>$couriers]);
             } else {
                 $tercouriers = $query->whereIn('status', ['1', '2', '6', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(15);
                 $role="reception";
@@ -65,8 +65,6 @@ class TercourierController extends Controller
             //    echo'<pre>'; print_r($name); die;
         }
 
-        $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
-        // echo'<pre>';print_r($query); die;
         return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'couriers'=>$couriers]);
     }
 
@@ -117,7 +115,7 @@ class TercourierController extends Controller
         $terdata['saved_by_name'] = $details->name;
         $terdata['saved_by_id'] = $details->id;
         $terdata['employee_id']    = $request->sender_id;
-        // return $terdata['employee_id'];  
+        // return $terdata['employee_id'];
         $terdata['date_of_receipt'] = $request->date_of_receipt;
         $terdata['courier_id']  = $request->courier_id;
         $terdata['docket_no']   = $request->docket_no;
@@ -138,7 +136,7 @@ class TercourierController extends Controller
         $terdata['terto_date'] = $request->terto_date;
         }else{
             $terdata['terfrom_date'] = $request->terfrom_date1;
-        $terdata['terto_date'] = $request->terto_date1; 
+        $terdata['terto_date'] = $request->terto_date1;
         }
 
 
@@ -158,9 +156,9 @@ class TercourierController extends Controller
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
-            $peid = "1201159713185947382"; // Get Key from DLT 
+            $peid = "1201159713185947382"; // Get Key from DLT
             $sender_id = "FAPLHR"; // Approved from DLT
-            $mob = $getsender->telephone_no; // Get Mobile Number from Sender 
+            $mob = $getsender->telephone_no; // Get Mobile Number from Sender
             $name = $getsender->name;
             // print_r($getsender);
             // exit;
@@ -450,7 +448,7 @@ class TercourierController extends Controller
     }
 
 
-    // Dhruv code 
+    // Dhruv code
     public function change_status_to_handover(Request $request)
     {
         // return 'hello'; die;
@@ -565,7 +563,7 @@ class TercourierController extends Controller
     //                     ]);
 
     //                     if ($update_ter_data) {
-    // // My Code for updating ledger 
+    // // My Code for updating ledger
     //                    $ter_id='1919';
     //                    $res= EmployeeLedgerData::finfect_paid_payment($ter_id);
     //                    return $res;
@@ -787,7 +785,7 @@ class TercourierController extends Controller
         $updated_details['updated_at'] = date('Y-m-d H:i:s');
 
         // if ($sender_emp_id ==  $sender_table[0]->employee_id) {
-        //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get(); 
+        //   $tercourier=DB::table('tercouriers')->where('sender_id',$sender_id)->where('id',$unique_id)->get();
         if ($tercourier[0]->status == 2 || $tercourier[0]->status == 4 || $tercourier[0]->status == 0) {
 
             if ((int)$tercourier[0]->amount != $amount) {
@@ -1527,8 +1525,8 @@ class TercourierController extends Controller
 
         $url_header = $_SERVER['HTTP_HOST'];
 
-        // Append the requested resource location to the URL   
-        //    $url.= $_SERVER['REQUEST_URI'];    
+        // Append the requested resource location to the URL
+        //    $url.= $_SERVER['REQUEST_URI'];
         // $send_data = '{
         //     "unique_code":"'.$emp_id.'",
         //     "name":"'.$emp_name.'",
@@ -1545,8 +1543,8 @@ class TercourierController extends Controller
         //     "email":"'.$sender_data->official_email_id.'",
         //     "terid":"'.$ter_id.'",
         //     "ptype":"Regular",
-        //     "ax_id":"'.$ax_id.'"  
-        //     "territory":"'.$sender_data->territory.'"      
+        //     "ax_id":"'.$ax_id.'"
+        //     "territory":"'.$sender_data->territory.'"
         //   }';
 
         // print_r($send_data);
@@ -1582,7 +1580,7 @@ class TercourierController extends Controller
                             \"bank_name\":\"$sender_data->bank_name\",
                             \"baddress\":\"$sender_data->branch_name\",
                             \"payable_amount\": \"$payable_sum\",
-                            \"claimed_amount\": \"$amount\" , 
+                            \"claimed_amount\": \"$amount\" ,
                             \"pfu\": \"$pfu\",
                             \"ax_voucher_code\":$encoded_data,
                             \"txn_route\": \"TER\",
@@ -1898,7 +1896,7 @@ class TercourierController extends Controller
         //   exit;
 
     }
-    
+
 
     public function update_emp_details(Request $request)
     {
@@ -1908,10 +1906,10 @@ class TercourierController extends Controller
         // $update_data['employee_id']=$data['emp_id'];
         // $update_data['ax_id']=$data['ax_id'];
         $id=$data['id'];
- 
+
         $tercourier_table=DB::table('tercouriers')->where('id',$id)->update(['hr_admin_remark'=>$data['remarks'],
         'sender_name'=>$data['emp_name'],'employee_id'=>$data['emp_id'],'ax_id'=>$data['ax_id'],'status'=>2 ]);
-      
+
      return $tercourier_table;
     }
 
@@ -1929,9 +1927,9 @@ class TercourierController extends Controller
         else{
             return 0;
         }
-     
+
     }
-    
+
     public function show_emp_not_exist(Request $request)
     {
 

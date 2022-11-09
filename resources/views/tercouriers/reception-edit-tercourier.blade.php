@@ -54,7 +54,7 @@
             color: #000;
         }
 
-        .form-control-sm {
+        .form-control-sm-30 {
             height: 30px !important;
         }
 
@@ -64,7 +64,6 @@
         }
 
         .editTer .form-row {
-            background: #83838315;
             border-radius: 12px;
             padding: 1rem 8px 2px;
             position: relative;
@@ -81,20 +80,7 @@
             box-shadow: 0 2px 2px #83838350;
         }
 
-        .editTer .form-row input {
-            background: #fff !important
-        }
 
-        /* <meta name="csrf-token" content="
-
-
-
-
-
-
-
-
-        {{ csrf_token() }}                         " /> */
     </style>
 
     <div class="container" id="edit_ter">
@@ -108,7 +94,7 @@
                 </nav>
                 <div id="html5-extension_filter" class="dataTables_filter d-flex align-items-center" style="gap: 8px;">
                     <label>
-                        <input type="text" class="form-control form-control-sm" placeholder="Enter UN ID"
+                        <input type="text" class="form-control form-control-sm form-control-sm-30" placeholder="Enter UN ID"
                                v-model="unique_id"
                                aria-controls="html5-extension"></label>
                     <button class="btn btn-success" v-on:click="get_data_by_id()"
@@ -171,58 +157,7 @@
                             </div>
 
                             <div class="form-row mb-4">
-                                <h6><b>Courier Details</b></h6>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Courier Name</label>
-                                    <select id="slct" name="courier_id" class="form-control form-control-sm">
-                                        <option selected disabled :value="this.all_data.courier_id">
-                                            @{{this.all_data.courier_company.courier_name}}
-                                        </option>
-                                        @foreach($couriers as $courier)
-                                            <option value="{{$courier->id}}"
-                                                    id="courier_id">{{$courier->courier_name}}</option>
-                                        @endforeach
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control form-control-sm" id="docket_no"
-                                           name="docket_no" autocomplete="off" v-model="docket_no">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Docket Date</label>
-                                    <input type="date" class="form-control form-control-sm" id="docket_date"
-                                           name="docket_date" v-model="docket_date">
-                                </div>
-                            </div>
-
-                            <div class="form-row mb-4">
                                 <h6><b>Document Details</b></h6>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Location</label>
-                                    <input type="text" class="form-control form-control-sm location1" id="location"
-                                           name="location" v-model="location">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">Company Name</label>
-                                    <select id="select_option" name="company_name" v-model="company_name"
-                                            class="form-control form-control-sm">
-                                        <option disabled selected style="background-color: #e9ecef;">
-                                            @{{company_name}}
-                                        </option>
-                                        <option value="FMC">FMC</option>
-                                        <option value="Corteva">Corteva</option>
-                                        <option value="Unit-HSB">Unit-HSB</option>
-                                        <option value="Remainco">Remainco</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="inputState">TER Amount *</label>
-                                    <input type="text" class="form-control form-control-sm" id="amount" name="amount"
-                                           v-model="amount" required>
-                                </div>
-
                                 <div class="form-group col-md-3 n-chk align-self-center">
                                     <label class="new-control new-radio radio-classic-primary">
                                         <input onchange="onChangePeriodType()" id="for_month"
@@ -265,6 +200,17 @@
                                            required name="terto_date" v-model="terto_date">
                                 </div>
 
+                                <div class="form-group col-md-6">
+                                    <label for="inputState">TER Amount *</label>
+                                    <input type="text" class="form-control form-control-sm" id="amount" name="amount"
+                                           v-model="amount" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputState">Location</label>
+                                    <input type="text" class="form-control form-control-sm location1" id="location"
+                                           name="location" v-model="location">
+                                </div>
+
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Other Details</label>
                                     <input type="text" class="form-control form-control-sm" id="details" name="details"
@@ -273,24 +219,35 @@
                                 <div class="form-group col-md-8">
                                     <label for="remarks">Remarks</label>
                                     <textarea name="remarks" class="form-control form-control-sm" rows="1" cols="70"
-                                              v-model="remarks"></textarea>
+                                              v-model="remarks" style="height: calc(2.8rem + 2px);"></textarea>
                                 </div>
 
                             </div>
 
                             <div class="form-row mb-4">
-                                <h6><b>Handover Details</b></h6>
-                                <div class="form-group col-md-6">
-                                    <label for="remarks">Given To</label>
-                                    <select class="form-control form-control-sm" id="given_to" name="given_to">
-                                        <!-- <option value="">Select</option> -->
-                                        <option value="Veena">Veena</option>
+                                <h6><b>Courier Details</b></h6>
+                                <div class="form-group col-md-4">
+                                    <label for="inputState">Courier Name *</label>
+                                    <select id="slct" name="courier_id" class="form-control form-control-sm" required>
+                                        <option selected disabled :value="this.all_data.courier_id">
+                                            @{{this.all_data.courier_company.courier_name}}
+                                        </option>
+                                        @foreach($couriers as $courier)
+                                            <option value="{{$courier->id}}"
+                                                    id="courier_id">{{$courier->courier_name}}</option>
+                                        @endforeach
+                                        <option>Other</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="remarks">Delivery Date</label>
-                                    <input type="date" class="form-control form-control-sm" id="delivery_date"
-                                           name="delivery_date" v-model="delivery_date">
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Docket No.</label>
+                                    <input type="text" class="form-control form-control-sm" id="docket_no"
+                                           name="docket_no" autocomplete="off" v-model="docket_no">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Docket Date *</label>
+                                    <input type="date" class="form-control form-control-sm" id="docket_date"
+                                           name="docket_date" v-model="docket_date" required>
                                 </div>
                             </div>
 
