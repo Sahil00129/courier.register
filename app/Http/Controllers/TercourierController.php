@@ -20,6 +20,8 @@ use App\Models\EmployeeBalance;
 use App\Models\EmployeeLedgerData;
 use App\Models\TerDeductionSettlement;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportTerList;
 
 class TercourierController extends Controller
 {
@@ -28,6 +30,7 @@ class TercourierController extends Controller
         // $this->middleware('auth');
         $this->middleware('permission:tercouriers/create', ['only' => ['create']]);
         $this->middleware('permission:tercouriers', ['only' => ['index']]);
+        $this->middleware('permission:tercouriers', ['only' => ['download_ter_list']]);
         $this->middleware('permission:ter_list_edit_user', ['only' => ['update_ter']]);
         $this->middleware('permission:hr_admin_edit_ter', ['only' => ['admin_update_ter']]);
         $this->middleware('permission:hr_admin_edit_ter', ['only' => ['show_emp_not_exist']]);
@@ -54,18 +57,41 @@ class TercourierController extends Controller
             // echo'<pre>'; print_r($name); die;
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(15);
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role = "Tr Admin";
 //                 echo'<pre>'; print_r($tercouriers); die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'couriers'=>$couriers]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(15);
+                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8','9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
                 $role="reception";
             }
             //    echo'<pre>'; print_r($name); die;
         }
 
         return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'couriers'=>$couriers]);
+    }
+
+    public function download_ter_list()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->roles[0]->name;
+            if ($name === "tr admin" || $name === "Hr Admin") {
+              return 1;
+            }
+            else{
+                return 2;
+            }
+
+        }
+
+
+    }
+
+    public function download_reception_list()
+    {
+        return Excel::download(new ExportTerList, 'ter_list.xlsx');
     }
 
     /**

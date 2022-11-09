@@ -132,6 +132,8 @@ Route::post('/get_employee_passbook', [SenderController::class,'get_employee_pas
 Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWidgets']);
 Route::get('daily-work-performance', [HomeController::class, 'dailyworkPerformance']);
 
+Route::get('download_ter_list', [TercourierController::class, 'download_ter_list']);
+Route::get('download_reception_list', [TercourierController::class, 'download_reception_list']);
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
 Route::post('/check_deduction', [TercourierController::class,'check_deduction']);
 Route::post('/update_ter_deduction', [TercourierController::class,'update_ter_deduction']);
