@@ -133,6 +133,7 @@ Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWid
 Route::get('daily-work-performance', [HomeController::class, 'dailyworkPerformance']);
 
 Route::get('download_ter_list', [TercourierController::class, 'download_ter_list']);
+Route::get('download_ter_full_list', [TercourierController::class, 'download_ter_full_list']);
 Route::get('download_reception_list', [TercourierController::class, 'download_reception_list']);
 Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
 Route::post('/check_deduction', [TercourierController::class,'check_deduction']);

@@ -1575,6 +1575,7 @@
                 }
 
             },
+            
             download_ter_list: function() {
 
                 axios.get('/download_ter_list', {
@@ -1583,7 +1584,8 @@
                     .then(response => {
                         console.log(response.data);
                         if (response.data == 1) {
-                            // location.reload();
+                            this.url = '/download_ter_full_list';
+                            window.location.href = this.url;
                         } else {
                             this.url = '/download_reception_list';
                             window.location.href = this.url;
