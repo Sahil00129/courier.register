@@ -1,11 +1,39 @@
 <style>
     li.menu > a > div {
         display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    li.menu.active > a {
+        background: none !important;
+    }
+
+    li.menu.active > a > div > svg, li.menu.active > a > div > span, li.menu:hover > a > div > span {
+        color: #0ba360 !important;
     }
 
     li.menu > a > div > svg {
+        height: 4px !important;
+        width: 4px !important;
+        background-color: black;
+        border-radius: 50vh;
+        transition: all 200ms ease-in-out;
+    }
+
+    li.menu.active > a > div > svg, li.menu > a:hover > div > svg {
+        background-color: transparent;
+        color: #0ba360 !important;
+        border-radius: 0vh;
         height: 18px !important;
         width: 18px !important;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+    .dt--top-section {
+        margin: 0 !important;
     }
 </style>
 
@@ -18,15 +46,17 @@
     </svg>
 </a>
 
-<?php $authuser = Auth::user(); ?>
+<?php $authuser = Auth::user();
+$currentURL = url()->current();
+?>
 
 <div class="nav-logo align-self-center">
     <a class="navbar-brand" href="{{url('home')}}">
-        <img alt="logo" src="{{asset('assets/img/f15.png')}}" />
+        <img alt="logo" src="{{asset('assets/img/f15.png')}}"/>
     </a>
 </div>
 
-<ul class="navbar-item topbar-navigation flex-grow-1">
+<ul id="topbar" class="navbar-item topbar-navigation flex-grow-1">
 
     <!--  BEGIN TOPBAR  -->
     <div class="topbar-nav header navbar" role="banner">
@@ -43,7 +73,8 @@
             </ul>
 
             <ul class="list-unstyled menu-categories" id="topAccordion">
-                <li class="menu single-menu">
+
+                <li class="menu single-menu @if($currentURL == url('home')) active @endif">
                     <a href="{{url('home')}}">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -58,7 +89,7 @@
                 </li>
 
                 @can('sender-table-show')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('sender-table')) active @endif">
                         <a href="{{url('sender-table')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -75,7 +106,7 @@
                     </li>
                 @endcan
                 @can('add-sender')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('courier-company')) active @endif">
                         <a href="#components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -162,7 +193,7 @@
                 {{--                @endcan--}}
 
                 @can('tercouriers')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
                         <a href="{{url('tercouriers')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -181,7 +212,7 @@
                 @endcan
 
                 @can('hr_admin_edit_ter')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('admin_update_ter')) active @endif">
                         <a href="{{url('admin_update_ter')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -197,7 +228,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('show_emp_not_exist')) active @endif">
                         <a href="{{url('show_emp_not_exist')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -217,7 +248,7 @@
 
 
                 @can('tercouriers/create')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('tercouriers/create')) active @endif">
                         <a href="{{url('tercouriers/create')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -235,7 +266,7 @@
                 @endcan
 
                 @can('edit-new-ter')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('edit_ter_reception')) active @endif">
                         <a href="{{url('edit_ter_reception')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -252,7 +283,7 @@
                 @endcan
 
                 @can('ter-bundles')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('ter-bundles')) active @endif">
                         <a href="{{url('ter-bundles')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -270,7 +301,7 @@
                 @endcan
 
                 @can('ter_list_edit_user')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('update_ter')) active @endif">
                         <a href="{{url('update_ter')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -288,7 +319,7 @@
                 @endcan
 
                 @can('pay-later-data')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('show_pay_later_data')) active @endif">
                         <a href="{{url('show_pay_later_data')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -322,30 +353,30 @@
                 @endcan
 
                 @can('hr_admin_edit_ter')
-                    <li class="menu single-menu">
-                        <a href="#ter-components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-box">
-                                    <path
-                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                                </svg>
-
-                                <span>TER Options</span>
-                            </div>
+                <li class="menu single-menu">
+                    <a href="#ter-components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-chevron-down">
-                                <polyline points="6 9 12 15 18 9"></polyline>
+                                 stroke-linejoin="round" class="feather feather-box">
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
                             </svg>
-                        </a>
-                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="ter-components"
-                            data-parent="#topAccordion">
-                            <li>
-                                <a href="{{url('admin_update_ter')}}">Edit TER</a>
+
+                            <span>TER Options</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round" class="feather feather-chevron-down">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </a>
+                    <ul class="collapse submenu list-unstyled animated fadeInUp" id="ter-components"
+                        data-parent="#topAccordion">
+                        <li>
+                            <a href="{{url('admin_update_ter')}}">Edit TER</a>
                             </li>
                             <li>
                                 <a href="{{url('show_emp_not_exist')}}">Approval TER's</a>
@@ -372,7 +403,7 @@
                 @endcan -->
 
                 @can('payment_sheet')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('payment_sheet')) active @endif">
                         <a href="{{url('payment_sheet')}}">
                             <div class="">
                                 <?xml version = "1.0" ?>
@@ -451,7 +482,7 @@
 
                 <!--new added for payments holds-->
                 @can('full-and-final-data')
-                    <li class="menu single-menu">
+                    <li class="menu single-menu @if($currentURL == url('show_full_and_final_data') || $currentURL == url('show_rejected_ter') || $currentURL == url('show_settlement_deduction')) active @endif">
                         <a href="#paymentsHold" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
                                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -674,3 +705,12 @@
         </div>
     </li>
 </ul>
+
+<script>
+    $('#topbar #topAccordion li a').on('click', function () {
+        if ($('#topbar #topAccordion li a').href.include('#') == false) {
+            $('#topbar #topAccordion').find('li.active').removeClass('active');
+            $(this).parent('li').addClass('active');
+        }
+    });
+</script>
