@@ -149,7 +149,7 @@
                                         <label for="month">Select Month</label>
                                         <select disabled="true" id="month" class=" form-control form-control-sm"
                                                 onchange="onSelectMonth()">
-                                            <option disabled selected>--Select Month--</option>
+                                            <option>--Select Month--</option>
                                             <option value="01">January</option>
                                             <option value="02">February</option>
                                             <option value="03">March</option>
@@ -185,7 +185,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="inputState">TER Amount *</label>
-                                        <input type="text" class="form-control form-control-sm"
+                                        <input  class="form-control form-control-sm" type="number"
                                                id="amount" type="number" name="amount" required>
                                     </div>
                                     <div class="form-group col-md-6">
@@ -214,7 +214,7 @@
                                         <label for="inputState">Courier Name *</label>
                                         <select id="slct" name="courier_id" class="form-control form-control-sm"
                                                 onchange="yesnoCheck(this);" required>
-                                            <option selected disabled>Select..</option>
+                                            <option></option>
                                             @foreach($couriers as $courier)
                                                 <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
                                             @endforeach
