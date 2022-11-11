@@ -589,10 +589,10 @@
                             @endif
                     </tbody>
 
-                    <tbody id="tb" v-else>
+                    <tbody v-else>
                         <tr v-for="tercourier in ter_all_data">
                             <td style="padding: 10px 21px;">
-                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="tercourier.id">
+                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
                             </td>
                             <td width="100px">
                                 <div class="d-flex align-items-center" style="gap: 4px;">
@@ -745,11 +745,10 @@
                                         <div class="axVouchers flex-grow-1">
                                             <div class="heading" style="min-height: 30px;">
                                                 <span id="dsa">
-                                                <!-- <span id="dsa" v-if="!Array.isArray(tercourier.voucher_code)"> -->
-                                                    <!-- @{{ Array.isArray(tercourier.voucher_code) }} -->
+                                                    @{{ tercourier.voucher_code }}
                                                 </span>
                                                 <span class="d-flex flex-column align-items-end">
-                                                    <!-- @{{tercourier.payable_amount}} -->
+                                                    @{{tercourier.payable_amount}}
                                                 </span>
                                             </div>
                                         </div>
@@ -1033,11 +1032,11 @@
 
                 <?php } ?>
             </tbody>
-            <tbody v-else>
+            <tbody id="tb1" v-else>
 
                 <tr v-for="tercourier in ter_all_data">
                     <td style="padding: 10px 21px;">
-                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="tercourier.id">
+                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
                     </td>
                     <td width="100px">
                         <div class="d-flex align-items-center" style="gap: 4px;">
@@ -1409,7 +1408,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="!search_flag || !ter_data_block_flag">
+        <div v-if="!search_flag && !ter_data_block_flag">
             <h5>Pagination:</h5>
             {{ $tercouriers->links() }}
         </div>
@@ -1967,6 +1966,12 @@
 
             change_to_handover: function() {
                 var x = this.$el.querySelector("#tb");
+               if(x == null)
+               {
+                x="";
+                x=this.$el.querySelector("#tb1");
+               }
+        
                 var y = x.querySelectorAll(".selected_box");
                 var trx_str = "";
 
