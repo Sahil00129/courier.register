@@ -353,13 +353,14 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input type="search" class="form-control form-control-sm form-control-sm-30px" placeholder="Search..." aria-controls="html5-extension" v-model="search_data" style="padding-left: 30px" v-on:change="test()">
+                        <input type="hidden" id="ter_role" value="<?php echo $role ?>" />
+                        <input class="form-control form-control-sm form-control-sm-30px" placeholder="Search..." v-model="search_data" style="padding-left: 30px" v-on:keyup.enter="get_searched_ter()" v-on:keyup="clear_search()">
                     </div>
                 </div>
 
                 @if ($role === 'Tr Admin')
 
-                <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
+                <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
@@ -372,7 +373,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="tb">
+                    <tbody id="tb" v-if="!ter_data_block_flag">
                         @if(count($tercouriers) < 1) <tr>
                             <td colspan="8">
                                 <div class="d-flex justify-content-center align-items-center" style="min-height: min(45vh, 400px)">
@@ -587,6 +588,189 @@
                             @endforeach
                             @endif
                     </tbody>
+
+                    <tbody id="tb" v-else>
+                        <tr v-for="tercourier in ter_all_data">
+                            <td style="padding: 10px 21px;">
+                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="tercourier.id">
+                            </td>
+                            <td width="100px">
+                                <div class="d-flex align-items-center" style="gap: 4px;">
+                                    @{{ tercourier.id }}
+                                    <div class="uid">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                        </svg>
+                                        <div class="terDetails">
+                                            <p>Given to <strong>@{{ (tercourier.given_to != null) ? tercourier.given_to : '-' }}</strong>
+                                                on
+                                                <strong>@{{ tercourier.delivery_date }}</strong>
+                                            </p>
+                                            <div class="courier d-flex align-items-center" style="gap: 1rem">
+                                                <p><strong>Courier
+                                                        Name:</strong> @{{ (tercourier.courier_company.courier_name != null) ? tercourier.courier_company.courier_name :  '-' }}
+                                                </p> |
+                                                <p><strong>Docket
+                                                        No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
+                                                </p>
+                                                |
+                                                <p><strong>Docket
+                                                        Date:</strong> @{{ tercourier.docket_date }}
+                                                </p>
+                                            </div>
+                                            <p>
+                                                <strong>Remarks:</strong> @{{ (tercourier.remarks != null) ? tercourier.remarks : '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+
+                                <div v-if="tercourier.status == 0 || tercourier.status == 2">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
+                                        Handover
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
+                                        Failed
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Sent to Finfect
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 5">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(tercourier.id)">
+                                        Paid
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 6">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 7">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Partially Paid
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 8">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Rejected
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 9">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Employee Doesn't exist
+                                    </button>
+                                </div>
+
+
+                            </td>
+                            <td>
+                                <ul class="dates d-flex flex-column justify-content-center">
+
+                                    <li v-if="tercourier.received_date">
+                                        Receipt: @{{ tercourier.received_date}}</li>
+
+                                    <li v-if="tercourier.date_of_receipt">
+                                        Courier: @{{ tercourier.date_of_receipt }}</li>
+
+                                    <li v-if="tercourier.handover_date">
+                                        Handover: @{{ tercourier.handover_date }}</li>
+                                </ul>
+                            </td>
+
+                            <td>
+                                <div class="senderBlock">
+                                    <div class="senderId">
+                                        <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
+                                        <span class="senderName">@{{( tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
+                                    </div>
+                                    <div class="senderLocation">
+                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
+                                        <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <!--ter-->
+                            <td>
+                                <div class="terBlock">
+                                    <div class="terDates flex-grow-1">
+                                        <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Claimed:</div>
+                                                ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between " id="pay_sum">
+                                                <div class="heading">Paid:</div>
+                                                @{{tercourier.payable_amount}}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Deduction:</div>
+                                                @{{tercourier.payable_amount}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!--ax-->
+                            <td>
+                                <div class="axDetails flex-grow-1">
+                                    <div class="heading d-flex justify-content-between align-items-center" style="font-size: 12px; font-weight: 500;">Voucher:
+                                        <span>Amount</span>
+                                    </div>
+                                    <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
+                                        <div class="axVouchers flex-grow-1">
+                                            <div class="heading" style="min-height: 30px;">
+                                                <span id="dsa">
+                                                <!-- <span id="dsa" v-if="!Array.isArray(tercourier.voucher_code)"> -->
+                                                    <!-- @{{ Array.isArray(tercourier.voucher_code) }} -->
+                                                </span>
+                                                <span class="d-flex flex-column align-items-end">
+                                                    <!-- @{{tercourier.payable_amount}} -->
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+
+                            <td>
+                                <div class="action d-flex justify-content-center align-items-center">
+                                    <a href="{{url('/update_ter')}}" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
                 </table>
 
                 {{--
@@ -699,7 +883,7 @@
         --}}
 
         @else
-        <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
+        <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
@@ -711,8 +895,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="tb">
-
+            <tbody id="tb" v-if="!search_flag">
                 <?php $i = 1;
                 foreach ($tercouriers as $key => $tercourier) {
                     // dd($tercourier)
@@ -847,7 +1030,125 @@
                         </td>
                         @endif
                     </tr>
+
                 <?php } ?>
+            </tbody>
+            <tbody v-else>
+
+                <tr v-for="tercourier in ter_all_data">
+                    <td style="padding: 10px 21px;">
+                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="tercourier.id">
+                    </td>
+                    <td width="100px">
+                        <div class="d-flex align-items-center" style="gap: 4px;">
+                            @{{ tercourier.id }}
+                            <div class="uid">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <div class="terDetails">
+                                    <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
+                                        <strong>@{{ tercourier.delivery_date }}</strong>
+                                    </p>
+                                    <div class="courier d-flex align-items-center" style="gap: 1rem">
+                                        <p><strong>Courier
+                                                Name:</strong> @{{ (tercourier.courier_company.courier_name != null) ? tercourier.courier_company.courier_name : '-' }}
+                                        </p> |
+                                        <p><strong>Docket No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
+                                        </p>
+                                        |
+                                        <p><strong>Docket Date:</strong> @{{ tercourier.docket_date }}
+                                        </p>
+                                    </div>
+                                    <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <div v-if="tercourier.status == 0 || tercourier.status == 1">
+                            <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
+                                Received
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button class="btn btn-sm btn-warning btn-rounded mb-2 statusButton" v-if="tercourier.status==2 || tercourier.status==8 " style="cursor: default">
+                                Handover
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-rounded mb-2 statusButton" v-if="tercourier.status==6" style="cursor: default">
+                                Cancel
+                            </button>
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <ul class="dates d-flex flex-column justify-content-center">
+                            <li v-if="tercourier.received_date">
+                                Receipt: @{{ tercourier.received_date }}</li>
+                            <li v-if="tercourier.date_of_receipt">
+                                Courier: @{{ tercourier.date_of_receipt }}</li>
+                            <li v-if="tercourier.handover_date">
+                                Handover: @{{ tercourier.handover_date }}</li>
+                        </ul>
+                    </td>
+
+
+                    <td>
+                        <div class="senderBlock">
+                            <div class="senderId">
+                                <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
+                                <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
+                            </div>
+                            <div class="senderLocation">
+                                <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
+                                <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <!--ter-->
+
+                    <td>
+                        <div class="terBlock">
+                            <div class="terDates flex-grow-1">
+                                <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
+                                <div class="dates d-flex flex-column justify-content-center">
+                                    <div class="amount d-flex align-items-center justify-content-between ">
+                                        <div class="heading">Claimed:</div>
+                                        ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td v-if="tercourier.status== 1">
+                        <div class="action d-flex justify-content-center align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </td>
+                    <td v-else>
+                        <div class="action d-flex justify-content-center align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="get_data_by_id('not_allowed')">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </div>
+                    </td>
+
+
+                </tr>
             </tbody>
         </table>
         <a href="{{url('tercouriers/create')}}" class="floatingButton btn btn-lg btn-primary">
@@ -859,7 +1160,7 @@
         </a>
         @endif
 
-        <div class="d-flex justify-content-between align-items-start px-3">
+        <!-- <div class="d-flex justify-content-between align-items-start px-3">
             <div class="d-flex align-items-center" style="width: 200px; gap: 4px;">
                 Rows on page:
                 <select id="month" class=" form-control form-control-sm form-control-sm-30px" onchange="setRowsOnPage(this.value)" style="width: 80px">
@@ -869,7 +1170,7 @@
                 </select>
             </div>
 
-        </div>
+        </div> -->
 
         <!-- Modal -->
         <div class="modal fade show" id="exampleModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1108,7 +1409,10 @@
                 </div>
             </div>
         </div>
-
+        <div v-if="!search_flag || !ter_data_block_flag">
+            <h5>Pagination:</h5>
+            {{ $tercouriers->links() }}
+        </div>
             </div>
         </div>
     </div>
@@ -1162,20 +1466,82 @@
             data_loaded: false,
             url: "",
             search_data: "",
+            ter_all_data: {},
+            courier_all_data: {},
+            search_flag: false,
+            ter_status: "",
+            ter_class: "",
+            ter_data_block_flag: false,
+            page_role: "",
 
 
         },
         created: function() {
-            // alert(this.got_details)
             //   alert('hello');
             // var table=$('#html5-extension');
             // table.dataTable({dom : 'lrt'});
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
-            test: function() {
-                var table = $('#html5-extension').DataTable();
-                table.search(this.search_data).draw();
+            clear_search: function() {
+                if (this.search_data == "") {
+                    this.ter_all_data = {};
+                    this.search_flag = false;
+                    this.ter_data_block_flag = false;
+
+                    return 1;
+                }
+            },
+
+            get_searched_ter: function() {
+                // var table = $('#html5-extension').DataTable();
+                // table.search(this.search_data).draw();
+                // alert(role);
+                // return 1;
+                this.page_role = document.getElementById('ter_role').value;
+                // reception
+                // alert(role);
+                // return 1;
+                if (this.search_data == "") {
+                    this.ter_all_data = {};
+                    this.search_flag = false;
+                    this.ter_data_block_flag = false;
+
+                    return 1;
+                }
+
+
+                axios.post('/get_searched_data', {
+                        'search_data': this.search_data,
+                        'page_role': this.page_role
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            this.ter_all_data = response.data[0];
+                            if (this.page_role == "reception") {
+                                this.search_flag = true;
+
+                            }
+                            if (this.page_role == "Tr Admin") {
+                                // alert('dd')
+                                this.ter_data_block_flag = true;
+
+
+                            }
+
+
+                            //    alert("loading done")
+                            // alert(this.sender_telephone);
+                        } else {
+                            // swal('error', "Not able to fetch employee details", 'error')
+                        }
+
+                    }).catch(error => {
+
+
+
+                    })
+
             },
             onSelectMonth: function() {
                 const selectedMonth = document.getElementById('month').value
@@ -1575,7 +1941,7 @@
                 }
 
             },
-            
+
             download_ter_list: function() {
 
                 axios.get('/download_ter_list', {
