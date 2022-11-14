@@ -162,7 +162,27 @@ $(document).ready(function (e) {
     /////////////////////////New TERCourier Create//////////////////////////
     $("#new_tercourier_create").submit(function (e) {
         e.preventDefault();
+        // var date_of_recp = $('#date_of_recp').val();
+        // var ter_to = $('#terto_date').val();
+        // var docket_date = $('#docket_date').val();
+        // var d1 = new Date(date_of_recp);
+        // var d2 = new Date(ter_to);
+        // if(!docket_date)
+        // {
+        //     var d3 = new Date(docket_date);
+        //     if(d3.getTime() >= d1.getTime()){
 
+        //         swal("Error", "Docket Date should be less than Data of Receipt", "error");
+        //         return 1;
+        //     }
+        // }
+     
+      
+        // if(d2.getTime() <= d1.getTime()){
+
+        //     swal("Error", "Date of Receipt should be less than ter period to Date", "error");
+        //     return 1;
+        // }
         // document.getElementById("save_ter_btn").disabled = true;
         jQuery("#save_ter_btn").prop("disabled", true);
 

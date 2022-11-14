@@ -65,7 +65,7 @@ class TercourierController extends Controller
                 // die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'couriers' => $couriers]);
             } else {
-                $tercouriers = $query->whereIn('status', ['1', '2', '6', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
             //    echo'<pre>'; print_r($name); die;
@@ -106,48 +106,30 @@ class TercourierController extends Controller
             $j = 0;
             $size = sizeof($tercouriers);
 
-            if ($role == 'reception') {
-                for ($i = 0; $i < $size; $i++) {
+            // if ($role == 'reception') {
+            //     for ($i = 0; $i < $size; $i++) {
 
-                    if (
-                        $tercouriers[$i]->status == 1 || $tercouriers[$i]->status == 2 || $tercouriers[$i]->status == 6 ||  $tercouriers[$i]->status == 8 ||
-                        $tercouriers[$i]->status == 9
-                    ) {
-                        $ter_data[$j] = $tercouriers[$i];
-                        //    print_r($j);
-                        $j++;
-                    }
-                }
-            } else {
-                // for ($i = 0; $i < $size; $i++) {
+            //         if (
+            //             $tercouriers[$i]->status == 1 || $tercouriers[$i]->status == 2 || $tercouriers[$i]->status == 6 ||  $tercouriers[$i]->status == 8 ||
+            //             $tercouriers[$i]->status == 9
+            //         ) {
+            //             $ter_data[$j] = $tercouriers[$i];
+            //             //    print_r($j);
+            //             $j++;
+            //         }
+            //     }
+            // } else {
+              
+            //     return [$tercouriers];
 
-                //     if (
-                //         $tercouriers[$i]->status == 0 ||
-                //         $tercouriers[$i]->status == 2 ||
-                //         $tercouriers[$i]->status == 3 ||
-                //         $tercouriers[$i]->status == 4 ||
-                //         $tercouriers[$i]->status == 5 ||
-                //         $tercouriers[$i]->status == 6 ||
-                //         $tercouriers[$i]->status == 8 ||
-                //         $tercouriers[$i]->status == 9 ||
-                //         $tercouriers[$i]->status == 7
-                //     ) {
-                //         $ter_data[$j] = $tercouriers[$i];
-                //         //    print_r($j);
-                //         $j++;
-                //     }
-                // }
-                //    echo "<pre>";
-                //    print_r($tercouriers);
-                return [$tercouriers];
-
-            }
+            // }
             // exit;
     //  echo "<pre>";
                 //    print_r($ter_data);
             // dd($ter_data);
             // return 'heelo';
-            return [$ter_data, $couriers];
+            // return [$ter_data, $couriers];
+            return [$tercouriers];
         } else {
             return 'error';
         }
@@ -207,10 +189,16 @@ class TercourierController extends Controller
             return response()->json($response);
         }
 
+        // return $request->timeTaken;
+        // $terdata=array();
+        // $ter_data['recp_entry_time'] = $request->timeTaken;
+        // echo "<pre>";print_r($ter_data);die;
+
         $details = Auth::user();
         $terdata['saved_by_name'] = $details->name;
         $terdata['saved_by_id'] = $details->id;
         $terdata['employee_id']    = $request->sender_id;
+        $terdata['recp_entry_time'] = $request->timeTaken;  
         // return $terdata['employee_id'];
         $terdata['date_of_receipt'] = $request->date_of_receipt;
         $terdata['courier_id']  = $request->courier_id;
@@ -241,10 +229,10 @@ class TercourierController extends Controller
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
-        // echo "<pre>";print_r($senders[0]->ax_id);die;
-        // echo "<pre>";print_r($terdata);die;
+        // echo "<pre>";print_r($ter_data);die;
+      
         $tercourier = Tercourier::create($terdata);
-        // dd($tercourier->id);
+        // dd($tercourier);
         if ($tercourier) {
             return  $tercourier->id;
             // exit;

@@ -364,7 +364,7 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
-                            <th>ID</th>
+                            <th>UN ID</th>
                             <th>Status</th>
                             <th>Dates</th>
                             <th>Sender</th>
@@ -446,6 +446,9 @@
                                 } elseif ($tercourier->status == 8) {
                                     $status = 'Rejected';
                                     $class = 'btn-danger';
+                                } elseif ($tercourier->status == 9) {
+                                    $status = 'Unknown';
+                                    $class = 'btn-secondary';
                                 } else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
@@ -476,12 +479,14 @@
                                 </td>
                                 <td>
                                     <ul class="dates d-flex flex-column justify-content-center">
-                                        @if($tercourier->received_date)
-                                        <li>
-                                            Receipt: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
                                         @if($tercourier->date_of_receipt)
                                         <li>
-                                            Courier: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
+                                            Recieved: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
+
+                                        @if($tercourier->received_date)
+                                        <li>
+                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+
                                         @if($tercourier->handover_date)
                                         <li>
                                             Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
@@ -644,6 +649,7 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+
                                 </div>
                                 <div v-if="tercourier.status == 3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
@@ -679,8 +685,8 @@
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 9">
-                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Employee Doesn't exist
+                                    <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Unknown
                                     </button>
                                 </div>
 
@@ -689,11 +695,11 @@
                             <td>
                                 <ul class="dates d-flex flex-column justify-content-center">
 
-                                    <li v-if="tercourier.received_date">
-                                        Receipt: @{{ tercourier.received_date}}</li>
-
                                     <li v-if="tercourier.date_of_receipt">
-                                        Courier: @{{ tercourier.date_of_receipt }}</li>
+                                        Received: @{{ tercourier.date_of_receipt }}</li>
+
+                                    <li v-if="tercourier.received_date">
+                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{{ tercourier.received_date}}</li>
 
                                     <li v-if="tercourier.handover_date">
                                         Handover: @{{ tercourier.handover_date }}</li>
@@ -772,394 +778,346 @@
                     </tbody>
                 </table>
 
-                {{--
-                            <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>UN IDs</th>
-                                    <th>Status</th>
-                                    <th>Date of Receipt</th>
-                                    <th>Sender Name</th>
-                                    <th>AX ID</th>
-                                    <th>Employee ID</th>
-                                    <th>Location</th>
-                                    <th>Company Name</th>
-                                    <th>TER Amount</th>
-                                    <th>TER Period From</th>
-                                    <th>TER Period To</th>
-                                    <th>Handover Date</th>
-                                    <th>Courier Name</th>
-                                    <th>Docket No</th>
-                                    <th>Docket Date</th>
-                                    <th>AX Payble Amount</th>
-                                    <th>AX Voucher Code</th>
-                                    <!-- <th> <input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
-                                </th>
-                                <th>Action</th> -->
-
-
-                                    <!-- <th class="dt-no-sorting">Actions</th> -->
-                                </tr>
-                                </thead>
-                                <tbody id="tb">
-                                <?php $i = 1;
-                                foreach ($tercouriers as $key => $tercourier) {
-                                    // echo'<pre>'; print_r($tercourier);
-                                ?>
-                                <tr>
-                                    <?php if ($tercourier->status == 1 || $tercourier->status == 2 || $tercourier->status == 0) { ?>
-                                    <td style="cursor:pointer" data-toggle="modal" data-target="#exampleModal"
-                                        v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
-            <?php } else if ($tercourier->status == 5) { ?>
-                <td style="cursor:pointer" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(<?php echo $tercourier->id ?>)">{{ $tercourier->id }}</td>
-            <?php } else { ?>
-                <td>{{ $tercourier->id }}</td>
-            <?php } ?>
-            <?php
-                                    if ($tercourier->status == 1) {
-                                        $status = 'Received';
-                                        $class = 'btn-success';
-                                    } elseif ($tercourier->status == 2) {
-                                        $status = 'Handover';
-                                        $class = 'btn-warning';
-                                    } elseif ($tercourier->status == 3) {
-
-                                        $status = 'Sent to Finfect';
-                                        $class = 'btn-success';
-                                    } elseif ($tercourier->status == 4) {
-
-                                        $status = 'Pay';
-                                        $class = 'btn-success';
-                                    } elseif ($tercourier->status == 5) {
-
-                                        $status = 'Paid';
-                                        $class = 'btn-success';
-                                    } elseif ($tercourier->status == 6) {
-
-                                        $status = 'Cancel';
-                                        $class = 'btn-danger';
-                                    } elseif ($tercourier->status == 7) {
-
-                                        $status = 'Partially Paid';
-                                        $class = 'btn-success';
-                                    } elseif ($tercourier->status == 8) {
-
-                                        $status = 'Rejected';
-                                        $class = 'btn-danger';
-                                    } else {
-                                        $status = 'Failed';
-                                        $class = 'btn-danger';
-                                    }
-            ?>
-            <td>
-
-                <span class="btn {{ $class }}">{{ $status }}</span>
-
-
-            </td>
-            <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
-            <td>{{ ucwords(@$tercourier->sender_name) ?? '-' }}</td>
-            <td>{{ $tercourier->ax_id ?? '-' }}</td>
-            <td>{{ $tercourier->employee_id ?? '-' }}</td>
-            <td>{{ ucwords($tercourier->location) ?? '-' }}</td>
-            <td>{{ $tercourier->company_name ?? '-' }}</td>
-            <td>{{ $tercourier->amount ?? '-' }}</td>
-            <td>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }}</td>
-            <td>{{ Helper::ShowFormatDate($tercourier->terto_date) }}</td>
-            <td>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</td>
-            <td>{{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}</td>
-            <td>{{ $tercourier->docket_no ?? '-' }}</td>
-            <td>{{ Helper::ShowFormatDate($tercourier->docket_date) }}</td>
-            <td>{{ $tercourier->payable_amount ?? '-' }}</td>
-            <td>{{ $tercourier->voucher_code ?? '-' }}</td>
-
-            </tr>
-        <?php } ?>
-        </tbody>
-
-
-        </table>
-        --}}
-
-        @else
-        <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
-                    <th>ID</th>
-                    <th>Status</th>
-                    <th>Dates</th>
-                    <th>Sender</th>
-                    <th>TER</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tb" v-if="!search_flag">
-                <?php $i = 1;
-                foreach ($tercouriers as $key => $tercourier) {
-                    // dd($tercourier)
-                ?>
-                    <tr>
-                        <td style="padding: 10px 21px;">
-                            <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
-                        </td>
-                        <td width="100px">
-                            <div class="d-flex align-items-center" style="gap: 4px;">
-                                {{ $tercourier->id }}
-                                <div class="uid">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                    </svg>
-                                    <div class="terDetails">
-                                        <p>Given to <strong>{{ $tercourier->given_to ?? '-' }}</strong> on
-                                            <strong>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</strong>
-                                        </p>
-                                        <div class="courier d-flex align-items-center" style="gap: 1rem">
-                                            <p><strong>Courier
-                                                    Name:</strong> {{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}
-                                            </p> |
-                                            <p><strong>Docket No.:</strong> {{ $tercourier->docket_no ?? '-' }}
-                                            </p>
-                                            |
-                                            <p><strong>Docket
-                                                    Date:</strong> {{ Helper::ShowFormatDate($tercourier->docket_date) }}
-                                            </p>
-                                        </div>
-                                        <p><strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <?php
-                        if ($tercourier->status == 1) {
-                            $status = 'Received';
-                            $class = 'btn-success';
-                        } elseif ($tercourier->status == 2) {
-                            $status = 'Handover';
-                            $class = 'btn-warning';
-                        } elseif ($tercourier->status == 8) {
-                            $status = 'Handover';
-                            $class = 'btn-warning';
-                        } elseif ($tercourier->status == 3) {
-                            $status = 'Unpaid';
-                            $class = 'btn-success';
-                        } elseif ($tercourier->status == 6) {
-                            $status = 'Cancel';
-                            $class = 'btn-danger';
-                        } else {
-                            $status = 'Cancel';
-                            $class = 'btn-danger';
-                        }
-
+                @else
+                <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
+                            <th>UN ID</th>
+                            <th>Status</th>
+                            <th>Dates</th>
+                            <th>Sender</th>
+                            <th>TER</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb" v-if="!search_flag">
+                        <?php $i = 1;
+                        foreach ($tercouriers as $key => $tercourier) {
+                            // dd($tercourier)
                         ?>
+                            <tr>
+                                <td style="padding: 10px 21px;">
+                                    <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
+                                </td>
+                                <td width="100px">
+                                    <div class="d-flex align-items-center" style="gap: 4px;">
+                                        {{ $tercourier->id }}
+                                        <div class="uid">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                            <div class="terDetails">
+                                                <p>Given to <strong>{{ $tercourier->given_to ?? '-' }}</strong> on
+                                                    <strong>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</strong>
+                                                </p>
+                                                <div class="courier d-flex align-items-center" style="gap: 1rem">
+                                                    <p><strong>Courier
+                                                            Name:</strong> {{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}
+                                                    </p> |
+                                                    <p><strong>Docket No.:</strong> {{ $tercourier->docket_no ?? '-' }}
+                                                    </p>
+                                                    |
+                                                    <p><strong>Docket
+                                                            Date:</strong> {{ Helper::ShowFormatDate($tercourier->docket_date) }}
+                                                    </p>
+                                                </div>
+                                                <p><strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <?php
+                                if ($tercourier->status == 1) {
+                                    $status = 'Received';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 2) {
+                                    $status = 'Handover';
+                                    $class = 'btn-warning';
+                                } elseif ($tercourier->status == 3) {
+                                    $status = 'Sent to Finfect';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 4) {
+                                    $status = 'Pay';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 5) {
+                                    $status = 'Paid';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 6) {
+                                    $status = 'Cancel';
+                                    $class = 'btn-danger';
+                                } elseif ($tercourier->status == 7) {
+                                    $status = 'Partially Paid';
+                                    $class = 'btn-success';
+                                } elseif ($tercourier->status == 8) {
+                                    $status = 'Rejected';
+                                    $class = 'btn-danger';
+                                } elseif ($tercourier->status == 9) {
+                                    $status = 'Unknown';
+                                    $class = 'btn-secondary';
+                                } else {
+                                    $status = 'Failed';
+                                    $class = 'btn-danger';
+                                }
+                                ?>
 
-                        <td>
-                            @if($tercourier->status == 0 || $tercourier->status == 1)
-                            <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
-                                {{ $status }}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </button>
-                            @else
-                            <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                {{ $status }}
-                            </button>
-                            @endif
-                        </td>
-                        <td>
-                            <ul class="dates d-flex flex-column justify-content-center">
-                                @if($tercourier->received_date)
-                                <li>
-                                    Receipt: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
-                                @if($tercourier->date_of_receipt)
-                                <li>
-                                    Courier: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
-                                @if($tercourier->handover_date)
-                                <li>
-                                    Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="senderBlock">
-                                <div class="senderId">
-                                    <span>Emp ID: {{ $tercourier->employee_id ?? '-' }}</span>
-                                    <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
-                                </div>
-                                <div class="senderLocation">
-                                    <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
-                                    <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <!--ter-->
-                        <td>
-                            <div class="terBlock">
-                                <div class="terDates flex-grow-1">
-                                    <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
-                                    <div class="dates d-flex flex-column justify-content-center">
-                                        <div class="amount d-flex align-items-center justify-content-between ">
-                                            <div class="heading">Claimed:</div>
-                                            ₹{{ $tercourier->amount ?? '-' }}
+                                <td>
+                                    @if($tercourier->status == 0 || $tercourier->status == 1)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @else
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        {{ $status }}
+                                    </button>
+                                    @endif
+                                </td>
+                                <td>
+                                    <ul class="dates d-flex flex-column justify-content-center">
+                                        @if($tercourier->date_of_receipt)
+                                        <li>
+                                            Recieved: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
+
+                                        @if($tercourier->received_date)
+                                        <li>
+                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+
+                                        @if($tercourier->handover_date)
+                                        <li>
+                                            Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
+                                    </ul>
+                                </td>
+                                <td>
+                                    <div class="senderBlock">
+                                        <div class="senderId">
+                                            <span>Emp ID: {{ $tercourier->employee_id ?? '-' }}</span>
+                                            <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
+                                        </div>
+                                        <div class="senderLocation">
+                                            <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
+                                            <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--ter-->
+                                <td>
+                                    <div class="terBlock">
+                                        <div class="terDates flex-grow-1">
+                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Claimed:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                @if ($role == 'reception' && $tercourier->status== 1)
+                                <td>
+                                    <div class="action d-flex justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </div>
+                                </td>
+                                @else
+                                <td>
+                                    <div class="action d-flex justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="cursor: not-allowed !important;">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </div>
+                                </td>
+                                @endif
+                            </tr>
+
+                        <?php } ?>
+                    </tbody>
+                    <tbody id="tb1" v-else>
+
+                        <tr v-for="tercourier in ter_all_data">
+                            <td style="padding: 10px 21px;">
+                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
+                            </td>
+                            <td width="100px">
+                                <div class="d-flex align-items-center" style="gap: 4px;">
+                                    @{{ tercourier.id }}
+                                    <div class="uid">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                        </svg>
+                                        <div class="terDetails">
+                                            <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
+                                                <strong>@{{ tercourier.delivery_date }}</strong>
+                                            </p>
+                                            <div class="courier d-flex align-items-center" style="gap: 1rem">
+                                                <p><strong>Courier
+                                                        Name:</strong> @{{ (tercourier.courier_company.courier_name != null) ? tercourier.courier_company.courier_name : '-' }}
+                                                </p> |
+                                                <p><strong>Docket No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
+                                                </p>
+                                                |
+                                                <p><strong>Docket Date:</strong> @{{ tercourier.docket_date }}
+                                                </p>
+                                            </div>
+                                            <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        @if ($role == 'reception' && $tercourier->status== 1)
-                        <td>
-                            <div class="action d-flex justify-content-center align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </div>
-                        </td>
-                        @else
-                        <td>
-                            <div class="action d-flex justify-content-center align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="get_data_by_id('not_allowed')">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </div>
-                        </td>
-                        @endif
-                    </tr>
+                            </td>
 
-                <?php } ?>
-            </tbody>
-            <tbody id="tb1" v-else>
 
-                <tr v-for="tercourier in ter_all_data">
-                    <td style="padding: 10px 21px;">
-                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
-                    </td>
-                    <td width="100px">
-                        <div class="d-flex align-items-center" style="gap: 4px;">
-                            @{{ tercourier.id }}
-                            <div class="uid">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
-                                <div class="terDetails">
-                                    <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
-                                        <strong>@{{ tercourier.delivery_date }}</strong>
-                                    </p>
-                                    <div class="courier d-flex align-items-center" style="gap: 1rem">
-                                        <p><strong>Courier
-                                                Name:</strong> @{{ (tercourier.courier_company.courier_name != null) ? tercourier.courier_company.courier_name : '-' }}
-                                        </p> |
-                                        <p><strong>Docket No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
-                                        </p>
-                                        |
-                                        <p><strong>Docket Date:</strong> @{{ tercourier.docket_date }}
-                                        </p>
-                                    </div>
-                                    <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
-                                    </p>
+                            <td>
+                                <div v-if="tercourier.status == 0 || tercourier.status == 1">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
+                                        Received
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
+                                        Failed
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
+                                <div v-if="tercourier.status == 2">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2" >
+                                        Handover
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+                                   
+
+                                </div>
+                                <div v-if="tercourier.status == 3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Sent to Finfect
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 5">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton">
+                                        Paid
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 6">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 7">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Partially Paid
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 8">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Rejected
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 9">
+                                    <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Unknown
+                                    </button>
+                                </div>
+                                </div>
+                            </td>
 
 
-                    <td>
-                        <div v-if="tercourier.status == 0 || tercourier.status == 1">
-                            <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
-                                Received
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-                        <div v-else>
-                            <button class="btn btn-sm btn-warning btn-rounded mb-2 statusButton" v-if="tercourier.status==2 || tercourier.status==8 " style="cursor: default">
-                                Handover
-                            </button>
-                            <button class="btn btn-sm btn-danger btn-rounded mb-2 statusButton" v-if="tercourier.status==6" style="cursor: default">
-                                Cancel
-                            </button>
-                        </div>
-                    </td>
+                            <td>
+                                <ul class="dates d-flex flex-column justify-content-center">
+                                    <li v-if="tercourier.date_of_receipt">
+                                        Received: @{{ tercourier.date_of_receipt }}</li>
+                                    <li v-if="tercourier.received_date">
+                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @{{ tercourier.received_date }}</li>
+                                    <li v-if="tercourier.handover_date">
+                                        Handover: @{{ tercourier.handover_date }}</li>
+                                </ul>
+                            </td>
 
 
-                    <td>
-                        <ul class="dates d-flex flex-column justify-content-center">
-                            <li v-if="tercourier.received_date">
-                                Receipt: @{{ tercourier.received_date }}</li>
-                            <li v-if="tercourier.date_of_receipt">
-                                Courier: @{{ tercourier.date_of_receipt }}</li>
-                            <li v-if="tercourier.handover_date">
-                                Handover: @{{ tercourier.handover_date }}</li>
-                        </ul>
-                    </td>
-
-
-                    <td>
-                        <div class="senderBlock">
-                            <div class="senderId">
-                                <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
-                                <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
-                            </div>
-                            <div class="senderLocation">
-                                <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
-                                <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
-                            </div>
-                        </div>
-                    </td>
-                    <!--ter-->
-
-                    <td>
-                        <div class="terBlock">
-                            <div class="terDates flex-grow-1">
-                                <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
-                                <div class="dates d-flex flex-column justify-content-center">
-                                    <div class="amount d-flex align-items-center justify-content-between ">
-                                        <div class="heading">Claimed:</div>
-                                        ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                            <td>
+                                <div class="senderBlock">
+                                    <div class="senderId">
+                                        <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
+                                        <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
+                                    </div>
+                                    <div class="senderLocation">
+                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
+                                        <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
+                            </td>
+                            <!--ter-->
 
-                    <td v-if="tercourier.status== 1">
-                        <div class="action d-flex justify-content-center align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </div>
-                    </td>
-                    <td v-else>
-                        <div class="action d-flex justify-content-center align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="get_data_by_id('not_allowed')">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </div>
-                    </td>
+                            <td>
+                                <div class="terBlock">
+                                    <div class="terDates flex-grow-1">
+                                        <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Claimed:</div>
+                                                ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td v-if="tercourier.status== 1">
+                                <div class="action d-flex justify-content-center align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </div>
+                            </td>
+                            <td v-else>
+                                <div class="action d-flex justify-content-center align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="cursor: not-allowed !important;">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </div>
+                            </td>
 
 
-                </tr>
-            </tbody>
-        </table>
-        <a href="{{url('tercouriers/create')}}" class="floatingButton btn btn-lg btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span class="text">TER Courier</span>
-        </a>
-        @endif
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="{{url('tercouriers/create')}}" class="floatingButton btn btn-lg btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span class="text">TER Courier</span>
+                </a>
+                @endif
 
-        <!-- <div class="d-flex justify-content-between align-items-start px-3">
+                <!-- <div class="d-flex justify-content-between align-items-start px-3">
             <div class="d-flex align-items-center" style="width: 200px; gap: 4px;">
                 Rows on page:
                 <select id="month" class=" form-control form-control-sm form-control-sm-30px" onchange="setRowsOnPage(this.value)" style="width: 80px">
@@ -1171,236 +1129,237 @@
 
         </div> -->
 
-        <!-- Modal -->
-        <div class="modal fade show" id="exampleModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cancel TER</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
-                                <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="ter_id" disabled>
+                <!-- Modal -->
+                <div class="modal fade show" id="exampleModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Cancel TER</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
-                                <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="cancel_remarks">
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="ter_id" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="cancel_remarks">
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="cancel_ter()" data-dismiss="modal">Save changes
-                        </button>
-                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
-                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                    </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="cancel_ter()" data-dismiss="modal">Save changes
+                                </button>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                            </div>
 
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <!-- Partial Paid Modal -->
-        <div class="modal fade show" id="partialpaidModal" v-if="partial_paid_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="partialpaidModalLabel">Partial Paid - TER ID:
-                            @{{ter_id}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_paid_modal=false;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
-                                <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="partial_remarks">
+                <!-- Partial Paid Modal -->
+                <div class="modal fade show" id="partialpaidModal" v-if="partial_paid_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="partialpaidModalLabel">Partial Paid - TER ID:
+                                    @{{ter_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_paid_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Payable
-                                    Amount</label>
-                                <input type="number" class="form-control form-control-sm" id="recipient-name" v-model="payable_amount">
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="partial_remarks">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Payable
+                                            Amount</label>
+                                        <input type="number" class="form-control form-control-sm" id="recipient-name" v-model="payable_amount">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Voucher Code</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="voucher_code">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
+                                        <input type="file" accept=".jpg,.pdf" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Voucher Code</label>
-                                <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="voucher_code">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal" style="border-radius: 8px;">Save changes
+                                </button>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
                             </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
-                                <input type="file" accept=".jpg,.pdf" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal" style="border-radius: 8px;">Save changes
-                        </button>
-                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
-                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                    </div>
 
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Edit Reception TER Modal -->
-        <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
-                <div class="modal-content" style="position: relative;">
-                    <div class="editTer modal-body editTer" v-if="data_loaded">
+                <!-- Edit Reception TER Modal -->
+                <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+                    <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
+                        <div class="modal-content" style="position: relative;">
+                            <div class="editTer modal-body editTer" v-if="data_loaded">
 
-                        <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Update TER</h3>
+                                <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Update TER</h3>
 
-                        <div class="form-row mb-4">
-                            <h6><b>Sender Details</b></h6>
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">From *</label>
+                                <div class="form-row mb-4">
+                                    <h6><b>Sender Details</b></h6>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">From *</label>
 
-                                <div>Actual Entry - @{{this.all_data.sender_detail.name}}
-                                    @{{this.all_data.sender_detail.ax_id}}
-                                    @{{this.all_data.sender_detail.employee_id}}
-                                    @{{this.all_data.sender_detail.status}}
+                                        <div>Actual Entry - @{{this.all_data.sender_detail.name}}
+                                            @{{this.all_data.sender_detail.ax_id}}
+                                            @{{this.all_data.sender_detail.employee_id}}
+                                            @{{this.all_data.sender_detail.status}}
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
+                                        <datalist class="select2-selection__rendered" id="sender_data">
+                                            <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
+                                                @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} :
+                                                @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
+                                            </option>
+                                        </datalist>
+                                    </div>
+
+                                    <!--------------- Date of Receipt ---------->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Date of Receipt *</label>
+                                        <div style="height: 20px;"></div>
+                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
+                                    </div>
+                                    <!--------------- end ------------------>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Location</label>
+                                        <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="sender_location" readonly="readonly">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Telephone No.</label>
+                                        <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="sender_telephone" readonly="readonly" name="telephone_no" autocomplete="off" maxlength="10" type="tel">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Status</label>
+                                        <input type="text" class="form-control form-control-sm" id="emp_status" v-model="sender_status" name="emp_status" autocomplete="off" readonly="readonly" />
+                                    </div>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
-                                <datalist class="select2-selection__rendered" id="sender_data">
-                                    <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
-                                        @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} :
-                                        @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
-                                    </option>
-                                </datalist>
-                            </div>
 
-                            <!--------------- Date of Receipt ---------->
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">Date of Receipt *</label>
-                                <div style="height: 20px;"></div>
-                                <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
-                            </div>
-                            <!--------------- end ------------------>
+                                <div class="form-row mb-4">
+                                    <h6><b>Document Details</b></h6>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">TER Amount *</label>
+                                        <input type="text" class="form-control form-control-sm" id="amount" name="amount" v-model="amount" @keyup="amount_in_words(amount)" required>
+                                        <span id="amountInwords" style="font-size: 12px;text-transform:capitalize;">@{{word_amount}}</span>
+                                    </div>
 
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Location</label>
-                                <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="sender_location" readonly="readonly">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">Location</label>
+                                        <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
+                                    </div>
+
+                                    <div class="form-group col-md-3 n-chk align-self-center">
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
+                                            <span class="new-control-indicator"></span>For Month
+                                        </label>
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input checked="checked" v-on:change="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
+                                            <span class="new-control-indicator"></span>For Period
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="month">Select Month</label>
+                                        <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
+                                            <option disabled>--Select Month--</option>
+                                            <option value="01">January</option>
+                                            <option value="02">February</option>
+                                            <option value="03">March</option>
+                                            <option value="04">April</option>
+                                            <option value="05">May</option>
+                                            <option value="06">June</option>
+                                            <option value="07">July</option>
+                                            <option value="08">August</option>
+                                            <option value="09">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputPassword4">TER Period From *</label>
+                                        <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="terfrom_date">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputPassword4">TER Period To *</label>
+                                        <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="terto_date">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Other Details</label>
+                                        <input type="text" class="form-control form-control-sm" id="details" name="details" v-model="details">
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea name="remarks" class="form-control form-control-sm form-control-sm-30" rows="1" cols="70" v-model="remarks"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mb-4">
+                                    <h6><b>Courier Details</b></h6>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputState">Courier Name</label>
+                                        <select id="slct" name="courier_id" class="form-control form-control-sm">
+                                            <option selected disabled :value="this.all_data.courier_id">
+                                                @{{this.all_data.courier_company.courier_name}}
+                                            </option>
+                                            @foreach($couriers as $courier)
+                                            <option value="{{$courier->id}}" id="courier_id">{{$courier->courier_name}}</option>
+                                            @endforeach
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket No.</label>
+                                        <input type="text" class="form-control form-control-sm" id="docket_no" v-model="docket_no" name="docket_no" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket Date</label>
+                                        <input type="date" class="form-control form-control-sm" id="docket_date" name="docket_date" v-model="docket_date">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
+                                        <span class="indicator-label">Save</span>
+                                        </span>
+                                    </button>
+                                </div>
+
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Telephone No.</label>
-                                <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="sender_telephone" readonly="readonly" name="telephone_no" autocomplete="off" maxlength="10" type="tel">
+                            <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
+                                Loading...
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Status</label>
-                                <input type="text" class="form-control form-control-sm" id="emp_status" v-model="sender_status" name="emp_status" autocomplete="off" readonly="readonly" />
-                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
                         </div>
-
-                        <div class="form-row mb-4">
-                            <h6><b>Document Details</b></h6>
-                            <div class="form-group col-md-6">
-                                <label for="inputState">TER Amount *</label>
-                                <input type="text" class="form-control form-control-sm" id="amount" name="amount" v-model="amount" required>
-                            </div>
-                            
-                            <div class="form-group col-md-6">
-                                <label for="inputState">Location</label>
-                                <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
-                            </div>
-                        
-                            <div class="form-group col-md-3 n-chk align-self-center">
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
-                                    <span class="new-control-indicator"></span>For Month
-                                </label>
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input checked="checked" v-on:change="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
-                                    <span class="new-control-indicator"></span>For Period
-                                </label>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="month">Select Month</label>
-                                <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
-                                    <option disabled>--Select Month--</option>
-                                    <option value="01">January</option>
-                                    <option value="02">February</option>
-                                    <option value="03">March</option>
-                                    <option value="04">April</option>
-                                    <option value="05">May</option>
-                                    <option value="06">June</option>
-                                    <option value="07">July</option>
-                                    <option value="08">August</option>
-                                    <option value="09">September</option>
-                                    <option value="10">October</option>
-                                    <option value="11">November</option>
-                                    <option value="12">December</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="inputPassword4">TER Period From *</label>
-                                <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="terfrom_date">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="inputPassword4">TER Period To *</label>
-                                <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="terto_date">
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Other Details</label>
-                                <input type="text" class="form-control form-control-sm" id="details" name="details" v-model="details">
-                            </div>
-                            <div class="form-group col-md-8">
-                                <label for="remarks">Remarks</label>
-                                <textarea name="remarks" class="form-control form-control-sm form-control-sm-30" rows="1" cols="70" v-model="remarks"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-row mb-4">
-                            <h6><b>Courier Details</b></h6>
-                            <div class="form-group col-md-4">
-                                <label for="inputState">Courier Name</label>
-                                <select id="slct" name="courier_id" class="form-control form-control-sm">
-                                    <option selected disabled :value="this.all_data.courier_id">
-                                        @{{this.all_data.courier_company.courier_name}}
-                                    </option>
-                                    @foreach($couriers as $courier)
-                                    <option value="{{$courier->id}}" id="courier_id">{{$courier->courier_name}}</option>
-                                    @endforeach
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Docket No.</label>
-                                <input type="text" class="form-control form-control-sm" id="docket_no" v-model="docket_no" name="docket_no" autocomplete="off">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputPassword4">Docket Date</label>
-                                <input type="date" class="form-control form-control-sm" id="docket_date" name="docket_date" v-model="docket_date">
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end align-items-center">
-                            <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
-                                <span class="indicator-label">Save</span>
-                                </span>
-                            </button>
-                        </div>
-
                     </div>
-                    <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
-                        Loading...
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
                 </div>
-            </div>
-        </div>
-        <div v-if="!search_flag && !ter_data_block_flag">
-            <h5>Pagination:</h5>
-            {{ $tercouriers->links() }}
-        </div>
+                <div v-if="!search_flag && !ter_data_block_flag">
+                    <h5>Pagination:</h5>
+                    {{ $tercouriers->links() }}
+                </div>
             </div>
         </div>
     </div>
@@ -1461,6 +1420,7 @@
             ter_class: "",
             ter_data_block_flag: false,
             page_role: "",
+            word_amount: "",
 
 
         },
@@ -1471,6 +1431,24 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            inWords: function(num) {
+                var a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+                var b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+                if ((num = num.toString()).length > 9) return 'overflow';
+                n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+                if (!n) return;
+                var str = '';
+                str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+                str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+                str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+                str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+                str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only ' : '';
+                return str;
+            },
+            amount_in_words: function(amount) {
+                this.word_amount = this.inWords(amount);
+                document.getElementById('amountInwords').style.textTransform = "capitalize";
+            },
             clear_search: function() {
                 if (this.search_data == "") {
                     this.ter_all_data = {};
@@ -1814,6 +1792,9 @@
                             this.remarks = this.all_data.remarks;
                             this.given_to = this.all_data.given_to;
                             this.delivery_date = this.all_data.delivery_date;
+                            this.word_amount = this.inWords(this.amount);
+                            // document.getElementById('amountInwords').style.textTransform = "capitalize";
+                            // this.amount_in_words();
 
 
                             // console.log(this.all_data.courier_company)
@@ -1825,6 +1806,7 @@
                             this.data_loaded = false;
                             swal('error', "Either Details already updated or No record Found", 'error')
                         }
+                        // this.amount_in_words();
 
                     }).catch(error => {
                         this.got_data = false;
@@ -1956,12 +1938,11 @@
 
             change_to_handover: function() {
                 var x = this.$el.querySelector("#tb");
-               if(x == null)
-               {
-                x="";
-                x=this.$el.querySelector("#tb1");
-               }
-        
+                if (x == null) {
+                    x = "";
+                    x = this.$el.querySelector("#tb1");
+                }
+
                 var y = x.querySelectorAll(".selected_box");
                 var trx_str = "";
 
@@ -2057,6 +2038,8 @@
                 }
 
             }
+
+
         }
     })
 </script>
