@@ -30,7 +30,8 @@ class Tercourier extends Model
     public static function get_details_of_employee($unique_ids, $user_id, $user_name)
     {
         // return $unique_ids;
-        $res=DB::table('tercouriers')->whereIn('id',$unique_ids)->get();
+        $res=DB::table('tercouriers')->whereIn('id',$unique_ids)->where('status',1)->get();
+      
         
         // foreach($res as $r){
         //     print_r($r->id);

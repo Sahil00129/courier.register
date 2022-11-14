@@ -103,7 +103,7 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">Date of Receipt *</label>
                                         <input type="date" class="form-control form-control-sm" name="date_of_receipt"
-                                               value="{{$lastdate->date_of_receipt}}" required>
+                                                required>
                                     </div>
                                     <!--------------- end ------------------>
 

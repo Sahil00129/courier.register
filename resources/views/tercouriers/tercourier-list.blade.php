@@ -1297,27 +1297,16 @@
 
                         <div class="form-row mb-4">
                             <h6><b>Document Details</b></h6>
-                            <div class="form-group col-md-4">
-                                <label for="inputState">Location</label>
-                                <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputState">Company Name</label>
-                                <select id="select_option" name="company_name" class="form-control form-control-sm" v-model="company_name">
-                                    <option disabled selected style="background-color: #e9ecef;">
-                                        @{{company_name}}
-                                    </option>
-                                    <option value="FMC">FMC</option>
-                                    <option value="Corteva">Corteva</option>
-                                    <option value="Unit-HSB">Unit-HSB</option>
-                                    <option value="Remainco">Remainco</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label for="inputState">TER Amount *</label>
                                 <input type="text" class="form-control form-control-sm" id="amount" name="amount" v-model="amount" required>
                             </div>
-
+                            
+                            <div class="form-group col-md-6">
+                                <label for="inputState">Location</label>
+                                <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
+                            </div>
+                        
                             <div class="form-group col-md-3 n-chk align-self-center">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
@@ -1607,15 +1596,16 @@
                         // console.log(response.data);
                         if (response.data) {
                             // alert(this.unique_id)
-                            dt.row(0).cells().invalidate().render()
+                            // dt.row(0).cells().invalidate().render()
                             this.update_ter_flag = true;
                             swal('success', "Record has been updated Successfully!!!", 'success')
                             this.got_data = false;
-                            document.getElementById("search_item").value = "";
+                            // document.getElementById("search_item").value = "";
 
                             this.sender_all_info = "";
                             this.all_data = {};
                             this.unique_id = "";
+                            location.reload();
                             // $('#html5-extension').DataTable().response.data.reload();
                         } else if (response.data == 0) {
                             this.button_text = "Search";
@@ -1624,14 +1614,14 @@
                             this.unique_id = "";
                             this.sender_all_info = "";
                             this.all_data = {};
-                            document.getElementById("search_item").value = "";
+                            // document.getElementById("search_item").value = "";
                         } else {
                             this.button_text = "Search";
                             this.got_data = false;
                             this.unique_id = "";
                             this.sender_all_info = "";
                             this.all_data = {};
-                            document.getElementById("search_item").value = "";
+                            // document.getElementById("search_item").value = "";
                             swal('error', "Either Record is already updated or not selected", 'error')
                         }
 
@@ -1641,7 +1631,7 @@
                         // return 1;
                         this.button_text = "Search";
                         this.got_data = false;
-                        document.getElementById("search_item").value = "";
+                        // document.getElementById("search_item").value = "";
                         this.unique_id = "";
                         this.sender_all_info = "";
 
