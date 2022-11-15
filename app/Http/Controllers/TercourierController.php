@@ -61,9 +61,10 @@ class TercourierController extends Controller
             if ($name === "tr admin" || $name === "Hr Admin") {
                 $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "Tr Admin";
+                // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
                 // die;
-                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'couriers' => $couriers]);
+                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'couriers' => $couriers,'name'=>$name]);
             } else {
                 $tercouriers = $query->whereIn('status', ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
@@ -106,23 +107,22 @@ class TercourierController extends Controller
             $j = 0;
             $size = sizeof($tercouriers);
 
-            // if ($role == 'reception') {
-            //     for ($i = 0; $i < $size; $i++) {
+            if ($role != 'reception') {
+                for ($i = 0; $i < $size; $i++) {
 
-            //         if (
-            //             $tercouriers[$i]->status == 1 || $tercouriers[$i]->status == 2 || $tercouriers[$i]->status == 6 ||  $tercouriers[$i]->status == 8 ||
-            //             $tercouriers[$i]->status == 9
-            //         ) {
-            //             $ter_data[$j] = $tercouriers[$i];
-            //             //    print_r($j);
-            //             $j++;
-            //         }
-            //     }
-            // } else {
+                    if (
+                        $tercouriers[$i]->status != 1) {
+                        $ter_data[$j] = $tercouriers[$i];
+                        //    print_r($j);
+                        $j++;
+                    }
+                }
+                return [$ter_data];
+            } else {
               
-            //     return [$tercouriers];
+                return [$tercouriers];
 
-            // }
+            }
             // exit;
     //  echo "<pre>";
                 //    print_r($ter_data);
@@ -234,8 +234,17 @@ class TercourierController extends Controller
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier);
         if ($tercourier) {
-            return  $tercourier->id;
-            // exit;
+            $type =     config('services.finfect_key.finfect_url');
+           if($type == "https://stagging.finfect.biz/api/non_finvendors_payments")
+           {
+            // return "hello";
+            $response['success'] = true;
+            $response['messages'] = 'Succesfully Submitted';
+            $response['redirect_url'] = URL::to('/tercouriers');
+            return Response::json($response);
+           }
+        //    exit;
+   
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
@@ -589,14 +598,22 @@ class TercourierController extends Controller
         return $add_multiple_data;
     }
 
-    public function update_ter()
+    public function update_ter($id)
     {
-        return view('tercouriers.update-tercourier');
+        return view('tercouriers.update-tercourier', ['unique_id' => $id]);
+        // if($id == '0')
+        // {
+        //     return view('tercouriers.update-tercourier');
+           
+        // }else{
+        //     return view('tercouriers.update-tercourier', ['unique_id' => $id]);
+        // }
+       
     }
 
-    public function admin_update_ter()
+    public function admin_update_ter($id)
     {
-        return view('tercouriers.admin-update-tercourier');
+        return view('tercouriers.admin-update-tercourier',['unique_id' => $id]);
     }
 
 
@@ -995,7 +1012,10 @@ class TercourierController extends Controller
                 }
             }
             return $updated_record_detail;
-        } else {
+        }elseif($tercourier[0]->status == 9){
+            return "not_allowed";
+        }
+         else {
             return 0;
         }
         // $tercourier=DB::table('tercouriers')->where('id',$unique_id)->update('sender_id',$sender_id);
@@ -1013,6 +1033,12 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
+    // return $tercourier_table;
+        if(count($tercourier_table)<1)
+        {
+            $data_error['status_of_data'] = "not_found";
+            return $data_error;
+        }
         if ($tercourier_table[0]->status == 3) {
             $data_error['status_of_data'] = "3";
             return $data_error;
@@ -2117,5 +2143,22 @@ class TercourierController extends Controller
     public function sent_payment_response(Request $request)
     {
         $data = $request->all();
+    }
+
+    public function open_verify_ter(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $res = URL::to('/update_ter/' . $id);
+        return $res;
+    }
+
+    
+    public function open_hr_verify_ter(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $res = URL::to('/admin_update_ter/' . $id);
+        return $res;
     }
 }

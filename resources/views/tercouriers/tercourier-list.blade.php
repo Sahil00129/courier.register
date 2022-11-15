@@ -358,12 +358,14 @@
                     </div>
                 </div>
 
+                <div class="d-flex justify-content-center" id="cover-spin" v-if="loader">
+                </div>
+
                 @if ($role === 'Tr Admin')
 
                 <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
                             <th>UN ID</th>
                             <th>Status</th>
                             <th>Dates</th>
@@ -384,9 +386,6 @@
                             @else
                             @foreach ($tercouriers as $key => $tercourier)
                             <tr>
-                                <td style="padding: 10px 21px;">
-                                    <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
-                                </td>
                                 <td width="100px">
                                     <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
@@ -581,12 +580,26 @@
 
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
-                                        <a href="{{url('/update_ter')}}" target="_blank">
+                                        @if($tercourier->status == 2 && $name == 'Hr Admin')
+                                        <a href="#" @click="open_hr_verify_ter(<?php echo $tercourier->id; ?>)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
                                         </a>
+                                        @elseif($tercourier->status == 2 && $name == 'tr admin')
+                                        <a href="#" @click="open_verify_ter(<?php echo $tercourier->id; ?>)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </a>
+                                        @else
+                                        <svg style="cursor: not-allowed !important; color: #83838360 !important;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -596,9 +609,6 @@
 
                     <tbody v-else>
                         <tr v-for="tercourier in ter_all_data">
-                            <td style="padding: 10px 21px;">
-                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
-                            </td>
                             <td width="100px">
                                 <div class="d-flex align-items-center" style="gap: 4px;">
                                     @{{ tercourier.id }}
@@ -765,11 +775,16 @@
 
                             <td>
                                 <div class="action d-flex justify-content-center align-items-center">
-                                    <a href="{{url('/update_ter')}}" target="_blank">
+                                    <a href="#" @click="open_verify_ter(tercourier.id)" v-if="tercourier.status == 2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>
+                                    </a>
+                                    <svg v-else style="cursor: not-allowed !important; color: #83838360 !important;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
                                     </a>
                                 </div>
                             </td>
@@ -995,14 +1010,14 @@
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 2">
-                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2" >
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
                                         Handover
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
 
                                     </button>
-                                   
+
 
                                 </div>
                                 <div v-if="tercourier.status == 3">
@@ -1043,7 +1058,7 @@
                                         Unknown
                                     </button>
                                 </div>
-                                </div>
+                                <!-- </div> -->
                             </td>
 
 
@@ -1356,10 +1371,10 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="!search_flag && !ter_data_block_flag">
-                    <h5>Pagination:</h5>
+                <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
                     {{ $tercouriers->links() }}
                 </div>
+
             </div>
         </div>
     </div>
@@ -1421,6 +1436,7 @@
             ter_data_block_flag: false,
             page_role: "",
             word_amount: "",
+            loader: false,
 
 
         },
@@ -1431,6 +1447,52 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            open_hr_verify_ter(id) {
+                this.unique_id = id;
+                this.loader = true;
+                // alert(id);
+                // return 1;
+                // window.location="/pages/employee-passbook";
+                // setTimeout(() => {window.location.href = "/employee-passbook"},2000);
+                axios.post('/open_hr_verify_ter', {
+                        'id': this.unique_id
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            window.location = response.data;
+                        } else {
+                            this.loader = false;
+                            swal('error', "System Error", 'error')
+                            location.reload();
+                        }
+
+                    }).catch(error => {
+
+
+                    })
+            },
+            open_verify_ter(id) {
+                this.unique_id = id;
+                this.loader = true;
+                // window.location="/pages/employee-passbook";
+                // setTimeout(() => {window.location.href = "/employee-passbook"},2000);
+                axios.post('/open_verify_ter', {
+                        'id': this.unique_id
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            window.location = response.data;
+                        } else {
+                            this.loader = false;
+                            swal('error', "System Error", 'error')
+                            location.reload();
+                        }
+
+                    }).catch(error => {
+
+
+                    })
+            },
             inWords: function(num) {
                 var a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
                 var b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];

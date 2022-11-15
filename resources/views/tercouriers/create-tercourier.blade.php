@@ -214,8 +214,8 @@
 
                                 <button type="submit" class="btn btn-primary" id="save_ter_btn" style="border-radius: 8px; width: 130px;">
                                     <span class="indicator-label">Save</span>
-                                    <span class="indicator-progress" style="display: none;">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    <span class="indicator-progress" style="display: none;">
+                                        Saving..
                                     </span>
                                 </button>
                             </div>
@@ -350,13 +350,14 @@
             $("input[name='terfrom_date']").val('');
             $("input[name='terto_date']").val('');
             document.getElementById('month').setAttribute("required", "true");
+            document.getElementById('month').style.borderColor = '#f16334';
         }
         if (forPeiod.checked) {
             document.getElementById('terfrom_date').disabled = false;
             document.getElementById('terto_date').disabled = false;
             document.getElementById('month').disabled = true;
             document.getElementById('month').setAttribute("required", "false");
-
+            document.getElementById('month').style.borderColor = '#002930';
         }
     }
 

@@ -212,8 +212,8 @@ $currentURL = url()->current();
                 @endcan
 
                 @can('hr_admin_edit_ter')
-                    <li class="menu single-menu @if($currentURL == url('admin_update_ter')) active @endif">
-                        <a href="{{url('admin_update_ter')}}">
+                    <li class="menu single-menu @if(Str::contains($currentURL, 'admin_update_ter')) active @endif">
+                        <a href="{{url('admin_update_ter/0')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -320,8 +320,10 @@ $currentURL = url()->current();
                 @endcan
 
                 @can('ter_list_edit_user')
-                    <li class="menu single-menu @if($currentURL == url('update_ter')) active @endif">
-                        <a href="{{url('update_ter')}}">
+                    <li class="menu single-menu @if(Str::contains($currentURL, 'update_ter')) active @endif">
+                    <!-- <li class="menu single-menu @if($currentURL == url('update_ter')) active @endif"> -->
+
+                        <a href="{{url('update_ter/0')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

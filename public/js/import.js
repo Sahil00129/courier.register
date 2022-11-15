@@ -167,17 +167,33 @@ $(document).ready(function (e) {
         var docket_date=$('#docket_date').val();
         var ReciptDate = new Date(date_of_recp); //Year, Month, Date    
         var TerToDate = new Date(ter_to); //Year, Month, Date   
+        if(TerToDate == 'Invalid Date')
+        {
+            swal("Error", "Please select Month", "error");
+            return 1;  
+        }
+        else{
+            if (ReciptDate < TerToDate) {     
+                swal("Error", "Date of receipt can't be before Ter To date.", "error");
+                return 1; 
+            }
+        }
 
-        if (ReciptDate > TerToDate) {     
-             swal("Error", "Date of receipt is greater than ter_to Date.", "error");
-             return 1; 
-         }
+
+        var today=new Date();
+        if(ReciptDate > today)
+        {
+            swal("Error", "Date of receipt can't be future date", "error");
+            return 1; 
+        }
+
+      
        
          if(docket_date!="")
          {
              var DocketDate = new Date(docket_date);
          if (DocketDate  > ReciptDate ) { 
-            swal("Error", "Docket Date is greater than Date of receipt", "error");   
+            swal("Error", "Docket Date can't be after Date of receipt", "error");   
               return 1; 
           }
          }
