@@ -37,7 +37,7 @@ class SenderController extends Controller
         $flag = 0;
         $flag_hr = 0;
         // echo'<pre>'; print_r($name); die;
-        if ($name === "tr admin" || $name === "Hr Admin") {
+        if ($name === "tr admin" || $name === "Hr Admin" || $name === "reception") {
             $flag = 1;
         }
         if ($name === "Hr Admin") {
