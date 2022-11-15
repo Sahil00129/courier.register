@@ -112,17 +112,11 @@
 
         .searchField svg {
             position: absolute;
-            right: 0;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            background: #1abc9c;
-            color: #fff;
-            height: 30px;
-            width: 44px;
-            font-size: 14px;
-            padding: 6px;
-            border-radius: 0 6px 6px 0;
-            cursor: pointer;
+            height: 14px;
+            width: 14px;
         }
 
         .searchField input {
@@ -234,7 +228,7 @@
                             </svg>
                             <input type="search" class="form-control form-control-sm form-control-sm-30px"
                                    placeholder="Search..." id="myInput"
-                                   style="padding-left: 8px">
+                                   style="padding-left: 30px" v-model="search_keyword" @keyup="search_keyword_fn()">
                         </div>
                     </div>
 
@@ -332,12 +326,17 @@
             data: {
                 unique_id: "",
                 loader: "",
+                search_keyword:"",
             },
             created: function () {
 
 
             },
             methods: {
+                search_keyword_fn(){
+                    var table = $('.html5-extension').DataTable();
+                    table.search(this.search_keyword).draw();
+                },
                 get_employee_passbook(id) {
                     this.unique_id = id;
                     this.loader = true;
@@ -367,20 +366,6 @@
         })
     </script>
 
-    <script>
-        $('.html5-extension').DataTable( {
-            fixedHeader: true
-        } );
 
-        var table = $('.html5-extension').DataTable();
-
-        // #myInput is a <input type="text"> element
-        function sss() {
-            document.getElementById('myInput').on('keyup', function () {
-                alert('sdsfds');
-                // table.search(this.value).draw();
-            });
-        }
-    </script>
     @include('models.delete-sender')
 @endsection
