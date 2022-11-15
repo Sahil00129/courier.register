@@ -334,7 +334,7 @@
             <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
 
                 <!---new view--->
-                <div class="widget-content widget-content-area br-6">
+                <div class="widget-content widget-content-area br-6" style="width: 100%; overflow-x: auto;">
                     <!---searchbar--->
                     <div class="d-flex justify-content-between align-items-center px-4 py-4" style="gap: 1rem;">
                         <div class="d-flex align-items-center" style="gap: 1rem;">
