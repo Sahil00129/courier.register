@@ -348,13 +348,29 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="searchField" style="width: 200px; position: relative;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="hidden" id="ter_role" value="<?php echo $role ?>" />
-                        <input class="form-control form-control-sm form-control-sm-30px" placeholder="Search..." v-model="search_data" style="padding-left: 30px" v-on:keyup.enter="get_searched_ter()" v-on:keyup="clear_search()">
+                    <div class="d-flex align-items-center" style="gap: 6px;">
+                        <div class="form-group form-group-sm mb-0">
+                            <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
+                                <option selected value="all">All</option>
+                                <option value="2">Handover</option>
+                                <option value="3">Finfect</option>
+                                <option value="4">Pay</option>
+                                <option value="5">Paid</option>
+                                <option value="6">Cancel</option>
+                                <option value="7">Partially Paid</option>
+                                <option value="8">Rejected</option>
+                                <option value="9">Unknown</option>
+                                <option value="fail">Failed</option>
+                            </select>
+                        </div>
+                        <div class="searchField" style="width: 200px; position: relative;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="hidden" id="ter_role" value="<?php echo $role ?>" />
+                            <input class="form-control form-control-sm form-control-sm-30px" id="searchedInput" placeholder="Search..." v-model="search_data" style="padding-left: 30px" v-on:keyup.enter="get_searched_ter()" v-on:keyup="clear_search()">
+                        </div>
                     </div>
                 </div>
 
@@ -609,6 +625,7 @@
 
                     <tbody v-else>
                         <tr v-for="tercourier in ter_all_data">
+
                             <td width="100px">
                                 <div class="d-flex align-items-center" style="gap: 4px;">
                                     @{{ tercourier.id }}
@@ -702,6 +719,7 @@
 
 
                             </td>
+
                             <td>
                                 <ul class="dates d-flex flex-column justify-content-center">
 
@@ -1437,6 +1455,7 @@
             page_role: "",
             word_amount: "",
             loader: false,
+            searched_status: "all",
 
 
         },
@@ -1520,6 +1539,21 @@
                     return 1;
                 }
             },
+            get_filter_status_data: function() {
+                // alert(this.searched_status);
+                // return 1;
+                if (this.searched_status == "all") {
+                    this.ter_all_data = {};
+                    this.search_flag = false;
+                    this.ter_data_block_flag = false;
+                    this.search_data="";
+                    document.getElementById('searchedInput').removeAttribute('disabled', true);
+                }else{
+                    this.search_data=this.searched_status;
+                    this.get_searched_ter();
+                    document.getElementById('searchedInput').setAttribute('disabled', true);
+                }
+            },
 
             get_searched_ter: function() {
                 // var table = $('#html5-extension').DataTable();
@@ -1546,6 +1580,7 @@
                     .then(response => {
                         if (response.data) {
                             this.ter_all_data = response.data[0];
+                            // console.log(this.ter_all_data.courier_company.courier_name)
                             if (this.page_role == "reception") {
                                 this.search_flag = true;
 

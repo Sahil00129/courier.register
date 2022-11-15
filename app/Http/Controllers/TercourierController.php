@@ -92,13 +92,67 @@ class TercourierController extends Controller
     {
         // ini_set('max_execution_time', -1);
         $data = $request->all();
-        $searched_item = $data['search_data'];
+        $searched_item = trim($data['search_data']);
+        $check_status=$searched_item;
         $role = $data['page_role'];
-        // return $role;
+        $flag=0;
         if (!empty($searched_item)) {
 
+            if($check_status == '2')
+            {
+                $status=2;
+                $flag=1;
+            }
+            else if($check_status == '3')
+            {
+                $status=3;
+                $flag=1;
+            }
+            else if($check_status == '4')
+            {
+                $status=4;
+                $flag=1;
+            }
+            else if($check_status == '5')
+            {
+                $status=5;
+                $flag=1;
+            }
+            else if($check_status == '6')
+            {
+                $status=6;
+                $flag=1;
+            }
+            else if($check_status == '7')
+            {
+                $status=7;
+                $flag=1;
+            }
+            else if($check_status == '8')
+            {
+                $status=8;
+                $flag=1;
+            }
+            else if($check_status == '9')
+            {
+                $status=9;
+                $flag=1;
+            }
+            else if($check_status == 'fail')
+            {
+                $status=0;
+                $flag=1;
+            }
             $query = Tercourier::query();
-            $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
+            // return $flag;
+            if($flag)
+            {
+                
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail')
+                ->where('status',$status)->orderby('id', 'DESC')->get();
+                return [$tercouriers];
+            }
+            else{
             $tercouriers = $query->with('CourierCompany', 'SenderDetail')
                 ->where('id', 'like', '%' . $searched_item . '%')->orWhere('employee_id', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orWhere('sender_name', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
             // dd($tercouriers);
@@ -123,13 +177,8 @@ class TercourierController extends Controller
                 return [$tercouriers];
 
             }
-            // exit;
-    //  echo "<pre>";
-                //    print_r($ter_data);
-            // dd($ter_data);
-            // return 'heelo';
-            // return [$ter_data, $couriers];
-            return [$tercouriers];
+        }
+
         } else {
             return 'error';
         }
