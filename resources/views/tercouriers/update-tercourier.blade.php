@@ -273,9 +273,9 @@
                                     <div class="form-group col-md-6">
                                         <label for="payable_">Payable Amount</label>
                                         <input type="number" class="form-control form-control-sm" id="payable_"
-                                               name="payable_" v-model="payable_amount"
+                                               name="payable_" v-model="payable_amount" @keyup="amount_in_words(payable_amount)"
                                                placeholder="Enter Payable Amount" :disabled="flag">
-                                    </div>
+                                        <span id="amountInwords" style="font-size: 12px;text-transform:capitalize;">@{{word_amount}}</span></div>
                                     <div class="form-group col-md-6">
                                         <label for="voucher_c">Voucher Code</label>
                                         <input type="text" class="form-control form-control-sm" id="voucher_c"
@@ -489,6 +489,7 @@
                 current_balance: "",
                 // sum_flag:true,
                 loader: false,
+                word_amount:".",
             },
             created: function () {
                 // alert(this.got_details)
@@ -533,6 +534,7 @@
                                 this.pay_data_array.push(payment_data)
                                 this.payable_amount = '';
                                 this.voucher_code = '';
+                                this.word_amount = '.';
                             } else {
                                 // this.sum_flag=false;
                                 swal('error', "Amount can't be greater than total amount", 'error')
@@ -860,6 +862,24 @@
                     })
                 },
 
+                inWords: function(num) {
+                    var a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+                    var b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+                    if ((num = num.toString()).length > 9) return 'overflow';
+                    n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+                    if (!n) return;
+                    var str = '';
+                    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+                    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+                    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+                    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+                    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only ' : '';
+                    return str;
+                },
+                amount_in_words: function(amount) {
+                    this.word_amount = this.inWords(amount);
+                    document.getElementById('amountInwords').style.textTransform = "capitalize";
+                },
             }
 
 

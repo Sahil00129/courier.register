@@ -353,14 +353,12 @@
             $("input[name='terfrom_date']").val('');
             $("input[name='terto_date']").val('');
             document.getElementById('month').setAttribute("required", "true");
-            document.getElementById('month').style.borderColor = '#f16334';
         }
         if (forPeiod.checked) {
             document.getElementById('terfrom_date').disabled = false;
             document.getElementById('terto_date').disabled = false;
             document.getElementById('month').disabled = true;
             document.getElementById('month').setAttribute("required", "false");
-            document.getElementById('month').style.borderColor = '#002930';
         }
     }
 
