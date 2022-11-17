@@ -991,7 +991,7 @@
                             swal('success', "Ter Id :" + this.ter_id + " has been sent to Finfect for Payment", 'success')
                             location.reload();
                         } else {
-                            swal('error', "System Error", 'error')
+                            swal('error', response.data[1] , 'error')
                             this.ter_id = "";
                         }
 
