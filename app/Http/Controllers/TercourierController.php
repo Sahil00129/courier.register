@@ -1182,6 +1182,39 @@ class TercourierController extends Controller
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
 
+        $check_dates=DB::table('tercouriers')->where('id',$id)->get();
+
+        $details = Auth::user();
+        $ter_data_update['user_id'] = $details->id;
+        $ter_data_update['user_name'] = $details->name;
+        $ter_data_update['updated_id'] = $id;
+        $ter_data_update['updated_date'] = date('Y-m-d');
+        $ter_data_update['created_at'] = date('Y-m-d H:i:s');
+        $ter_data_update['updated_at'] = date('Y-m-d H:i:s');
+
+        if($check_dates)
+        {
+            if($data['terfrom'] != $check_dates[0]->terfrom_date)
+            {
+                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+                    'terfrom_date' => $data['terfrom']
+                ));
+                if($do_update){
+                        $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
+                         DB::table('update_table_data_details')->insert($ter_data_update);
+                }
+            }
+            if($data['terto'] != $check_dates[0]->terto_date){
+                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+                    'terto_date' => $data['terto']
+                ));
+                if($do_update){
+                    $ter_data_update['updated_field'] = 'TER To Date Changed from ' . $check_dates[0]->terto_date . ' to ' . $data['terto'];
+                     DB::table('update_table_data_details')->insert($ter_data_update);
+            }
+            }
+        }
+
         /////////////////////////////////////////////// Start of duplicate voucher check /////////////////////////////////////////////////////////////////////////
 
         if (!empty($payable_data)) {
@@ -1204,6 +1237,7 @@ class TercourierController extends Controller
             for ($i = 0; $i < $voucher_code_size; $i++) {
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
                 // print_r($decode2[$i]);
+                if (gettype($decode2[$i]) == "array") {
                 if (!empty($decode2[$i])) {
                     if (sizeof($decode2[$i]) > 1) {
                         // print_r("rt");
@@ -1222,6 +1256,13 @@ class TercourierController extends Controller
                         }
                     }
                 }
+            }
+            else{
+                if ($decode2[$i] == $data['voucher_code'][$l]) {
+                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                    // exit;
+                }
+            }
             }
         }
         //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1265,6 +1306,38 @@ class TercourierController extends Controller
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
+        $check_dates=DB::table('tercouriers')->where('id',$id)->get();
+
+        $details = Auth::user();
+        $ter_data_update['user_id'] = $details->id;
+        $ter_data_update['user_name'] = $details->name;
+        $ter_data_update['updated_id'] = $id;
+        $ter_data_update['updated_date'] = date('Y-m-d');
+        $ter_data_update['created_at'] = date('Y-m-d H:i:s');
+        $ter_data_update['updated_at'] = date('Y-m-d H:i:s');
+
+        if($check_dates)
+        {
+            if($data['terfrom'] != $check_dates[0]->terfrom_date)
+            {
+                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+                    'terfrom_date' => $data['terfrom']
+                ));
+                if($do_update){
+                        $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
+                         DB::table('update_table_data_details')->insert($ter_data_update);
+                }
+            }
+            if($data['terto'] != $check_dates[0]->terto_date){
+                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+                    'terto_date' => $data['terto']
+                ));
+                if($do_update){
+                    $ter_data_update['updated_field'] = 'TER To Date Changed from ' . $check_dates[0]->terto_date . ' to ' . $data['terto'];
+                     DB::table('update_table_data_details')->insert($ter_data_update);
+            }
+            }
+        }
 
         //////////////////////////////////////////////////// Start of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1278,6 +1351,7 @@ class TercourierController extends Controller
         $decode2 = array();
         $check_duplicate = DB::table('tercouriers')->select('voucher_code')->whereIn('status', [3, 5])->get();
         $voucher_code_size = sizeof($check_duplicate);
+        // return $voucher_code_size;
         for ($l = 0; $l < sizeof($data['voucher_code']); $l++) {
             // this is for previous flow
             for ($i = 0; $i < $voucher_code_size; $i++) {
@@ -1288,10 +1362,11 @@ class TercourierController extends Controller
             for ($i = 0; $i < $voucher_code_size; $i++) {
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
                 // print_r($decode2[$i]);exit;
+                if (gettype($decode2[$i]) == "array") {
                 if (!empty($decode2[$i])) {
-                    if (count($decode2[$i]) > 1) {
+                    if (sizeof($decode2[$i]) > 1) {
                         // print_r("rt");
-                        for ($j = 0; $j < count($decode2[$i]); $j++) {
+                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
                             if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
                                 return ["duplicate_voucher", $data['voucher_code'][$l]];
                             }
@@ -1306,6 +1381,12 @@ class TercourierController extends Controller
                         }
                     }
                 }
+            }else{
+                if ($decode2[$i] == $data['voucher_code'][$l]) {
+                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                    // exit;
+                }
+            }
             }
         }
         //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -58,6 +58,12 @@ class Tercourier extends Model
             $change['status']=9;
             $change['txn_type']="emp_doesn't_exists";
         }
+        // if (!empty($res[$i]->last_working_date)) {
+        //     $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+        //         'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+        //     ));
+        //     return $change_status;
+        // }
         $change['given_to'] = 'TR-Department';
         $change['saved_by_id'] = $user_id;
         $change['saved_by_name'] = $user_name;

@@ -212,12 +212,12 @@
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">TER Period From</label>
                                     <input type="date" class="form-control form-control-sm" id="terfrom_date"
-                                           name="terfrom_date" readonly="readonly" v-model="terfrom">
+                                           name="terfrom_date"  v-model="terfrom">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="inputPassword4">TER Period To</label>
                                     <input type="date" class="form-control form-control-sm" id="terto_date"
-                                           name="terto_date" readonly="readonly" v-model="terto">
+                                           name="terto_date" v-model="terto">
                                 </div>
 
                                 <!--
@@ -574,7 +574,9 @@
                             'payable_data': this.pay_data_array,
                             'unique_id': this.all_data.id,
                             'payment_status': "2",
-                            "ter_total_amount": this.amount
+                            "ter_total_amount": this.amount,
+                            "terfrom":this.terfrom,
+                            'terto':this.terto
                         })
                             .then(response => {
                                 // console.log(response.data);
@@ -681,7 +683,9 @@
                             'unique_id': this.all_data.id,
                             'payment_status': "1",
                             "ter_total_amount": this.amount,
-                            "current_balance": this.current_balance
+                            "current_balance": this.current_balance,
+                            "terfrom":this.terfrom,
+                            'terto':this.terto
                         })
                             .then(response => {
                                 // console.log(response.data);
