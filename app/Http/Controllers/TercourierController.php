@@ -1127,6 +1127,10 @@ class TercourierController extends Controller
             $data_error['status_of_data'] = "9";
             return $data_error;
         }
+        if ($tercourier_table[0]->status == 4 && $role=="reception") {
+            $data_error['status_of_data'] = "4";
+            return $data_error;
+        }
         if ($tercourier_table[0]->status == 2 && $role=="reception") {
             $data_error['status_of_data'] = "2";
             return $data_error;
