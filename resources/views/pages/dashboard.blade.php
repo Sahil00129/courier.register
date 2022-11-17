@@ -109,27 +109,57 @@
         }
 
     </style>
+
+    <?php $authUser = Auth::user();
+    $authUser->roles[0]->name;
+    $role = $authUser->roles[0]->name;
+    ?>
+
     <div class="layout-px-spacing">
 
-        <div class="page-header">
-            <!--  <div class="page-title">
-            <h3>Analytics Dashboard</h3>
-        </div>  -->
+        @if ($role === 'admin' || $role === 'reception')
 
-            <!-- <div class="toggle-switch">
-            <label class="switch s-icons s-outline  s-outline-secondary">
-                <input type="checkbox" checked="" class="theme-shifter">
-                <span class="slider round">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            {{-- ---for reception--- --}}
+            @if(false)
+                <div class="row flex-wrap layout-top-spacing">
+                    <div
+                        class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
+                        <h6><strong>Average Time for TER Entry</strong></h6>
+                        <div class="detailsBlock" style="background-color: #C4DFAA;">
+                            <p>Today's Average<span>00:04:03 hrs</span></p>
+                            <p>Month's Average<span>00:02:33 hrs</span></p>
+                        </div>
+                    </div>
+                    <div
+                        class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
+                        <h6><strong>Average Turn Around Time</strong></h6>
+                        <div class="detailsBlock" style="background-color: #FFEBAD;">
+                            <p>Today's Average<span>1 Day</span></p>
+                            <p>Month's Average<span>1 Day</span></p>
+                        </div>
+                    </div>
+                    <div
+                        class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
+                        <h6><strong>Time Taken for TER Entry<span>(last 5 entries)</span></strong></h6>
+                        <div class="detailsBlock" style="background-color: #ABD9FF;">
+                            <div class="tb-head">UNID <span>Time taken</span></div>
+                            <p>4465<span>00:04:35 hrs</span></p>
+                            <p>4464<span>00:03:37 hrs</span></p>
+                            <p>4463<span>00:03:00 hrs</span></p>
+                            <p>4462<span>00:04:01 hrs</span></p>
+                            <p>4461<span>00:02:54 hrs</span></p>
+                        </div>
+                    </div>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </span>
-            </label>
-        </div>  -->
-        </div>
+                    <div class="col-12 dashboard-widget d-flex align-items-center justify-content-between">
+                        <h6 class="handoverHeading ml-lg-4"><span>10</span> Pending TER`s for Handover</h6>
+                        <button class="btn btn-sm btn-primary mr-lg-4 dashboardActionButton">View</button>
+                    </div>
+                </div>
+            @endif
 
-    @if (true)
-        <!----for HR & TER user---->
+        @else
+            {{-- ----for HR & TER user---- --}}
             <div class="row layout-top-spacing">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
                     <div class="widget widget-four">
@@ -419,109 +449,6 @@
                     </div>
                 </div>
             </div>
-    @else
-        <!---for reception--->
-            <div class="row flex-wrap layout-top-spacing">
-                <div
-                    class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
-                    <h6><strong>Average Time for TER Entry</strong></h6>
-                    <div class="detailsBlock" style="background-color: #C4DFAA;">
-                        <p>Today's Average<span>00:04:03 hrs</span></p>
-                        <p>Month's Average<span>00:02:33 hrs</span></p>
-                    </div>
-                </div>
-                <div
-                    class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
-                    <h6><strong>Average Turn Around Time</strong></h6>
-                    <div class="detailsBlock" style="background-color: #FFEBAD;">
-                        <p>Today's Average<span>1 Day</span></p>
-                        <p>Month's Average<span>1 Day</span></p>
-                    </div>
-                </div>
-                <div
-                    class="d-flex flex-column col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing dashboard-widget">
-                    <h6><strong>Time Taken for TER Entry<span>(last 5 entries)</span></strong></h6>
-                    <div class="detailsBlock" style="background-color: #ABD9FF;">
-                        <div class="tb-head">UNID <span>Time taken</span></div>
-                        <p>4465<span>00:04:35 hrs</span></p>
-                        <p>4464<span>00:03:37 hrs</span></p>
-                        <p>4463<span>00:03:00 hrs</span></p>
-                        <p>4462<span>00:04:01 hrs</span></p>
-                        <p>4461<span>00:02:54 hrs</span></p>
-                    </div>
-                </div>
-
-                <div class="col-12 dashboard-widget d-flex align-items-center justify-content-between">
-                    <h6 class="handoverHeading ml-lg-4"><span>10</span> Pending TER`s for Handover</h6>
-                    <button class="btn btn-sm btn-primary mr-lg-4 dashboardActionButton">View</button>
-                </div>
-            </div>
-    @endif
-
-    <!-- <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-            <div class="widget widget-table-three">
-
-                <div class="widget-heading">
-                    <h5 class="">TER Processed by Users (Current Month):</h5>
-                </div>
-
-                <div class="widget-content">
-                    <div class="table-responsive">
-                        <table class="table table-scroll">
-                            <thead>
-                                <tr>
-                                    <th><div class="th-content">User </div></th>
-                                    <th><div class="th-content th-heading">oday TER processed</div></th>
-                                    <th><div class="th-content th-heading">Value of today processed Ter </div></th>
-                                    <th><div class="th-content">current month processed Ter </div></th>
-                                    <th><div class="th-content">Monthly Target achieved </div></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><div class="td-content product-name"><img src="assets/img/90x90.jpg" alt="product"><div class="align-self-center"><p class="prd-name">Headphone</p><p class="prd-category text-primary">Digital</p></div></div></td>
-                                    <td><div class="td-content"><span class="pricing">$168.09</span></div></td>
-                                    <td><div class="td-content"><span class="discount-pricing">$60.09</span></div></td>
-                                    <td><div class="td-content">170</div></td>
-                                    <td><div class="td-content"><a href="javascript:void(0);" class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> Direct</a></div></td>
-                                </tr>
-                                <tr>
-                                    <td><div class="td-content product-name"><img src="assets/img/90x90.jpg" alt="product"><div class="align-self-center"><p class="prd-name">Shoes</p><p class="prd-category text-warning">Faishon</p></div></div></td>
-                                    <td><div class="td-content"><span class="pricing">$108.09</span></div></td>
-                                    <td><div class="td-content"><span class="discount-pricing">$47.09</span></div></td>
-                                    <td><div class="td-content">130</div></td>
-                                    <td><div class="td-content"><a href="javascript:void(0);" class="text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> Google</a></div></td>
-                                </tr>
-                                <tr>
-                                    <td><div class="td-content product-name"><img src="assets/img/90x90.jpg" alt="product"><div class="align-self-center"><p class="prd-name">Watch</p><p class="prd-category text-danger">Accessories</p></div></div></td>
-                                    <td><div class="td-content"><span class="pricing">$88.00</span></div></td>
-                                    <td><div class="td-content"><span class="discount-pricing">$20.00</span></div></td>
-                                    <td><div class="td-content">66</div></td>
-                                    <td><div class="td-content"><a href="javascript:void(0);" class="text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> Ads</a></div></td>
-                                </tr>
-                                <tr>
-                                    <td><div class="td-content product-name"><img src="assets/img/90x90.jpg" alt="product"><div class="align-self-center"><p class="prd-name">Laptop</p><p class="prd-category text-primary">Digital</p></div></div></td>
-                                    <td><div class="td-content"><span class="pricing">$110.00</span></div></td>
-                                    <td><div class="td-content"><span class="discount-pricing">$33.00</span></div></td>
-                                    <td><div class="td-content">35</div></td>
-                                    <td><div class="td-content"><a href="javascript:void(0);" class="text-info"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> Email</a></div></td>
-                                </tr>
-                                <tr>
-                                    <td><div class="td-content product-name"><img src="assets/img/90x90.jpg" alt="product"><div class="align-self-center"><p class="prd-name">Camera</p><p class="prd-category text-primary">Digital</p></div></div></td>
-                                    <td><div class="td-content"><span class="pricing">$126.04</span></div></td>
-                                    <td><div class="td-content"><span class="discount-pricing">$26.04</span></div></td>
-                                    <td><div class="td-content">30</div></td>
-                                    <td><div class="td-content"><a href="javascript:void(0);" class="text-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg> Referral</a></div></td>
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-
+        @endif
     </div>
 @endsection

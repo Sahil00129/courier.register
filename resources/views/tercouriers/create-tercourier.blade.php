@@ -76,6 +76,9 @@
                     <li class="breadcrumb-item active" aria-current="page"><a href="#">Create New</a></li>
                 </ol>
             </nav>
+            <div class="d-flex align-items-center" style="gap: 3px; font-size: 1rem; font-weight: 700;">Time taken:
+                <div style="width: 80px;" id="time"></div>
+            </div>
         </div>
         <div class="row editTer">
             <div id="flFormsGrid" class="col-lg-12 layout-spacing">
@@ -207,10 +210,10 @@
                                 </div>
                             </div>
                             <input id="timeTaken" name="timeTaken" hidden>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center" style="gap: 3px;">Time taken:
-                                    <div style="width: 80px;" id="time"></div>
-                                </div>
+                            <div class="d-flex justify-content-end align-items-center">
+{{--                                <div class="d-flex align-items-center" style="gap: 3px;">Time taken:--}}
+{{--                                    <div style="width: 80px;" id="time"></div>--}}
+{{--                                </div>--}}
 
                                 <button type="submit" class="btn btn-primary" id="save_ter_btn" style="border-radius: 8px; width: 130px;">
                                     <span class="indicator-label">Save</span>

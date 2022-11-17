@@ -41,6 +41,10 @@
         color: #00a859;
         background: #00a85921;
     }
+
+    * .btn{
+        border-radius: 8px;
+    }
     #cover-spin {
             position: fixed;
             width: 100%;

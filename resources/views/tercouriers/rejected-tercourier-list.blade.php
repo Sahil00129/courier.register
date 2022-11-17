@@ -78,7 +78,7 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
-            width: 80px;
+            min-width: 80px;
         }
 
         .statusButton svg {
@@ -290,7 +290,7 @@
 
         .actionButtons {
             height: 30px;
-            width: 80px;
+            min-width: 80px;
             border-radius: 8px;
             padding: 0;
             display: flex;
@@ -479,15 +479,9 @@
                                     </td>
                                     <td>
                                         <ul class="dates d-flex flex-column justify-content-center">
-                                            @if($tercourier->received_date)
-                                                <li>
-                                                    Receipt: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
-                                            @if($tercourier->date_of_receipt)
-                                                <li>
-                                                    Courier: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
-                                            @if($tercourier->handover_date)
-                                                <li>
-                                                    Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
+                                            <li>Received: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>
+                                            <li>Booked: {{ Helper::ShowFormatDate($tercourier->book_date) }}</li>
+                                            <li>Paid: {{ Helper::ShowFormatDate($tercourier->paid_date) }}</li>
                                         </ul>
                                     </td>
                                     <td>
@@ -586,7 +580,9 @@
                                         <div class="action d-flex justify-content-center align-items-center">
                                             @if($tercourier->status == 8 && $tercourier->file_name != "")
                                                 <a target="_blank"
-                                                   href="rejected_ter_uploads/{{$tercourier->file_name}}">
+                                                   href="#" data-toggle="modal" data-target="#viewFileModal"
+                                                   v-on:click="open_file_view_modal(<?php echo $tercourier->name ?>)"
+                                                >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                          viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                          stroke-width="2"
@@ -715,7 +711,7 @@
 
                                 <button type="button" class="btn {{ $class }}"
                                         v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)"
-                                        value="<?php echo $tercourier->id; ?> " disabled>{{ $status }}</button>
+                                        value="<?php echo $tercourier->id; ?> " >{{ $status }}</button>
                                 <?php   } else { ?>
 
                                 <button type="button" class="btn {{ $class }}"
@@ -802,6 +798,50 @@
                         </div>
                     </div>
 
+                    <!-- file view modal  -->
+                    <div class="modal fade show" id="viewFileModal" v-if="file_view_modal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Uploaded File for 4482</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            @click="ter_modal=false;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-md-12 bg-black">
+                                        <img
+                                            src="https://noticiassalamanca.com/wp-content/uploads/2022/07/vida-eusebio-563x330.jpg"
+                                            alt="sample image"
+                                            style="width: 100%; max-height: 300px; border-radius: 12px;"/>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-outline-primary" href="@{{view_file_name}}"
+                                       target="_blank"
+                                       style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
+                                        Open in New Tab
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14"
+                                             viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="feather feather-external-link" style="height: 14px; width: 14px">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                    </a>
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                    <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
@@ -828,6 +868,8 @@
                 voucher_code: "",
                 file: "",
                 total_amount: "",
+                file_view_modal: false,
+                view_file_name: "",
 
             },
             created: function () {
@@ -994,6 +1036,12 @@
                     })
 
                 }
+
+                open_file_view_modal: function (viewFileName) {
+                    this.file_view_modal = true;
+                    this.view_file_name = `rejected_ter_uploads/${view_file_name}`;
+                },
+
             }
 
 
