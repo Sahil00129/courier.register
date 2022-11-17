@@ -75,7 +75,7 @@
         align-items: center;
         justify-content: center;
         gap: 4px;
-        width: 80px;
+        min-width: 80px;
     }
 
     .statusButton svg {
@@ -288,9 +288,9 @@
 
     .actionButtons {
         height: 30px;
-        width: 80px;
+        min-width: 80px;
         border-radius: 8px;
-        padding: 0;
+        padding: 0 8px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -347,11 +347,22 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
+                        @if ($role != 'reception')
+                        <button class="actionButtons btn btn-success" @click="hand_shake_report()">
+                            Handshake Report
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                        @endif
                     </div>
                     <div class="d-flex align-items-center" style="gap: 6px;">
                         <div class="form-group form-group-sm mb-0">
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
+                                @if($role =="reception")<option value="1">Received</option>@endif
                                 <option value="2">Handover</option>
                                 <option value="3">Finfect</option>
                                 <option value="4">Pay</option>
@@ -1466,6 +1477,25 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            hand_shake_report: function() {
+                axios.get('/hand_shake_report', {
+
+
+                    })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.data == 1) {
+                            this.url = '/download_handshake_report';
+                            window.location.href = this.url;
+                        }
+
+                    }).catch(error => {
+
+                        console.log(response)
+                        this.apply_offer_btn = 'Apply';
+
+                    })
+            },
             open_hr_verify_ter(id) {
                 this.unique_id = id;
                 this.loader = true;
@@ -1546,10 +1576,10 @@
                     this.ter_all_data = {};
                     this.search_flag = false;
                     this.ter_data_block_flag = false;
-                    this.search_data="";
+                    this.search_data = "";
                     document.getElementById('searchedInput').removeAttribute('disabled', true);
-                }else{
-                    this.search_data=this.searched_status;
+                } else {
+                    this.search_data = this.searched_status;
                     this.get_searched_ter();
                     document.getElementById('searchedInput').setAttribute('disabled', true);
                 }

@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExportTerList;
 use App\Exports\ExportTerFullList;
+use App\Exports\ExportHandShakeList;
+
 
 class TercourierController extends Controller
 {
@@ -98,7 +100,13 @@ class TercourierController extends Controller
         $flag=0;
         if (!empty($searched_item)) {
 
-            if($check_status == '2')
+            if($check_status == '1')
+            {
+                $status=1;
+                $flag=1;
+            }
+
+            else if($check_status == '2')
             {
                 $status=2;
                 $flag=1;
@@ -184,11 +192,33 @@ class TercourierController extends Controller
         }
     }
 
+    public function get_file_name(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['id'];
+        $get_file_name=DB::table('tercouriers')->select('file_name')->where('id',$id)->get();
+        $name=$get_file_name[0]->file_name;
+        return $name;
+    }
+
 
     public function download_ter_full_list()
     {
         return Excel::download(new ExportTerFullList, 'courier_ter_list.xlsx');
     }
+
+    public function hand_shake_report()
+    {
+        if (Auth::check()) {
+           return 1;
+        }
+    }
+
+    public function download_handshake_report()
+    {
+        return Excel::download(new ExportHandShakeList, 'hand_shake_report.xlsx');
+    }
+    
 
     public function download_reception_list()
     {
