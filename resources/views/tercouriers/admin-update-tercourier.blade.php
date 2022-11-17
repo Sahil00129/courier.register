@@ -177,11 +177,18 @@
                         <!------------Document details --------->
                         <div class="form-row mb-4">
                             <h6><b>Document Details</b></h6>
-                            <div class="form-group form-group-sm col-md-4">
+
+                            <div class="form-group form-group-sm col-md-6">
+                                <label for="inputState">TER Amount</label>
+                                <input type="text" class="form-control" id="amount" name="amount" v-model="amount" id="amount" name="amount" v-model="amount" @keyup="amount_in_words(amount)">
+                                <span id="amountInwords" style="font-size: 12px;text-transform:capitalize;">@{{word_amount}}</span>
+                            </div>
+
+                            <div class="form-group form-group-sm col-md-6">
                                 <label for="inputState">Location</label>
                                 <input type="text" class="form-control location1" id="location" name="location" readonly="readonly" :value="this.all_data.location">
                             </div>
-                            <div class="form-group form-group-sm col-md-4">
+                            <!-- <div class="form-group form-group-sm col-md-4">
                                 <label for="inputState">Company Name</label>
                                 <select id="select_option" name="company_name" v-model="company_name" class="form-control">
                                     <option disabled selected style="background-color: #e9ecef;">
@@ -192,11 +199,7 @@
                                     <option value="Unit-HSB">Unit-HSB</option>
                                     <option value="Remainco">Remainco</option>
                                 </select>
-                            </div>
-                            <div class="form-group form-group-sm col-md-4">
-                                <label for="inputState">TER Amount</label>
-                                <input type="text" class="form-control" id="amount" name="amount" v-model="amount">
-                            </div>
+                            </div> -->
 
                             <div class="form-group col-md-3 n-chk align-self-center">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -489,6 +492,7 @@
             admin_remarks: "",
             manually_paid: "",
             loader: false,
+            word_amount: "",
 
         },
         created: function() {
@@ -754,6 +758,7 @@
                             this.terfrom = this.all_data.terfrom_date;
                             this.terto = this.all_data.terto_date;
                             this.admin_remarks = this.all_data.hr_admin_remark;
+                            this.word_amount = this.inWords(this.amount);
                             if (this.all_data.payment_status == 5) {
                                 this.manually_paid = true;
                             }
@@ -817,6 +822,24 @@
 
 
                     })
+            },
+            inWords: function(num) {
+                var a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+                var b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+                if ((num = num.toString()).length > 9) return 'overflow';
+                n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+                if (!n) return;
+                var str = '';
+                str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
+                str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
+                str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+                str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+                str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'only ' : '';
+                return str;
+            },
+            amount_in_words: function(amount) {
+                this.word_amount = this.inWords(amount);
+                document.getElementById('amountInwords').style.textTransform = "capitalize";
             },
 
         }
