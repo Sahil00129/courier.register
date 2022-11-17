@@ -262,8 +262,11 @@
                             </div>
 
                             <div>
-                                <p class="display-3" style="font-size: 1rem; font-weight: 700; margin-bottom: 2rem;">
+                                <p class="display-3 d-flex align-items-center justify-content-between" style="font-size: 1rem; font-weight: 700; margin-bottom: 2rem;">
                                     Advance Amount ₹@{{ current_balance }}
+                                   <span v-if="all_data.sender_detail.last_working_date">
+                                    Last working date @{{ all_data.sender_detail.last_working_date }}
+                                   </span>
                                 </p>
                             </div>
 
@@ -558,7 +561,7 @@
                     var i, myArray, ter_to, myArray2, last_date_array, month_number, d1, d2;
                     var terto_date = new Date(this.all_data.terto_date);
                     if (this.all_data.sender_detail.last_working_date) {
-                        myArray = this.all_data.terto_date.split("-");
+                        myArray = this.terto.split("-");
                         myArray2 = this.all_data.sender_detail.last_working_date.split("-");
                         ter_to = myArray[0] + "-" + myArray[1] + "-" + myArray[2]
                         month_number = this.get_month_number(myArray2[1]);
@@ -665,7 +668,7 @@
                     var i, myArray, ter_to, myArray2, last_date_array, month_number, d1, d2;
                     var terto_date = new Date(this.all_data.terto_date);
                     if (this.all_data.sender_detail.last_working_date) {
-                        myArray = this.all_data.terto_date.split("-");
+                        myArray = this.terto.split("-");
                         myArray2 = this.all_data.sender_detail.last_working_date.split("-");
                         ter_to = myArray[0] + "-" + myArray[1] + "-" + myArray[2]
                         month_number = this.get_month_number(myArray2[1]);
