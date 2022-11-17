@@ -1289,9 +1289,9 @@ class TercourierController extends Controller
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
                 // print_r($decode2[$i]);exit;
                 if (!empty($decode2[$i])) {
-                    if (sizeof($decode2[$i]) > 1) {
+                    if (count($decode2[$i]) > 1) {
                         // print_r("rt");
-                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                        for ($j = 0; $j < count($decode2[$i]); $j++) {
                             if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
                                 return ["duplicate_voucher", $data['voucher_code'][$l]];
                             }
