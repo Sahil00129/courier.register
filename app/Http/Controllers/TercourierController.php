@@ -1109,6 +1109,7 @@ class TercourierController extends Controller
         $data = $request->all();
         // return $data;
         $id = $data['unique_id'];
+        $role= $data['role'];
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
@@ -1116,6 +1117,18 @@ class TercourierController extends Controller
         if(count($tercourier_table)<1)
         {
             $data_error['status_of_data'] = "not_found";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 0 && $role=="reception") {
+            $data_error['status_of_data'] = "0";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 9 && $role=="reception") {
+            $data_error['status_of_data'] = "9";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 2 && $role=="reception") {
+            $data_error['status_of_data'] = "2";
             return $data_error;
         }
         if ($tercourier_table[0]->status == 3) {
@@ -1274,7 +1287,7 @@ class TercourierController extends Controller
             }
             for ($i = 0; $i < $voucher_code_size; $i++) {
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
-                // print_r($decode2[$i]);
+                // print_r($decode2[$i]);exit;
                 if (!empty($decode2[$i])) {
                     if (sizeof($decode2[$i]) > 1) {
                         // print_r("rt");

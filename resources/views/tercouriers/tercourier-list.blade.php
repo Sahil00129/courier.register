@@ -1892,7 +1892,8 @@
                     //  alert(this.unique_id);
 
                     axios.post('/get_all_data', {
-                        'unique_id': this.unique_id
+                        'unique_id': this.unique_id,
+                        'role':""
                     })
                     .then(response => {
                         console.log(response.data);

@@ -738,7 +738,8 @@
                     //  alert(this.unique_id);
 
                     axios.post('/get_all_data', {
-                        'unique_id': this.unique_id
+                        'unique_id': this.unique_id,
+                        'role':""
                     })
                         .then(response => {
                             var string_pay, split_data_pay_amt, pay_data_len, string_voucher, split_data_voucher,
