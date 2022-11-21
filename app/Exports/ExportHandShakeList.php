@@ -17,6 +17,7 @@ class ExportHandShakeList implements FromCollection, WithHeadings
 
         $size = sizeof($data);
 
+        $arr_instrulist_excel[] =array();
         for ($i = 0; $i < $size; $i++) {
             $id = $data[$i]->id;
             $status = $data[$i]->status;

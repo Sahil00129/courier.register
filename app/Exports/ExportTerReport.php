@@ -16,7 +16,7 @@ class ExportTerReport implements FromCollection, WithHeadings
         $data=Tercourier::select('id','created_at','saved_by_name','updated_by_name','updated_at')->get();
         $size=sizeof($data);
         // $val="";
-         
+        $arr_instrulist_excel[] =array();
         for($i=0;$i<$size;$i++)
         {
             $val= explode(" ",$data[$i]->created_at);

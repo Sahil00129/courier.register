@@ -17,7 +17,7 @@ class ExportTerEmpLedger implements FromCollection, WithHeadings
         $data = EmployeeBalance::with('SenderDetailsTable')->get();
         $size=sizeof($data);
         // $val="";
-         
+        $arr_instrulist_excel[] =array();
         for($i=0;$i<$size;$i++)
         {
         $sender_table=Sender::select('*')->where('employee_id',$data[$i]->employee_id)->get();
