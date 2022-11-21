@@ -2017,6 +2017,7 @@ class TercourierController extends Controller
             $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
             // print_r($decode2[$i]);
             if (!empty($decode2[$i])) {
+                if (gettype($decode2[$i]) == "array") {
                 if (sizeof($decode2[$i]) > 1) {
                     // print_r("rt");
                     for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
@@ -2036,6 +2037,14 @@ class TercourierController extends Controller
                         // exit;
                     }
                 }
+            }else{
+                // return $decode2;
+                if ($decode2[0] == $data['voucher_code']) {
+                    return ["duplicate_voucher", $data['voucher_code']];
+                    // exit;
+                }
+
+            }
             }
         }
         // exit;
