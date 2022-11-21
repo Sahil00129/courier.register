@@ -1531,7 +1531,6 @@ class TercourierController extends Controller
         // print_r($voucher_codes);
         // exit;
         // return $voucher_codes;
-
         if ($current_balance != 0) {
             if ($total_payable_sum > $current_balance) {
                 $flag = 1;
@@ -1550,7 +1549,8 @@ class TercourierController extends Controller
             }
 
             $emp_sender_id = $emp_id;
-
+            
+           
             if (!$settlement_deduction) {
                 $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
                 if (!empty($check_last_working)) {
@@ -1564,13 +1564,12 @@ class TercourierController extends Controller
                 }
             }
 
-
             // print_r($voucher_codes);
             // exit;
 
             $update_ledger_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
-            // print_r($update_ledger_table);
-            // exit;
+          
+            
             $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
 
 
@@ -1618,8 +1617,6 @@ class TercourierController extends Controller
             $utlized_amount = 0;
             $final_payable = $total_payable_sum;
             $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
-            //    print_r($update_employee_table);
-            //    exit;
             $payment_status = $data['payment_status'];
             if ($ax_code != 0) {
                 $p_status = 1;
@@ -1685,13 +1682,13 @@ class TercourierController extends Controller
         // exit;
         $data['payable_data'] = "";
         $response = self::advance_payment_check($data, $total_payable_sum);
-        // return $response;
 
         if ($response[1] == '4') {
             return $response[0];
         } else {
             $res = self::api_call_finfect($data['selected_id']);
         }
+        
         return $res;
     }
 

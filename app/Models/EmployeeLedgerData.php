@@ -64,6 +64,29 @@ class EmployeeLedgerData extends Model
         $balance_data = EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
         $ledger_data = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
 
+        if (gettype(json_decode($ter_pay_amount)) == "array") {
+            $arr1=json_decode($ter_pay_amount);
+            if ($arr1 > 1) {
+                $ter_pay_amount = array_sum($arr1);
+            } else {
+                $ter_pay_amount=$arr1[0];
+            }
+        }
+
+        if (gettype(json_decode($voucher_data)) == "array") {
+            $arr1=json_decode($voucher_data);
+            if ($arr1 > 1) {
+                $voucher_data = $voucher_data;
+                // print_r($arr1);
+                // exit;
+            } else {
+                $voucher_data=$arr1[0];
+            }
+           
+            $insert_data['ax_voucher_number'] = $voucher_data;
+        }else{
+            $insert_data['ax_voucher_number'] = json_encode($voucher_data);
+        }
             $current_balance = $balance_data->current_balance;
             if ($current_balance != 0) {
                     $insert_data['ledger_balance'] = $ledger_data->ledger_balance - (int)$ter_pay_amount;
@@ -84,12 +107,10 @@ class EmployeeLedgerData extends Model
         $insert_data['updated_date'] = date('Y-m-d');
         $insert_data['employee_id'] = $emp_id;
         $insert_data['ter_id'] = $ter_id;
-        $insert_data['ax_voucher_number'] = json_encode($voucher_data);
         $insert_data['user_id'] = $user_id;
         $insert_data['user_name'] = $user_name;
         $insert_data['created_at'] = date('Y-m-d H:i:s');
         $insert_data['updated_at'] = date('Y-m-d H:i:s');
-        // return $insert_data;
         $table_update = EmployeeLedgerData::insert($insert_data);
         return $table_update;
     }

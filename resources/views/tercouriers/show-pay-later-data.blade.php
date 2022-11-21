@@ -680,7 +680,7 @@
 
                             location.reload();
                         } else {
-                            swal('error', "System Error", 'error')
+                            swal('error',response.data[1], 'error')
                         }
 
                     }).catch(error => {

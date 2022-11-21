@@ -27,13 +27,13 @@ class EmployeeBalance extends Model
         {
             $current_balance=$balance_data->current_balance;
             if($balance_data->ter_expense_balance){
-            $insert_data['ter_expense_balance']=$current_balance-$ter_pay_amount+$balance_data->ter_expense_balance;
+            $insert_data['ter_expense_balance']=$current_balance-(int)$ter_pay_amount+$balance_data->ter_expense_balance;
             }
-            $insert_data['ter_expense_balance']=$current_balance-$ter_pay_amount;
+            $insert_data['ter_expense_balance']=$current_balance-(int)$ter_pay_amount;
             $insert_data['current_balance']=$current_balance-$utilized_amount;
         }else{
             $insert_data['current_balance']=$utilized_amount;
-            $insert_data['ter_expense_balance']=$utilized_amount-$ter_pay_amount;
+            $insert_data['ter_expense_balance']=$utilized_amount-(int)$ter_pay_amount;
         }
         // $insert_data['ter_expense_balance']=
         $insert_data['updated_date']=date('Y-m-d');
