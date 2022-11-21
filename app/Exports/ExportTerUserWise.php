@@ -14,7 +14,7 @@ class ExportTerUserWise implements FromCollection, WithHeadings
     public function collection()
     {
         $data = Tercourier::select('*')->get();
-    
+        $arr_instrulist_excel[] =array();
             $size = sizeof($data);
          
             for ($i = 0; $i < $size; $i++) {
