@@ -1434,6 +1434,47 @@ class TercourierController extends Controller
                 return $change_status;
             } else {
                 $res = self::api_call_finfect($id);
+                $emp_id = $data_ter[0]->employee_id;
+                // $res="dsd";
+                if($res != '1')
+                {
+                 $get_emp_ledger=EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                 $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
+                 $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance+$get_emp_ledger->ter_expense;
+                 $insert_data['wallet_id'] = 0;
+                 $insert_data['incoming_payment'] = 0;
+                 $insert_data['action_done'] = 'Payment_Failed';
+                 $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
+                 $insert_data['utilize_amount'] = 0;
+                 $insert_data['updated_date'] = date('Y-m-d');
+                 $insert_data['employee_id'] = $emp_id;
+                 $insert_data['ter_id'] = $get_emp_ledger->ter_id;
+                 $insert_data['user_id'] = $get_emp_ledger->user_id;
+                 $insert_data['user_name'] = $get_emp_ledger->user_name;
+                 $insert_data['created_at'] = date('Y-m-d H:i:s');
+                 $insert_data['updated_at'] = date('Y-m-d H:i:s');
+                 EmployeeLedgerData::insert($insert_data);
+         
+                 $get_emp_acc=EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                 if($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id )
+                 {
+                     $insert_emp_data['updated_date']=date('Y-m-d');
+                     $insert_emp_data['employee_id']=$emp_id;
+                     $insert_emp_data['advance_amount']=0;
+                     $insert_emp_data['ter_id']=$get_emp_acc->ter_id;
+                     $insert_emp_data['ax_voucher_number']=$get_emp_acc->ax_voucher_number;
+                     $insert_emp_data['utilize_amount']=$get_emp_acc->utilize_amount;
+                     $insert_emp_data['current_balance']=$get_emp_acc->utilize_amount+$get_emp_acc->current_balance;
+                     $insert_emp_data['action_done']='Payment_Failed';
+                     $insert_emp_data['user_id']=$get_emp_acc->user_id;
+                     $insert_emp_data['user_name']=$get_emp_acc->user_name;
+                     $insert_emp_data['created_at']= date('Y-m-d H:i:s');
+                     $insert_emp_data['updated_at']= date('Y-m-d H:i:s');
+                     // return $insert_data;
+                     $table_update=EmployeeBalance::insert($insert_emp_data);
+                 }
+         
+                }
                 return $res;
             }
         }
@@ -1442,7 +1483,7 @@ class TercourierController extends Controller
 
     public function advance_payment_check($data, $total_payable_sum)
     {
-        // print_r($data);
+        // print_r($total_payable_sum);
         // exit;
         $id = $data['unique_id'];
         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
@@ -1682,13 +1723,57 @@ class TercourierController extends Controller
         // exit;
         $data['payable_data'] = "";
         $response = self::advance_payment_check($data, $total_payable_sum);
-
+        // print_r($response);
+        // print_r("Ds");
+        // exit;
         if ($response[1] == '4') {
             return $response[0];
         } else {
             $res = self::api_call_finfect($data['selected_id']);
         }
-        
+      
+        // print_r($res);
+        // print_r("dss");
+        // exit;
+       if($res != '1')
+       {
+        $get_emp_ledger=EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+        $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
+        $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance+$get_emp_ledger->ter_expense;
+        $insert_data['wallet_id'] = 0;
+        $insert_data['incoming_payment'] = 0;
+        $insert_data['action_done'] = 'Payment_Failed';
+        $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
+        $insert_data['utilize_amount'] = 0;
+        $insert_data['updated_date'] = date('Y-m-d');
+        $insert_data['employee_id'] = $emp_id;
+        $insert_data['ter_id'] = $get_emp_ledger->ter_id;
+        $insert_data['user_id'] = $get_emp_ledger->user_id;
+        $insert_data['user_name'] = $get_emp_ledger->user_name;
+        $insert_data['created_at'] = date('Y-m-d H:i:s');
+        $insert_data['updated_at'] = date('Y-m-d H:i:s');
+        EmployeeLedgerData::insert($insert_data);
+
+        $get_emp_acc=EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+        if($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id )
+        {
+            $insert_emp_data['updated_date']=date('Y-m-d');
+            $insert_emp_data['employee_id']=$emp_id;
+            $insert_emp_data['advance_amount']=0;
+            $insert_emp_data['ter_id']=$get_emp_acc->ter_id;
+            $insert_emp_data['ax_voucher_number']=$get_emp_acc->ax_voucher_number;
+            $insert_emp_data['utilize_amount']=$get_emp_acc->utilize_amount;
+            $insert_emp_data['current_balance']=$get_emp_acc->utilize_amount+$get_emp_acc->current_balance;
+            $insert_emp_data['action_done']='Payment_Failed';
+            $insert_emp_data['user_id']=$get_emp_acc->user_id;
+            $insert_emp_data['user_name']=$get_emp_acc->user_name;
+            $insert_emp_data['created_at']= date('Y-m-d H:i:s');
+            $insert_emp_data['updated_at']= date('Y-m-d H:i:s');
+            // return $insert_data;
+            $table_update=EmployeeBalance::insert($insert_emp_data);
+        }
+
+       }
         return $res;
     }
 

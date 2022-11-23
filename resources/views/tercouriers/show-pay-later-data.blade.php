@@ -236,6 +236,25 @@
     .searchField input {
         padding-left: 30px;
     }
+    .finfectResponseDetail {
+        z-index: 9999999;
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #ffffff;
+        opacity: 0;
+        display: none;
+        box-shadow: 0 0 17px #83838360;
+        border-radius: 12px;
+        padding: 10px 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .finfectResponseStatus:hover+.finfectResponseDetail {
+        opacity: 1;
+        display: block;
+    }
 </style>
 
 
@@ -252,34 +271,10 @@
     <div class="row layout-top-spacing" id="cancel-row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="widget-content widget-content-area br-6" style="width: 100%; overflow-x: auto;">
-                <!---searchbar--->
-                <div class="d-flex justify-content-between align-items-center px-4 py-4" style="gap: 1rem;">
-                    <div class="d-flex align-items-center" style="gap: 1rem;">
-                        <button class="actionButtons btn btn-success" v-on:click="group_pay_now()" disabled style="padding-inline: 8px; width: max-content">
-                            Group Pay Now
-                        </button>
-                        <button class="actionButtons btn btn-success">
-                            Excel
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="searchField" style="width: 200px; position: relative;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="search" class="form-control form-control-sm form-control-sm-30px" placeholder="Search..." aria-controls="html5-extension" style="padding-left: 30px">
-                    </div>
-                </div>
-
-                <table id="html5-extension1" class="table table-hover non-hover" style="width:100%">
+            
+                <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
                             <th>UN ID</th>
                             <th>Status</th>
                             <th>Dates</th>
@@ -294,9 +289,6 @@
                             // echo'<pre>'; print_r($tercourier);
                         ?>
                             <tr>
-                                <td style="padding: 10px 21px;">
-                                    <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
-                                </td>
                                 <td width="100px">
                                     <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
@@ -359,6 +351,17 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+                                    @elseif($tercourier->status == 0 || $role == "tr admin")
+                                   <div style="position: relative;">
+                                   <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
+                                        {{ $status }}
+                                    </button>
+                                    <div class="finfectResponseDetail">
+                                        <p>
+                                            <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
+                                        </p>
+                                    </div>
+                                   </div>
                                     @else
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
                                         {{ $status }}
@@ -475,117 +478,6 @@
 
             </div>
 
-            <button class="btn btn-success" v-on:click="group_pay_now()" disabled>Group Pay Now</button>
-
-            <div class="widget-content widget-content-area br-6">
-
-                <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>UN IDs</th>
-                            <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" style="zoom: 2" />
-                            </th>
-                            <th>Status & Action</th>
-                            <th>Response from finfect</th>
-                            <th>Date of Receipt</th>
-                            <th>Sender Name</th>
-                            <th>AX ID</th>
-                            <th>Employee ID</th>
-                            <th>Location</th>
-                            <th>Company Name</th>
-                            <th>TER Amount</th>
-                            <th>TER Period From</th>
-                            <th>TER Period To</th>
-                            <th>Handover Date</th>
-                            <th>Courier Name</th>
-                            <th>Docket No</th>
-                            <th>Docket Date</th>
-                            <th>AX Payble Amount</th>
-                            <th>AX Voucher Code</th>
-
-                            <!-- <th class="dt-no-sorting">Actions</th> -->
-                        </tr>
-                    </thead>
-                    <tbody id="tb">
-                        <?php $i = 1;
-                        foreach ($tercouriers as $key => $tercourier) {
-                            // echo'<pre>'; print_r($tercourier);
-                        ?>
-                            <tr>
-                                <td>{{ $tercourier->id }}</td>
-                                <td>
-                                    <?php
-                                    if ($tercourier->status == 3) { ?>
-                                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_boxes" disabled />
-                                    <?php   } else { ?>
-
-                                        <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>" />
-                                    <?php   }
-                                    ?>
-                                </td>
-                                <?php
-                                if ($tercourier->status == 1) {
-                                    $status = 'Received';
-                                    $class = 'btn-success';
-                                } elseif ($tercourier->status == 2) {
-                                    $status = 'Handover';
-                                    $class = 'btn-warning';
-                                } elseif ($tercourier->status == 3) {
-
-                                    $status = 'Sent to Finfect';
-                                    $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
-
-                                    $status = 'Pay';
-                                    $class = 'btn-success';
-                                } else {
-                                    $status = 'Repay';
-                                    $class = 'btn-danger';
-                                }
-                                ?>
-                                <td>
-                                    <?php
-                                    if ($tercourier->status == 3) { ?>
-
-                                        <button type="button" class="btn {{ $class }}" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?> " disabled>{{ $status }}</button>
-                                    <?php   } else { ?>
-
-                                        <button type="button" class="btn {{ $class }}" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">{{ $status }}</button>
-                                    <?php   }
-                                    ?>
-                                </td>
-                                <td>{{$tercourier->finfect_response}}</td>
-                                <td>{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</td>
-                                <td>{{ ucwords(@$tercourier->sender_name) ?? '-' }}</td>
-                                <td>{{ $tercourier->ax_id ?? '-' }}</td>
-                                <td>{{ $tercourier->employee_id ?? '-' }}</td>
-                                <td>{{ ucwords($tercourier->location) ?? '-' }}</td>
-                                <td>{{ $tercourier->company_name ?? '-' }}</td>
-                                <td>{{ $tercourier->amount ?? '-' }}</td>
-                                <td>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }}</td>
-                                <td>{{ Helper::ShowFormatDate($tercourier->terto_date) }}</td>
-                                <td>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</td>
-                                <td>{{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}</td>
-                                <td>{{ $tercourier->docket_no ?? '-' }}</td>
-                                <td>{{ Helper::ShowFormatDate($tercourier->docket_date) }}</td>
-
-                                <td>
-                                    <?php echo $tercourier->payable_amount; ?>
-                                    <!-- <input type="number" placeholder="Enter Amount" id="existing_amount" class="existing_amount" name="amount" value="<?php echo $tercourier->payable_amount; ?>" disabled /> -->
-                                </td>
-
-
-                                <td>
-                                    <?php echo $tercourier->voucher_code; ?>
-                                    <!-- <input type="text" placeholder="Enter Coupan" id="existing_voucher_code" class="existing_voucher_code" name="voucher_code" value="<?php echo $tercourier->voucher_code; ?>" disabled /> -->
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-
-                </table>
-
-            </div>
         </div>
 
     </div>

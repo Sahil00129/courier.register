@@ -123,7 +123,7 @@ $(document).ready(function() {
                type: "GET",
                url: "daily-work-performance",
                success: function(response){
-                var vipin = response.user1.split(',');
+             
                 var veena = response.user2.split(',');
                 var harpreet = response.user3.split(',');
                 var rameshwer = response.user4.split(',');
@@ -156,21 +156,21 @@ $(document).ready(function() {
                         const highest3 = ctx.getHighestValueInSeries(2);
                         const highest4 = ctx.getHighestValueInSeries(3);
                 
-                        ctx.addPointAnnotation({
-                          x: new Date(ctx.w.globals.seriesX[0][ctx.w.globals.series[0].indexOf(highest1)]).getTime(),
-                          y: highest1,
-                          label: {
-                            style: {
-                              cssClass: 'd-none'
-                            }
-                          },
-                          customSVG: {
-                              SVG: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#1b55e2" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>',
-                              cssClass: undefined,
-                              offsetX: -8,
-                              offsetY: 5
-                          }
-                        })
+                        // ctx.addPointAnnotation({
+                        //   x: new Date(ctx.w.globals.seriesX[0][ctx.w.globals.series[0].indexOf(highest1)]).getTime(),
+                        //   y: highest1,
+                        //   label: {
+                        //     style: {
+                        //       cssClass: 'd-none'
+                        //     }
+                        //   },
+                        //   customSVG: {
+                        //       SVG: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#1b55e2" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>',
+                        //       cssClass: undefined,
+                        //       offsetX: -8,
+                        //       offsetY: 5
+                        //   }
+                        // })
                 
                         ctx.addPointAnnotation({
                           x: new Date(ctx.w.globals.seriesX[1][ctx.w.globals.series[1].indexOf(highest2)]).getTime(),
@@ -222,7 +222,7 @@ $(document).ready(function() {
                       },
                     }
                   },
-                  colors: ['#1b55e2', '#e7515a','#00ff00','#ff00ff'],
+                  colors: ['#e7515a','#00ff00','#ff00ff'],
                   dataLabels: {
                       enabled: false
                   },
@@ -271,10 +271,7 @@ $(document).ready(function() {
                       width: 2,
                       lineCap: 'square'
                   },
-                  series: [{
-                      name: 'Vipin',
-                      data: vipin
-                  }, 
+                  series: [
                   {
                       name: 'Veena',
                       data: veena

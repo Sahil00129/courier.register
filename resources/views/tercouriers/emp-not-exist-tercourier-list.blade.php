@@ -307,33 +307,7 @@
             <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
                 <div class="widget-content widget-content-area br-6">
 
-                    <!---searchbar--->
-                    <div class="d-flex justify-content-between align-items-center px-4 py-4" style="gap: 1rem;">
-                        <div class="d-flex align-items-center" style="gap: 1rem;">
-                            @if($role == "tr admin")
-                                <button class="actionButtons btn btn-success px-2" disabled>
-                                    Group Pay Now
-                                </button>
-                            @else
-                                <button class="actionButtons btn btn-success px-2" v-on:click="group_pay_now()"
-                                        disabled>
-                                    Group Pay Now
-                                </button>
-                            @endif
-                        </div>
-                        <div class="searchField" style="width: 200px; position: relative;">
-                            <svg onclick="test()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                            <input type="search" class="form-control form-control-sm form-control-sm-30px"
-                                   placeholder="Search..." aria-controls="html5-extension" v-model="search_data"
-                                   style="padding-left: 30px" @keyup="search_data_fn()">
-                        </div>
-                    </div>
-
+            
                     <!---unknown TER's table--->
                     <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                         <thead>
