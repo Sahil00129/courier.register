@@ -46,6 +46,7 @@ class Tercourier extends Model
         $date_check= date_format($date,"Y-m-d");
 
         $today_date=date('Y-m-d');
+        $change['given_to'] = 'TER-Team';
         if($today_date<=$date_check)
         {
         $change['status'] = 2;
@@ -56,6 +57,7 @@ class Tercourier extends Model
         if($res[$i]->employee_id == 0)
         {
             $change['status']=9;
+            $change['given_to'] = 'HR-Team';
             $change['txn_type']="emp_doesn't_exists";
         }
         // if (!empty($res[$i]->last_working_date)) {
@@ -64,7 +66,7 @@ class Tercourier extends Model
         //     ));
         //     return $change_status;
         // }
-        $change['given_to'] = 'TR-Department';
+       
         $change['saved_by_id'] = $user_id;
         $change['saved_by_name'] = $user_name;
         $change['handover_date']=date('Y-m-d');

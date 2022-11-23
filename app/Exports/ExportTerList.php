@@ -20,6 +20,7 @@ class ExportTerList implements FromCollection, WithHeadings
             for ($i = 0; $i < $size; $i++) {
                 $id = $data[$i]->id;
                 $sum1=0;
+                $pfu="";
                 $status = $data[$i]->status;
                 if ($status == 1) {
                     $actual_status = "Received";
@@ -33,7 +34,14 @@ class ExportTerList implements FromCollection, WithHeadings
                     $actual_status = "Paid";
                 } else if ($status == 6) {
                     $actual_status = "Cancel";
-                } else if ($status == 0) {
+                } else if ($status == 7) {
+                    $actual_status = "Partially Paid";
+                }else if ($status == 8) {
+                    $actual_status = "Rejected";
+                }else if ($status == 9) {
+                    $actual_status = "Unknown";
+                }
+                else if ($status == 0) {
                     $actual_status = "Failed";
                 }
 
@@ -70,24 +78,38 @@ class ExportTerList implements FromCollection, WithHeadings
               
                 }
 
+                $ax_id=$data[$i]->ax_id;
+                if (!empty($ax_id)) {
+                    $new_data = explode("-", $ax_id);
+                    if ($new_data[0] == "FAMA") {
+                        $pfu = "MA2";
+                    } else if ($new_data[0] == "FAGMA") {
+                        $pfu = "MA4";
+                    } else if ($new_data[0] == "FAGSD") {
+                        $pfu = "SD3";
+                    } else if ($new_data[0] == "FAPL") {
+                        $pfu = "SD1";
+                    }
+                }
+
     // dd($data[$i]->CourierCompany->courier_name);
                 $arr_instrulist_excel[] = array(
                     // 's.no.' => $i + 1,
                     'id'  => $id,
                     'status'   => $actual_status,
                     'date_of_receipt'    => $data[$i]->date_of_receipt,
+                    'handover_date'=>$data[$i]->handover_date,
                     'sender_name' => $data[$i]->sender_name,
                     'ax_id'  => $data[$i]->ax_id,
                     'employee_id'   => $data[$i]->employee_id,
                     'location' => $data[$i]->location,
-                    'company_name' => $data[$i]->company_name,
+                    'company_name' => $pfu,
                     'amount' => $data[$i]->amount,
                     'ter_period_from' => $data[$i]->terfrom_date,
                     'ter_period_to' => $data[$i]->terto_date,
                     'other_details' => $data[$i]->details,
                     'remarks' => $data[$i]->remarks,
                     'given_to'=>$data[$i]->given_to,
-                    'handover_date'=>$data[$i]->handover_date,
                     'courier_name'=>@$data[$i]->CourierCompany->courier_name,
                     'docket_no'=>$data[$i]->docket_no,
                     'docket_date'=>$data[$i]->docket_date,
@@ -101,8 +123,8 @@ class ExportTerList implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-             "UN ID", "Status", "Date of Receipt", "Sender Name", "Ax ID", "Employee ID", "Location", "Company Name", "TER  Amount",
-            "Ter Period From","TER Period To","Other Details","Remarks","Given To","Handover Date","Courier Name",
+             "UN ID", "Status", "Date of Receipt","Handover Date","Sender Name", "Ax ID", "Employee ID", "Location", "Company Name", "TER  Amount",
+            "Ter Period From","TER Period To","Other Details","Remarks","Given To","Courier Name",
             "Docket No", "Docket Date"
         ];
     }
