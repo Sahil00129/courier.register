@@ -137,6 +137,7 @@ Route::get('unprosessed-ter-widgets', [HomeController::class, 'unprocessedTerWid
 Route::get('daily-work-performance', [HomeController::class, 'dailyworkPerformance']);
 Route::get('hand_shake_report', [TercourierController::class, 'hand_shake_report']);
 Route::get('download_ter_list', [TercourierController::class, 'download_ter_list']);
+Route::get('download_status_wise_ter/{status}', [TercourierController::class, 'download_status_wise_ter']);
 Route::post('/get_searched_data', [TercourierController::class,'get_searched_data']);
 Route::post('/get_file_name', [TercourierController::class,'get_file_name']);
 Route::get('download_ter_full_list', [TercourierController::class, 'download_ter_full_list']);

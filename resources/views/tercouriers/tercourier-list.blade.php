@@ -339,7 +339,16 @@
                             Handover
                         </button>
                         @endif
-                        <button class="actionButtons btn btn-success" @click="download_ter_list()">
+                        
+                        <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
+                            Excel
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                        <button class="actionButtons btn btn-success" @click="download_ter_status_list()" v-if="!ter_full_excel">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1471,6 +1480,7 @@
             word_amount: "",
             loader: false,
             searched_status: "all",
+            ter_full_excel:true,
 
 
         },
@@ -1581,12 +1591,21 @@
                     this.search_flag = false;
                     this.ter_data_block_flag = false;
                     this.search_data = "";
+                    this.ter_full_excel=true;
                     document.getElementById('searchedInput').removeAttribute('disabled', true);
                 } else {
                     this.search_data = this.searched_status;
                     this.get_searched_ter();
+                    this.ter_full_excel=false;
                     document.getElementById('searchedInput').setAttribute('disabled', true);
                 }
+            },
+            download_ter_status_list:function(){
+              
+                this.url = '/download_status_wise_ter/'+this.searched_status;
+                // alert(this.url)
+                    window.location.href = this.url;
+                  
             },
 
             get_searched_ter: function() {

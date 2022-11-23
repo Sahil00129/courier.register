@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExportTerList;
 use App\Exports\ExportTerFullList;
 use App\Exports\ExportHandShakeList;
+use App\Exports\ExportTerStatusList;
 
 
 class TercourierController extends Controller
@@ -205,6 +206,13 @@ class TercourierController extends Controller
     public function download_ter_full_list()
     {
         return Excel::download(new ExportTerFullList, 'courier_ter_list.xlsx');
+    }
+
+    public function download_status_wise_ter($status)
+    {
+
+ return Excel::download(new ExportTerStatusList($status), 'courier_ter_list.xlsx');
+
     }
 
     public function hand_shake_report()

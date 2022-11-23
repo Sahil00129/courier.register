@@ -6,23 +6,33 @@ use App\Models\Tercourier;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ExportTerFullList implements FromCollection, WithHeadings
+class ExportTerStatusList implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
      */
+
+     protected $status;
+
+    public function __construct($status)
+    {
+     $this->status=$status;
+    }
     public function collection()
     {
-        $data = Tercourier::with('CourierCompany', 'SenderDetail')->get();
+        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('status',$this->status)->get();
     
             $size = sizeof($data);
             $arr_instrulist_excel[] =array();
             for ($i = 0; $i < $size; $i++) {
                 $id = $data[$i]->id;
                 $sum1=0;
-                $pfu="";
                 $status = $data[$i]->status;
-                 if ($status == 2) {
+                $pfu="";
+                if ($status == 1) {
+                    $actual_status = "Received";
+                }
+                else if ($status == 2) {
                     $actual_status = "Handover";
                 } else if ($status == 3) {
                     $actual_status = "Sent to FinFect";
@@ -74,6 +84,7 @@ class ExportTerFullList implements FromCollection, WithHeadings
              
               
                 }
+
                 $ax_id=$data[$i]->ax_id;
                 if (!empty($ax_id)) {
                     $new_data = explode("-", $ax_id);
