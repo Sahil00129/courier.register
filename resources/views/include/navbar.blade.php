@@ -29,12 +29,12 @@
         width: 18px !important;
     }
 
-    .dataTables_filter {
+    /* .dataTables_filter {
         display: none;
     }
     .dt--top-section {
         margin: 0 !important;
-    }
+    } */
 </style>
 
 <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">

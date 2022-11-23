@@ -91,7 +91,7 @@ class HomeController extends Controller
         // echo $total_ter; die;
 
         $user_array = array(
-            array("id" => 7, "name" => 'Vipin'),
+            // array("id" => 7, "name" => 'Vipin'),
             array("id" => 9, "name" => 'Veena'),
             array("id" => 10, "name" => 'Harpreet'),
             array("id" => 11, "name" => 'Rameshwer'),
@@ -184,7 +184,7 @@ class HomeController extends Controller
         $total_ter = Tercourier::select('id')->whereIn('status', [3, 5])->whereMonth('updated_at', date("m"))->whereYear('updated_at', date("Y"))->count();
 
         $user_array = array(
-            array("id" => 7, "name" => 'Vipin'),
+            // array("id" => 7, "name" => 'Vipin'),
             array("id" => 9, "name" => 'Veena'),
             array("id" => 10, "name" => 'Harpreet'),
             array("id" => 11, "name" => 'Rameshwer'),

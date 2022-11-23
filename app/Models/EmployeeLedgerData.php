@@ -72,8 +72,19 @@ class EmployeeLedgerData extends Model
                 $ter_pay_amount=$arr1[0];
             }
         }
+        if(gettype($voucher_data) == "array")
+        {
+            if($voucher_data > 1)
+            {
+            $voucher_data = $voucher_data;
+            }
+            else{
+                $voucher_data=$voucher_data[0];
+            }
+        }
 
-        if (gettype(json_decode($voucher_data)) == "array") {
+
+       else if (gettype(json_decode($voucher_data)) == "array") {
             $arr1=json_decode($voucher_data);
             if ($arr1 > 1) {
                 $voucher_data = $voucher_data;

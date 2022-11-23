@@ -870,6 +870,8 @@
                                                 </div>
                                                 <p><strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
                                                 </p>
+                                                <p><strong>Time taken:</strong> {{ $tercourier->recp_entry_time ?? '-' }} hrs
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -1017,6 +1019,8 @@
                                             </div>
                                             <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
                                             </p>
+                                            <p><strong>Time taken:</strong> @{{ tercourier.recp_entry_time ? tercourier.recp_entry_time : '-' }} hrs
+                                                </p>
                                         </div>
                                     </div>
                                 </div>

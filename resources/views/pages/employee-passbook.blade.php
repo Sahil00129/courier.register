@@ -101,6 +101,10 @@
                                         $status = 'Imprest Adjusted for UNID '.$data->ter_id;
                                         
                                     }
+                                    elseif ($data->action_done == 'Payment_Failed') {
+                                        $status = 'Payment_Failed Imprest Adjusted for UNID '.$data->ter_id;
+                                        
+                                    }
                                      else{
                                         $status="";
                                     }
@@ -170,6 +174,10 @@
                                     {
                                         $amount =  $data->utilize_amount;
                                     }
+                                    // else if($data->action_done == 'Payment_Failed')
+                                    // {
+                                    //     $amount = -($data->ter_expense);
+                                    // } 
                                     else{
                                         $amount="-";
                                     } ?>
@@ -195,7 +203,11 @@
                                         $status = 'Imprest Added and Adjusted';
                                     } elseif ($data->action_done == 'Ter_Book') {
                                         $status = 'TER Booked-UNID- '.$data->ter_id;
-                                    } elseif ($data->action_done == 'Ter_Paid') {
+                                    }   else if($data->action_done == 'Payment_Failed')
+                                    {
+                                        $status = 'Payment Failed- and Adjusted for UNID- '.$data->ter_id;
+                                    } 
+                                     elseif ($data->action_done == 'Ter_Paid') {
                                         $status = 'TER Paid-UNID- '.$data->ter_id;
                                     }
                                     elseif ($data->action_done == 'new_emp') {
