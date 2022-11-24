@@ -31,7 +31,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    {{$user->role}}
+                                    {{ucfirst($user->role)}}
                                     <!-- @if(!empty($user->getRoleNames()))
                                         @foreach($user->getRoleNames() as $val)
                                             <label class="badge badge-dark">{{ $val }}</label>
