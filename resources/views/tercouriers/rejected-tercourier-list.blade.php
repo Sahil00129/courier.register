@@ -451,6 +451,12 @@
                                             </p>
                                         </div>
                                     </div>
+                                    @elseif($tercourier->status == 8 && $tercourier->file_name == "")
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" >
+                                            {{ $status }}
+                                        </button>
+                                    </div>
                                     @elseif($tercourier->status == 8 && $role == "tr admin")
                                     <div style="position: relative;">
                                         <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" disabled>

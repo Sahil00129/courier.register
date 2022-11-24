@@ -2016,13 +2016,13 @@ class TercourierController extends Controller
             }
         } else {
             if ($settlement_deduction) {
-                $new_data['finfect_response'] = "Finfect is not working";
+                $new_data['finfect_response'] = "Finfect is down temporarily, please click Pay later. You can pay this TER once Finfect is Live.";
                 $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
                     'finfect_response' => $new_data['finfect_response'],
                     'status' => 0
                 ));
             } else {
-                $new_data['finfect_response'] = "Finfect is not working";
+                $new_data['finfect_response'] = "Finfect is down temporarily, please click Pay later. You can pay this TER once Finfect is Live.";
                 $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
                     'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
                     'status' => 0
