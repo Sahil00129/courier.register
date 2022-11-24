@@ -2046,7 +2046,8 @@ class TercourierController extends Controller
             $tercouriers = $query->where('payment_status', 2)->whereIn('status', [4, 0])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
 
             // echo'<pre>'; print_r($tercouriers->status); die;
-            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers]);
+            $role="tr admin";
+            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers,'role' =>$role]);
         }
         //    echo'<pre>'; print_r($name); die;
     }
