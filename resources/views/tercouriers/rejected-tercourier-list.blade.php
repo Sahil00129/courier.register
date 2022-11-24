@@ -451,6 +451,12 @@
                                             </p>
                                         </div>
                                     </div>
+                                    @elseif($tercourier->status == 8 && $role == "tr admin")
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" disabled>
+                                            {{ $status }}
+                                        </button>
+                                    </div>
                                     @else
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
                                         {{ $status }}
@@ -591,6 +597,7 @@
                                         @endif
                                     </div>
                                 </td>
+                                <input type="hidden" :value=<?php echo $tercourier->amount; ?>  id="total_amount"/>
                             </tr>
                             @endforeach
                             @endif
