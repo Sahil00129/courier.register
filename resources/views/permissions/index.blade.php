@@ -32,7 +32,7 @@
                                 <td>{{ $permission->name }}</td>
                                 <!-- <td>adding de</td> -->
                                 <td>
-                                    <a class="btn btn-success" href="{{ route('permissions.show',$permission->id) }}">Show</a>
+                                    <!-- <a class="btn btn-success" href="{{ route('permissions.show',$permission->id) }}">Show</a> -->
                                     @can('role-edit')
                                         <a class="btn btn-primary" href="{{ route('permissions.edit',$permission->id) }}">Edit</a>
                                     @endcan
