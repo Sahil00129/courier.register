@@ -90,12 +90,12 @@
     }
 
     .statusButton {
-        padding: 3px;
+        padding: 3px 6px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 4px;
-        width: 80px;
+        min-width: 80px;
     }
 
     .statusButton svg {
@@ -419,11 +419,18 @@
                                     $status = 'Missing Info';
                                     $class = 'btn-danger';
                                 } elseif ($tercourier->status == 8 && $tercourier->file_name != "") {
-
-                                    $status = 'Pay';
-                                    $class = 'btn-success';
+                                    if ($role == "tr admin") {
+                                        $status = 'Sent To HR';
+                                        $class = 'btn-warning';
+                                    } else {
+                                        $status = 'For Approval';
+                                        $class = 'btn-warning';
+                                    }
                                 } elseif ($tercourier->status == 0 && $tercourier->txn_type == 'rejected_ter') {
                                     $status = 'Repay';
+                                    $class = 'btn-danger';
+                                } elseif ($tercourier->status == 10 && $tercourier->txn_type == 'rejected_ter') {
+                                    $status = 'Rejected by HR';
                                     $class = 'btn-danger';
                                 }
                                 ?>
@@ -450,6 +457,23 @@
                                                 <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
                                             </p>
                                         </div>
+                                    </div>
+                                    @elseif($tercourier->status == 10 && $tercourier->txn_type == 'rejected_ter')
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
+                                            {{ $status }}
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>HR Admin Remark:</strong> {{ ucfirst($tercourier->hr_admin_remark) ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @elseif($tercourier->status == 8 && $tercourier->file_name != "")
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" data-toggle="modal" data-target="#hrApprovalModal" @click="open_hr_approval_modal(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
+                                            {{ $status }}
+                                        </button>
                                     </div>
                                     @else
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
@@ -530,10 +554,13 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
-                                                    <?php
-                                                    $voucherCode = json_decode($tercourier->voucher_code);
-                                                    $payableAmount = json_decode($tercourier->payable_amount);
-                                                    ?>
+                                                    <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
+                                                    <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
+
+                                                    <!-- <?php
+                                                            $voucherCode = json_decode($tercourier->voucher_code);
+                                                            $payableAmount = json_decode($tercourier->payable_amount);
+                                                            ?>
 
                                                     <span class="d-flex flex-column">
                                                         @if(is_countable($voucherCode) && count($voucherCode) > 0)
@@ -552,7 +579,7 @@
                                                         @else
                                                         <span>-</span>
                                                         @endif
-                                                    </span>
+                                                    </span> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -561,7 +588,7 @@
 
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
-                                        @if($tercourier->status == 8 || $tercourier->status == 0  && $tercourier->file_name != "")
+                                        @if($tercourier->status == 8 || $tercourier->status == 0 && $tercourier->file_name != "")
                                         <a href="" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal({{$tercourier->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
                                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -583,6 +610,13 @@
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
                                         </a>
+                                        @elseif($tercourier->status == 10 && $tercourier->txn_type == 'rejected_ter' && $role != "Hr Admin")
+                                        <a target="_blank" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </a>
                                         @else
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="cursor:not-allowed;">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -591,12 +625,75 @@
                                         @endif
                                     </div>
                                 </td>
+                                <input type="hidden" :value=<?php echo $tercourier->amount; ?> id="total_amount" />
                             </tr>
                             @endforeach
                             @endif
                     </tbody>
                 </table>
 
+            </div>
+
+
+            <!-- HR approval Modal -->
+            <div class="modal fade show" id="hrApprovalModal" v-if="hr_approval_modal" tabindex="-1" role="dialog" aria-labelledby="hrApprovalModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="hrApprovalModalLabel"> TER ID: @{{rejected_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="hr_approval_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div v-if="hr_approval_modal_details_loading" class="modal-body">
+                            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                                Loading...
+                            </div>
+                        </div>
+                        <div v-else class="modal-body">
+                            <div class="mb-4 d-flex align-items-center justify-content-center" style="border-radius: 12px; height: 150px; width: 100%; border: 1px dashed;">
+                                <img :src="rejected_file_name" alt="attachment" style="max-width: 100%; max-height: 130px; border-radius: 12px; object-fit: cover;" />
+                            </div>
+                            <p><strong>Payable Amount: </strong>@{{rejected_payable_amount}}</p>
+                            <p><strong>Voucher Code: </strong>@{{rejected_voucher}}</p>
+                            <p><strong>Remarks: </strong>@{{remarks_rejected}}</p>
+
+                        </div>
+                        @if($role == "Hr Admin")
+                        <div class="modal-footer">
+                            <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_rejected_remarks_modal()">Reject</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve & Pay</button>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- payment rejected remarks Modal -->
+            <div class="modal fade show" id="rejectedRemarksModal" v-if="rejected_remarks_modal" tabindex="-1" role="dialog" aria-labelledby="rejectedRemarksModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="rejectedRemarksModalLabel"> TER ID: @{{rejected_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="rejected_remarks_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">HR Remarks:</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="hr_remarks">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" @click="submit_hr_remarks()">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
 
@@ -700,6 +797,16 @@
             file_view_modal: false,
             id: "",
             view_file_name: "",
+            hr_approval_modal: false,
+            hr_approval_modal_details_loading: true,
+            rejected_remarks_modal: false,
+            rejected_id: "",
+            rejected_payable_amount: "",
+            rejected_voucher: "",
+            rejected_file_name: "",
+            remarks_rejected: "",
+            hr_remarks: "",
+
 
         },
         created: function() {
@@ -707,6 +814,28 @@
             //   alert('hello');
         },
         methods: {
+            submit_hr_remarks: function() {
+                if (this.hr_remarks != "") {
+                    axios.post('/submit_hr_remarks', {
+                            'hr_remarks': this.hr_remarks,
+                            'id': this.rejected_id
+                        })
+                        .then(response => {
+                            if (response.data == '1') {
+                                swal('success', 'Updated Successfully!', 'success')
+                                location.reload();
+                                // console.log(response.data[0].status)
+                            }
+                        }).catch(error => {
+
+                            console.log(response)
+                            this.apply_offer_btn = 'Apply';
+
+                        })
+                } else {
+                    swal('error', 'Hr Remarks Required', 'error')
+                }
+            },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
                 var y = this.$el.querySelectorAll(".selected_box");
@@ -723,6 +852,32 @@
             upload_file(e) {
                 this.file = e.target.files[0];
             },
+            open_hr_approval_modal: function(ter_id) {
+                this.rejected_id = ter_id;
+                axios.post('/get_rejected_details', {
+                        'id': this.rejected_id
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            this.rejected_payable_amount = response.data[0].payable_amount;
+                            this.rejected_voucher = response.data[0].voucher_code;
+                            this.rejected_file_name = 'rejected_ter_uploads/' + response.data[0].file_name;
+                            this.remarks_rejected = response.data[0].remarks;
+                            this.hr_approval_modal_details_loading = false;
+                            // console.log(response.data[0].status)
+                        }
+                    }).catch(error => {
+
+                        console.log(response)
+                        this.apply_offer_btn = 'Apply';
+
+                    })
+                this.hr_approval_modal = true;
+            },
+            open_rejected_remarks_modal: function() {
+                this.rejected_remarks_modal = true;
+            },
+
             open_file_view_modal: function(ter_id) {
                 // var file;
                 // file=document.getElementById('table_file_name').value;

@@ -437,7 +437,36 @@
                                 ?>
 
                                 <td>
-                                    @if($tercourier->status == 1 || $tercourier->status == 2)
+                                    @if ($tercourier->status == 3 || $role == "tr admin")
+                                    <button type="button" class="btn statusButton btn-rounded {{ $class }}" disabled>{{ $status }}</button>
+                                    @elseif($tercourier->status == 0)
+                                    @if($role != "tr admin")
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->id; ?>">
+                                            {{ $status }}
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @else
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
+                                            {{ $status }}
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @else
+                                    <button type="button" class="btn {{ $class }}" v-on:click="pay_now_ter(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->id; ?>">{{ $status }}</button>
+                                    @endif
+                                    <!-- @if($tercourier->status == 1 || $tercourier->status == 2)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -466,7 +495,7 @@
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         {{ $status }}
                                     </button>
-                                    @endif
+                                    @endif -->
                                 </td>
                                 <td>
                                     <ul class="dates d-flex flex-column justify-content-center">
@@ -527,7 +556,11 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
-                                                    <?php
+                                                <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
+                                                <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
+
+
+                                                    <!-- <?php
                                                     $voucherCode = json_decode($tercourier->voucher_code);
                                                     $payableAmount = json_decode($tercourier->payable_amount);
                                                     ?>
@@ -549,7 +582,7 @@
                                                         @else
                                                         <span>-</span>
                                                         @endif
-                                                    </span>
+                                                    </span> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -557,7 +590,7 @@
                                 </td>
 
                                 <td>
-                                <div class="action d-flex justify-content-center align-items-center">
+                                    <div class="action d-flex justify-content-center align-items-center">
                                         @if($tercourier->file_name != "")
                                         <a href="" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal({{$tercourier->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">

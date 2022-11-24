@@ -31,14 +31,15 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    @if(!empty($user->getRoleNames()))
+                                    {{ucfirst($user->role)}}
+                                    <!-- @if(!empty($user->getRoleNames()))
                                         @foreach($user->getRoleNames() as $val)
                                             <label class="badge badge-dark">{{ $val }}</label>
                                         @endforeach
-                                    @endif
+                                    @endif -->
                                 </td>
                                 <td>
-                                    <a class="btn btn-success" href="{{ route('users.show',$user->id) }}">Show</a>
+                                    <!-- <a class="btn btn-success" href="{{ route('users.show',$user->id) }}">Show</a> -->
                                     @can('user-edit')
                                         <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
                                     @endcan

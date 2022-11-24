@@ -2016,13 +2016,13 @@ class TercourierController extends Controller
             }
         } else {
             if ($settlement_deduction) {
-                $new_data['finfect_response'] = "Finfect is not working";
+                $new_data['finfect_response'] = "Finfect is down temporarily, please click Pay later. You can pay this TER once Finfect is Live.";
                 $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
                     'finfect_response' => $new_data['finfect_response'],
                     'status' => 0
                 ));
             } else {
-                $new_data['finfect_response'] = "Finfect is not working";
+                $new_data['finfect_response'] = "Finfect is down temporarily, please click Pay later. You can pay this TER once Finfect is Live.";
                 $res = DB::table('tercouriers')->where('id', $tercourier_data->id)->update(array(
                     'finfect_response' => $new_data['finfect_response'], 'payment_status' => 2,
                     'status' => 0
@@ -2046,7 +2046,8 @@ class TercourierController extends Controller
             $tercouriers = $query->where('payment_status', 2)->whereIn('status', [4, 0])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
 
             // echo'<pre>'; print_r($tercouriers->status); die;
-            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers]);
+            $role="tr admin";
+            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers,'role' =>$role]);
         }
         //    echo'<pre>'; print_r($name); die;
     }
@@ -2188,14 +2189,21 @@ class TercourierController extends Controller
         $insert['saved_by_id'] = $details->id;
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
-
-        $update_details = DB::table('tercouriers')->update($insert);
+        $id=$data['ter_id'];
+       
+        $check=DB::table('tercouriers')->where('id',$id)->get();
+        if($check[0]->status == 10)
+        {
+            $insert['status'] = 8;
+        }
+            $update_details = DB::table('tercouriers')->where('id',$id)->update($insert);
+        
         //    if($update_details)
         //    {
         //  $res=   DB::table('tercouriers')->where('id',$data['ter_id'])->update(['status'=>7,'updated_by_id'=>$details->id,
         //     'updated_by_name'=>$details->name]);
         //    }
-
+       
         // $t=Storage::disk('local')->put($fileName, 'Contents');
         return $update_details;
     }
@@ -2342,7 +2350,7 @@ class TercourierController extends Controller
             $name = $data->roles[0]->name;
             // return $name;
 
-            $tercouriers = $query->whereIn('status', [8, 0])->where('txn_type', 'rejected_ter')->orderby('id', 'ASC')->get();
+            $tercouriers = $query->whereIn('status', [8, 0,10])->where('txn_type', 'rejected_ter')->orderby('id', 'ASC')->get();
 
             // echo'<pre>'; print_r($tercouriers->status); die;
             return view('tercouriers.rejected-tercourier-list', ['tercouriers' => $tercouriers, 'role' => $name]);
@@ -2394,6 +2402,23 @@ class TercourierController extends Controller
     {
         $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
         return view('tercouriers.reception-edit-tercourier', ['couriers' => $couriers]);
+    }
+
+    public function get_rejected_details(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['id'];
+        $ter=DB::table('tercouriers')->where('id',$id)->get();
+        return $ter;
+    }
+
+    public function submit_hr_remarks(Request $request)
+    {
+        $data=$request->all();
+        $hr_remarks=$data['hr_remarks'];
+        $id=$data['id'];
+        $ter=DB::table('tercouriers')->where('id',$id)->update(['hr_admin_remark'=> $hr_remarks,'status'=>10]);
+        return $ter;
     }
 
     public function edit_tercourier(Request $request)
