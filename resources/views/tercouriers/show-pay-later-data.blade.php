@@ -351,7 +351,7 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
-                                    @elseif($tercourier->status == 0)
+                                    @elseif($tercourier->status == 0 || $role == "tr admin")
                                    <div style="position: relative;">
                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
                                         {{ $status }}
