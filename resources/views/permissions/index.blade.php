@@ -21,6 +21,7 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <!-- <th>Description</th> -->
                             <th width="280px">Action</th>
                         </tr>
                     </thead>
@@ -29,6 +30,7 @@
                             <tr>
                                 <td>{{ $permission->id }}</td>
                                 <td>{{ $permission->name }}</td>
+                                <!-- <td>adding de</td> -->
                                 <td>
                                     <a class="btn btn-success" href="{{ route('permissions.show',$permission->id) }}">Show</a>
                                     @can('role-edit')
