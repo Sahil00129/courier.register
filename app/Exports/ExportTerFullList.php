@@ -95,18 +95,23 @@ class ExportTerFullList implements FromCollection, WithHeadings
                     'status'   => $actual_status,
                     'date_of_receipt'    => $data[$i]->date_of_receipt,
                     'handover_date'=>$data[$i]->handover_date,
+                    'sent_to_finfect_date'=>$data[$i]->sent_to_finfect_date,
+                    'finfect_response'=>$data[$i]->finfect_response,
+                    'paid_date'=>$data[$i]->paid_date,
+                    'amount' => $data[$i]->amount,
+                    'ax_payable_amount'=>$data[$i]->payable_amount,
+                    'final_payable'=>$paid_amount,
+                    'deductions' =>$deductions,
                     'sender_name' => $data[$i]->sender_name,
                     'ax_id'  => $data[$i]->ax_id,
                     'employee_id'   => $data[$i]->employee_id,
                     'location' => $data[$i]->location,
                     'company_name' => $pfu,
-                    'amount' => $data[$i]->amount,
                     'ter_period_from' => $data[$i]->terfrom_date,
                     'ter_period_to' => $data[$i]->terto_date,
                     'courier_name'=>@$data[$i]->CourierCompany->courier_name,
                     'docket_no'=>$data[$i]->docket_no,
                     'docket_date'=>$data[$i]->docket_date,
-                    'ax_payable_amount'=>$data[$i]->payable_amount,
                     'ax_voucher_code'=>$data[$i]->voucher_code,
                 );
 
@@ -118,9 +123,10 @@ class ExportTerFullList implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-             "UN ID", "Status", "Date of Receipt","Handover Date", "Sender Name", "Ax ID", "Employee ID", "Location", "Company Name", "TER  Amount",
-            "Ter Period From","TER Period To","Courier Name",
-            "Docket No", "Docket Date","AX Payable Amount","AX Voucher Code"
+            "UN ID", "Status", "Date of Receipt","Handover Date","Sent to Finfect date","Finfect Response",
+            "Paid from Finfect Date","TER  Amount Received","AX Payable Amount","Amount Paid From Finfect","Deductions", "Sender Name", "Ax ID", "Employee ID", "Location", "Company Name", 
+           "Ter Period From","TER Period To","Courier Name",
+           "Docket No", "Docket Date","AX Voucher Code"
         ];
     }
 }
