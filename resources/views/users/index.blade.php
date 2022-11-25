@@ -20,6 +20,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Password</th>
                             <th>Roles</th>
                             <th width="280px">Action</th>
                         </tr>
@@ -30,6 +31,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->text_password }}</td>
                                 <td>
                                     {{ucfirst($user->role)}}
                                     <!-- @if(!empty($user->getRoleNames()))

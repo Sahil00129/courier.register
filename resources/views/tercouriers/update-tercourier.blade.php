@@ -780,7 +780,11 @@
                             if (response.data.status_of_data === "8") {
                                 this.button_text = "Search";
                                 swal('error', "Record has been sent to admin", 'error')
-                            } else if (isNaN(response.data[0].sender_id)) {
+                            }   if (response.data.status_of_data === "9") {
+                                this.button_text = "Search";
+                                swal('error', "Unknow employee, contact HR admin.", 'error')
+                            }
+                            else if (isNaN(response.data[0].sender_id)) {
                                 this.button_text = "Search";
                                 swal('error', "Sender Details are missing for this record", 'error')
                             } else if (response.data[0] != "" && response.data.status_of_data === "0") {

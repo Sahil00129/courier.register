@@ -421,9 +421,8 @@
 
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
-
-                                    $status = 'Pay';
+                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                    $status = 'F&F Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 0) {
 

@@ -460,7 +460,7 @@
                                     </div>
                                     @elseif($tercourier->status == 10 && $tercourier->txn_type == 'rejected_ter')
                                     <div style="position: relative;">
-                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
                                             {{ $status }}
                                         </button>
                                         <div class="finfectResponseDetail">
@@ -695,7 +695,6 @@
                     </div>
                 </div>
             </div>
-
 
             <!-- Partial Paid Modal -->
             <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">

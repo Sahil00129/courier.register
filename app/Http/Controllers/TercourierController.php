@@ -1121,7 +1121,7 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
-    // return $tercourier_table;
+
         if(count($tercourier_table)<1)
         {
             $data_error['status_of_data'] = "not_found";
@@ -1132,6 +1132,10 @@ class TercourierController extends Controller
             return $data_error;
         }
         if ($tercourier_table[0]->status == 9 && $role=="reception") {
+            $data_error['status_of_data'] = "9";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 9 && $role=="" && $tercourier_table[0]->employee_id == 0) {
             $data_error['status_of_data'] = "9";
             return $data_error;
         }

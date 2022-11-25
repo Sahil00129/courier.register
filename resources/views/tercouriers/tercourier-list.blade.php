@@ -466,7 +466,11 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
+                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                    $status = 'F&F Pay';
+                                    $class = 'btn-success';
+                                }
+                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -703,7 +707,12 @@
                                         Sent to Finfect
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4">
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                       F&F Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         Pay
                                     </button>
@@ -895,7 +904,11 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
+                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                    $status = 'F&F Pay';
+                                    $class = 'btn-success';
+                                }
+                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -1067,7 +1080,12 @@
                                         Sent to Finfect
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4">
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                       F&F Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         Pay
                                     </button>
