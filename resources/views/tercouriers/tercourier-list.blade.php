@@ -339,7 +339,7 @@
                             Handover
                         </button>
                         @endif
-                        
+
                         <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
@@ -451,6 +451,11 @@
                                                 <p>
                                                     <strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
                                                 </p>
+                                                @if($tercourier->status == 3)
+                                                <p>
+                                                    <strong>Finfect Acknowledgement:</strong> Amount of Rs.{{$tercourier->final_payable}} received to process for UNID - {{$tercourier->id}}
+                                                </p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -466,11 +471,10 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
                                     $status = 'F&F Pay';
                                     $class = 'btn-success';
-                                }
-                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
+                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -593,6 +597,7 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
+
                                                     <?php
                                                     $voucherCode = json_decode($tercourier->voucher_code);
                                                     $payableAmount = json_decode($tercourier->payable_amount);
@@ -683,6 +688,9 @@
                                             <p>
                                                 <strong>Remarks:</strong> @{{ (tercourier.remarks != null) ? tercourier.remarks : '-' }}
                                             </p>
+                                            <p v-if="tercourier.status == 3">
+                                                <strong>Finfect Acknowledgement:</strong> Amount of Rs.@{{tercourier.final_payable}} received to process for UNID - @{{tercourier.id}}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -713,7 +721,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                       F&F Pay
+                                        F&F Pay
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
@@ -791,11 +799,11 @@
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between " id="pay_sum">
                                                 <div class="heading">Paid:</div>
-                                                @{{tercourier.payable_amount}}
+                                                @{{arraySum(tercourier.payable_amount)}}
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between ">
                                                 <div class="heading">Deduction:</div>
-                                                @{{tercourier.payable_amount}}
+                                                @{{arraySum(tercourier.payable_amount) - tercourier.amount}}
                                             </div>
                                         </div>
                                     </div>
@@ -811,12 +819,17 @@
                                     <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                         <div class="axVouchers flex-grow-1">
                                             <div class="heading" style="min-height: 30px;">
-                                                <span id="dsa">
-                                                    @{{ tercourier.voucher_code }}
-                                                </span>
-                                                <span class="d-flex flex-column align-items-end">
-                                                    @{{tercourier.payable_amount}}
-                                                </span>
+                                                <div>
+                                                    <span v-for="vc in JSON.parse(tercourier.voucher_code)">
+                                                        @{{ vc }}<br />
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span class="d-flex flex-column align-items-end"
+                                                     v-for="pa in JSON.parse(tercourier.payable_amount)">
+                                                     ₹@{{ pa }}<br />
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -908,11 +921,10 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
                                     $status = 'F&F Pay';
                                     $class = 'btn-success';
-                                }
-                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
+                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -1046,7 +1058,7 @@
                                             <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
                                             </p>
                                             <p><strong>Time taken:</strong> @{{ tercourier.recp_entry_time ? tercourier.recp_entry_time : '-' }} hrs
-                                                </p>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1086,7 +1098,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                       F&F Pay
+                                        F&F Pay
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
@@ -1502,8 +1514,8 @@
             word_amount: "",
             loader: false,
             searched_status: "all",
-            ter_full_excel:true,
-            actual_partial_id:"",
+            ter_full_excel: true,
+            actual_partial_id: "",
 
 
         },
@@ -1514,6 +1526,17 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            arraySum: function(ary) {
+
+                const obj = JSON.parse(ary);
+                var sum = 0;
+                for (var el in obj) {
+                    if (obj.hasOwnProperty(el)) {
+                        sum += parseFloat(obj[el]);
+                    }
+                }
+                return sum;
+            },
             hand_shake_report: function() {
                 axios.get('/hand_shake_report', {
 
@@ -1614,21 +1637,21 @@
                     this.search_flag = false;
                     this.ter_data_block_flag = false;
                     this.search_data = "";
-                    this.ter_full_excel=true;
+                    this.ter_full_excel = true;
                     document.getElementById('searchedInput').removeAttribute('disabled', true);
                 } else {
                     this.search_data = this.searched_status;
                     this.get_searched_ter();
-                    this.ter_full_excel=false;
+                    this.ter_full_excel = false;
                     document.getElementById('searchedInput').setAttribute('disabled', true);
                 }
             },
-            download_ter_status_list:function(){
-              
-                this.url = '/download_status_wise_ter/'+this.searched_status;
+            download_ter_status_list: function() {
+
+                this.url = '/download_status_wise_ter/' + this.searched_status;
                 // alert(this.url)
-                    window.location.href = this.url;
-                  
+                window.location.href = this.url;
+
             },
 
             get_searched_ter: function() {
@@ -1940,7 +1963,7 @@
 
                     axios.post('/get_all_data', {
                         'unique_id': this.unique_id,
-                        'role':""
+                        'role': ""
                     })
                     .then(response => {
                         console.log(response.data);

@@ -554,10 +554,7 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
-                                                    <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
-                                                    <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
-
-                                                    <!-- <?php
+                                                                                                    <?php
                                                             $voucherCode = json_decode($tercourier->voucher_code);
                                                             $payableAmount = json_decode($tercourier->payable_amount);
                                                             ?>
@@ -579,7 +576,7 @@
                                                         @else
                                                         <span>-</span>
                                                         @endif
-                                                    </span> -->
+                                                    </span> 
                                                 </div>
                                             </div>
                                         </div>
