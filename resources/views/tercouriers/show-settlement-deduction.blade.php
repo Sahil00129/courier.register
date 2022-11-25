@@ -419,15 +419,20 @@
 
                                 <?php
                                 if ($tercourier->status == 7) {
-
-                                    $status = 'Pay';
-                                    $class = 'btn-success';
+                                    if ($role == "tr admin") {
+                                        $status = 'Sent to HR';
+                                        $class = 'btn-warning';
+                                    } else {
+                                        $status = 'For Approval';
+                                        $class = 'btn-warning';
+                                    }
+                                } elseif ($tercourier->status == 10) {
+                                    $status = 'Rejected by HR';
+                                    $class = 'btn-secondary';
                                 } elseif ($tercourier->status == 3) {
-
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
-
                                     $status = 'Paid';
                                     $class = 'btn-success';
                                 } else {
@@ -437,8 +442,28 @@
                                 ?>
 
                                 <td>
-                                    @if ($tercourier->status == 3 || $role == "tr admin")
+                                    @if($tercourier->status == 10)
+                                    <div style="position: relative;">
+                                        @if($role == "tr admin")
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" data-toggle="modal" data-target="#partialpaidModal" @click="open_partial_payment_modal(<?php echo $tercourier->parent_ter_id; ?>,<?php echo $tercourier->id; ?>)">
+                                            {{ $status }}
+                                        </button>
+                                        @else
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
+                                            {{ $status }}
+                                        </button>
+                                        @endif
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>HR Admin Remarks:</strong> {{ ucfirst($tercourier->hr_admin_remark) ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @elseif ($tercourier->status == 3 || $role == "tr admin")
                                     <button type="button" class="btn statusButton btn-rounded {{ $class }}" disabled>{{ $status }}</button>
+                                    @elseif ($tercourier->status == 7)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" data-toggle="modal" data-target="#hrApprovalModal" @click="open_hr_approval_modal(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->id; ?>"> {{ $status }}
+                                    </button>
                                     @elseif($tercourier->status == 0)
                                     @if($role != "tr admin")
                                     <div style="position: relative;">
@@ -556,14 +581,14 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
-                                                <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
-                                                <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
+                                                    <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
+                                                    <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
 
 
                                                     <!-- <?php
-                                                    $voucherCode = json_decode($tercourier->voucher_code);
-                                                    $payableAmount = json_decode($tercourier->payable_amount);
-                                                    ?>
+                                                            $voucherCode = json_decode($tercourier->voucher_code);
+                                                            $payableAmount = json_decode($tercourier->payable_amount);
+                                                            ?>
 
                                                     <span class="d-flex flex-column">
                                                         @if(is_countable($voucherCode) && count($voucherCode) > 0)
@@ -610,6 +635,109 @@
                 </table>
             </div>
 
+            <!-- HR approval Modal -->
+            <div class="modal fade show" id="hrApprovalModal" v-if="hr_approval_modal" tabindex="-1" role="dialog" aria-labelledby="hrApprovalModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="hrApprovalModalLabel"> TER ID: @{{partially_paid_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="hr_approval_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div v-if="hr_approval_modal_details_loading" class="modal-body">
+                            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                                Loading...
+                            </div>
+                        </div>
+                        <div v-if="!hr_approval_modal_details_loading" class="modal-body">
+                            <div class="mb-4 d-flex align-items-center justify-content-center" style="border-radius: 12px; height: 150px; width: 100%; border: 1px dashed;">
+                                <img :src="partially_paid_file_name" alt="attachment" style="max-width: 100%; max-height: 130px; border-radius: 12px; object-fit: cover;" />
+                            </div>
+                            <p><strong>Payable Amount: </strong>@{{partially_paid_payable_amount}}</p>
+                            <p><strong>Voucher Code: </strong>@{{partially_paid_voucher}}</p>
+                            <p><strong>Remarks: </strong>@{{remarks_partially_paid}}</p>
+
+                        </div>
+                        @if($role == "Hr Admin")
+                        <div class="modal-footer">
+                            <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_partially_paid_remarks_modal()">Reject</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve & Pay</button>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- payment rejected remarks Modal -->
+            <div class="modal fade show" id="rejectedRemarksModal" v-if="partially_paid_remarks_modal" tabindex="-1" role="dialog" aria-labelledby="rejectedRemarksModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="rejectedRemarksModalLabel"> TER ID: @{{partially_paid_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partially_paid_remarks_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">HR Remarks:</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="hr_remarks">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" @click="submit_hr_remarks()">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partial Paid Modal -->
+            <div class="modal fade show" id="partialpaidModal" v-if="partial_payment_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="partialpaidModalLabel"> TER ID:  @{{partially_paid_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_payment_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="ter_remarks">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Payable Amount</label>
+                                    <input type="number" class="form-control" id="recipient-name" v-model="payable_amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Voucher Code</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="voucher_code">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Upload File</label>
+                                    <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal">Save changes
+                            </button>
+                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
 
             <div class="modal fade show" id="viewFileModal" v-if="file_view_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -641,7 +769,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
     </div>
@@ -663,12 +791,143 @@
             file_view_modal: false,
             id: "",
             view_file_name: "",
+
+            hr_approval_modal: false,
+            hr_approval_modal_details_loading: true,
+            partially_paid_remarks_modal: false,
+            partially_paid_id: "",
+            partially_paid_payable_amount: "",
+            partially_paid_voucher: "",
+            partially_paid_file_name: "",
+            remarks_partially_paid: "",
+            hr_remarks: "",
+
+            partial_payment_modal: false,
+            ter_remarks:"",
+            payable_amount: "",
+            voucher_code: "",
+            file:"",
+            diff_amount: "",
+            actual_amount:"",
+            prev_payable_sum:"",
+            actual_partial_id:"",
+
         },
         created: function() {
             // alert(this.got_details)
             //   alert('hello');
         },
         methods: {
+            // open_partial_payment_modal: function(id) {
+            //     this.partial_payment_modal = true;
+            //     this.partially_paid_id = id;
+            // },
+            open_partial_payment_modal: function(ter_id,id) {
+                this.actual_partial_id=id;
+                this.partial_payment_modal = true;
+                this.partially_paid_id = ter_id;
+                axios.post('/check_deduction', {
+                        'ter_id': this.partially_paid_id,
+                    })
+                    .then(response => {
+                        if (response.data[0] == "success") {
+                            this.diff_amount = response.data[1];
+                            this.actual_amount = response.data[2];
+                            this.prev_payable_sum = response.data[3];
+                        } else {
+                            swal('error', "All dues are paid", 'error')
+                            this.partial_payment_modal = false;
+                            $('#partialpaidModal').modal('hide');
+                        }
+                        this.partial_remarks = "";
+                        this.payable_amount = "";
+                        this.voucher_code = "";
+                        document.getElementById("fileupload").value = "";
+
+                    }).catch(error => {
+
+                        swal('error', error, 'error')
+                        this.partial_payment_modal = false;
+                        this.partially_paid_id = "";
+                    })
+                // this.partial_paid_modal = true;
+            },
+            upload_file(e) {
+                this.file = e.target.files[0];
+            },
+            update_payment: function() {
+                if (this.ter_remarks != "" && this.voucher_code != "" && this.payable_amount != "" && this.file != null) {
+                    if (parseInt(this.diff_amount) >= this.payable_amount) {
+                        const config = {
+                            headers: {
+                                'content-type': 'multipart/form-data',
+                            }
+                        }
+                        let formData = new FormData();
+                        formData.append('file', this.file);
+                        formData.append('ter_id', this.partially_paid_id);
+                        formData.append('remarks', this.ter_remarks);
+                        formData.append('voucher_code', this.voucher_code);
+                        formData.append('payable_amount', this.payable_amount);
+                        formData.append('actual_amount', this.actual_amount);
+                        formData.append('prev_payable_sum', this.prev_payable_sum);
+                        formData.append('left_amount', this.diff_amount);
+                        formData.append('actual_partial_id', this.actual_partial_id);
+
+
+                        axios.post('/update_ter_deduction', formData, config)
+                            .then(response => {
+                                if (response.data[0] === "duplicate_voucher") {
+                                    swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                                } else if (response.data) {
+                                    swal('success', "Ter Id :" + this.ter_id + " has been sent to HR for payment", 'success')
+                                    location.reload();
+                                } else {
+                                    swal('error', "System Error", 'error')
+                                    this.partial_paid_modal = false;
+                                    this.ter_id = "";
+                                    location.reload();
+                                }
+
+                            }).catch(error => {
+
+                                swal('error', error, 'error')
+                                this.partial_paid_modal = false;
+                                this.ter_id = "";
+                            })
+                    } else {
+                        swal('error', "Payable Amount = " + this.payable_amount + " can't be greater than Total Amount = " + this.diff_amount, 'error')
+                    }
+                } else {
+                    swal('error', "Fields are Empty", 'error')
+                }
+            },
+
+            open_hr_approval_modal: function(ter_id) {
+                this.partially_paid_id = ter_id;
+                axios.post('/partially_paid_details', {
+                        'id': this.partially_paid_id
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            this.partially_paid_payable_amount = response.data.payable_amount;
+                            this.partially_paid_voucher = response.data.voucher_code;
+                            this.partially_paid_file_name = 'uploads/' + response.data.file_name;
+                            this.remarks_partially_paid = response.data.remarks;
+                            this.hr_approval_modal_details_loading = false;
+                            // console.log(response.data)
+                        }
+                    }).catch(error => {
+
+                        // console.log(response)
+                        this.apply_offer_btn = 'Apply';
+
+                    })
+                this.hr_approval_modal = true;
+            },
+            open_partially_paid_remarks_modal: function() {
+                this.partially_paid_remarks_modal = true;
+            },
             open_file_view_modal: function(ter_id) {
                 // var file;
                 // file=document.getElementById('table_file_name').value;
@@ -678,7 +937,7 @@
                         'id': this.id,
                     })
                     .then(response => {
-                        this.view_file_name = 'rejected_ter_uploads/' + response.data;
+                        this.view_file_name = 'partially_paid_ter_uploads/' + response.data;
                         this.file_view_modal = true;
                     }).catch(error => {
 
@@ -686,6 +945,29 @@
                         this.file_view_modal = false;
                         this.ter_id = "";
                     })
+            },
+            submit_hr_remarks: function() {
+                if (this.hr_remarks != "") {
+                    axios.post('/submit_hr_remarks', {
+                            'hr_remarks': this.hr_remarks,
+                            'id': this.partially_paid_id,
+                            'type': "partially_paid"
+                        })
+                        .then(response => {
+                            if (response.data == '1') {
+                                swal('success', 'Updated Successfully!', 'success')
+                                location.reload();
+                                // console.log(response.data[0].status)
+                            }
+                        }).catch(error => {
+
+                            console.log(response)
+                            this.apply_offer_btn = 'Apply';
+
+                        })
+                } else {
+                    swal('error', 'Hr Remarks Required', 'error')
+                }
             },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
