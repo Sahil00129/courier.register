@@ -581,14 +581,10 @@
                                         <div class="dates d-flex flex-column justify-content-center" style="width: 100%;">
                                             <div class="axVouchers flex-grow-1">
                                                 <div class="heading" style="min-height: 30px;">
-                                                    <span class="d-flex flex-column">{{$tercourier->voucher_code ?? '-'}}</span>
-                                                    <span class="d-flex flex-column align-items-end">{{$tercourier->payable_amount ?? '-'}}</span>
-
-
-                                                    <!-- <?php
-                                                            $voucherCode = json_decode($tercourier->voucher_code);
-                                                            $payableAmount = json_decode($tercourier->payable_amount);
-                                                            ?>
+                                                    <?php
+                                                    $voucherCode = json_decode($tercourier->voucher_code);
+                                                    $payableAmount = json_decode($tercourier->payable_amount);
+                                                    ?>
 
                                                     <span class="d-flex flex-column">
                                                         @if(is_countable($voucherCode) && count($voucherCode) > 0)
@@ -607,7 +603,7 @@
                                                         @else
                                                         <span>-</span>
                                                         @endif
-                                                    </span> -->
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -701,7 +697,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="partialpaidModalLabel"> TER ID:  @{{partially_paid_id}}</h5>
+                            <h5 class="modal-title" id="partialpaidModalLabel"> TER ID: @{{partially_paid_id}}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_payment_modal=false;">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -803,14 +799,14 @@
             hr_remarks: "",
 
             partial_payment_modal: false,
-            ter_remarks:"",
+            ter_remarks: "",
             payable_amount: "",
             voucher_code: "",
-            file:"",
+            file: "",
             diff_amount: "",
-            actual_amount:"",
-            prev_payable_sum:"",
-            actual_partial_id:"",
+            actual_amount: "",
+            prev_payable_sum: "",
+            actual_partial_id: "",
 
         },
         created: function() {
@@ -822,8 +818,8 @@
             //     this.partial_payment_modal = true;
             //     this.partially_paid_id = id;
             // },
-            open_partial_payment_modal: function(ter_id,id) {
-                this.actual_partial_id=id;
+            open_partial_payment_modal: function(ter_id, id) {
+                this.actual_partial_id = id;
                 this.partial_payment_modal = true;
                 this.partially_paid_id = ter_id;
                 axios.post('/check_deduction', {

@@ -2145,8 +2145,8 @@ class TercourierController extends Controller
         $details = Auth::user();
 
 
-        $insert['payable_amount'] = $data['payable_amount'];
-        $insert['voucher_code'] = $data['voucher_code'];
+        $insert['payable_amount'][0] = $data['payable_amount'];
+        $insert['voucher_code'][0] = $data['voucher_code'];
         $insert['book_date'] = date('Y-m-d');
         $insert['payment_type'] = "ter_rejected";
         $insert['remarks'] = $data['remarks'];
@@ -2199,8 +2199,8 @@ class TercourierController extends Controller
         $insert['actual_amount'] = $data['actual_amount'];
         $insert['prev_payable_sum'] = $data['prev_payable_sum'];
         $insert['left_amount'] = $data['left_amount'];
-        $insert['payable_amount'] = $data['payable_amount'];
-        $insert['voucher_code'] = $data['voucher_code'];
+        $insert['payable_amount'][0] = $data['payable_amount'];
+        $insert['voucher_code'][0] = $data['voucher_code'];
         $insert['book_date'] = date('Y-m-d');
         $insert['payment_type'] = "deduction_setllement";
         $insert['remarks'] = $data['remarks'];
