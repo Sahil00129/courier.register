@@ -96,8 +96,13 @@ class SenderController extends Controller
     {
         $data = $request->all();
         $details = Auth::user();
+        $emp_id=$data['emp_id'];
+        $check_blocked_user=DB::table('sender_details')->where('employee_id',$emp_id)->get();
+        if($check_blocked_user[0]->status == "Blocked" || $check_blocked_user[0]->last_working_day != "")
+        {
+            return "Blocked";
+        }
         $balance_data = DB::table('employee_balance')->where('employee_id', $data['emp_id'])->orderBy('id', 'DESC')->first();
-         $emp_id=$data['emp_id'];
          $user_id=$details->id;
          $user_name = $details->name;
         $ledger_data = EmployeeLedgerData::where('employee_id', $data['emp_id'])->orderBy('id', 'DESC')->first();

@@ -466,7 +466,11 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
+                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                    $status = 'F&F Pay';
+                                    $class = 'btn-success';
+                                }
+                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -499,12 +503,16 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
-                                    @elseif($tercourier->status == 5)
+                                    @elseif($tercourier->status == 5 && $name=="tr admin")
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(<?php echo $tercourier->id ?>)">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 5 && $name=="Hr Admin")
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal">
+                                        {{ $status }}
                                     </button>
                                     @else
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
@@ -703,7 +711,12 @@
                                         Sent to Finfect
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4">
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                       F&F Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         Pay
                                     </button>
@@ -895,7 +908,11 @@
                                 } elseif ($tercourier->status == 3) {
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4) {
+                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                    $status = 'F&F Pay';
+                                    $class = 'btn-success';
+                                }
+                                elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
                                     $status = 'Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
@@ -1067,7 +1084,12 @@
                                         Sent to Finfect
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4">
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                       F&F Pay
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         Pay
                                     </button>

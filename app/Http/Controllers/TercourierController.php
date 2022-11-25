@@ -67,7 +67,7 @@ class TercourierController extends Controller
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
                 // die;
-                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'couriers' => $couriers,'name'=>$name]);
+                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'name' =>$name, 'couriers' => $couriers,'name'=>$name]);
             } else {
                 $tercouriers = $query->whereIn('status', ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
@@ -75,7 +75,7 @@ class TercourierController extends Controller
             //    echo'<pre>'; print_r($name); die;
         }
 
-        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'couriers' => $couriers]);
+        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'name' =>$name, 'couriers' => $couriers]);
     }
 
     public function download_ter_list()
@@ -1121,7 +1121,7 @@ class TercourierController extends Controller
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
-    // return $tercourier_table;
+
         if(count($tercourier_table)<1)
         {
             $data_error['status_of_data'] = "not_found";
@@ -1132,6 +1132,10 @@ class TercourierController extends Controller
             return $data_error;
         }
         if ($tercourier_table[0]->status == 9 && $role=="reception") {
+            $data_error['status_of_data'] = "9";
+            return $data_error;
+        }
+        if ($tercourier_table[0]->status == 9 && $role=="" && $tercourier_table[0]->employee_id == 0) {
             $data_error['status_of_data'] = "9";
             return $data_error;
         }
@@ -1496,6 +1500,7 @@ class TercourierController extends Controller
         $id = $data['unique_id'];
         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
         $settlement_deduction = 0;
+        $response="";
         if (!empty($check_deduction_table)) {
             $emp_id = $check_deduction_table->employee_id;
             $payable_amount = $check_deduction_table->payable_amount;
@@ -1917,7 +1922,7 @@ class TercourierController extends Controller
         //     "txn_route":"TER",
         //     "email":"'.$sender_data->official_email_id.'",
         //     "terid":"'.$ter_id.'",
-        //     "ptype":"Regular",
+        //     "ptype":"'.$payment_type.'",
         //     "ax_id":"'.$ax_id.'"
         //     "territory":"'.$sender_data->territory.'"
         //   }';

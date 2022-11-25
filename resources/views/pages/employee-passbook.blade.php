@@ -38,6 +38,7 @@
                 <div class="row">
                     <div class="col">
                         <h5>Imprest Report Employee Wise</h5>
+                    <h6>Employee Id : {{$emp_id}}</h6>
                     <h6>Employee Name : {{$employee_name}}</h6>
                     <h6>Current Balance : {{$current_balance}}</h6>
                     </div>
@@ -138,6 +139,7 @@
                 <div class="row">
                     <div class="col">
                         <h5>Employee TER Ledger</h5>
+                        <h6>Employee Id : {{$emp_id}}</h6>
                     <h6>Employee Name : {{$employee_name}}</h6>
                     <!-- <h6>Current Balance : {{$current_balance}}</h6> -->
                     </div>
@@ -320,11 +322,14 @@
                         'emp_id':this.emp_id
                     })
                     .then(response => {
-                        if (response.data) {
+                        if(response.data == "Blocked"){
+                            swal('error', "Advance can't be added for Blocked User", 'error')
+                        }
+                        else if (response.data) {
                             swal('success', "Advance Added Successfully!!!", 'success')
                             this.emp_modal=false;
                             this.emp_advance_amount="";
-                            location.reload();
+                            // location.reload();
                         } else {
                             this.emp_modal=false;
                             this.emp_advance_amount="";
