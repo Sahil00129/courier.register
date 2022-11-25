@@ -1503,6 +1503,7 @@
             loader: false,
             searched_status: "all",
             ter_full_excel:true,
+            actual_partial_id:"",
 
 
         },
@@ -1830,6 +1831,7 @@
                         formData.append('actual_amount', this.actual_amount);
                         formData.append('prev_payable_sum', this.prev_payable_sum);
                         formData.append('left_amount', this.diff_amount);
+                        formData.append('actual_partial_id', this.actual_partial_id);
 
 
                         axios.post('/update_ter_deduction', formData, config)

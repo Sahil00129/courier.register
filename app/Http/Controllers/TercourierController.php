@@ -67,15 +67,15 @@ class TercourierController extends Controller
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
                 // die;
-                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'name' =>$name, 'couriers' => $couriers,'name'=>$name]);
+                return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
-                $tercouriers = $query->whereIn('status', ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
             //    echo'<pre>'; print_r($name); die;
         }
 
-        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role,'name' =>$name, 'couriers' => $couriers]);
+        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
     }
 
     public function download_ter_list()
@@ -96,98 +96,75 @@ class TercourierController extends Controller
         // ini_set('max_execution_time', -1);
         $data = $request->all();
         $searched_item = trim($data['search_data']);
-        $check_status=$searched_item;
+        $check_status = $searched_item;
         $role = $data['page_role'];
-        $flag=0;
+        $flag = 0;
         if (!empty($searched_item)) {
 
-            if($check_status == '1')
-            {
-                $status=1;
-                $flag=1;
-            }
-
-            else if($check_status == '2')
-            {
-                $status=2;
-                $flag=1;
-            }
-            else if($check_status == '3')
-            {
-                $status=3;
-                $flag=1;
-            }
-            else if($check_status == '4')
-            {
-                $status=4;
-                $flag=1;
-            }
-            else if($check_status == '5')
-            {
-                $status=5;
-                $flag=1;
-            }
-            else if($check_status == '6')
-            {
-                $status=6;
-                $flag=1;
-            }
-            else if($check_status == '7')
-            {
-                $status=7;
-                $flag=1;
-            }
-            else if($check_status == '8')
-            {
-                $status=8;
-                $flag=1;
-            }
-            else if($check_status == '9')
-            {
-                $status=9;
-                $flag=1;
-            }
-            else if($check_status == 'fail')
-            {
-                $status=0;
-                $flag=1;
+            if ($check_status == '1') {
+                $status = 1;
+                $flag = 1;
+            } else if ($check_status == '2') {
+                $status = 2;
+                $flag = 1;
+            } else if ($check_status == '3') {
+                $status = 3;
+                $flag = 1;
+            } else if ($check_status == '4') {
+                $status = 4;
+                $flag = 1;
+            } else if ($check_status == '5') {
+                $status = 5;
+                $flag = 1;
+            } else if ($check_status == '6') {
+                $status = 6;
+                $flag = 1;
+            } else if ($check_status == '7') {
+                $status = 7;
+                $flag = 1;
+            } else if ($check_status == '8') {
+                $status = 8;
+                $flag = 1;
+            } else if ($check_status == '9') {
+                $status = 9;
+                $flag = 1;
+            } else if ($check_status == 'fail') {
+                $status = 0;
+                $flag = 1;
             }
             $query = Tercourier::query();
             // return $flag;
-            if($flag)
-            {
-                
+            if ($flag) {
+
                 $tercouriers = $query->with('CourierCompany', 'SenderDetail')
-                ->where('status',$status)->orderby('id', 'DESC')->get();
+                    ->where('status', $status)->orderby('id', 'DESC')->get();
                 return [$tercouriers];
-            }
-            else{
-            $tercouriers = $query->with('CourierCompany', 'SenderDetail')
-                ->where('id', 'like', '%' . $searched_item . '%')->orWhere('employee_id', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orWhere('sender_name', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
-            // dd($tercouriers);
-            // return $tercouriers;
-            $ter_data = array();
-            $j = 0;
-            $size = sizeof($tercouriers);
-
-            if ($role != 'reception') {
-                for ($i = 0; $i < $size; $i++) {
-
-                    if (
-                        $tercouriers[$i]->status != 1) {
-                        $ter_data[$j] = $tercouriers[$i];
-                        //    print_r($j);
-                        $j++;
-                    }
-                }
-                return [$ter_data];
             } else {
-              
-                return [$tercouriers];
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail')
+                    ->where('id', 'like', '%' . $searched_item . '%')->orWhere('employee_id', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orWhere('sender_name', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
+                // dd($tercouriers);
+                // return $tercouriers;
+                $ter_data = array();
+                $j = 0;
+                $size = sizeof($tercouriers);
 
+                if ($role != 'reception') {
+                    for ($i = 0; $i < $size; $i++) {
+
+                        if (
+                            $tercouriers[$i]->status != 1
+                        ) {
+                            $ter_data[$j] = $tercouriers[$i];
+                            //    print_r($j);
+                            $j++;
+                        }
+                    }
+                    return [$ter_data];
+                } else {
+
+                    return [$tercouriers];
+                }
             }
-        }
-
         } else {
             return 'error';
         }
@@ -195,10 +172,10 @@ class TercourierController extends Controller
 
     public function get_file_name(Request $request)
     {
-        $data=$request->all();
-        $id=$data['id'];
-        $get_file_name=DB::table('tercouriers')->select('file_name')->where('id',$id)->get();
-        $name=$get_file_name[0]->file_name;
+        $data = $request->all();
+        $id = $data['id'];
+        $get_file_name = DB::table('tercouriers')->select('file_name')->where('id', $id)->get();
+        $name = $get_file_name[0]->file_name;
         return $name;
     }
 
@@ -211,14 +188,13 @@ class TercourierController extends Controller
     public function download_status_wise_ter($status)
     {
 
- return Excel::download(new ExportTerStatusList($status), 'courier_ter_list.xlsx');
-
+        return Excel::download(new ExportTerStatusList($status), 'courier_ter_list.xlsx');
     }
 
     public function hand_shake_report()
     {
         if (Auth::check()) {
-           return 1;
+            return 1;
         }
     }
 
@@ -226,7 +202,7 @@ class TercourierController extends Controller
     {
         return Excel::download(new ExportHandShakeList, 'hand_shake_report.xlsx');
     }
-    
+
 
     public function download_reception_list()
     {
@@ -285,7 +261,7 @@ class TercourierController extends Controller
         $terdata['saved_by_name'] = $details->name;
         $terdata['saved_by_id'] = $details->id;
         $terdata['employee_id']    = $request->sender_id;
-        $terdata['recp_entry_time'] = $request->timeTaken;  
+        $terdata['recp_entry_time'] = $request->timeTaken;
         // return $terdata['employee_id'];
         $terdata['date_of_receipt'] = $request->date_of_receipt;
         $terdata['courier_id']  = $request->courier_id;
@@ -317,21 +293,20 @@ class TercourierController extends Controller
         $terdata['sender_name']  = $senders[0]->name;
 
         // echo "<pre>";print_r($ter_data);die;
-      
+
         $tercourier = Tercourier::create($terdata);
         // dd($tercourier);
         if ($tercourier) {
             $type =     config('services.finfect_key.finfect_url');
-           if($type == "https://stagging.finfect.biz/api/non_finvendors_payments")
-           {
-            // return "hello";
-            $response['success'] = true;
-            $response['messages'] = 'Succesfully Submitted';
-            $response['redirect_url'] = URL::to('/tercouriers');
-            return Response::json($response);
-           }
-        //    exit;
-   
+            if ($type == "https://stagging.finfect.biz/api/non_finvendors_payments") {
+                // return "hello";
+                $response['success'] = true;
+                $response['messages'] = 'Succesfully Submitted';
+                $response['redirect_url'] = URL::to('/tercouriers');
+                return Response::json($response);
+            }
+            //    exit;
+
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
@@ -691,16 +666,16 @@ class TercourierController extends Controller
         // if($id == '0')
         // {
         //     return view('tercouriers.update-tercourier');
-           
+
         // }else{
         //     return view('tercouriers.update-tercourier', ['unique_id' => $id]);
         // }
-       
+
     }
 
     public function admin_update_ter($id)
     {
-        return view('tercouriers.admin-update-tercourier',['unique_id' => $id]);
+        return view('tercouriers.admin-update-tercourier', ['unique_id' => $id]);
     }
 
 
@@ -1099,10 +1074,9 @@ class TercourierController extends Controller
                 }
             }
             return $updated_record_detail;
-        }elseif($tercourier[0]->status == 9){
+        } elseif ($tercourier[0]->status == 9) {
             return "not_allowed";
-        }
-         else {
+        } else {
             return 0;
         }
         // $tercourier=DB::table('tercouriers')->where('id',$unique_id)->update('sender_id',$sender_id);
@@ -1117,33 +1091,32 @@ class TercourierController extends Controller
         $data = $request->all();
         // return $data;
         $id = $data['unique_id'];
-        $role= $data['role'];
+        $role = $data['role'];
         $query = Tercourier::query();
         // $tercourier_table= DB::table('tercouriers')->select ('*')->where('id',$id)->get()->toArray();
         $tercourier_table = $query->where('id', $id)->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
 
-        if(count($tercourier_table)<1)
-        {
+        if (count($tercourier_table) < 1) {
             $data_error['status_of_data'] = "not_found";
             return $data_error;
         }
-        if ($tercourier_table[0]->status == 0 && $role=="reception") {
+        if ($tercourier_table[0]->status == 0 && $role == "reception") {
             $data_error['status_of_data'] = "0";
             return $data_error;
         }
-        if ($tercourier_table[0]->status == 9 && $role=="reception") {
+        if ($tercourier_table[0]->status == 9 && $role == "reception") {
             $data_error['status_of_data'] = "9";
             return $data_error;
         }
-        if ($tercourier_table[0]->status == 9 && $role=="" && $tercourier_table[0]->employee_id == 0) {
+        if ($tercourier_table[0]->status == 9 && $role == "" && $tercourier_table[0]->employee_id == 0) {
             $data_error['status_of_data'] = "9";
             return $data_error;
         }
-        if ($tercourier_table[0]->status == 4 && $role=="reception") {
+        if ($tercourier_table[0]->status == 4 && $role == "reception") {
             $data_error['status_of_data'] = "4";
             return $data_error;
         }
-        if ($tercourier_table[0]->status == 2 && $role=="reception") {
+        if ($tercourier_table[0]->status == 2 && $role == "reception") {
             $data_error['status_of_data'] = "2";
             return $data_error;
         }
@@ -1198,7 +1171,7 @@ class TercourierController extends Controller
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
 
-        $check_dates=DB::table('tercouriers')->where('id',$id)->get();
+        $check_dates = DB::table('tercouriers')->where('id', $id)->get();
 
         $details = Auth::user();
         $ter_data_update['user_id'] = $details->id;
@@ -1208,26 +1181,24 @@ class TercourierController extends Controller
         $ter_data_update['created_at'] = date('Y-m-d H:i:s');
         $ter_data_update['updated_at'] = date('Y-m-d H:i:s');
 
-        if($check_dates)
-        {
-            if($data['terfrom'] != $check_dates[0]->terfrom_date)
-            {
-                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+        if ($check_dates) {
+            if ($data['terfrom'] != $check_dates[0]->terfrom_date) {
+                $do_update = DB::table('tercouriers')->where('id', $id)->update(array(
                     'terfrom_date' => $data['terfrom']
                 ));
-                if($do_update){
-                        $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
-                         DB::table('update_table_data_details')->insert($ter_data_update);
+                if ($do_update) {
+                    $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
+                    DB::table('update_table_data_details')->insert($ter_data_update);
                 }
             }
-            if($data['terto'] != $check_dates[0]->terto_date){
-                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+            if ($data['terto'] != $check_dates[0]->terto_date) {
+                $do_update = DB::table('tercouriers')->where('id', $id)->update(array(
                     'terto_date' => $data['terto']
                 ));
-                if($do_update){
+                if ($do_update) {
                     $ter_data_update['updated_field'] = 'TER To Date Changed from ' . $check_dates[0]->terto_date . ' to ' . $data['terto'];
-                     DB::table('update_table_data_details')->insert($ter_data_update);
-            }
+                    DB::table('update_table_data_details')->insert($ter_data_update);
+                }
             }
         }
 
@@ -1254,31 +1225,30 @@ class TercourierController extends Controller
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
                 // print_r($decode2[$i]);
                 if (gettype($decode2[$i]) == "array") {
-                if (!empty($decode2[$i])) {
-                    if (sizeof($decode2[$i]) > 1) {
-                        // print_r("rt");
-                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
-                            if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                    if (!empty($decode2[$i])) {
+                        if (sizeof($decode2[$i]) > 1) {
+                            // print_r("rt");
+                            for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                                if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                                }
+                            }
+                        } else {
+                            // echo "<pre>";
+                            // print_r($data['voucher_code'][$l]);
+                            // print_r($decode2[$i][0]);
+                            if ($decode2[$i][0] == $data['voucher_code'][$l]) {
                                 return ["duplicate_voucher", $data['voucher_code'][$l]];
+                                // exit;
                             }
                         }
-                    } else {
-                        // echo "<pre>";
-                        // print_r($data['voucher_code'][$l]);
-                        // print_r($decode2[$i][0]);
-                        if ($decode2[$i][0] == $data['voucher_code'][$l]) {
-                            return ["duplicate_voucher", $data['voucher_code'][$l]];
-                            // exit;
-                        }
+                    }
+                } else {
+                    if ($decode2[$i] == $data['voucher_code'][$l]) {
+                        return ["duplicate_voucher", $data['voucher_code'][$l]];
+                        // exit;
                     }
                 }
-            }
-            else{
-                if ($decode2[$i] == $data['voucher_code'][$l]) {
-                    return ["duplicate_voucher", $data['voucher_code'][$l]];
-                    // exit;
-                }
-            }
             }
         }
         //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1322,7 +1292,7 @@ class TercourierController extends Controller
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
-        $check_dates=DB::table('tercouriers')->where('id',$id)->get();
+        $check_dates = DB::table('tercouriers')->where('id', $id)->get();
 
         $details = Auth::user();
         $ter_data_update['user_id'] = $details->id;
@@ -1332,26 +1302,24 @@ class TercourierController extends Controller
         $ter_data_update['created_at'] = date('Y-m-d H:i:s');
         $ter_data_update['updated_at'] = date('Y-m-d H:i:s');
 
-        if($check_dates)
-        {
-            if($data['terfrom'] != $check_dates[0]->terfrom_date)
-            {
-                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+        if ($check_dates) {
+            if ($data['terfrom'] != $check_dates[0]->terfrom_date) {
+                $do_update = DB::table('tercouriers')->where('id', $id)->update(array(
                     'terfrom_date' => $data['terfrom']
                 ));
-                if($do_update){
-                        $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
-                         DB::table('update_table_data_details')->insert($ter_data_update);
+                if ($do_update) {
+                    $ter_data_update['updated_field'] = 'TER From Date Changed from ' . $check_dates[0]->terfrom_date . ' to ' . $data['terfrom'];
+                    DB::table('update_table_data_details')->insert($ter_data_update);
                 }
             }
-            if($data['terto'] != $check_dates[0]->terto_date){
-                $do_update=DB::table('tercouriers')->where('id',$id)->update(array(
+            if ($data['terto'] != $check_dates[0]->terto_date) {
+                $do_update = DB::table('tercouriers')->where('id', $id)->update(array(
                     'terto_date' => $data['terto']
                 ));
-                if($do_update){
+                if ($do_update) {
                     $ter_data_update['updated_field'] = 'TER To Date Changed from ' . $check_dates[0]->terto_date . ' to ' . $data['terto'];
-                     DB::table('update_table_data_details')->insert($ter_data_update);
-            }
+                    DB::table('update_table_data_details')->insert($ter_data_update);
+                }
             }
         }
 
@@ -1379,30 +1347,30 @@ class TercourierController extends Controller
                 $decode2[$i] = json_decode($check_duplicate[$i]->voucher_code);
                 // print_r($decode2[$i]);exit;
                 if (gettype($decode2[$i]) == "array") {
-                if (!empty($decode2[$i])) {
-                    if (sizeof($decode2[$i]) > 1) {
-                        // print_r("rt");
-                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
-                            if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                    if (!empty($decode2[$i])) {
+                        if (sizeof($decode2[$i]) > 1) {
+                            // print_r("rt");
+                            for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                                if ($decode2[$i][$j] == $data['voucher_code'][$l]) {
+                                    return ["duplicate_voucher", $data['voucher_code'][$l]];
+                                }
+                            }
+                        } else {
+                            // echo "<pre>";
+                            // print_r($data['voucher_code'][$l]);
+                            // print_r($decode2[$i][0]);
+                            if ($decode2[$i][0] == $data['voucher_code'][$l]) {
                                 return ["duplicate_voucher", $data['voucher_code'][$l]];
+                                // exit;
                             }
                         }
-                    } else {
-                        // echo "<pre>";
-                        // print_r($data['voucher_code'][$l]);
-                        // print_r($decode2[$i][0]);
-                        if ($decode2[$i][0] == $data['voucher_code'][$l]) {
-                            return ["duplicate_voucher", $data['voucher_code'][$l]];
-                            // exit;
-                        }
+                    }
+                } else {
+                    if ($decode2[$i] == $data['voucher_code'][$l]) {
+                        return ["duplicate_voucher", $data['voucher_code'][$l]];
+                        // exit;
                     }
                 }
-            }else{
-                if ($decode2[$i] == $data['voucher_code'][$l]) {
-                    return ["duplicate_voucher", $data['voucher_code'][$l]];
-                    // exit;
-                }
-            }
             }
         }
         //////////////////////////////////////////////////// end of duplicate voucher check ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1448,44 +1416,41 @@ class TercourierController extends Controller
                 $res = self::api_call_finfect($id);
                 $emp_id = $data_ter[0]->employee_id;
                 // $res="dsd";
-                if($res != '1')
-                {
-                 $get_emp_ledger=EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-                 $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
-                 $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance+$get_emp_ledger->ter_expense;
-                 $insert_data['wallet_id'] = 0;
-                 $insert_data['incoming_payment'] = 0;
-                 $insert_data['action_done'] = 'Payment_Failed';
-                 $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
-                 $insert_data['utilize_amount'] = 0;
-                 $insert_data['updated_date'] = date('Y-m-d');
-                 $insert_data['employee_id'] = $emp_id;
-                 $insert_data['ter_id'] = $get_emp_ledger->ter_id;
-                 $insert_data['user_id'] = $get_emp_ledger->user_id;
-                 $insert_data['user_name'] = $get_emp_ledger->user_name;
-                 $insert_data['created_at'] = date('Y-m-d H:i:s');
-                 $insert_data['updated_at'] = date('Y-m-d H:i:s');
-                 EmployeeLedgerData::insert($insert_data);
-         
-                 $get_emp_acc=EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-                 if($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id )
-                 {
-                     $insert_emp_data['updated_date']=date('Y-m-d');
-                     $insert_emp_data['employee_id']=$emp_id;
-                     $insert_emp_data['advance_amount']=0;
-                     $insert_emp_data['ter_id']=$get_emp_acc->ter_id;
-                     $insert_emp_data['ax_voucher_number']=$get_emp_acc->ax_voucher_number;
-                     $insert_emp_data['utilize_amount']=$get_emp_acc->utilize_amount;
-                     $insert_emp_data['current_balance']=$get_emp_acc->utilize_amount+$get_emp_acc->current_balance;
-                     $insert_emp_data['action_done']='Payment_Failed';
-                     $insert_emp_data['user_id']=$get_emp_acc->user_id;
-                     $insert_emp_data['user_name']=$get_emp_acc->user_name;
-                     $insert_emp_data['created_at']= date('Y-m-d H:i:s');
-                     $insert_emp_data['updated_at']= date('Y-m-d H:i:s');
-                     // return $insert_data;
-                     $table_update=EmployeeBalance::insert($insert_emp_data);
-                 }
-         
+                if ($res != '1') {
+                    $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                    $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
+                    $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+                    $insert_data['wallet_id'] = 0;
+                    $insert_data['incoming_payment'] = 0;
+                    $insert_data['action_done'] = 'Payment_Failed';
+                    $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
+                    $insert_data['utilize_amount'] = 0;
+                    $insert_data['updated_date'] = date('Y-m-d');
+                    $insert_data['employee_id'] = $emp_id;
+                    $insert_data['ter_id'] = $get_emp_ledger->ter_id;
+                    $insert_data['user_id'] = $get_emp_ledger->user_id;
+                    $insert_data['user_name'] = $get_emp_ledger->user_name;
+                    $insert_data['created_at'] = date('Y-m-d H:i:s');
+                    $insert_data['updated_at'] = date('Y-m-d H:i:s');
+                    EmployeeLedgerData::insert($insert_data);
+
+                    $get_emp_acc = EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                    if ($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id) {
+                        $insert_emp_data['updated_date'] = date('Y-m-d');
+                        $insert_emp_data['employee_id'] = $emp_id;
+                        $insert_emp_data['advance_amount'] = 0;
+                        $insert_emp_data['ter_id'] = $get_emp_acc->ter_id;
+                        $insert_emp_data['ax_voucher_number'] = $get_emp_acc->ax_voucher_number;
+                        $insert_emp_data['utilize_amount'] = $get_emp_acc->utilize_amount;
+                        $insert_emp_data['current_balance'] = $get_emp_acc->utilize_amount + $get_emp_acc->current_balance;
+                        $insert_emp_data['action_done'] = 'Payment_Failed';
+                        $insert_emp_data['user_id'] = $get_emp_acc->user_id;
+                        $insert_emp_data['user_name'] = $get_emp_acc->user_name;
+                        $insert_emp_data['created_at'] = date('Y-m-d H:i:s');
+                        $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
+                        // return $insert_data;
+                        $table_update = EmployeeBalance::insert($insert_emp_data);
+                    }
                 }
                 return $res;
             }
@@ -1500,7 +1465,7 @@ class TercourierController extends Controller
         $id = $data['unique_id'];
         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
         $settlement_deduction = 0;
-        $response="";
+        $response = "";
         if (!empty($check_deduction_table)) {
             $emp_id = $check_deduction_table->employee_id;
             $payable_amount = $check_deduction_table->payable_amount;
@@ -1603,8 +1568,8 @@ class TercourierController extends Controller
             }
 
             $emp_sender_id = $emp_id;
-            
-           
+
+
             if (!$settlement_deduction) {
                 $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
                 if (!empty($check_last_working)) {
@@ -1622,8 +1587,8 @@ class TercourierController extends Controller
             // exit;
 
             $update_ledger_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
-          
-            
+
+
             $update_employee_table = EmployeeBalance::utilized_advance($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
 
 
@@ -1744,49 +1709,46 @@ class TercourierController extends Controller
         } else {
             $res = self::api_call_finfect($data['selected_id']);
         }
-      
+
         // print_r($res);
         // print_r("dss");
         // exit;
-       if($res != '1')
-       {
-        $get_emp_ledger=EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-        $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
-        $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance+$get_emp_ledger->ter_expense;
-        $insert_data['wallet_id'] = 0;
-        $insert_data['incoming_payment'] = 0;
-        $insert_data['action_done'] = 'Payment_Failed';
-        $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
-        $insert_data['utilize_amount'] = 0;
-        $insert_data['updated_date'] = date('Y-m-d');
-        $insert_data['employee_id'] = $emp_id;
-        $insert_data['ter_id'] = $get_emp_ledger->ter_id;
-        $insert_data['user_id'] = $get_emp_ledger->user_id;
-        $insert_data['user_name'] = $get_emp_ledger->user_name;
-        $insert_data['created_at'] = date('Y-m-d H:i:s');
-        $insert_data['updated_at'] = date('Y-m-d H:i:s');
-        EmployeeLedgerData::insert($insert_data);
+        if ($res != '1') {
+            $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+            $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
+            $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+            $insert_data['wallet_id'] = 0;
+            $insert_data['incoming_payment'] = 0;
+            $insert_data['action_done'] = 'Payment_Failed';
+            $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
+            $insert_data['utilize_amount'] = 0;
+            $insert_data['updated_date'] = date('Y-m-d');
+            $insert_data['employee_id'] = $emp_id;
+            $insert_data['ter_id'] = $get_emp_ledger->ter_id;
+            $insert_data['user_id'] = $get_emp_ledger->user_id;
+            $insert_data['user_name'] = $get_emp_ledger->user_name;
+            $insert_data['created_at'] = date('Y-m-d H:i:s');
+            $insert_data['updated_at'] = date('Y-m-d H:i:s');
+            EmployeeLedgerData::insert($insert_data);
 
-        $get_emp_acc=EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-        if($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id )
-        {
-            $insert_emp_data['updated_date']=date('Y-m-d');
-            $insert_emp_data['employee_id']=$emp_id;
-            $insert_emp_data['advance_amount']=0;
-            $insert_emp_data['ter_id']=$get_emp_acc->ter_id;
-            $insert_emp_data['ax_voucher_number']=$get_emp_acc->ax_voucher_number;
-            $insert_emp_data['utilize_amount']=$get_emp_acc->utilize_amount;
-            $insert_emp_data['current_balance']=$get_emp_acc->utilize_amount+$get_emp_acc->current_balance;
-            $insert_emp_data['action_done']='Payment_Failed';
-            $insert_emp_data['user_id']=$get_emp_acc->user_id;
-            $insert_emp_data['user_name']=$get_emp_acc->user_name;
-            $insert_emp_data['created_at']= date('Y-m-d H:i:s');
-            $insert_emp_data['updated_at']= date('Y-m-d H:i:s');
-            // return $insert_data;
-            $table_update=EmployeeBalance::insert($insert_emp_data);
+            $get_emp_acc = EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+            if ($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id) {
+                $insert_emp_data['updated_date'] = date('Y-m-d');
+                $insert_emp_data['employee_id'] = $emp_id;
+                $insert_emp_data['advance_amount'] = 0;
+                $insert_emp_data['ter_id'] = $get_emp_acc->ter_id;
+                $insert_emp_data['ax_voucher_number'] = $get_emp_acc->ax_voucher_number;
+                $insert_emp_data['utilize_amount'] = $get_emp_acc->utilize_amount;
+                $insert_emp_data['current_balance'] = $get_emp_acc->utilize_amount + $get_emp_acc->current_balance;
+                $insert_emp_data['action_done'] = 'Payment_Failed';
+                $insert_emp_data['user_id'] = $get_emp_acc->user_id;
+                $insert_emp_data['user_name'] = $get_emp_acc->user_name;
+                $insert_emp_data['created_at'] = date('Y-m-d H:i:s');
+                $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
+                // return $insert_data;
+                $table_update = EmployeeBalance::insert($insert_emp_data);
+            }
         }
-
-       }
         return $res;
     }
 
@@ -2051,8 +2013,8 @@ class TercourierController extends Controller
             $tercouriers = $query->where('payment_status', 2)->whereIn('status', [4, 0])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->get();
 
             // echo'<pre>'; print_r($tercouriers->status); die;
-            $role="tr admin";
-            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers,'role' =>$role]);
+            $role = "tr admin";
+            return view('tercouriers.show-pay-later-data', ['tercouriers' => $tercouriers, 'role' => $role]);
         }
         //    echo'<pre>'; print_r($name); die;
     }
@@ -2114,33 +2076,32 @@ class TercourierController extends Controller
             // print_r($decode2[$i]);
             if (!empty($decode2[$i])) {
                 if (gettype($decode2[$i]) == "array") {
-                if (sizeof($decode2[$i]) > 1) {
-                    // print_r("rt");
-                    for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
-                        if ($decode2[$i][$j] == $data['voucher_code']) {
+                    if (sizeof($decode2[$i]) > 1) {
+                        // print_r("rt");
+                        for ($j = 0; $j < sizeof($decode2[$i]); $j++) {
+                            if ($decode2[$i][$j] == $data['voucher_code']) {
+                                return ["duplicate_voucher", $data['voucher_code']];
+                            }
+                        }
+                    } else {
+                        // echo "<pre>";
+                        // print_r($decode2)
+                        // print_r($data['voucher_code'][$l]);
+                        // print_r($decode2[$i][0]);
+                        // exit;
+
+                        if ($decode2[$i][0] == $data['voucher_code']) {
                             return ["duplicate_voucher", $data['voucher_code']];
+                            // exit;
                         }
                     }
                 } else {
-                    // echo "<pre>";
-                    // print_r($decode2)
-                    // print_r($data['voucher_code'][$l]);
-                    // print_r($decode2[$i][0]);
-                    // exit;
-
-                    if ($decode2[$i][0] == $data['voucher_code']) {
+                    // return $decode2;
+                    if ($decode2[0] == $data['voucher_code']) {
                         return ["duplicate_voucher", $data['voucher_code']];
                         // exit;
                     }
                 }
-            }else{
-                // return $decode2;
-                if ($decode2[0] == $data['voucher_code']) {
-                    return ["duplicate_voucher", $data['voucher_code']];
-                    // exit;
-                }
-
-            }
             }
         }
         // exit;
@@ -2194,21 +2155,20 @@ class TercourierController extends Controller
         $insert['saved_by_id'] = $details->id;
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
-        $id=$data['ter_id'];
-       
-        $check=DB::table('tercouriers')->where('id',$id)->get();
-        if($check[0]->status == 10)
-        {
+        $id = $data['ter_id'];
+
+        $check = DB::table('tercouriers')->where('id', $id)->get();
+        if ($check[0]->status == 10) {
             $insert['status'] = 8;
         }
-            $update_details = DB::table('tercouriers')->where('id',$id)->update($insert);
-        
+        $update_details = DB::table('tercouriers')->where('id', $id)->update($insert);
+
         //    if($update_details)
         //    {
         //  $res=   DB::table('tercouriers')->where('id',$data['ter_id'])->update(['status'=>7,'updated_by_id'=>$details->id,
         //     'updated_by_name'=>$details->name]);
         //    }
-       
+
         // $t=Storage::disk('local')->put($fileName, 'Contents');
         return $update_details;
     }
@@ -2249,8 +2209,15 @@ class TercourierController extends Controller
         $insert['saved_by_id'] = $details->id;
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
-
-        $update_details = TerDeductionSettlement::insert($insert);
+        $actual_id = $data['actual_partial_id'];
+        $check_id_exist = TerDeductionSettlement::select('*')->where('id', $actual_id)->get();
+        if (!empty($check_id_exist)) {
+            $update_details = TerDeductionSettlement::where('id', $actual_id)->update(['remarks'=>$insert['remarks'],
+                    'payable_amount'=> $insert['payable_amount'],'voucher_code'=> $insert['voucher_code'],
+                'file_name'=> $insert['file_name'],'status'=>7]);
+        } else {
+            $update_details = TerDeductionSettlement::insert($insert);
+        }
         if ($update_details) {
             $res =   DB::table('tercouriers')->where('id', $data['ter_id'])->update([
                 'status' => 7, 'updated_by_id' => $details->id,
@@ -2355,7 +2322,7 @@ class TercourierController extends Controller
             $name = $data->roles[0]->name;
             // return $name;
 
-            $tercouriers = $query->whereIn('status', [8, 0,10])->where('txn_type', 'rejected_ter')->orderby('id', 'ASC')->get();
+            $tercouriers = $query->whereIn('status', [8, 0, 10])->where('txn_type', 'rejected_ter')->orderby('id', 'ASC')->get();
 
             // echo'<pre>'; print_r($tercouriers->status); die;
             return view('tercouriers.rejected-tercourier-list', ['tercouriers' => $tercouriers, 'role' => $name]);
@@ -2411,18 +2378,35 @@ class TercourierController extends Controller
 
     public function get_rejected_details(Request $request)
     {
-        $data=$request->all();
-        $id=$data['id'];
-        $ter=DB::table('tercouriers')->where('id',$id)->get();
+        $data = $request->all();
+        $id = $data['id'];
+        $ter = DB::table('tercouriers')->where('id', $id)->get();
+        return $ter;
+    }
+    public function partially_paid_details(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $ter = DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->orderby("book_date", "DESC")->first();
         return $ter;
     }
 
+
     public function submit_hr_remarks(Request $request)
     {
-        $data=$request->all();
-        $hr_remarks=$data['hr_remarks'];
-        $id=$data['id'];
-        $ter=DB::table('tercouriers')->where('id',$id)->update(['hr_admin_remark'=> $hr_remarks,'status'=>10]);
+        $data = $request->all();
+        $hr_remarks = $data['hr_remarks'];
+        $id = $data['id'];
+        $type = $data['type'];
+        if ($type == "partially_paid") {
+            $ter_first = DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->orderby("book_date", "DESC")->first();
+            $ter = DB::table('ter_deduction_settlements')->where('id', $ter_first->id)->update(['hr_admin_remark' => $hr_remarks, 'status' => 10]);
+            // print_r($ter_first->id);
+            // exit;
+            // update(['hr_admin_remark'=> $hr_remarks,'status'=>10]);
+        } else {
+            $ter = DB::table('tercouriers')->where('id', $id)->update(['hr_admin_remark' => $hr_remarks, 'status' => 10]);
+        }
         return $ter;
     }
 
@@ -2459,7 +2443,7 @@ class TercourierController extends Controller
         return $res;
     }
 
-    
+
     public function open_hr_verify_ter(Request $request)
     {
         $data = $request->all();

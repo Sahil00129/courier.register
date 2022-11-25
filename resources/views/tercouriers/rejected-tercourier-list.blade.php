@@ -817,7 +817,8 @@
                 if (this.hr_remarks != "") {
                     axios.post('/submit_hr_remarks', {
                             'hr_remarks': this.hr_remarks,
-                            'id': this.rejected_id
+                            'id': this.rejected_id,
+                            'type':""
                         })
                         .then(response => {
                             if (response.data == '1') {

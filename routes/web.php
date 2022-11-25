@@ -150,6 +150,7 @@ Route::post('/update_rejected_ter', [TercourierController::class,'update_rejecte
 Route::post('/get_emp_list', [TercourierController::class,'get_emp_list']);
 Route::post('/update_emp_details', [TercourierController::class,'update_emp_details']);
 Route::post('/get_rejected_details', [TercourierController::class,'get_rejected_details']);
+Route::post('/partially_paid_details', [TercourierController::class,'partially_paid_details']);
 Route::post('/submit_hr_remarks', [TercourierController::class,'submit_hr_remarks']);
 
 
