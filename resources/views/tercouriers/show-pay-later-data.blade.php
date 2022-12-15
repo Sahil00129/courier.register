@@ -344,7 +344,7 @@
 
 
                                 <td>
-                                    @if($tercourier->status == 3)
+                                    @if($tercourier->status == 3 || $tercourier->status == 4)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?> ">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
