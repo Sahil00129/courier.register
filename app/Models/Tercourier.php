@@ -42,7 +42,7 @@ class Tercourier extends Model
         {
             
         $date=date_create($res[$i]->terto_date);
-        date_add($date,date_interval_create_from_date_string("45 days"));
+        date_add($date,date_interval_create_from_date_string("50 days"));
         $date_check= date_format($date,"Y-m-d");
 
         $today_date=date('Y-m-d');

@@ -315,6 +315,7 @@
         },
         methods: {
             add_advance_payment(){
+                // alert("Ds")
                 if(this.emp_voucher_number !="" && this.emp_advance_amount!=""){
                 axios.post('/add_advance_payment', {
                         'emp_advance_amount': this.emp_advance_amount,
@@ -329,7 +330,7 @@
                             swal('success', "Advance Added Successfully!!!", 'success')
                             this.emp_modal=false;
                             this.emp_advance_amount="";
-                            // location.reload();
+                            location.reload();
                         } else {
                             this.emp_modal=false;
                             this.emp_advance_amount="";
