@@ -198,8 +198,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="inputPassword4">Docket No.</label>
-                                    <input type="text" class="form-control form-control-sm" id="docket_no" name="docket_no" autocomplete="off">
+                                    <label for="inputPassword4">Docket No.*</label>
+                                    <input type="text" class="form-control form-control-sm" id="docket_no" name="docket_no" autocomplete="off" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Docket Date</label>
