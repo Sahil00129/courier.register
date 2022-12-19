@@ -94,12 +94,13 @@
                                     <select class="form-control form-control-sm basic" name="sender_id" id="select_employee" required>
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
-                                        <option value="{{$sender->employee_id}}">{{$sender->name}}
+                                        <option value="{{$sender->employee_id}}" >{{$sender->name}}
                                             : {{$sender->ax_id}} : {{$sender->employee_id}}
-                                            : {{$sender->status}}</option>
+                                            : {{$sender->status}} </option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <input type="hidden" id="date_of_joining" />
                                 <!--------------- Date of Receipt ---------->
                                 <div class="form-group col-md-6">
                                     <label for="inputPassword4">Date of Receipt *</label>
@@ -323,6 +324,11 @@
                         } else {
                             var telephone_no = res.data.telephone_no;
                         }
+                          if (res.data.date_of_joining == null) {
+                            var date_of_joining = '';
+                        } else {
+                            var date_of_joining = res.data.date_of_joining;
+                        }
                         if (res.data.status == null) {
                             var status = '';
                         } else {
@@ -333,6 +339,8 @@
                         $("#emp_status").val(status);
                         $("#last_working_date").val(res.data.last_working_date);
                         $(".location1").val(location);
+                        $("#date_of_joining").val(date_of_joining);
+
                     }
                 }
             });

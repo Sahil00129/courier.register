@@ -147,6 +147,7 @@ Route::post('/cancel_ter', [TercourierController::class,'cancel_ter']);
 Route::post('/check_deduction', [TercourierController::class,'check_deduction']);
 Route::post('/update_ter_deduction', [TercourierController::class,'update_ter_deduction']);
 Route::post('/update_rejected_ter', [TercourierController::class,'update_rejected_ter']);
+Route::post('/status_change_to_handover', [TercourierController::class,'status_change_to_handover']);
 Route::post('/get_emp_list', [TercourierController::class,'get_emp_list']);
 Route::post('/update_emp_details', [TercourierController::class,'update_emp_details']);
 Route::post('/get_rejected_details', [TercourierController::class,'get_rejected_details']);

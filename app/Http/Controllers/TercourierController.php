@@ -1812,9 +1812,10 @@ class TercourierController extends Controller
             $encoded_data = json_encode($ax_data);
 
             $payable_sum = $tercourier_data->final_payable;
-            if ($tercourier_data->txn_type == "rejected_ter") {
-                $payable_sum = $tercourier_data->payable_amount;
-            }
+            // if ($tercourier_data->txn_type == "rejected_ter") {      
+                // $payable_sum = $tercourier_data->payable_amount;
+                
+            // }
 
             $sender_id = $tercourier_data->sender_id;
             $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
@@ -2128,13 +2129,13 @@ class TercourierController extends Controller
     public function update_rejected_ter(Request $request)
     {
         $data = $request->all();
-        $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
+        // $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
         // echo "<pre>";
         // print_r($check_duplicate);
         // exit;
-        if (gettype($check_duplicate) == "array") {
-            return $check_duplicate;
-        }
+        // if (gettype($check_duplicate) == "array") {
+        //     return $check_duplicate;
+        // }
 
         $image = $request->file('file');
         $fileName = $image->getClientOriginalName();
@@ -2145,8 +2146,8 @@ class TercourierController extends Controller
         $details = Auth::user();
 
 
-        $insert['payable_amount'][0] = $data['payable_amount'];
-        $insert['voucher_code'][0] = $data['voucher_code'];
+        // $insert['payable_amount'][0] = $data['payable_amount'];
+        // $insert['voucher_code'][0] = $data['voucher_code'];
         $insert['book_date'] = date('Y-m-d');
         $insert['payment_type'] = "ter_rejected";
         $insert['remarks'] = $data['remarks'];
@@ -2176,6 +2177,7 @@ class TercourierController extends Controller
     public function update_ter_deduction(Request $request)
     {
         $data = $request->all();
+        $res="";
         $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
         // echo "<pre>";
         // print_r($check_duplicate);
@@ -2199,8 +2201,8 @@ class TercourierController extends Controller
         $insert['actual_amount'] = $data['actual_amount'];
         $insert['prev_payable_sum'] = $data['prev_payable_sum'];
         $insert['left_amount'] = $data['left_amount'];
-        $insert['payable_amount'][0] = $data['payable_amount'];
-        $insert['voucher_code'][0] = $data['voucher_code'];
+        $insert['payable_amount'] = $data['payable_amount'];
+        $insert['voucher_code'] = $data['voucher_code'];
         $insert['book_date'] = date('Y-m-d');
         $insert['payment_type'] = "deduction_setllement";
         $insert['remarks'] = $data['remarks'];
@@ -2209,15 +2211,20 @@ class TercourierController extends Controller
         $insert['saved_by_id'] = $details->id;
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
-        $actual_id = $data['actual_partial_id'];
-        $check_id_exist = TerDeductionSettlement::select('*')->where('id', $actual_id)->get();
-        if (!empty($check_id_exist)) {
-            $update_details = TerDeductionSettlement::where('id', $actual_id)->update(['remarks'=>$insert['remarks'],
+        $actual_id = $data['ter_id'];
+        // $actual_id = 46;
+       
+        $check_id_exist = DB::table('ter_deduction_settlements')->select("*")->where('parent_ter_id', $actual_id)->first();
+    
+        if ($check_id_exist != null || $check_id_exist != '') {
+            $update_details = TerDeductionSettlement::where('id', $check_id_exist->id)->update(['remarks'=>$insert['remarks'],
                     'payable_amount'=> $insert['payable_amount'],'voucher_code'=> $insert['voucher_code'],
                 'file_name'=> $insert['file_name'],'status'=>7]);
+                // return "Ds";
         } else {
             $update_details = TerDeductionSettlement::insert($insert);
         }
+    // dd($update_details);
         if ($update_details) {
             $res =   DB::table('tercouriers')->where('id', $data['ter_id'])->update([
                 'status' => 7, 'updated_by_id' => $details->id,
@@ -2381,6 +2388,13 @@ class TercourierController extends Controller
         $data = $request->all();
         $id = $data['id'];
         $ter = DB::table('tercouriers')->where('id', $id)->get();
+        return $ter;
+    }
+    public function status_change_to_handover(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['selected_id'];
+        $ter = DB::table('tercouriers')->where('id', $id)->update(['status'=>2]);
         return $ter;
     }
     public function partially_paid_details(Request $request)

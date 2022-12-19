@@ -353,7 +353,7 @@
                                     </button>
                                     @elseif($tercourier->status == 0 || $role == "tr admin")
                                    <div style="position: relative;">
-                                   <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
+                                   <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
                                         {{ $status }}
                                     </button>
                                     <div class="finfectResponseDetail">
