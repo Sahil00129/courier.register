@@ -658,7 +658,7 @@
                         @if($role == "Hr Admin")
                         <div class="modal-footer">
                             <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_partially_paid_remarks_modal()">Reject</button>
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve & Pay</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->parent_ter_id; ?>">Approve & Pay</button>
                         </div>
                         @endif
 
@@ -1033,7 +1033,7 @@
                         console.log(response.data);
                         if (response.data == 1) {
 
-                            location.reload();
+                            // location.reload();
                         } else {
                             swal('error', "System Error", 'error')
                         }

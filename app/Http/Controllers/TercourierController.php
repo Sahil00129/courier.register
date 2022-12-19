@@ -1463,6 +1463,8 @@ class TercourierController extends Controller
         // print_r($total_payable_sum);
         // exit;
         $id = $data['unique_id'];
+        // print_r($id);
+        // exit;
         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $data['unique_id'])->orderby("book_date", "DESC")->first();
         $settlement_deduction = 0;
         $response = "";
