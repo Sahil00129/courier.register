@@ -657,15 +657,15 @@
                             <div class="mb-4 d-flex align-items-center justify-content-center" style="border-radius: 12px; height: 150px; width: 100%; border: 1px dashed;">
                                 <img :src="rejected_file_name" alt="attachment" style="max-width: 100%; max-height: 130px; border-radius: 12px; object-fit: cover;" />
                             </div>
-                            <p><strong>Payable Amount: </strong>@{{rejected_payable_amount}}</p>
-                            <p><strong>Voucher Code: </strong>@{{rejected_voucher}}</p>
+                            <!-- <p><strong>Payable Amount: </strong>@{{rejected_payable_amount}}</p>
+                            <p><strong>Voucher Code: </strong>@{{rejected_voucher}}</p> -->
                             <p><strong>Remarks: </strong>@{{remarks_rejected}}</p>
 
                         </div>
                         @if($role == "Hr Admin")
                         <div class="modal-footer">
                             <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_rejected_remarks_modal()">Reject</button>
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve & Pay</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve</button>
                         </div>
                         @endif
 
@@ -715,14 +715,14 @@
                                     <label for="recipient-name" class="col-form-label">Remarks:</label>
                                     <input type="text" class="form-control" id="recipient-name" v-model="ter_remarks">
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Payable Amount</label>
                                     <input type="number" class="form-control" id="recipient-name" v-model="payable_amount">
                                 </div>
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Voucher Code</label>
                                     <input type="text" class="form-control" id="recipient-name" v-model="voucher_code">
-                                </div>
+                                </div> -->
                                 <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Upload File</label>
                                     <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
@@ -862,8 +862,8 @@
                     })
                     .then(response => {
                         if (response.data) {
-                            this.rejected_payable_amount = response.data[0].payable_amount;
-                            this.rejected_voucher = response.data[0].voucher_code;
+                            // this.rejected_payable_amount = response.data[0].payable_amount;
+                            // this.rejected_voucher = response.data[0].voucher_code;
                             this.rejected_file_name = 'rejected_ter_uploads/' + response.data[0].file_name;
                             this.remarks_rejected = response.data[0].remarks;
                             this.hr_approval_modal_details_loading = false;
@@ -901,7 +901,7 @@
             },
             update_payment: function() {
                 this.total_amount = document.getElementById('total_amount').value;
-                if (this.ter_remarks != "" && this.voucher_code != "" && this.payable_amount != "" && this.file != null) {
+                if (this.ter_remarks != "" && this.file != null) {
                     if (parseInt(this.total_amount) >= this.payable_amount) {
                         const config = {
                             headers: {
@@ -912,8 +912,8 @@
                         formData.append('file', this.file);
                         formData.append('ter_id', this.ter_id);
                         formData.append('remarks', this.ter_remarks);
-                        formData.append('voucher_code', this.voucher_code);
-                        formData.append('payable_amount', this.payable_amount);
+                        // formData.append('voucher_code', this.voucher_code);
+                        // formData.append('payable_amount', this.payable_amount);
 
 
                         axios.post('/update_rejected_ter', formData, config)
@@ -1021,13 +1021,13 @@
             pay_now_ter: function($id) {
                 var unique_id = $id;
                 this.ter_id = $id;
-                axios.post('/pay_later_ter_now', {
+                axios.post('/status_change_to_handover', {
                         'selected_id': unique_id
                     })
                     .then(response => {
                         console.log(response.data);
                         if (response.data == 1) {
-                            swal('success', "Ter Id :" + this.ter_id + " has been sent to Finfect for Payment", 'success')
+                            swal('success', "Ter Id :" + this.ter_id + " has been approved", 'success')
                             location.reload();
                         } else {
                             swal('error', response.data[1], 'error')

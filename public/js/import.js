@@ -163,10 +163,28 @@ $(document).ready(function (e) {
     $("#new_tercourier_create").submit(function (e) {
         e.preventDefault();
         var date_of_recp = $('#date_of_recp').val();
+        var date_of_joinig = $('#date_of_joining').val();
+        var d = new Date(date_of_joinig),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+// alert(d);
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    var doj = [year, month, day].join('-');
+  
         var ter_to = $('#terto_date').val();
         var docket_date=$('#docket_date').val();
         var ReciptDate = new Date(date_of_recp); //Year, Month, Date    
         var TerToDate = new Date(ter_to); //Year, Month, Date   
+        var DOJ= new Date(doj);
+        if (DOJ > TerToDate) {     
+            swal("Error", "Date of Joining doesn't lie in the Ter Period", "error");
+            return 1; 
+        }
         if(TerToDate == 'Invalid Date')
         {
             swal("Error", "Please select Month", "error");
