@@ -147,17 +147,28 @@
                             <h6><b>Document Details</b></h6>
                             <div class="form-group col-md-3 n-chk align-self-center">
                                 <label class="new-control new-radio radio-classic-primary">
-                                    <input onchange="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
+                                    <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
                                     <span class="new-control-indicator"></span>For Month
                                 </label>
                                 <label class="new-control new-radio radio-classic-primary">
-                                    <input checked="checked" onchange="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
+                                    <input checked="checked" v-on:change="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
                                     <span class="new-control-indicator"></span>For Period
                                 </label>
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3 n-chk align-self-center">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input checked="checked" id="current_year" type="radio" class="new-control-input" name="selected_year">
+                                    <span class="new-control-indicator"></span>Current Year
+                                </label>
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input id="last_year" type="radio" class="new-control-input" name="selected_year">
+                                    <span class="new-control-indicator"></span>Last Year
+                                </label>
+                            </div>
+
+                            <div class="form-group col-md-2">
                                 <label for="month">Select Month</label>
-                                <select disabled="true" id="month" class=" form-control form-control-sm" onchange="onSelectMonth()">
+                                <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
                                     <option disabled selected>--Select Month--</option>
                                     <option value="01">January</option>
                                     <option value="02">February</option>
@@ -173,11 +184,11 @@
                                     <option value="12">December</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <label for="inputPassword4">TER Period From *</label>
                                 <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="terfrom_date">
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <label for="inputPassword4">TER Period To *</label>
                                 <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="terto_date">
                             </div>
@@ -329,6 +340,11 @@
             given_to: "",
             delivery_date: "",
             word_amount: "",
+            selectedYear: "",
+            currentYear: "",
+            lastYear: "",
+            forMonth: "",
+            forPeiod: "",
         },
         created: function() {
             // alert(this.got_details)
@@ -445,7 +461,7 @@
 
                     axios.post('/get_all_data', {
                         'unique_id': this.unique_id,
-                        'role':'reception'
+                        'role': 'reception'
                     })
                     .then(response => {
                         console.log(response.data);
@@ -512,13 +528,63 @@
                 this.word_amount = this.inWords(amount);
                 document.getElementById('amountInwords').style.textTransform = "capitalize";
             },
+            onChangePeriodType: function() {
+                this.selectedYear = new Date().getFullYear();
+                this.currentYear = document.getElementById('current_year')
+                this.lastYear = document.getElementById('last_year')
+                this.forMonth = document.getElementById('for_month')
+                this.forPeiod = document.getElementById('for_period')
+                if (this.forMonth.checked) {
+                    document.getElementById('terfrom_date').disabled = true;
+                    document.getElementById('terto_date').disabled = true;
+                    document.getElementById('month').disabled = false;
+                    $("input[name='terfrom_date']").val('');
+                    $("input[name='terto_date']").val('');
+                    document.getElementById('month').setAttribute("required", "true");
+                    this.currentYear.disabled = false;
+                    this.lastYear.disabled = false;
+                }
+                if (this.forPeiod.checked) {
+                    document.getElementById('terfrom_date').disabled = false;
+                    document.getElementById('terto_date').disabled = false;
+                    document.getElementById('month').disabled = true;
+                    document.getElementById('month').setAttribute("required", "false");
+                    document.getElementById('month').value = '00';
+
+                    this.currentYear.disabled = true;
+                    this.lastYear.disabled = true;
+                }
+            },
+            // 7 sick, 7 el, 14 al
+            onSelectMonth: function() {
+                this.selectedMonth = document.getElementById('month').value
+                this.currentYear = this.lastYear.checked ? (this.selectedYear - 1) : this.selectedYear;
+                // alert(this.currentYear)
+                // alert(`${this.currentYear}-${this.selectedMonth}-01`)
+                if (this.selectedMonth == 1 || this.selectedMonth == 3 || this.selectedMonth == 5 || this.selectedMonth == 7 || this.selectedMonth == 8 || this.selectedMonth == 10 || this.selectedMonth == 12) {
+                    this.terfrom_date = `${this.currentYear}-${this.selectedMonth}-01`;
+                    this.terto_date = `${this.currentYear}-${this.selectedMonth}-31`;
+                    // $("input[name='terfrom_date1']").val(`${this.currentYear}-${this.selectedMonth}-01`);
+                    // $("input[name='terto_date1']").val(`${this.currentYear}-${this.selectedMonth}-31`);
+                } else if (this.selectedMonth == 2) {
+                    this.terfrom_date = `${this.currentYear}-${this.selectedMonth}-01`;
+                    this.terto_date = `${this.currentYear}-${this.selectedMonth}-28`;
+                    // $("input[name='terfrom_date1']").val(`${this.currentYear}-${this.selectedMonth}-01`);
+                    // $("input[name='terto_date1']").val(`${this.currentYear}-${this.selectedMonth}-28`);
+                } else {
+                    this.terfrom_date = `${this.currentYear}-${this.selectedMonth}-01`;
+                    this.terto_date = `${this.currentYear}-${this.selectedMonth}-30`;
+                    // $("input[name='terfrom_date1']").val(`${this.currentYear}-${this.selectedMonth}-01`);
+                    // $("input[name='terto_date1']").val(`${this.currentYear}-${this.selectedMonth}-30`);
+                }
+            }
         }
 
 
     })
 </script>
 
-<script>
+<!-- <script>
     function onChangePeriodType() {
         var forMonth = document.getElementById('for_month')
         var forPeiod = document.getElementById('for_period')
@@ -548,6 +614,6 @@
             document.getElementById('terto_date').value = `${currentYear}-${selectedMonth}-30`;
         }
     }
-</script>
+</script> -->
 
 @endsection
