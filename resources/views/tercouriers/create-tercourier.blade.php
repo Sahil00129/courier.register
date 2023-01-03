@@ -94,7 +94,7 @@
                                     <select class="form-control form-control-sm basic" name="sender_id" id="select_employee" required>
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
-                                        <option value="{{$sender->employee_id}}" >{{$sender->name}}
+                                        <option value="{{$sender->employee_id}}">{{$sender->name}}
                                             : {{$sender->ax_id}} : {{$sender->employee_id}}
                                             : {{$sender->status}} </option>
                                         @endforeach
@@ -128,7 +128,7 @@
                                 <h6><b>Document Details</b></h6>
                                 <div class="form-group col-md-3 n-chk align-self-center">
                                     <label class="new-control new-radio radio-classic-primary">
-                                        <input  checked="checked" onchange="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
+                                        <input checked="checked" onchange="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
                                         <span class="new-control-indicator"></span>For Month
                                     </label>
                                     <label class="new-control new-radio radio-classic-primary">
@@ -136,10 +136,20 @@
                                         <span class="new-control-indicator"></span>For Period
                                     </label>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3 n-chk align-self-center">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input checked="checked" id="current_year" type="radio" class="new-control-input" name="selected_year">
+                                        <span class="new-control-indicator"></span>Current Year
+                                    </label>
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input id="last_year" type="radio" class="new-control-input" name="selected_year">
+                                        <span class="new-control-indicator"></span>Last Year
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-2">
                                     <label for="month">Select Month</label>
                                     <select id="month" class=" form-control form-control-sm" onchange="onSelectMonth()">
-                                        <option>--Select Month--</option>
+                                        <option value="00">--Select Month--</option>
                                         <option value="01">January</option>
                                         <option value="02">February</option>
                                         <option value="03">March</option>
@@ -154,12 +164,12 @@
                                         <option value="12">December</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-2">
                                     <label for="inputPassword4">TER Period From *</label>
                                     <input disabled="true" type="date" class="form-control form-control-sm" id="terfrom_date" name="terfrom_date" class="terfrom_date" required>
                                     <input type="hidden" class="form-control form-control-sm" id="terfrom_date1" name="terfrom_date1" class="terfrom_date1" required>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-2">
                                     <label for="inputPassword4">TER Period To *</label>
                                     <input disabled="true" type="date" class="form-control form-control-sm" id="terto_date" name="terto_date" class="terto_date" required>
                                     <input type="hidden" class="form-control form-control-sm" id="terto_date1" name="terto_date1" class="terto_date1" required>
@@ -212,9 +222,9 @@
                             </div>
                             <input id="timeTaken" name="timeTaken" hidden>
                             <div class="d-flex justify-content-end align-items-center">
-{{--                                <div class="d-flex align-items-center" style="gap: 3px;">Time taken:--}}
-{{--                                    <div style="width: 80px;" id="time"></div>--}}
-{{--                                </div>--}}
+                                {{-- <div class="d-flex align-items-center" style="gap: 3px;">Time taken:--}}
+                                {{-- <div style="width: 80px;" id="time"></div>--}}
+                                {{-- </div>--}}
 
                                 <button type="submit" class="btn btn-primary" id="save_ter_btn" style="border-radius: 8px; width: 130px;">
                                     <span class="indicator-label">Save</span>
@@ -232,7 +242,7 @@
 </div>
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 <script>
-     $('#date_of_recp').val(new Date().toJSON().slice(0, 10));
+    $('#date_of_recp').val(new Date().toJSON().slice(0, 10));
     $(document).ready(function() {
         $('#delivery_date').val(new Date().toJSON().slice(0, 10));
         //////////
@@ -324,7 +334,7 @@
                         } else {
                             var telephone_no = res.data.telephone_no;
                         }
-                          if (res.data.date_of_joining == null) {
+                        if (res.data.date_of_joining == null) {
                             var date_of_joining = '';
                         } else {
                             var date_of_joining = res.data.date_of_joining;
@@ -351,9 +361,14 @@
 </script>
 
 <script>
+    let selectedYear = new Date().getFullYear();
+    const currentYear = document.getElementById('current_year')
+    const lastYear = document.getElementById('last_year')
+    const forMonth = document.getElementById('for_month')
+    const forPeiod = document.getElementById('for_period')
+
     function onChangePeriodType() {
-        var forMonth = document.getElementById('for_month')
-        var forPeiod = document.getElementById('for_period')
+
         if (forMonth.checked) {
             document.getElementById('terfrom_date').disabled = true;
             document.getElementById('terto_date').disabled = true;
@@ -361,18 +376,25 @@
             $("input[name='terfrom_date']").val('');
             $("input[name='terto_date']").val('');
             document.getElementById('month').setAttribute("required", "true");
+            currentYear.disabled = false;
+            lastYear.disabled = false;
         }
         if (forPeiod.checked) {
             document.getElementById('terfrom_date').disabled = false;
             document.getElementById('terto_date').disabled = false;
             document.getElementById('month').disabled = true;
             document.getElementById('month').setAttribute("required", "false");
+            document.getElementById('month').value = '00';
+
+            currentYear.disabled = true;
+            lastYear.disabled = true;
         }
     }
 
     function onSelectMonth() {
         const selectedMonth = document.getElementById('month').value
-        const currentYear = new Date().getFullYear()
+        const currentYear = lastYear.checked ? (selectedYear - 1) : selectedYear;
+        // alert(currentYear)
         if (selectedMonth == 1 || selectedMonth == 3 || selectedMonth == 5 || selectedMonth == 7 || selectedMonth == 8 || selectedMonth == 10 || selectedMonth == 12) {
             $("input[name='terfrom_date']").val(`${currentYear}-${selectedMonth}-01`);
             $("input[name='terto_date']").val(`${currentYear}-${selectedMonth}-31`);
@@ -414,11 +436,10 @@
         return str;
     }
 
-    document.getElementById('amount').onkeyup = function () {
-    document.getElementById('amountInwords').innerHTML = inWords(document.getElementById('amount').value);
-    document.getElementById('amountInwords').style.textTransform = "capitalize";
-};
-
+    document.getElementById('amount').onkeyup = function() {
+        document.getElementById('amountInwords').innerHTML = inWords(document.getElementById('amount').value);
+        document.getElementById('amountInwords').style.textTransform = "capitalize";
+    };
 </script>
 
 <script>
