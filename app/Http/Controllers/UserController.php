@@ -65,7 +65,9 @@ class UserController extends Controller
     
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-    
+        // dd($input['password_confirmation']);
+        $input['role'] = $input['roles'][0];
+        $input['text_password']=$input['password_confirmation'];
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
     
