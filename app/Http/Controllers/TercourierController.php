@@ -1848,25 +1848,43 @@ class TercourierController extends Controller
                 ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'], 'status' => 3]);
         }
 
-        // print_r($ax_data);
+       
+        $get_emp_id=DB::table('tercouriers')->where('id',$id)->get();
+        $emp_id = $get_emp_id[0]->employee_id;
+        $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+        if(empty($ax_id)){
+            $ax_id=$sender_table[0]->iag_code;
+        //  $ax_id=
+        }
+        $pfu=$sender_table[0]->pfu;
+        // $pfu="";
+        if(empty($pfu))
+        {
+            DB::table('tercouriers')->where('id',$id)->update(['status'=>0,'voucher_code'=>"","payable_amount"=>"","final_payable"=>"",'remarks'=>'pfu is not available','updated_at'=>date('Y-m-d H:i:s')]);
+      
+            return "pfu_missing";
+        }
+        // $ter_id="3243534";
+        // print_r($pfu);
+        // print_r($ax_id);
         // exit;
 
-        if (!empty($ax_id)) {
-            $new_data = explode("-", $ax_id);
-            if ($new_data[0] == "FAMA") {
-                $pfu = "MA2";
-            } else if ($new_data[0] == "FAGMA") {
-                $pfu = "MA4";
-            } else if ($new_data[0] == "FAGSD") {
-                $pfu = "SD3";
-            } else if ($new_data[0] == "FAPL") {
-                $pfu = "SD1";
-            } else {
-                exit;
-            }
-        } else {
-            return "AX_ID not Available";
-        }
+        // if (!empty($ax_id)) {
+        //     $new_data = explode("-", $ax_id);
+        //     if ($new_data[0] == "FAMA") {
+        //         $pfu = "MA2";
+        //     } else if ($new_data[0] == "FAGMA") {
+        //         $pfu = "MA4";
+        //     } else if ($new_data[0] == "FAGSD") {
+        //         $pfu = "SD3";
+        //     } else if ($new_data[0] == "FAPL") {
+        //         $pfu = "SD1";
+        //     } else {
+        //         exit;
+        //     }
+        // } else {
+        //     return "AX_ID not Available";
+        // }
 
         $url_header = $_SERVER['HTTP_HOST'];
 

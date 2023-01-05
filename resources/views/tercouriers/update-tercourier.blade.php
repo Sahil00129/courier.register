@@ -696,7 +696,11 @@
                                 // console.log(response.data);
                                 if (response.data === "error_sum_amount") {
                                     swal('error', "Payable Amount is Greater than TER Amount", 'error')
-                                } else if (response.data === "ifsc_error") {
+                                } 
+                                else if (response.data === "pfu_missing") {
+                                    swal('error', "PFU is not available for this TER", 'error')
+                                } 
+                                else if (response.data === "ifsc_error") {
                                     swal('error', "IFSC for this employee is not valid", 'error')
                                 } else if (response.data[0] === "duplicate_voucher") {
                                     swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')

@@ -161,6 +161,8 @@
                             <th>Sender</th>
                             <th>Type</th>
                             <th>Telephone No</th>
+                            <th>IAG Code</th>
+                            <th>PFU</th>
                             <th>Last Working Date</th>
                             <th>Status</th>
                             <th>Passbook</th>
@@ -189,6 +191,8 @@
                             </td>
                             <td>{{$send->type}}</td>
                             <td>{{$send->telephone_no}}</td>
+                            <td>{{$send->iag_code}}</td>
+                            <td>{{$send->pfu}}</td>
                             <td>{{Helper::ShowFormatDate($send->last_working_date)}}</td>
                             <td style="text-align: center;">
                                 @if($send->status == 'Active')
