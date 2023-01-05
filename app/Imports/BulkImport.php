@@ -542,5 +542,34 @@ class BulkImport implements ToModel, WithHeadingRow
             //     ]);
             // }
         }
+        if ($_POST['import_type'] == 12) {
+            // echo "<pre>"; print_r($row['employee_code']);exit;
+            $get_employee_data=DB::table('sender_details')->where('employee_id',$row['employee_code'])->get()->toArray();
+            if(!empty($get_employee_data)){
+            if($row['employee_code'] == $get_employee_data[0]->employee_id)
+            {
+                $updated_data=DB::table('sender_details')->where('employee_id',$row['employee_code'])->update(['iag_code'=>$row['iag_code'],
+                'pfu'=>$row['pfu'],'updated_at' => date('Y-m-d H:i:s')]);
+                // return $updated_data;
+               
+                // print_r($get_employee_data[0]->employee_id);
+                // print_r($row['employee_id']);
+                // exit;
+              
+                // print_r($updated_data);
+            }
+            print_r("Done");
+            // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+            }
+            // die;
+            // $for = DB::table('for_companies')
+            //     ->where('for_company', '=', $row['for_company'])
+            //     ->first();
+            // if (is_null($for)) {
+            //     return new ForCompany([
+            //         'for_company'  => $row['for_company']
+            //     ]);
+            // }
+        }
     }
 }

@@ -335,7 +335,7 @@
                                 <tr>
                                     <td width="100px">
                                         <div class="d-flex align-items-center" style="gap: 4px;">
-                                            {{ $tercourier->id }}
+                                           <div style="cursor:pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_cancel_ter_modal(<?php echo $tercourier->id ?>)"> {{ $tercourier->id }}</div>
                                             <div class="uid">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -581,6 +581,39 @@
                         </div>
                     </div>
 
+                      <!-- Cancel TER Modal -->
+                <div class="modal fade show" id="exampleModal" v-if="cancel_ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Cancel TER</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="ter_id" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="cancel_remarks">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="cancel_ter()" data-dismiss="modal">Save changes
+                                </button>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 </div>
             </div>
         </div>
@@ -601,12 +634,44 @@
                 senders_data: "",
                 sender_all_info: "",
                 search_data: "",
+                cancel_ter_modal:false,
+                cancel_remarks:"",
             },
             created: function () {
                 // alert(this.got_details)
                 //   alert('hello');
             },
             methods: {
+                open_cancel_ter_modal: function(ter_id) {
+                this.ter_id = ter_id;
+                this.cancel_ter_modal = true;
+            },
+            cancel_ter: function() {
+                if (this.cancel_remarks != "") {
+                    axios.post('/cancel_ter', {
+                            'ter_id': this.ter_id,
+                            'remarks': this.cancel_remarks
+                        })
+                        .then(response => {
+                            if (response.data) {
+                                swal('success', "Ter Id :" + this.ter_id + " has been cancelled", 'success')
+                                location.reload();
+                            } else {
+                                swal('error', "System Error", 'error')
+                                this.cancel_ter_modal = false;
+                                this.ter_id = "";
+                            }
+
+                        }).catch(error => {
+
+                            swal('error', error, 'error')
+                            this.cancel_ter_modal = false;
+                            this.ter_id = "";
+                        })
+                } else {
+                    swal('error', "Remarks needs to be added", 'error')
+                }
+            },
                 search_data_fn: function () {
                     var table = $('#html5-extension').DataTable();
                     table.search(this.search_data).draw();

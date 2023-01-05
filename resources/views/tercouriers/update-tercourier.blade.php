@@ -572,8 +572,8 @@
                         this.allow_flag = true;
                     }
                     d1 = new Date(ter_to);
-                    d2 = new Date(last_date_array);
-
+                    d2 = new Date(this.all_data.sender_detail.last_working_date);
+    
                     if (d1 <= d2 || this.allow_flag) {
                         axios.post('/ter_pay_later', {
                             'payable_data': this.pay_data_array,
@@ -696,7 +696,11 @@
                                 // console.log(response.data);
                                 if (response.data === "error_sum_amount") {
                                     swal('error', "Payable Amount is Greater than TER Amount", 'error')
-                                } else if (response.data === "ifsc_error") {
+                                } 
+                                else if (response.data === "pfu_missing") {
+                                    swal('error', "PFU is not available for this TER", 'error')
+                                } 
+                                else if (response.data === "ifsc_error") {
                                     swal('error', "IFSC for this employee is not valid", 'error')
                                 } else if (response.data[0] === "duplicate_voucher") {
                                     swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')

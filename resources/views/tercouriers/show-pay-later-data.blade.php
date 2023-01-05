@@ -236,6 +236,7 @@
     .searchField input {
         padding-left: 30px;
     }
+
     .finfectResponseDetail {
         z-index: 9999999;
         position: absolute;
@@ -271,7 +272,7 @@
     <div class="row layout-top-spacing" id="cancel-row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="widget-content widget-content-area br-6" style="width: 100%; overflow-x: auto;">
-            
+
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
@@ -352,16 +353,16 @@
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 0 || $role == "tr admin")
-                                   <div style="position: relative;">
-                                   <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
-                                        {{ $status }}
-                                    </button>
-                                    <div class="finfectResponseDetail">
-                                        <p>
-                                            <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
-                                        </p>
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
+                                            {{ $status }}
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
+                                            </p>
+                                        </div>
                                     </div>
-                                   </div>
                                     @else
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">
                                         {{ $status }}
@@ -571,8 +572,10 @@
                         if (response.data == 1) {
 
                             location.reload();
+                        } else if (response.data === "pfu_missing") {
+                            swal('error', "PFU is not available for this TER", 'error')
                         } else {
-                            swal('error',response.data[1], 'error')
+                            swal('error', response.data[1], 'error')
                         }
 
                     }).catch(error => {
