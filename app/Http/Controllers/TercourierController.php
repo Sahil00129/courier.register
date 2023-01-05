@@ -1865,7 +1865,7 @@ class TercourierController extends Controller
                 exit;
             }
         } else {
-            exit;
+            return "AX_ID not Available";
         }
 
         $url_header = $_SERVER['HTTP_HOST'];
