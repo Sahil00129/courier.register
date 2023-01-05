@@ -572,8 +572,8 @@
                         this.allow_flag = true;
                     }
                     d1 = new Date(ter_to);
-                    d2 = new Date(last_date_array);
-
+                    d2 = new Date(this.all_data.sender_detail.last_working_date);
+    
                     if (d1 <= d2 || this.allow_flag) {
                         axios.post('/ter_pay_later', {
                             'payable_data': this.pay_data_array,
