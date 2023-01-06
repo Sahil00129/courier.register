@@ -2297,10 +2297,15 @@ class TercourierController extends Controller
         // $update_data['employee_id']=$data['emp_id'];
         // $update_data['ax_id']=$data['ax_id'];
         $id = $data['id'];
+        // return $data['emp_id'];
+        $get_sender_data=DB::table('sender_details')->where('employee_id',$data['emp_id'])->get();
+        // return $get_sender_data;
+        $sender_id=$get_sender_data[0]->id;
 
         $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
             'hr_admin_remark' => $data['remarks'],
-            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'], 'status' => 2
+            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'], 
+            'sender_id'=>$sender_id,'status' => 2
         ]);
 
         return $tercourier_table;
