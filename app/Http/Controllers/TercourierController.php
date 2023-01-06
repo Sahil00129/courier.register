@@ -1818,12 +1818,11 @@ class TercourierController extends Controller
                 // $payable_sum = $tercourier_data->payable_amount;
                 
             // }
-
+            $emp_id = $tercourier_data->employee_id;
             $sender_id = $tercourier_data->sender_id;
-            $sender_table = DB::table('sender_details')->where('id', $sender_id)->get()->toArray();
+            $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
             $sender_data = $sender_table[0];
             $ax_id = $tercourier_data->ax_id;
-            $emp_id = $tercourier_data->employee_id;
             $emp_name = $tercourier_data->sender_name;
             $amount = $tercourier_data->amount;
             $ter_id = $tercourier_data->id;
