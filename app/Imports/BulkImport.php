@@ -225,7 +225,9 @@ class BulkImport implements ToModel, WithHeadingRow
                     'beneficiary_name'=>$row['beneficiary_name'],
                     'account_base_type'=>$row['account_base_type'],
                     'transfer_type'=>$row['transfer_type'],
-                    'account_type'=>$row['type']
+                    'account_type'=>$row['type'],
+                    'iag_code'=>$row['iag_code'],
+                    'pfu'=>$row['pfu']
 
                 ]);
             }else{
@@ -245,6 +247,17 @@ class BulkImport implements ToModel, WithHeadingRow
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                     // echo "<pre>";print_r($updated_record_detail);
                 }
+            }
+
+            if ($sender_table->iag_code != $row['iag_code']) {
+                // print_r($sender_table->last_working_date);
+                Sender::where('id', $sender_table->id)->update(['iag_code' => $row['iag_code']]);
+
+            }
+            if ($sender_table->pfu != $row['pfu']) {
+                // print_r($sender_table->last_working_date);
+               Sender::where('id', $sender_table->id)->update(['pfu' => $row['pfu']]);
+
             }
 
             if ($sender_table->location != $row['hq']) {
