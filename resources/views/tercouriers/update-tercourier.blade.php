@@ -263,7 +263,7 @@
 
                             <div>
                                 <p class="display-3 d-flex align-items-center justify-content-between" style="font-size: 1rem; font-weight: 700; margin-bottom: 2rem;">
-                                    Advance Amount ₹@{{ current_balance }}
+                                    TER Amount ₹@{{ amount }} &nbsp;&nbsp;|&nbsp;&nbsp; Advance Amount ₹@{{ current_balance }}
                                    <span v-if="all_data.sender_detail.last_working_date">
                                     Last working date @{{ all_data.sender_detail.last_working_date }}
                                    </span>
