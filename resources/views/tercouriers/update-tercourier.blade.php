@@ -798,7 +798,7 @@
                                 this.amount = this.all_data.amount;
                                 this.payable_amount = this.all_data.payable_amount;
                                 this.voucher_code = this.all_data.voucher_code;
-                                this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id;
+                                this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id + " : "+ this.all_data.sender_detail.pfu;
                                 this.date_of_receipt = this.all_data.date_of_receipt;
                                 this.location = this.all_data.sender_detail.location;
                                 this.telephone_no = this.all_data.sender_detail.telephone_no;
@@ -842,7 +842,7 @@
                                         // }
                                     }
                                 }
-                                this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id;
+                                this.emp_details = this.all_data.sender_name + " : " + this.all_data.employee_id + " : " + this.all_data.ax_id + " : "+ this.all_data.sender_detail.pfu;
                                 this.date_of_receipt = this.all_data.date_of_receipt;
                                 this.location = this.all_data.sender_detail.location;
                                 this.telephone_no = this.all_data.sender_detail.telephone_no;
