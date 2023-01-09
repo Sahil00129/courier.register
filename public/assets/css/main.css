@@ -2152,3 +2152,8 @@ table .badge-success, table .badge-primary, table .badge-warning, table .badge-d
 
 .position-relative {
   position: relative; }
+
+label.error {
+    color: #ff0000;
+    font-weight: normal;
+}

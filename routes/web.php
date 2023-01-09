@@ -13,6 +13,8 @@ use App\Http\Controllers\CourierController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\TercourierController;
+use App\Http\Controllers\PoController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,9 +161,17 @@ Route::post('/submit_hr_remarks', [TercourierController::class,'submit_hr_remark
 Route::view('/reports','pages/export-data');
 
 Route::get('download_report/{type}',[ImportExportController::class,'download_report']);
+
+Route::get('/get-locations', [UserController::class, 'getLocation']);
+Route::get('/get_departments', [UserController::class, 'getDepartment']);
+
+Route::resource('pos', PoController::class);
+Route::resource('invoices', InvoiceController::class);
+Route::get('/get-po', [InvoiceController::class, 'getPo']);
+
 });
 
-
+Route::get('/forgot-session', [HomeController::class, 'ForgotSession']);
 
 Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 Route::get('/check_deduction_paid_status', [TercourierController::class,'check_deduction_paid_status']);

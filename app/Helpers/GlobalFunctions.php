@@ -61,4 +61,21 @@ class GlobalFunctions {
         return $thecash; // writes the final format where $currency is the currency symbol.
     }
 
+    public static function PoUnit($unit){
+        if($unit == 1){
+            $unit = 'SD1';
+        }
+        else if($unit == 2){
+            $unit = 'SD3';
+        }
+        else if($unit == 3){      //2
+            $unit = 'MA2';
+        }
+        else if($unit == 4){       //3
+            $unit = 'MA4';
+        }
+    
+        return $unit;
+    }
+
 }
