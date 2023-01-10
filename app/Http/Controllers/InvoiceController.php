@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Po;
+use App\Models\Tercourier;
+use DB;
+use URL;
+use Helper;
+use Validator;
+use Config;
+use Session;
 
 class InvoiceController extends Controller
 {
@@ -37,7 +43,57 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = array(
+            // 'po_number'    => 'required|unique:pos',
+            // 'vendor_name' => 'required', 
+            // 'po_value'  => 'required',
+            // 'unit'  => 'required',
+        );
+        $validator = Validator::make($request->all() , $rules);
+        if ($validator->fails())
+        {
+            $errors                 = $validator->errors();
+            $response['success']    = false;
+            $response['validation'] = false;
+            $response['formErrors'] = true;
+            $response['errors']     = $errors;
+            return response()->json($response);
+        }
+
+        if(!empty($request->po_id)){
+            $saveinvoice['po_id'] = $request->po_id;
+        }
+
+        if(!empty($request->basic_amount)){
+            $saveinvoice['basic_amount'] = $request->basic_amount;
+        }
+        if(!empty($request->total_amount)){
+            $saveinvoice['total_amount'] = $request->total_amount;
+        }
+        if(!empty($request->invoice_no)){
+            $saveinvoice['invoice_no'] = $request->invoice_no;
+        }
+        if(!empty($request->invoice_date)){
+            $saveinvoice['invoice_date'] = $request->invoice_date;
+        }
+        
+        $saveinvoice['ter_type'] = 1;
+        $saveinvoice['status'] = 1;
+
+        $savepo = Tercourier::create($saveinvoice);
+        if($savepo){
+            $response['success']    = true;
+            $response['page']       = 'create-invoice';
+            $response['error']      = false;
+            $response['success_message'] = "Invoices created successfully";
+            $response['redirect_url'] = URL::to('/invoices');
+        }else{
+            $response['success']       = false;
+            $response['error']         = true;
+            $response['error_message'] = "Can not created invoice please try again";
+        }
+        // echo "<pre>"; print_r($response); die;
+        return response()->json($response);
     }
 
     /**

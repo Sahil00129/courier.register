@@ -207,6 +207,8 @@ function formSubmitRedirect(form)
                 $('#'+form.id).trigger('reset');
             }else if(response.page == 'create-pos'){
                 setTimeout(() => {window.location.href = response.redirect_url},1000);
+            }else if(response.page == 'create-invoice'){
+                setTimeout(() => {window.location.href = response.redirect_url},1000);
             }
             
             if(response.formErrors)

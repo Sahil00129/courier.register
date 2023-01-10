@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-lg-12 col-12 layout-spacing">
                     <div class="statbox widget box box-shadow">
-                        <form class="general_form row" method="POST" action="{{url('/invoices')}}" id="new_tercourier_create">
+                        <form class="general_form row" method="POST" action="{{url('/invoices')}}" id="createinvoice">
                             <div class="form-group mb-4 col-md-6">
                                 <label for="exampleFormControlInput2">Ax Code</label>
                                 <select class="form-control form-control-sm basic" name="po_id" id="select_po" required>
