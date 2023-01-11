@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tercourier;
+use App\Models\Po;
 use DB;
 use URL;
 use Helper;
@@ -18,9 +19,55 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $peritem = Config::get('variable.PER_PAGE');
+        $query = Tercourier::query();
+        
+        if ($request->ajax()) {
+            if(isset($request->resetfilter)){
+                Session::forget('peritem');
+                $url = URL::to($this->prefix.'/'.$this->segment);
+                return response()->json(['success' => true,'redirect_url'=>$url]);
+            }
+            $query = $query;
+
+            if(!empty($request->search)){
+                $search = $request->search;
+                $searchT = str_replace("'","",$search);
+                $query->where(function ($query)use($search,$searchT) {
+                    $query->where('po_number', 'like', '%' . $search . '%')
+                    ->orWhere('ax_code', 'like', '%' . $search . '%')
+                    ->orWhere('vendor_name', 'like', '%' . $search . '%')
+                    ->orWhere('po_value', 'like', '%' . $search . '%')
+                    ->orWhere('unit', 'like', '%' . $search . '%');
+                });
+            }
+
+            if($request->peritem){
+                Session::put('peritem',$request->peritem);
+            }
+      
+            $peritem = Session::get('peritem');
+            if(!empty($peritem)){
+                $peritem = $peritem;
+            }else{
+                $peritem = Config::get('variable.PER_PAGE');
+            }
+
+            $invoice = $query->where('ter_type',1)->orderBy('id', 'DESC')->paginate($peritem);
+            $invoice = $invoice->appends($request->query());
+
+            $html =  view('invoices.invoice-list-ajax',['invoice' => $invoice,'peritem'=>$peritem])->render();
+            
+            return response()->json(['html' => $html]);
+        }
+
+
+        $invoice = $query->where('ter_type',1)->orderBy('id','DESC')->paginate($peritem);
+        $invoice = $invoice->appends($request->query());
+        
+        return view('invoices.invoice-list', ['invoice' => $invoice, 'peritem'=>$peritem]);
     }
 
     /**
@@ -105,6 +152,7 @@ class InvoiceController extends Controller
     public function show($id)
     {
         //
+     
     }
 
     /**

@@ -89,21 +89,32 @@ $currentURL = url()->current();
                 </li>
 
                 @can('sender-table-show')
-                    <li class="menu single-menu @if($currentURL == url('sender-table')) active @endif">
-                        <a href="{{url('sender-table')}}">
+                    <li class="menu single-menu">
+                        <a href="#employee_doc" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-users">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                     stroke-linejoin="round" class="feather feather-layers">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
                                 </svg>
-                                <span>Employees</span>
+
+                                <span>Senders</span>
                             </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </a>
+                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="employee_doc"
+                            data-parent="#topAccordion">
+                            <li><a href="{{url('sender-table')}}">Employees </a></li>
+                            <li><a href="{{url('sender-table')}}">Vendors </a></li>
+                        </ul>
                     </li>
+
                 @endcan
                 @can('add-sender')
                     <li class="menu single-menu @if($currentURL == url('courier-company')) active @endif">
@@ -131,31 +142,7 @@ $currentURL = url()->current();
                         </ul>
                     </li>
 
-                    <!-- receive documents -->
-                    <li class="menu single-menu">
-                        <a href="#receives_doc" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-layers">
-                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                    <polyline points="2 17 12 22 22 17"></polyline>
-                                    <polyline points="2 12 12 17 22 12"></polyline>
-                                </svg>
-
-                                <span>Receive Documents</span>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-chevron-down">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </a>
-                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
-                            data-parent="#topAccordion">
-                            <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
-                        </ul>
-                    </li>
+                 
 
                     {{--                    <li class="menu single-menu">--}}
                     {{--                        <a href="{{url('add-sender')}}">--}}
@@ -233,6 +220,34 @@ $currentURL = url()->current();
                                 <span>PO List</span>
                             </div>
                         </a>
+                    </li>
+
+                       <!-- receive documents -->
+                       <li class="menu single-menu">
+                        <a href="#receives_doc" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-layers">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+
+                                <span>Receive Documents</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </a>
+                        <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
+                            data-parent="#topAccordion">
+                            <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
+                            <li><a href=" {{url('tercouriers/create')}}"> Add TER </a></li>
+                           
+                        </ul>
                     </li>
 
                 @can('tercouriers')
