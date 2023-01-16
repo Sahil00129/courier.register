@@ -955,7 +955,7 @@
                                     </div>
                                 </td>
                                 <?php
-                                if (!empty($tercourier->HandoverDetail)) {
+                                if (!empty($tercourier->HandoverDetail) && $tercourier->status == 1) {
                                     if ($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks != "") {
                                         $status = 'Received';
                                         $class = 'btn-danger';
@@ -1004,7 +1004,7 @@
                                 ?>
 
                                 <td>
-                                    @if(!empty($tercourier->HandoverDetail))
+                                    @if(!empty($tercourier->HandoverDetail) && $tercourier->status == 1 )
                                     @if($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks!="")
                                     <div style="position: relative;">
                                         <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">

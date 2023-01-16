@@ -333,7 +333,7 @@
                 <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <!-- <th>ID</th> -->
                             <th>Handover ID</th>
                             <th>UNID's</th>
                             <th>Count</th>
@@ -358,7 +358,7 @@
                             <tr>
                             @if($name == 'reception')
                                 <!-- @if($key == 0) -->
-                                <td width="100px">{{ $key+1 }}</td>
+                                <!-- <td width="100px">{{ $key+1 }}</td> -->
                                 <!-- @else
                                 <td width="100px">{{ $key }}</td>
                                 @endif -->
@@ -370,11 +370,11 @@
                                 </td> -->
                                 @endif
                                 @if($name == 'tr admin' && $handover->department == 'ter-team')
-                                @if($key == 0)
+                                <!-- @if($key == 0)
                                 <td width="100px">{{ $key+1 }}</td>
                                 @else
                                 <td width="100px">{{ $key }}</td>
-                                @endif
+                                @endif -->
                                 <td><strong>{{ $handover->handover_id }}</strong></td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
@@ -387,11 +387,11 @@
                                 </td>
                                 @endif
                                 @if($name == 'Hr Admin' && $handover->department=='hr-admin')
-                                @if($key == 0)
+                                <!-- @if($key == 0)
                                 <td width="100px">{{ $key+1 }}</td>
                                 @else
                                 <td width="100px">{{ $key }}</td>
-                                @endif
+                                @endif -->
                                 <td><strong>{{ $handover->handover_id }}</strong></td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
