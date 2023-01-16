@@ -576,8 +576,8 @@
                     // return 1;
                     d1 = new Date(ter_to);
                     d2 = new Date(last_date_array);
-                    // alert(d1)
-                    // alert(d2)
+                    alert(d1)
+                    alert(d2)
     
                     if (d1 <= d2 || this.allow_flag) {
                         axios.post('/ter_pay_later', {
@@ -685,6 +685,7 @@
                     }
                     d1 = new Date(ter_to);
                     d2 = new Date(last_date_array);
+                   
 
                     if (d1 <= d2 || this.allow_flag) {
 
