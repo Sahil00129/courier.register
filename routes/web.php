@@ -122,6 +122,7 @@ Route::get('show_settlement_deduction', [TercourierController::class, 'show_sett
 Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
 
+
 Route::get('/export_emp_table', [ImportExportController::class,'ExportSender']);
 Route::get('/export_ter_user_entry', [ImportExportController::class,'ExportSavedEntry']);
 
@@ -155,7 +156,9 @@ Route::post('/update_emp_details', [TercourierController::class,'update_emp_deta
 Route::post('/get_rejected_details', [TercourierController::class,'get_rejected_details']);
 Route::post('/partially_paid_details', [TercourierController::class,'partially_paid_details']);
 Route::post('/submit_hr_remarks', [TercourierController::class,'submit_hr_remarks']);
-
+Route::get('/document_list', [TercourierController::class,'received_docs']);
+Route::post('/accept_handover', [TercourierController::class,'accept_handover']);
+Route::post('/reject_handover', [TercourierController::class,'reject_handover']);
 
 
 Route::view('/reports','pages/export-data');
