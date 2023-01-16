@@ -571,12 +571,10 @@
                     } else {
                         this.allow_flag = true;
                     }
-                    // alert(ter_to)
-                    // alert(last_date_array)
-                    // return 1;
+                   
                     d1 = new Date(ter_to);
-                    d2 = new Date(last_date_array);
                     alert(d1)
+                    d2 = new Date(last_date_array);
                     alert(d2)
     
                     if (d1 <= d2 || this.allow_flag) {
