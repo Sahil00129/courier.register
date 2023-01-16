@@ -26,6 +26,9 @@ use App\Exports\ExportTerFullList;
 use App\Exports\ExportHandShakeList;
 use App\Exports\ExportTerStatusList;
 use App\Models\HandoverDetail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+
 
 class TercourierController extends Controller
 {
@@ -810,7 +813,32 @@ class TercourierController extends Controller
     //     }
 
 
-   
+    public function check_email_trigger()
+    {
+        $today_date=date('Y-m-d');
+        $arr1=array();
+        $check_received_email=Tercourier::where('status',1)->whereDate('received_date', '<', $today_date)->get();
+        // echo "<pre>";
+        for($i=0;$i<sizeof($check_received_email);$i++)
+        {
+     $arr1[]=$check_received_email[$i]->id;
+        }
+
+
+       $received_ids = implode(',', $arr1);
+       print_r($received_ids);
+
+       $testMailData = [
+        'title' => 'Test Email',
+        'body' => " Received ID's ".$received_ids
+    ];
+
+    Mail::to('dhroov.kanwar@eternitysolutions.net')->send(new SendMail($testMailData));
+
+    dd('Success! Email has been sent successfully.');
+        // exit;
+        // return ;
+    }
 
 
 
