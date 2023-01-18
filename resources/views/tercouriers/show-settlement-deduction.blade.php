@@ -655,10 +655,12 @@
                             <p><strong>Remarks: </strong>@{{remarks_partially_paid}}</p>
 
                         </div>
+                    
+
                         @if($role == "Hr Admin")
                         <div class="modal-footer">
                             <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_partially_paid_remarks_modal()">Reject</button>
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->parent_ter_id; ?>">Approve & Pay</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter()" >Approve & Pay</button>
                         </div>
                         @endif
 
@@ -1023,9 +1025,8 @@
             },
 
 
-            pay_now_ter: function($id) {
-                var unique_id = $id;
-
+            pay_now_ter: function() {
+                var unique_id = this.partially_paid_id;
                 axios.post('/pay_later_ter_now', {
                         'selected_id': unique_id
                     })
