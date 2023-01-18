@@ -11,16 +11,16 @@ class SendMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $testMailData;
+    public $terMailData;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($testMailData)
+    public function __construct($terMailData)
     {
-        $this->testMailData = $testMailData;
+        $this->terMailData = $terMailData;
     }
 
     /**

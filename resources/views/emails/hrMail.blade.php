@@ -4,7 +4,7 @@
     <title>Needs Urgent Updates</title>
 </head>
 <body>
-    <h1>{{ $testMailData['title'] }}</h1>
-    <p>{{ $testMailData['body'] }}</p>
+    <h1>{{ $terMailData['title'] }}</h1>
+    <p>{{ $terMailData['body'] }}</p>
 </body>
 </html>

@@ -15,7 +15,7 @@ class Tercourier extends Model
     protected $fillable = [
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'recp_entry_time', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
-        'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id'
+        'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date'
     ];
 
     public function CourierCompany()
@@ -238,6 +238,7 @@ class Tercourier extends Model
             $data['payable_amount'] = $pay_data;
             $data['voucher_code'] = $voucher_data;
         }
+        $data['verify_ter_date']=date('Y-m-d');
         // return $data;
         $query =  DB::table('tercouriers')->where('id', $unique_id)
             ->update($data);
