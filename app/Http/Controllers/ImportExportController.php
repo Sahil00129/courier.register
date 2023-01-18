@@ -276,5 +276,11 @@ class ImportExportController extends Controller
       {
         return Excel::download(new ExportTerEmpLedger,'ter_emp_ledger_report.xlsx');
       }
+      else if($type=="emp_list")
+      {
+        return Excel::download(new ExportEmployee, 'employee_report.xlsx');
+      }
+     
+      
     }
 }
