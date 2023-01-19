@@ -28,6 +28,7 @@ use App\Exports\ExportTerStatusList;
 use App\Models\HandoverDetail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use PDF;
 
 
 class TercourierController extends Controller
@@ -910,14 +911,25 @@ class TercourierController extends Controller
     //    print_r($handover_ids);
 
        $terMailData = [
-        'title' => 'List of TER UNID"s ',
-        'body' => " Received ID's: ".$received_ids ." <br/> Handover ID's: ".$handover_ids ." , Unknown ID's: ".$unknown_ids
-                 ." , Rejected ID's: ".$rejected_ids ." , Finfect ID's: ".$finfect_ids ." , Failed Payment ID's: ".$failed_payment_ids
-                 ." , PayLater ID's: ".$paylater_ids ." , Full_&_Final ID's: ".$full_n_final_ids      
+        'title' => "List of TER UNID's ",
+        'received'=>$received_ids,
+        'handover'=>$handover_ids,
+        'finfect'=>$finfect_ids,
+        'unknown'=>$unknown_ids,
+        'rejected'=>$rejected_ids,
+        'failed'=>$failed_payment_ids,
+        'paylater'=>$paylater_ids,
+        'full_n_final'=>$full_n_final_ids,
+
+        // 'body' => " Received ID's: ".$received_ids ." <br/> Handover ID's: ".$handover_ids ." , Unknown ID's: ".$unknown_ids
+        //          ." , Rejected ID's: ".$rejected_ids ." , Finfect ID's: ".$finfect_ids ." , Failed Payment ID's: ".$failed_payment_ids
+        //          ." , PayLater ID's: ".$paylater_ids ." , Full_&_Final ID's: ".$full_n_final_ids      
                  
     ];
 
     Mail::to('dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
+    // Mail::to('bestbringer1@gmail.com')->send(new SendMail($terMailData));
+
 
     dd('Success! Email has been sent successfully.');
         // exit;

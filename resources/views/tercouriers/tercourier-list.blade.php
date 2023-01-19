@@ -841,11 +841,11 @@
                                                 <div class="heading">Claimed:</div>
                                                 ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
                                             </div>
-                                            <div class="amount d-flex align-items-center justify-content-between " id="pay_sum">
+                                            <div class="amount d-flex align-items-center justify-content-between " id="pay_sum" v-if="tercourier.status!=2">
                                                 <div class="heading">Paid:</div>
                                                 @{{arraySum(tercourier.payable_amount)}}
                                             </div>
-                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                            <div class="amount d-flex align-items-center justify-content-between " v-if="tercourier.status!=2">
                                                 <div class="heading">Deduction:</div>
                                                 @{{arraySum(tercourier.payable_amount) - tercourier.amount}}
                                             </div>
@@ -855,7 +855,7 @@
                             </td>
 
                             <!--ax-->
-                            <td>
+                            <td v-if="tercourier.status!=2">
                                 <div class="axDetails flex-grow-1">
                                     <div class="heading d-flex justify-content-between align-items-center" style="font-size: 12px; font-weight: 500;">Voucher:
                                         <span>Amount</span>
