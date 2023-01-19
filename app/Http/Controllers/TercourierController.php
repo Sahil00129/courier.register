@@ -31,6 +31,7 @@ use App\Mail\SendMail;
 use PDF;
 
 
+
 class TercourierController extends Controller
 {
     public function __construct()
@@ -926,6 +927,11 @@ class TercourierController extends Controller
         //          ." , PayLater ID's: ".$paylater_ids ." , Full_&_Final ID's: ".$full_n_final_ids      
                  
     ];
+    // $data=array('full_n_final'=>$full_n_final_ids,);
+
+  
+    // $pdf = PDF::loadView('emails.hrMail',['terMailData'=> $terMailData]);
+    // return $pdf->download('invoice.pdf');
 
     Mail::to('dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
     // Mail::to('bestbringer1@gmail.com')->send(new SendMail($terMailData));
