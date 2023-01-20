@@ -22,6 +22,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/jquery-step/jquery.steps.css')}}">
 
 <link rel="stylesheet" type="text/css" href="{{asset('plugins/select2/select2.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/jquery.toast.css')}}">
 <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 <style>

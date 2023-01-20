@@ -701,6 +701,9 @@
                                 if (response.data === "error_sum_amount") {
                                     swal('error', "Payable Amount is Greater than TER Amount", 'error')
                                 } 
+                                else if (response.data === "bank_details_missing") {
+                                    swal('error', "Bank Details are missing for this TER", 'error')
+                                } 
                                 else if (response.data === "pfu_missing") {
                                     swal('error', "PFU is not available for this TER", 'error')
                                 } 

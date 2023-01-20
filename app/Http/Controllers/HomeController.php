@@ -331,4 +331,17 @@ class HomeController extends Controller
         return Response::json($response);
 
     }
+
+    public function ForgotSession(){
+        // Session::forget('lead-search');
+        Session::forget('peritem');
+        Session::forget('startdate'); 
+        Session::forget('endate');
+        
+        Session::forget('internalperitem');
+        Session::forget('searchvehicle');
+         
+         $response['success'] = true;
+         return response()->json($response);
+    }
 }

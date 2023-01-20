@@ -572,6 +572,8 @@
                         if (response.data == 1) {
 
                             location.reload();
+                        } else if (response.data === "bank_details_missing") {
+                            swal('error', "Bank Details are missing for this TER", 'error')
                         } else if (response.data === "pfu_missing") {
                             swal('error', "PFU is not available for this TER", 'error')
                         } else {

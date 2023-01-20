@@ -25,6 +25,10 @@ use App\Exports\ExportTerList;
 use App\Exports\ExportTerFullList;
 use App\Exports\ExportHandShakeList;
 use App\Exports\ExportTerStatusList;
+use App\Models\HandoverDetail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+use PDF;
 
 
 class TercourierController extends Controller
@@ -43,6 +47,7 @@ class TercourierController extends Controller
         $this->middleware('permission:full-and-final-data', ['only' => ['show_settlement_deduction']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_rejected_ter']]);
         $this->middleware('permission:payment_sheet', ['only' => ['payment_sheet']]);
+        $this->middleware('permission:document_list', ['only' => ['received_docs']]);
     }
     /**
      * Display a listing of the resource.
@@ -62,21 +67,83 @@ class TercourierController extends Controller
             // echo'<pre>'; print_r($name); die;
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
+
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
                 // die;
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
-                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])->with('CourierCompany', 'SenderDetail')->orderby('id', 'DESC')->paginate(20);
+
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
-            //    echo'<pre>'; print_r($name); die;
+            //    echo'<pre>'; print_r($tercouriers); die;
         }
 
         return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
     }
+
+    public function received_docs()
+    {
+        $data = HandoverDetail::where('action_done', '0')->get();
+        $user = Auth::user();
+        $user_type = json_decode(json_encode($user));
+        $name = $user_type->roles[0]->name;
+
+        // if($name == 'reception')
+        // {
+        //     $data = HandoverDetail::where(['is_received'=>0])->get();
+        // }
+        // dd($data);
+        return view('tercouriers.handover-list-tercourier', ['handovers' => $data, 'name' => $name]);
+    }
+
+    public function accept_handover(Request $request)
+    {
+
+        $data = $request->all();
+        $handover_id = $data['handover_id'];
+        $details = Auth::user();
+        $user_id = $details->id;
+        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
+        if ($res) {
+            $get_data = HandoverDetail::where('handover_id', $handover_id)->get();
+            $ter_ids = $get_data[0]->ter_ids;
+            $explode_ter = explode(',', $ter_ids);
+            for ($i = 0; $i < sizeof($explode_ter); $i++) {
+                $id = $explode_ter[$i];
+                $get_ter_data = Tercourier::where('id', $id)->first();
+                $status = $get_ter_data->copy_status;
+                $update_data = Tercourier::where('id', $id)->update(array('status' => $status, 'copy_status' => ""));
+            }
+        }
+        return $update_data;
+    }
+    public function reject_handover(Request $request)
+    {
+
+        $data = $request->all();
+        $handover_id = $data['handover_id'];
+        $handover_remarks = $data['handover_remarks'];
+        $details = Auth::user();
+        $user_id = $details->id;
+        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('handover_remarks' => $handover_remarks, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
+        if ($res) {
+            $get_data = HandoverDetail::where('handover_id', $handover_id)->get();
+            $ter_ids = $get_data[0]->ter_ids;
+            $explode_ter = explode(',', $ter_ids);
+            for ($i = 0; $i < sizeof($explode_ter); $i++) {
+                $id = $explode_ter[$i];
+                // $get_ter_data=Tercourier::where('id',$id)->first();
+                // $status= $get_ter_data->copy_status;
+                $update_data = Tercourier::where('id', $id)->update(array('status' => '1', 'copy_status' => ""));
+            }
+        }
+        return $update_data;
+    }
+
 
     public function download_ter_list()
     {
@@ -128,6 +195,9 @@ class TercourierController extends Controller
             } else if ($check_status == '9') {
                 $status = 9;
                 $flag = 1;
+            } else if ($check_status == '11') {
+                $status = 11;
+                $flag = 1;
             } else if ($check_status == 'fail') {
                 $status = 0;
                 $flag = 1;
@@ -136,11 +206,11 @@ class TercourierController extends Controller
             // return $flag;
             if ($flag) {
 
-                $tercouriers = $query->with('CourierCompany', 'SenderDetail')
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail')
                     ->where('status', $status)->orderby('id', 'DESC')->get();
                 return [$tercouriers];
             } else {
-                $tercouriers = $query->with('CourierCompany', 'SenderDetail')
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail')
                     ->where('id', 'like', '%' . $searched_item . '%')->orWhere('employee_id', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orWhere('sender_name', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
                 // dd($tercouriers);
                 // return $tercouriers;
@@ -737,6 +807,138 @@ class TercourierController extends Controller
     //         // }
     //         return 1;
     //     }
+
+
+    public function check_email_trigger()
+    {
+        $today_date = date('Y-m-d');
+        $received_ids_arr = array();
+        $handover_ids_arr = array();
+        $unknown_ids_arr = array();
+        $rejected_ids_arr = array();
+        $sent_to_finfect_arr = array();
+        $payment_failed_arr = array();
+        $pay_later_arr = array();
+        $full_n_final_arr = array();
+
+
+        $check_received_email = Tercourier::where('status', 1)->whereDate('received_date', '<', $today_date)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_received_email); $i++) {
+            $received_ids_arr[] = $check_received_email[$i]->id;
+        }
+
+        $date = date_create($today_date);
+        date_add($date, date_interval_create_from_date_string("-7 days"));
+        $date_check = date_format($date, "Y-m-d");
+
+        $check_handover_email = Tercourier::where('status', 2)->whereDate('handover_date', '<', $date_check)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_handover_email); $i++) {
+            $handover_ids_arr[] = $check_handover_email[$i]->id;
+        }
+
+        $check_unknown_email = Tercourier::where('status', 9)->whereDate('handover_date', '<', $today_date)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_unknown_email); $i++) {
+            $unknown_ids_arr[] = $check_unknown_email[$i]->id;
+        }
+
+        $date = date_create($today_date);
+        date_add($date, date_interval_create_from_date_string("-2 days"));
+        $date_check = date_format($date, "Y-m-d");
+
+        $check_reject_email = Tercourier::where('status', 8)->whereDate('handover_date', '<', $date_check)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_reject_email); $i++) {
+            $rejected_ids_arr[] = $check_reject_email[$i]->id;
+        }
+
+        $check_finfect_email = Tercourier::where('status', 3)->whereDate('sent_to_finfect_date', '<', $today_date)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_finfect_email); $i++) {
+            $sent_to_finfect_arr[] = $check_finfect_email[$i]->id;
+        }
+
+        $check_failed_email = Tercourier::where('status', 0)->whereDate('sent_to_finfect_date', '<', $today_date)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_failed_email); $i++) {
+            $payment_failed_arr[] = $check_failed_email[$i]->id;
+        }
+
+        $date = date_create($today_date);
+        date_add($date, date_interval_create_from_date_string("-7 days"));
+        $date_check = date_format($date, "Y-m-d");
+
+        $check_paylater_email = Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date', '<', $date_check)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_paylater_email); $i++) {
+            $pay_later_arr[] = $check_paylater_email[$i]->id;
+        }
+
+        $date = date_create($today_date);
+        date_add($date, date_interval_create_from_date_string("-30 days"));
+        $date_check = date_format($date, "Y-m-d");
+
+        $check_full_n_final_email = Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date', '<', $date_check)->get();
+        // echo "<pre>";
+        for ($i = 0; $i < sizeof($check_full_n_final_email); $i++) {
+            $full_n_final_arr[] = $check_full_n_final_email[$i]->id;
+        }
+
+
+        $received_ids = implode(', ', $received_ids_arr);
+        $received_data_size = sizeof($received_ids_arr);
+        $handover_ids = implode(', ', $handover_ids_arr);
+        $handover_data_size = sizeof($handover_ids_arr);
+        $unknown_ids = implode(', ', $unknown_ids_arr);
+        $unknown_data_size = sizeof($unknown_ids_arr);
+        $rejected_ids = implode(', ', $rejected_ids_arr);
+        $rejected_data_size = sizeof($rejected_ids_arr);
+        $finfect_ids = implode(', ', $sent_to_finfect_arr);
+        $finfect_data_size = sizeof($sent_to_finfect_arr);
+        $failed_payment_ids = implode(', ', $payment_failed_arr);
+        $failed_data_size = sizeof($payment_failed_arr);
+        $paylater_ids = implode(', ', $pay_later_arr);
+        $paylater_data_size = sizeof($pay_later_arr);
+        $full_n_final_ids = implode(', ', $full_n_final_arr);
+        $full_n_final_data_size = sizeof($full_n_final_arr);
+
+        //    print_r($handover_ids);
+
+        $terMailData = [
+            'title' => "List of TER UNID's ",
+            'received' => $received_ids,
+            'received_size' => $received_data_size,
+            'handover' => $handover_ids,
+            'handover_size' => $handover_data_size,
+            'finfect' => $finfect_ids,
+            'finfect_size' => $finfect_data_size,
+            'unknown' => $unknown_ids,
+            'unknown_size' => $unknown_data_size,
+            'rejected' => $rejected_ids,
+            'rejected_size' => $rejected_data_size,
+            'failed' => $failed_payment_ids,
+            'failed_size' => $failed_data_size,
+            'paylater' => $paylater_ids,
+            'paylater_size' => $paylater_data_size,
+            'full_n_final' => $full_n_final_ids,
+            'full_n_final_size' => $full_n_final_data_size
+        ];
+
+
+        // Mail::to(['dhroov.kanwar@eternitysolutions.net','vineet.thakur@eternitysolutions.net'])->cc(['itsupport@frontierag.com','sahil.thakur@eternitysolutions.net'])->send(new SendMail($terMailData));
+
+
+
+
+    Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])->send(new SendMail($terMailData));
+
+        // Mail::to('hrd@frontierag.com')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
+
+
+        // dd('Success! Email has been sent successfully.');
+    }
 
 
 
@@ -1409,7 +1611,7 @@ class TercourierController extends Controller
             $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
             if (!empty($check_last_working[0]->last_working_date)) {
                 $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                    'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                    'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                 ));
                 return $change_status;
             } else {
@@ -1578,7 +1780,7 @@ class TercourierController extends Controller
                     if ($check_last_working[0]->last_working_date) {
                         // return "Dsa";
                         $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                            'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                            'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                         ));
                         return $change_status;
                     }
@@ -1604,7 +1806,7 @@ class TercourierController extends Controller
                     ]);
                     if ($update_deduction_table) {
                         $response = DB::table('tercouriers')->where('id', $id)->update([
-                            'status' => 5, 'updated_by_id' => $log_in_user_id,
+                            'status' => 5, 'verify_ter_date' => date('Y-m-d'), 'updated_by_id' => $log_in_user_id,
                             'updated_by_name' => $log_in_user_name
                         ]);
                     }
@@ -1815,8 +2017,8 @@ class TercourierController extends Controller
 
             $payable_sum = $tercourier_data->final_payable;
             // if ($tercourier_data->txn_type == "rejected_ter") {      
-                // $payable_sum = $tercourier_data->payable_amount;
-                
+            // $payable_sum = $tercourier_data->payable_amount;
+
             // }
             $emp_id = $tercourier_data->employee_id;
             $sender_id = $tercourier_data->sender_id;
@@ -1847,21 +2049,26 @@ class TercourierController extends Controller
                 ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'], 'status' => 3]);
         }
 
-       
-        $get_emp_id=DB::table('tercouriers')->where('id',$id)->get();
+
+        $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
         $emp_id = $get_emp_id[0]->employee_id;
         $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
-        if(empty($ax_id)){
-            $ax_id=$sender_table[0]->iag_code;
-        //  $ax_id=
+        if (empty($ax_id)) {
+            $ax_id = $sender_table[0]->iag_code;
+            //  $ax_id=
         }
-        $pfu=$sender_table[0]->pfu;
+        $pfu = $sender_table[0]->pfu;
         // $pfu="";
-        if(empty($pfu))
-        {
-            DB::table('tercouriers')->where('id',$id)->update(['status'=>0,'voucher_code'=>"","payable_amount"=>"","final_payable"=>"",'remarks'=>'pfu is not available','updated_at'=>date('Y-m-d H:i:s')]);
-      
+        if (empty($pfu)) {
+            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+
             return "pfu_missing";
+        }
+
+        if (empty($sender_data->account_number) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
+            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'Bank Details are missing', 'updated_at' => date('Y-m-d H:i:s')]);
+
+            return "bank_details_missing";
         }
         // $ter_id="3243534";
         // print_r($pfu);
@@ -2196,7 +2403,7 @@ class TercourierController extends Controller
     public function update_ter_deduction(Request $request)
     {
         $data = $request->all();
-        $res="";
+        $res = "";
         $check_duplicate = self::check_duplicate_voucher_code($data['voucher_code']);
         // echo "<pre>";
         // print_r($check_duplicate);
@@ -2232,18 +2439,20 @@ class TercourierController extends Controller
         $insert['updated_at'] = date('Y-m-d H:i:s');
         $actual_id = $data['ter_id'];
         // $actual_id = 46;
-       
+
         $check_id_exist = DB::table('ter_deduction_settlements')->select("*")->where('parent_ter_id', $actual_id)->first();
-    
+
         if ($check_id_exist != null || $check_id_exist != '') {
-            $update_details = TerDeductionSettlement::where('id', $check_id_exist->id)->update(['remarks'=>$insert['remarks'],
-                    'payable_amount'=> $insert['payable_amount'],'voucher_code'=> $insert['voucher_code'],
-                'file_name'=> $insert['file_name'],'status'=>7]);
-                // return "Ds";
+            $update_details = TerDeductionSettlement::where('id', $check_id_exist->id)->update([
+                'remarks' => $insert['remarks'],
+                'payable_amount' => $insert['payable_amount'], 'voucher_code' => $insert['voucher_code'],
+                'file_name' => $insert['file_name'], 'status' => 7
+            ]);
+            // return "Ds";
         } else {
             $update_details = TerDeductionSettlement::insert($insert);
         }
-    // dd($update_details);
+        // dd($update_details);
         if ($update_details) {
             $res =   DB::table('tercouriers')->where('id', $data['ter_id'])->update([
                 'status' => 7, 'updated_by_id' => $details->id,
@@ -2297,14 +2506,14 @@ class TercourierController extends Controller
         // $update_data['ax_id']=$data['ax_id'];
         $id = $data['id'];
         // return $data['emp_id'];
-        $get_sender_data=DB::table('sender_details')->where('employee_id',$data['emp_id'])->get();
+        $get_sender_data = DB::table('sender_details')->where('employee_id', $data['emp_id'])->get();
         // return $get_sender_data;
-        $sender_id=$get_sender_data[0]->id;
+        $sender_id = $get_sender_data[0]->id;
 
         $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
             'hr_admin_remark' => $data['remarks'],
-            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'], 
-            'sender_id'=>$sender_id,'status' => 2
+            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+            'sender_id' => $sender_id, 'status' => 2
         ]);
 
         return $tercourier_table;
@@ -2418,7 +2627,7 @@ class TercourierController extends Controller
     {
         $data = $request->all();
         $id = $data['selected_id'];
-        $ter = DB::table('tercouriers')->where('id', $id)->update(['status'=>2]);
+        $ter = DB::table('tercouriers')->where('id', $id)->update(['status' => 2]);
         return $ter;
     }
     public function partially_paid_details(Request $request)

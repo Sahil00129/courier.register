@@ -13,6 +13,8 @@ use App\Http\Controllers\CourierController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\TercourierController;
+use App\Http\Controllers\PoController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,6 +122,7 @@ Route::get('show_settlement_deduction', [TercourierController::class, 'show_sett
 Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
 
+
 Route::get('/export_emp_table', [ImportExportController::class,'ExportSender']);
 Route::get('/export_ter_user_entry', [ImportExportController::class,'ExportSavedEntry']);
 
@@ -153,18 +156,28 @@ Route::post('/update_emp_details', [TercourierController::class,'update_emp_deta
 Route::post('/get_rejected_details', [TercourierController::class,'get_rejected_details']);
 Route::post('/partially_paid_details', [TercourierController::class,'partially_paid_details']);
 Route::post('/submit_hr_remarks', [TercourierController::class,'submit_hr_remarks']);
-
+Route::get('/document_list', [TercourierController::class,'received_docs']);
+Route::post('/accept_handover', [TercourierController::class,'accept_handover']);
+Route::post('/reject_handover', [TercourierController::class,'reject_handover']);
 
 
 Route::view('/reports','pages/export-data');
 
 Route::get('download_report/{type}',[ImportExportController::class,'download_report']);
+
+Route::get('/get-locations', [UserController::class, 'getLocation']);
+Route::get('/get_departments', [UserController::class, 'getDepartment']);
+
+Route::resource('pos', PoController::class);
+Route::resource('invoices', InvoiceController::class);
+Route::get('/get-po', [InvoiceController::class, 'getPo']);
+
 });
 
-
+Route::get('/forgot-session', [HomeController::class, 'ForgotSession']);
 
 Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 Route::get('/check_deduction_paid_status', [TercourierController::class,'check_deduction_paid_status']);
 Route::get('/check_finfect_status', [TercourierController::class,'check_finfect_status']);
-
+Route::get('/check_email_trigger', [TercourierController::class,'check_email_trigger']);
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');

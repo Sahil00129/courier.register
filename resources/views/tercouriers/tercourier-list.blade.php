@@ -314,6 +314,26 @@
     .searchField input {
         padding-left: 30px;
     }
+
+    .finfectResponseDetail {
+        z-index: 9999999;
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #ffffff;
+        opacity: 0;
+        display: none;
+        box-shadow: 0 0 17px #83838360;
+        border-radius: 12px;
+        padding: 10px 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .finfectResponseStatus:hover+.finfectResponseDetail {
+        opacity: 1;
+        display: block;
+    }
 </style>
 
 
@@ -327,6 +347,7 @@
         </nav>
     </div>
 
+
     <div class="row layout-top-spacing" id="cancel-row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="widget-content widget-content-area br-6" style="width: 100%; overflow-x: auto;">
@@ -334,7 +355,7 @@
                 <!---searchbar--->
                 <div class="d-flex justify-content-between align-items-center px-4 py-4" style="gap: 1rem;">
                     <div class="d-flex align-items-center" style="gap: 1rem;">
-                        @if ($role != 'Tr Admin')
+                        @if ($role == 'reception')
                         <button class="actionButtons btn btn-success" v-on:click="change_to_handover()">
                             Handover
                         </button>
@@ -373,6 +394,7 @@
                                 <option selected value="all">All</option>
                                 @if($role =="reception")<option value="1">Received</option>@endif
                                 <option value="2">Handover</option>
+                                <option value="11">Handover Created</option>
                                 <option value="3">Finfect</option>
                                 <option value="4">Pay</option>
                                 <option value="5">Paid</option>
@@ -462,9 +484,12 @@
                                 </td>
 
                                 <?php
-                                if ($tercourier->status == 1) {
+                              if ($tercourier->status == 1) {
                                     $status = 'Received';
                                     $class = 'btn-success';
+                                } elseif ($tercourier->status == 11) {
+                                    $status = 'Created Handover';
+                                    $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
                                     $status = 'Handover';
                                     $class = 'btn-warning';
@@ -500,7 +525,15 @@
 
 
                                 <td>
-                                    @if($tercourier->status == 0 || $tercourier->status == 1 || $tercourier->status == 2)
+                                   
+                                    @if($tercourier->status == 11 )
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 0 || $tercourier->status == 1 || $tercourier->status == 2)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -697,6 +730,17 @@
                             </td>
 
                             <td>
+                                <div v-if="tercourier.status == 11">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
+                                        Handover Created
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+
+
+                                </div>
 
                                 <div v-if="tercourier.status == 0 || tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
@@ -911,9 +955,21 @@
                                     </div>
                                 </td>
                                 <?php
-                                if ($tercourier->status == 1) {
+                                if (!empty($tercourier->HandoverDetail) && $tercourier->status == 1) {
+                                    if ($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks != "") {
+                                        $status = 'Received';
+                                        $class = 'btn-danger';
+                                    }
+                                    elseif ($tercourier->status == 11) {
+                                        $status = 'Created Handover';
+                                        $class = 'btn-warning';
+                                    }
+                                } else if ($tercourier->status == 1) {
                                     $status = 'Received';
                                     $class = 'btn-success';
+                                } elseif ($tercourier->status == 11) {
+                                    $status = 'Created Handover';
+                                    $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
                                     $status = 'Handover';
                                     $class = 'btn-warning';
@@ -948,7 +1004,31 @@
                                 ?>
 
                                 <td>
-                                    @if($tercourier->status == 0 || $tercourier->status == 1)
+                                    @if(!empty($tercourier->HandoverDetail) && $tercourier->status == 1 )
+                                    @if($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks!="")
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                            {{ $status }}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>Cancel Remark:</strong> {{ ucfirst($tercourier->HandoverDetail->handover_remarks) ?? '-' }}
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @elseif($tercourier->status == 11 )
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @endif
+                                    @elseif($tercourier->status == 0 || $tercourier->status == 1)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -1065,23 +1145,43 @@
 
 
                             <td>
-                                <div v-if="tercourier.status == 0 || tercourier.status == 1">
+                                <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'"> -->
+                                <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
+                                        Received
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-else>
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
                                         Received
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
-                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
+                                </div>
+                                <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
                                         Failed
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
-                                </div>
                                 <div v-if="tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
                                         Handover
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+
+
+                                </div>
+                                <div v-if="tercourier.status == 11">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
+                                        Handover Created
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
