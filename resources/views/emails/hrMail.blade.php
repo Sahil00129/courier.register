@@ -19,7 +19,10 @@
                 <p>
                     Dear Sir,<br /><br />
                     Below is the report generated from DP Portal for the UNIDs exceeding their pre-set TAT and required immediate attention.
-                </p>
+                </p><br/>
+                Data complied at <?php 
+                    date_default_timezone_set('Asia/Kolkata');
+                    echo date("d-m-Y h:m a") ?>
             </td>
         </tr>
     </table>
@@ -31,19 +34,9 @@
             <th class="innerCell" style="background: #002930; color: #fff;">Status</th>
             <th class="innerCell" style="background: #002930; color: #fff;">TAT</th>
             <th class="innerCell" style="background: #002930; color: #fff;">Count</th>
-            <th class="innerCell" style="background: #002930; color: #fff;">List of TER ID's</th>
+            <th class="innerCell" style="background: #002930; color: #fff;">List of TER UNID's</th>
         </tr>
 
-        <tr>
-            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Received</td>
-            <td class="innerCell" valign="top" style="width: 15%; text-align: center;">24 Hrs</td>
-            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">
-                {{$terMailData['received_size']}}
-            </td>
-            <td class="innerCell" valign="top" style="width: 49%; text-align: center;">
-                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received']}}</p>
-            </td>
-        </tr>
         <tr>
             <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Handover</td>
             <td class="innerCell" valign="top" style="width: 15%; text-align: center;">7 Days</td>
@@ -55,7 +48,7 @@
             </td>
         </tr>
         <tr>
-            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Finfect</td>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Sent to Finfect</td>
             <td class="innerCell" valign="top" style="width: 15%; text-align: center;">24 Hrs</td>
             <td class="innerCell" valign="top" style="width: 18%; text-align: center;">
                 {{$terMailData['finfect_size']}}
@@ -95,7 +88,7 @@
             </td>
         </tr>
         <tr>
-            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Failed</td>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Payment Failed</td>
             <td class="innerCell" valign="top" style="width: 15%; text-align: center;">24 Hrs</td>
             <td class="innerCell" valign="top" style="width: 18%; text-align: center;">
                 {{$terMailData['failed_size']}}
@@ -104,6 +97,28 @@
                 <p style="width: 100%; word-wrap: break-word;">{{$terMailData['failed']}}</p>
             </td>
         </tr>
+        <tr>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Unknown</td>
+            <td class="innerCell" valign="top" style="width: 15%; text-align: center;">24 Hrs</td>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">
+                {{$terMailData['unknown_size']}}
+            </td>
+            <td class="innerCell" valign="top" style="width: 49%; text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['unknown']}}</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">Received</td>
+            <td class="innerCell" valign="top" style="width: 15%; text-align: center;">24 Hrs</td>
+            <td class="innerCell" valign="top" style="width: 18%; text-align: center;">
+                {{$terMailData['received_size']}}
+            </td>
+            <td class="innerCell" valign="top" style="width: 49%; text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received']}}</p>
+            </td>
+        </tr>
+
     </table>
 
     <br /><br /><br/>
@@ -113,7 +128,7 @@
             <td>
                 <ul>
                     <li>
-                        Preset TAT (Turn Around Time): On receiving a TER at reception, UNID is generated from DP portal and a Status is given to that UNID. Now Status has their TAT and action needs to be done within TAT.
+                        Preset TAT (Turn Around Time): On receiving a TER at reception, UNID is generated from DP portal and a Status is given to that UNID. Status has their TAT and action needs to be done within TAT.
                     </li>
                 </ul>
             </td>
@@ -126,9 +141,6 @@
                 <p>
                     Thanks<br />
                     DP Portal Auto Email<br />
-                    Data complied at <?php 
-                    date_default_timezone_set('Asia/Kolkata');
-                    echo date("d-m-Y h:m a") ?>
                 </p>
             </td>
         </tr>

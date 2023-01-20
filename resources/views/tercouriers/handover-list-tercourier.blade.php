@@ -335,6 +335,7 @@
                         <tr>
                             <!-- <th>ID</th> -->
                             <th>Handover ID</th>
+                            <th>Handover Department</th>
                             <th>UNID's</th>
                             <th>Count</th>
                             @if($name == 'tr admin' || $name == 'Hr Admin')
@@ -363,6 +364,7 @@
                                 <td width="100px">{{ $key }}</td>
                                 @endif -->
                                 <td><strong>{{ $handover->handover_id }}</strong></td>
+                                <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
                                 <!-- <td>
@@ -376,6 +378,7 @@
                                 <td width="100px">{{ $key }}</td>
                                 @endif -->
                                 <td><strong>{{ $handover->handover_id }}</strong></td>
+                                <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
                                 <td>
@@ -393,6 +396,7 @@
                                 <td width="100px">{{ $key }}</td>
                                 @endif -->
                                 <td><strong>{{ $handover->handover_id }}</strong></td>
+                                <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
                                 <td>

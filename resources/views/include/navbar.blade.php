@@ -205,7 +205,7 @@ $currentURL = url()->current();
                 {{--                    </li>--}}
                 {{--                @endcan--}}
 
-                <li class="menu single-menu @if($currentURL == url('pos')) active @endif">
+                <!-- <li class="menu single-menu @if($currentURL == url('pos')) active @endif">
                         <a href="{{url('pos')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -220,7 +220,7 @@ $currentURL = url()->current();
                                 <span>PO List</span>
                             </div>
                         </a>
-                    </li>
+                    </li> -->
 
                        <!-- receive documents -->
                        <li class="menu single-menu">
