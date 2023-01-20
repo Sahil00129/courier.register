@@ -1321,7 +1321,8 @@ code {
           margin-right: 6px;
           stroke-width: 1.2px; }
         .topbar-nav.header nav#topbar ul.menu-categories li.menu a > div span {
-          font-size: 14px;
+          font-size: 13px;
+          white-space: nowrap;
           font-weight: 600;
           color: #3b3f5c; }
         .topbar-nav.header nav#topbar ul.menu-categories li.menu > .dropdown-toggle svg.feather-chevron-down {
