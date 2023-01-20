@@ -111,7 +111,7 @@ $currentURL = url()->current();
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="employee_doc"
                             data-parent="#topAccordion">
                             <li><a href="{{url('sender-table')}}">Employees </a></li>
-                            <li><a href="{{url('sender-table')}}">Vendors </a></li>
+                            <!-- <li><a href="{{url('sender-table')}}">Vendors </a></li> -->
                         </ul>
                     </li>
 
@@ -244,7 +244,7 @@ $currentURL = url()->current();
                         </a>
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
                             data-parent="#topAccordion">
-                            <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
+                            <!-- <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li> -->
                             <li><a href=" {{url('tercouriers/create')}}"> Add TER </a></li>
                            
                         </ul>
@@ -282,7 +282,7 @@ $currentURL = url()->current();
                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
-                                <span>Received TER</span>
+                                <span>Handover Table</span>
                             </div>
                         </a>
                     </li>
