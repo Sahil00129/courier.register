@@ -927,12 +927,13 @@ class TercourierController extends Controller
         ];
 
 
-        Mail::to(['dhroov.kanwar@eternitysolutions.net','vineet.thakur@eternitysolutions.net'])->cc(['itsupport@frontierag.com','sahil.thakur@eternitysolutions.net'])->send(new SendMail($terMailData));
+        // Mail::to('vineet.thakur@eternitysolutions.net')->cc('sahil.thakur@eternitysolutions.net')->bcc('dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
 
 
 
 
-    // Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])->send(new SendMail($terMailData));
+    Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
+    ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
 
         // Mail::to('hrd@frontierag.com')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
 
