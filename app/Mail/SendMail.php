@@ -31,7 +31,7 @@ class SendMail extends Mailable
     public function build()
     {
         // dd($this->testMailData );
-        return $this->subject('Email From Eternity Solutions')
+        return $this->subject('Immediate Action required, TER UNID Exceeding TAT')
                     ->view('emails.hrMail');
     }
 }

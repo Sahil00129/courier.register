@@ -900,26 +900,43 @@ class TercourierController extends Controller
         }
 
 
-       $received_ids = implode(',', $received_ids_arr);
-       $handover_ids= implode(',', $handover_ids_arr);
-       $unknown_ids= implode(',', $unknown_ids_arr);
-       $rejected_ids= implode(',', $rejected_ids_arr);
-       $finfect_ids= implode(',', $sent_to_finfect_arr);
-       $failed_payment_ids= implode(',', $payment_failed_arr);
-       $paylater_ids= implode(',', $pay_later_arr);
-       $full_n_final_ids= implode(',', $full_n_final_arr);
+       $received_ids = implode(', ', $received_ids_arr);
+       $received_data_size= sizeof($received_ids_arr);
+       $handover_ids= implode(', ', $handover_ids_arr);
+       $handover_data_size= sizeof($handover_ids_arr);
+       $unknown_ids= implode(', ', $unknown_ids_arr);
+       $unknown_data_size= sizeof($unknown_ids_arr);
+       $rejected_ids= implode(', ', $rejected_ids_arr);
+       $rejected_data_size= sizeof($rejected_ids_arr);
+       $finfect_ids= implode(', ', $sent_to_finfect_arr);
+       $finfect_data_size= sizeof($sent_to_finfect_arr);
+       $failed_payment_ids= implode(', ', $payment_failed_arr);
+       $failed_data_size= sizeof($payment_failed_arr);
+       $paylater_ids= implode(', ', $pay_later_arr);
+       $paylater_data_size= sizeof($pay_later_arr);
+       $full_n_final_ids= implode(', ', $full_n_final_arr);
+       $full_n_final_data_size= sizeof($full_n_final_arr);
+
     //    print_r($handover_ids);
 
        $terMailData = [
         'title' => "List of TER UNID's ",
         'received'=>$received_ids,
+        'received_size'=>$received_data_size,
         'handover'=>$handover_ids,
+        'handover_size'=>$handover_data_size,
         'finfect'=>$finfect_ids,
+        'finfect_size'=>$finfect_data_size,
         'unknown'=>$unknown_ids,
+        'unknown_size'=>$unknown_data_size,
         'rejected'=>$rejected_ids,
+        'rejected_size'=>$rejected_data_size,
         'failed'=>$failed_payment_ids,
+        'failed_size'=>$failed_data_size,
         'paylater'=>$paylater_ids,
+        'paylater_size'=>$paylater_data_size,
         'full_n_final'=>$full_n_final_ids,
+        'full_n_final_size'=>$full_n_final_data_size
 
         // 'body' => " Received ID's: ".$received_ids ." <br/> Handover ID's: ".$handover_ids ." , Unknown ID's: ".$unknown_ids
         //          ." , Rejected ID's: ".$rejected_ids ." , Finfect ID's: ".$finfect_ids ." , Failed Payment ID's: ".$failed_payment_ids
@@ -927,7 +944,8 @@ class TercourierController extends Controller
                  
     ];
 
-    Mail::to('dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
+    Mail::to('dhroov.kanwar@eternitysolutions.net')->
+    cc('bestbringer1@gmail.com')->send(new SendMail($terMailData));
     // Mail::to('bestbringer1@gmail.com')->send(new SendMail($terMailData));
 
 
