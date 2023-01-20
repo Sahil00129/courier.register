@@ -222,6 +222,7 @@ $currentURL = url()->current();
                         </a>
                     </li> -->
 
+                    @can('tercouriers/create')
                        <!-- receive documents -->
                        <li class="menu single-menu">
                         <a href="#receives_doc" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -249,6 +250,7 @@ $currentURL = url()->current();
                            
                         </ul>
                     </li>
+                    @endcan
 
                 @can('tercouriers')
                     <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
