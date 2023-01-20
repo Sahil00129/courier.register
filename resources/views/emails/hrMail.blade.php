@@ -17,7 +17,7 @@
         <tr>
             <td>
                 <p>
-                    Dear Sir,,<br /><br />
+                    Dear Sir,<br /><br />
                     Below is the report generated from DP Portal for the UNIDs exceeding their pre-set TAT and required immediate attention.
                 </p><br/>
                 Data complied at <?php 
