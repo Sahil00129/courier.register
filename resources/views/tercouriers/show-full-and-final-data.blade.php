@@ -421,7 +421,7 @@
 
                                     $status = 'Sent to Finfect';
                                     $class = 'btn-success';
-                                }  elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
+                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
                                     $status = 'F&F Pay';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 0) {
@@ -659,6 +659,8 @@
                         if (response.data == 1) {
 
                             location.reload();
+                        } else if (response.data === "bank_details_missing") {
+                            swal('error', "Bank Details are missing for this TER", 'error')
                         } else {
                             swal('error', "System Error", 'error')
                         }

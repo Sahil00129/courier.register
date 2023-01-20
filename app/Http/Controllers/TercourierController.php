@@ -927,10 +927,14 @@ class TercourierController extends Controller
         ];
 
 
-        // Mail::to('dhroov.kanwar@eternitysolutions.net')->cc('itsupport@frontierag.com')->send(new SendMail($terMailData));
+        // Mail::to(['dhroov.kanwar@eternitysolutions.net','vineet.thakur@eternitysolutions.net'])->cc(['itsupport@frontierag.com','sahil.thakur@eternitysolutions.net'])->send(new SendMail($terMailData));
 
 
-        Mail::to('hrd@frontierag.com')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
+
+
+    Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])->send(new SendMail($terMailData));
+
+        // Mail::to('hrd@frontierag.com')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
 
 
         // dd('Success! Email has been sent successfully.');
@@ -2059,6 +2063,12 @@ class TercourierController extends Controller
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
             return "pfu_missing";
+        }
+
+        if (empty($sender_data->account_number) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
+            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'Bank Details are missing', 'updated_at' => date('Y-m-d H:i:s')]);
+
+            return "bank_details_missing";
         }
         // $ter_id="3243534";
         // print_r($pfu);
