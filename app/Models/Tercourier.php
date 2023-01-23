@@ -63,11 +63,11 @@ class Tercourier extends Model
                     $ter_team_ids[] = $res[$i]->id;
                 }
             } else {
-                $hr_admin_ids[] = $res[$i]->id;
+                $ter_team_ids[] = $res[$i]->id;
                 $change['status'] = 11;
                 $change['copy_status'] = 8;
                 $change['txn_type'] = "rejected_ter";
-                $change['given_to'] = 'HR-Team';
+                $change['given_to'] = 'TER-Team';
             }
             if ($change['txn_type'] != "rejected_ter") {
                 if ($res[$i]->employee_id == 0) {
@@ -114,6 +114,7 @@ class Tercourier extends Model
             $handover_data['ter_id_count'] = $size_ter;
             $handover_data['ter_ids'] = $ter;
             $handover_data['department'] = 'ter-team';
+            $handover_data['reception_action'] = '1';
             $handover_data['doc_type'] = 'ter';
             $handover_data['created_user_id'] = $user_id;
             $res= HandoverDetail::insert($handover_data);
@@ -137,6 +138,7 @@ class Tercourier extends Model
             $handover_data['ter_id_count'] = $size_hr;
             $handover_data['ter_ids'] = $hr;
             $handover_data['department'] = 'hr-admin';
+            $handover_data['reception_action'] = '1';
             $handover_data['doc_type'] = 'ter';
             $handover_data['created_user_id'] = $user_id;
            $res = HandoverDetail::insert($handover_data);

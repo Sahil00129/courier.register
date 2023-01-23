@@ -338,6 +338,9 @@
                             <th>Handover Department</th>
                             <th>UNID's</th>
                             <th>Count</th>
+                            <th>Handover Date</th>
+                            <th>Handover Remarks</th>
+                            <th>Handover Status</th>
                             @if($name == 'tr admin' || $name == 'Hr Admin')
                             <th class="text-center">Action</th>
                             @endif
@@ -357,7 +360,7 @@
                             @else
                             @foreach ($handovers as $key => $handover)
                             <tr>
-                            @if($name == 'reception')
+                                @if($name == 'reception')
                                 <!-- @if($key == 0) -->
                                 <!-- <td width="100px">{{ $key+1 }}</td> -->
                                 <!-- @else
@@ -367,10 +370,21 @@
                                 <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
+                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                                @if($handover->handover_remarks!="" && $handover->reception_action == 0)
+                                <td>{{$handover->handover_remarks}}</td>
+                                @else
+                                <td>-</td>
+                                @endif
+                                @if($handover->is_received == 1)
+                                <td>Received</td>
+                                @else
+                                <td>Not Received</td>
+                                @endif
+                                @endif
                                 <!-- <td>
                                     {{$handover->handover_remarks}}
                                 </td> -->
-                                @endif
                                 @if($name == 'tr admin' && $handover->department == 'ter-team')
                                 <!-- @if($key == 0)
                                 <td width="100px">{{ $key+1 }}</td>
@@ -381,13 +395,28 @@
                                 <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
+                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                                @if($handover->handover_remarks!="")
+                                <td>{{$handover->handover_remarks}}</td>
+                                @else
+                                <td>-</td>
+                                @endif
+                                @if($handover->is_received == 1)
+                                <td>Received</td>
+                                @else
+                                <td>Not Received</td>
+                                @endif
+                                @if($handover->reception_action == '1' && $handover->is_received == 0)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" 
-                                        v-on:click="accept_handover(<?php echo $handover->handover_id?>)">Accept</div>
-                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id?>)">Decline</div>
+                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
+                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
                                     </div>
                                 </td>
+                                @else
+                                <td>-</td>
+                                @endif
+
                                 @endif
                                 @if($name == 'Hr Admin' && $handover->department=='hr-admin')
                                 <!-- @if($key == 0)
@@ -399,13 +428,27 @@
                                 <td>{{$handover->department}}</td>
                                 <td>{{$handover->ter_ids}}</td>
                                 <td>{{$handover->ter_id_count}}</td>
+                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                                @if($handover->handover_remarks!="")
+                                <td>{{$handover->handover_remarks}}</td>
+                                @else
+                                <td>-</td>
+                                @endif
+                                @if($handover->is_received == 1 && $handover->handover_remarks == "")
+                                <td>Received</td>
+                                @else
+                                <td>Not Received</td>
+                                @endif
+                                @if($handover->reception_action == '1' && $handover->is_received == 0)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" 
-                                        v-on:click="accept_handover(<?php echo $handover->handover_id?>)">Accept</div>
-                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id?>)">Decline</div>
+                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
+                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
                                     </div>
                                 </td>
+                                @else
+                                <td>-</td>
+                                @endif
                                 @endif
 
                             </tr>
@@ -420,25 +463,25 @@
                 <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content" style="position: relative;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="rejectedRemarksModalLabel"> Handover ID: @{{handover_id}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Cancel Remarks:</label>
-                                    <input type="text" class="form-control" id="recipient-name" v-model="handover_remarks">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="confirm_decline()">Confirm Decline</button>
-                        </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="rejectedRemarksModalLabel"> Handover ID: @{{handover_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Cancel Remarks:</label>
+                                        <input type="text" class="form-control" id="recipient-name" v-model="handover_remarks">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="confirm_decline()">Confirm Decline</button>
+                            </div>
 
-                        
+
                         </div>
                     </div>
                 </div>
@@ -456,14 +499,13 @@
         //   ValidationProvider
         // },
         data: {
-          handover_id:"",
-          handover_remarks:"",
+            handover_id: "",
+            handover_remarks: "",
         },
-        created: function() {
-        },
+        created: function() {},
         methods: {
-            accept_handover:function(id){
-                this.handover_id=id;
+            accept_handover: function(id) {
+                this.handover_id = id;
                 axios.post('/accept_handover', {
                         'handover_id': this.handover_id
                     })
@@ -482,10 +524,10 @@
 
                     })
             },
-            confirm_decline:function(){
+            confirm_decline: function() {
                 axios.post('/reject_handover', {
                         'handover_id': this.handover_id,
-                        'handover_remarks':this.handover_remarks
+                        'handover_remarks': this.handover_remarks
                     })
                     .then(response => {
                         if (response.data) {
@@ -503,10 +545,10 @@
 
                     })
             },
-            decline_handover:function(id){
-                this.handover_id=id;
+            decline_handover: function(id) {
+                this.handover_id = id;
             },
-         
+
 
         }
     })
