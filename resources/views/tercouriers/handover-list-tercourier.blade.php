@@ -333,7 +333,6 @@
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <!-- <th>ID</th> -->
                             <th>Handover ID</th>
                             <th>Handover Department</th>
                             <th>UNID's</th>
@@ -344,116 +343,90 @@
                             @if($name == 'tr admin' || $name == 'Hr Admin')
                             <th class="text-center">Action</th>
                             @endif
-                            <!-- @if($name == 'reception')
-                            <th class="text-center">Cancel Remarks</th>
-                            @endif -->
                         </tr>
                     </thead>
                     <tbody id="tb">
-                        @if(count($handovers) < 0) <tr>
-                            <td colspan="8">
-                                <div class="d-flex justify-content-center align-items-center" style="min-height: min(45vh, 400px)">
-                                    No data to display
+                        @foreach ($handovers as $key => $handover)
+
+                        @if($name == 'reception')
+                        <tr>
+                            <td><strong>{{ $handover->handover_id }}</strong></td>
+                            <td>{{$handover->department}}</td>
+                            <td>{{$handover->ter_ids}}</td>
+                            <td>{{$handover->ter_id_count}}</td>
+                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                            @if($handover->handover_remarks!="" && $handover->reception_action == 0)
+                            <td>{{$handover->handover_remarks}}</td>
+                            @else
+                            <td>-</td>
+                            @endif
+                            @if($handover->is_received == 1)
+                            <td>Received</td>
+                            @else
+                            <td>Not Received</td>
+                            @endif
+                        </tr>
+
+                        @elseif($name == 'tr admin' && $handover->department == 'ter-team')
+                        <tr>
+                            <td><strong>{{ $handover->handover_id }}</strong></td>
+                            <td>{{$handover->department}}</td>
+                            <td>{{$handover->ter_ids}}</td>
+                            <td>{{$handover->ter_id_count}}</td>
+                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                            @if($handover->handover_remarks!="")
+                            <td>{{$handover->handover_remarks}}</td>
+                            @else
+                            <td>-</td>
+                            @endif
+                            @if($handover->is_received == 1)
+                            <td>Received</td>
+                            @else
+                            <td>Not Received</td>
+                            @endif
+                            @if($handover->reception_action == '1' && $handover->is_received == 0)
+                            <td>
+                                <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
+                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
+                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
                                 </div>
                             </td>
-                            </tr>
                             @else
-                            @foreach ($handovers as $key => $handover)
-                            <tr>
-                                @if($name == 'reception')
-                                <!-- @if($key == 0) -->
-                                <!-- <td width="100px">{{ $key+1 }}</td> -->
-                                <!-- @else
-                                <td width="100px">{{ $key }}</td>
-                                @endif -->
-                                <td><strong>{{ $handover->handover_id }}</strong></td>
-                                <td>{{$handover->department}}</td>
-                                <td>{{$handover->ter_ids}}</td>
-                                <td>{{$handover->ter_id_count}}</td>
-                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
-                                @if($handover->handover_remarks!="" && $handover->reception_action == 0)
-                                <td>{{$handover->handover_remarks}}</td>
-                                @else
-                                <td>-</td>
-                                @endif
-                                @if($handover->is_received == 1)
-                                <td>Received</td>
-                                @else
-                                <td>Not Received</td>
-                                @endif
-                                @endif
-                                <!-- <td>
-                                    {{$handover->handover_remarks}}
-                                </td> -->
-                                @if($name == 'tr admin' && $handover->department == 'ter-team')
-                                <!-- @if($key == 0)
-                                <td width="100px">{{ $key+1 }}</td>
-                                @else
-                                <td width="100px">{{ $key }}</td>
-                                @endif -->
-                                <td><strong>{{ $handover->handover_id }}</strong></td>
-                                <td>{{$handover->department}}</td>
-                                <td>{{$handover->ter_ids}}</td>
-                                <td>{{$handover->ter_id_count}}</td>
-                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
-                                @if($handover->handover_remarks!="")
-                                <td>{{$handover->handover_remarks}}</td>
-                                @else
-                                <td>-</td>
-                                @endif
-                                @if($handover->is_received == 1)
-                                <td>Received</td>
-                                @else
-                                <td>Not Received</td>
-                                @endif
-                                @if($handover->reception_action == '1' && $handover->is_received == 0)
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
-                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
-                                    </div>
-                                </td>
-                                @else
-                                <td>-</td>
-                                @endif
-
-                                @endif
-                                @if($name == 'Hr Admin' && $handover->department=='hr-admin')
-                                <!-- @if($key == 0)
-                                <td width="100px">{{ $key+1 }}</td>
-                                @else
-                                <td width="100px">{{ $key }}</td>
-                                @endif -->
-                                <td><strong>{{ $handover->handover_id }}</strong></td>
-                                <td>{{$handover->department}}</td>
-                                <td>{{$handover->ter_ids}}</td>
-                                <td>{{$handover->ter_id_count}}</td>
-                                <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
-                                @if($handover->handover_remarks!="")
-                                <td>{{$handover->handover_remarks}}</td>
-                                @else
-                                <td>-</td>
-                                @endif
-                                @if($handover->is_received == 1 && $handover->handover_remarks == "")
-                                <td>Received</td>
-                                @else
-                                <td>Not Received</td>
-                                @endif
-                                @if($handover->reception_action == '1' && $handover->is_received == 0)
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                        <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
-                                        <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
-                                    </div>
-                                </td>
-                                @else
-                                <td>-</td>
-                                @endif
-                                @endif
-
-                            </tr>
-                            @endforeach
+                            <td>-</td>
                             @endif
+                        </tr>
+
+                        @elseif($name == 'Hr Admin' && $handover->department=='hr-admin')
+                        <tr>
+                            <td><strong>{{ $handover->handover_id }}</strong></td>
+                            <td>{{$handover->department}}</td>
+                            <td>{{$handover->ter_ids}}</td>
+                            <td>{{$handover->ter_id_count}}</td>
+                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                            @if($handover->handover_remarks!="")
+                            <td>{{$handover->handover_remarks}}</td>
+                            @else
+                            <td>-</td>
+                            @endif
+                            @if($handover->is_received == 1 && $handover->handover_remarks == "")
+                            <td>Received</td>
+                            @else
+                            <td>Not Received</td>
+                            @endif
+                            @if($handover->reception_action == '1' && $handover->is_received == 0)
+                            <td>
+                                <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
+                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
+                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
+                                </div>
+                            </td>
+                            @else
+                            <td>-</td>
+                            @endif
+
+                        </tr>
+                        @endif
+                        @endforeach
                     </tbody>
 
                 </table>
