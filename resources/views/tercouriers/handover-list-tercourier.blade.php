@@ -330,7 +330,7 @@
     <div class="row layout-top-spacing" id="cancel-row">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="widget-content widget-content-area br-6" style="width: 100%; overflow-x: auto; padding: 2.5rem 0 1rem">
-                <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
+                <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
                             <!-- <th>ID</th> -->
