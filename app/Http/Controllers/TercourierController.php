@@ -87,7 +87,8 @@ class TercourierController extends Controller
 
     public function received_docs()
     {
-        $data = HandoverDetail::where('action_done', '0')->get();
+        // $data = HandoverDetail::where('action_done', '0')->get();
+        $data = HandoverDetail::orderby('id','DESC')->get();
         $user = Auth::user();
         $user_type = json_decode(json_encode($user));
         $name = $user_type->roles[0]->name;
@@ -129,7 +130,7 @@ class TercourierController extends Controller
         $handover_remarks = $data['handover_remarks'];
         $details = Auth::user();
         $user_id = $details->id;
-        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('handover_remarks' => $handover_remarks, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
+        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('handover_remarks' => $handover_remarks, 'action_done' => '1', 'user_id' => $user_id, 'reception_action' => '0','updated_at' => date('Y-m-d H:i:s')));
         if ($res) {
             $get_data = HandoverDetail::where('handover_id', $handover_id)->get();
             $ter_ids = $get_data[0]->ter_ids;
@@ -935,7 +936,7 @@ class TercourierController extends Controller
     Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
     ->bcc('itsupport@frontierag.com','dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
 
-        // Mail::to('hrd@frontierag.com')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
+        // Mail::to('vineet.thakur@eternitysolutions.net')->cc('itsupport@frontierag.com', 'dhroov.kanwar@eternitysolutions.net')->send(new SendMail($terMailData));
 
 
         dd('Success! Email has been sent successfully.');
@@ -2508,14 +2509,28 @@ class TercourierController extends Controller
         $id = $data['id'];
         // return $data['emp_id'];
         $get_sender_data = DB::table('sender_details')->where('employee_id', $data['emp_id'])->get();
-        // return $get_sender_data;
-        $sender_id = $get_sender_data[0]->id;
+        $sender_id= $get_sender_data[0]->id;
+        $get_ter_data=DB::table('tercouriers')->where('id',$id)->get();
+        $check_rejected = $get_ter_data[0]->is_rejected;
 
-        $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
-            'hr_admin_remark' => $data['remarks'],
-            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
-            'sender_id' => $sender_id, 'status' => 2
-        ]);
+      
+        if($check_rejected == '1')
+        {
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 8,'txn_type' => 'rejected_ter','given_to'=>'TER-Team'
+            ]);
+        }else{
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 2,'given_to'=>'TER-Team'
+            ]);
+
+        }
+
+       
 
         return $tercourier_table;
     }

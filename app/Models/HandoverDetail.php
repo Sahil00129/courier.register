@@ -11,7 +11,7 @@ class HandoverDetail extends Model
     protected $table = 'handover_details';
     protected $fillable = [
         'handover_id','ter_id_count','ter_ids','department','doc_type','handover_remarks','is_received',
-        'created_user_id','user_id','created_at','updated_at'
+        'created_user_id','user_id','created_at','updated_at','reception_action'
 
     ];
     
