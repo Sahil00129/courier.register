@@ -927,7 +927,7 @@ class TercourierController extends Controller
         ];
 
 
-        Mail::to(['vineet.thakur@eternitysolutions.net','itsupport@frontierag.com','dhroov.kanwar@eternitysolutions.net'])->cc(['sahil.thakur@eternitysolutions.net','sahildhruv1@gmail.com'])->send(new SendMail($terMailData));
+        Mail::to(['vineet.thakur@eternitysolutions.net','dhroov.kanwar@eternitysolutions.net'])->cc(['sahil.thakur@eternitysolutions.net','sahildhruv1@gmail.com'])->send(new SendMail($terMailData));
 
 
 
