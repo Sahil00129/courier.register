@@ -15,7 +15,7 @@ class Tercourier extends Model
     protected $fillable = [
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'recp_entry_time', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
-        'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date'
+        'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date','is_rejected'
     ];
 
     public function CourierCompany()
@@ -63,13 +63,17 @@ class Tercourier extends Model
                     $ter_team_ids[] = $res[$i]->id;
                 }
             } else {
+                if ($res[$i]->employee_id != 0) {
                 $ter_team_ids[] = $res[$i]->id;
                 $change['status'] = 11;
                 $change['copy_status'] = 8;
                 $change['txn_type'] = "rejected_ter";
                 $change['given_to'] = 'TER-Team';
+                }else{
+                    $change['is_rejected']=1;
+                }
             }
-            if ($change['txn_type'] != "rejected_ter") {
+        
                 if ($res[$i]->employee_id == 0) {
                     $hr_admin_ids[] = $res[$i]->id;
                     $change['status'] = 11;
@@ -77,7 +81,7 @@ class Tercourier extends Model
                     $change['given_to'] = 'HR-Team';
                     $change['txn_type'] = "emp_doesn't_exists";
                 }
-            }
+        
             // if (!empty($res[$i]->last_working_date)) {
             //     $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
             //         'payment_type' => 'full_and_final_payment', 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')

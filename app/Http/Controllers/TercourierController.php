@@ -2509,14 +2509,28 @@ class TercourierController extends Controller
         $id = $data['id'];
         // return $data['emp_id'];
         $get_sender_data = DB::table('sender_details')->where('employee_id', $data['emp_id'])->get();
-        // return $get_sender_data;
-        $sender_id = $get_sender_data[0]->id;
+        $sender_id= $get_sender_data[0]->id;
+        $get_ter_data=DB::table('tercouriers')->where('id',$id)->get();
+        $check_rejected = $get_ter_data[0]->is_rejected;
 
-        $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
-            'hr_admin_remark' => $data['remarks'],
-            'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
-            'sender_id' => $sender_id, 'status' => 2
-        ]);
+      
+        if($check_rejected == '1')
+        {
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 8,'txn_type' => 'rejected_ter','given_to'=>'TER-Team'
+            ]);
+        }else{
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 2,'given_to'=>'TER-Team'
+            ]);
+
+        }
+
+       
 
         return $tercourier_table;
     }
