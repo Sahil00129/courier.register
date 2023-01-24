@@ -125,6 +125,29 @@
     .dt--top-section {
         margin: 0 !important;
     }
+
+
+    /* for modal */
+    .detailBox {
+        border-radius: 12px;
+        padding: 1rem;
+        background: #8383831f;
+        flex: 1;
+        gap: 8px;
+    }
+
+    .detailBox p {
+        color: #000;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .detailBox p span {
+        color: #838383;
+        width: 100px;
+    }
 </style>
 
 <!-- END PAGE LEVEL CUSTOM STYLES -->
@@ -176,7 +199,7 @@
                         <?php //echo '<pre>'; print_r($send); die;
                         ?>
                         <tr>
-                            <td>{{ $send->id }}</td>
+                            <td style="cursor:pointer; text-align: center;" data-toggle="modal" data-target="#editTerModal" v-on:click="get_employee_detail(<?php echo $send->id ?>)">{{ $send->id }}</td>
                             <td>
                                 <div class="senderBlock">
                                     <div class="senderId">
@@ -223,6 +246,62 @@
         </div>
     </div>
 
+    <!-- Edit Reception TER Modal -->
+    <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
+            <div class="modal-content" style="position: relative;">
+                <div class="editTer modal-body editTer" v-if="data_loaded">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Sender Details</h3>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; width: 100%; gap: 1rem;">
+                        <div class="detailBox d-flex" style="flex-wrap: wrap;">
+                            <p style="flex: 1; min-width: 100%;"><span>Emp ID</span>: @{{sender_data.employee_id}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>Grade</span>: @{{sender_data.grade}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>AX Code</span>: @{{sender_data.ax_id}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>IAG Code</span>: @{{sender_data.iag_code}}</p>
+                        </div>
+
+                        <div class="detailBox d-flex" style="flex-wrap: wrap;">
+                            <p style="flex: 1; min-width: 100%;"><span>Name</span>: @{{sender_data.name}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>Aadhar</span>: @{{sender_data.aadhar_number}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>DOB</span>: @{{sender_data.date_of_birth}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>Mobile</span>: @{{sender_data.telephone_no}}</p>
+                            <p style="flex: 1; min-width: 100%;"><span>PAN</span>: @{{sender_data.pan}}</p>
+                        </div>
+
+                        <div class="detailBox d-flex" style="min-width: 100%; flex-wrap: wrap;">
+                            <p style="font-size: 1rem; font-weight: 600; width: 100%; margin-top: -2rem">Employement Details</p>
+                            <p style="flex: 1; min-width: 260px;"><span>Head Quarter</span>: @{{sender_data.hq_state}}</p>
+                            <p style="flex: 1; min-width: 260px;"><span>Joining Date</span>: @{{sender_data.date_of_joining}}</p>
+                            <p style="flex: 1; min-width: 260px;"><span>Leaving Date</span>: @{{sender_data.last_working_date}}</p>
+                        </div>
+
+                        <div class="detailBox d-flex" style="min-width: 100%; flex-wrap: wrap;">
+                            <p style="font-size: 1rem; font-weight: 600; width: 100%; margin-top: -2rem">Bank Details</p>
+                            <p style="flex: 1; min-width: 40%;"><span>Bank Name</span>: @{{sender_data.bank_name}}</p>
+                            <p style="flex: 1; min-width: 40%;"><span>Holder Name</span>: @{{sender_data.beneficiary_name}}</p>
+                            <p style="flex: 1; min-width: 40%;"><span>A/c Number</span>: @{{sender_data.account_number}}</p>
+                            <p style="flex: 1; min-width: 40%;"><span>IFSC</span>: @{{sender_data.ifsc}}</p>
+                            <p style="flex: 1; min-width: 40%;"><span>Branch</span>: @{{sender_data.branch_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if(!$flag)
     <a href="{{url('add-sender')}}" class="floatingButton btn btn-lg btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
@@ -244,6 +323,8 @@
             unique_id: "",
             loader: "",
             search_keyword: "",
+            data_loaded: false,
+            sender_data: {},
         },
         created: function() {
 
@@ -276,6 +357,25 @@
 
                     })
             },
+            get_employee_detail: function(id) {
+                this.unique_id = id;
+                this.sender_data = {};
+                //    alert(id);
+                //    return 1;
+                axios.post('/get_employee_details', {
+                        'sender_id': this.unique_id
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            this.data_loaded = true;
+                            this.sender_data = response.data;
+                        }
+
+                    }).catch(error => {
+
+
+                    })
+            }
 
         }
 

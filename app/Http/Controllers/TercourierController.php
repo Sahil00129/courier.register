@@ -933,13 +933,34 @@ class TercourierController extends Controller
 
 
 
-    Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
-    ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
-
-        // Mail::to('vineet.thakur@eternitysolutions.net')->cc(['itsupport@frontierag.com','sahil.thakur@eternitysolutions.net', 'dhroov.kanwar@eternitysolutions.net'])->send(new SendMail($terMailData));
+    // Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
+    // ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
+        Mail::to('vineet.thakur@eternitysolutions.net')->cc(['itsupport@frontierag.com','sahil.thakur@eternitysolutions.net', 'dhroov.kanwar@eternitysolutions.net'])->
+        send(new SendMail($terMailData));
 
 
         dd('Success! Email has been sent successfully.');
+
+
+        // $data["email"] = "test@gmail.com";
+        // $data["title"] = "techsolutionstuff.com";
+ 
+        // $files = [
+        //     public_path('attachments/Laravel.jpeg'),
+        //     public_path('attachments/Laravel_8_mail_example.pdf'),
+        // ];
+  
+        // Mail::send('mail.Test_mail', $data, function($message)use($data, $files) {
+        //     $message->to($data["email"])
+        //             ->subject($data["title"]);
+ 
+        //     foreach ($files as $file){
+        //         $message->attach($file);
+        //     }            
+        // });
+
+        // echo "Mail send successfully !!";
+    
     }
 
 
