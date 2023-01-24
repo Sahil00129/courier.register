@@ -427,6 +427,16 @@ class BulkImport implements ToModel, WithHeadingRow
                         }
                     }
                 }
+            }else{
+
+                $updated_details['updated_id'] = $sender_table->id;
+                $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
+                $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
+                if ($date_of_leaving_update) {
+                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                    // echo "<pre>";
+                    // print_r($updated_record_detail);
+                }
             }
         }
         if ($_POST['import_type'] == 6) {
