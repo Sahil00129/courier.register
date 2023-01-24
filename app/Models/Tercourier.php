@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Maatwebsite\Excel\Concerns\ToArray;
 use App\Models\HandoverDetail;
+use App\Models\Po;
 
 class Tercourier extends Model
 {
@@ -30,6 +31,11 @@ class Tercourier extends Model
     public function HandoverDetail()
     {
         return $this->hasone('App\Models\HandoverDetail', 'handover_id','handover_id');
+    }
+
+    public function Po()
+    {
+        return $this->hasone('App\Models\Po', 'po_id','id');
     }
 
     // Dhruv's Code

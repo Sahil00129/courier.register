@@ -265,7 +265,7 @@ $currentURL = url()->current();
                         </a>
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
                             data-parent="#topAccordion">
-                            <!-- <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li> -->
+                            <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
                             <li><a href=" {{url('tercouriers/create')}}"> Add TER </a></li>
                            
                         </ul>
