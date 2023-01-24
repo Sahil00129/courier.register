@@ -30,8 +30,13 @@ class SendMail extends Mailable
      */
     public function build()
     {
+        // $file =  public_path('sample/sample.pdf');
+        
         // dd($this->testMailData );
+
         return $this->subject('Immediate Action required, TER UNID Exceeding TAT')
-                    ->view('emails.hrMail');
+        ->view('emails.hrMail');
+        // return $this->subject('Immediate Action required, TER UNID Exceeding TAT')
+        //             ->view('emails.hrMail')->attach($file);
     }
 }
