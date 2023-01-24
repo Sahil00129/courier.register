@@ -168,6 +168,22 @@ class BulkImport implements ToModel, WithHeadingRow
 
             // echo'<pre>';print_r($lastworkingdate);
 
+              $pfu="";
+          if($row['grade'] == "Unit - 1")
+            {
+                $pfu="SD1";
+            } else if($row['grade'] == "Unit - 2")
+            {
+                $pfu="MA2";
+            } else if($row['grade'] == "Unit - 3")
+            {
+                $pfu="SD3";
+            }
+            else if($row['grade'] == "Unit - 4")
+            {
+                $pfu="MA4";
+            }
+
             if (empty($sender_table)) {
 // print_r("Dd");
                 $today = date('d-m-Y');
@@ -193,41 +209,41 @@ class BulkImport implements ToModel, WithHeadingRow
                     'last_working_date' => $lastworkingdate,
                     'status' => $status,
                     'grade' => $row['grade'],
-                    'designation' => $row['designation'],
-                    'hq_state' => $row['hq_state'],
+                    // 'designation' => $row['designation'],
+                    // 'hq_state' => $row['hq_state'],
                     'territory' => $row['territory'],
-                    'team' => $row['team'],
+                    // 'team' => $row['team'],
                     'date_of_joining' => $row['date_of_joining'],
-                    'category' => $row['category'],
+                    // 'category' => $row['category'],
                     'date_of_birth' => $row['date_of_birth'],
-                    'education_qualification' => $row['education_qualification'],
-                    'gender' => $row['gender'],
-                    'marital_status' => $row['marital_status'],
+                    // 'education_qualification' => $row['education_qualification'],
+                    // 'gender' => $row['gender'],
+                    // 'marital_status' => $row['marital_status'],
                     'official_email_id' => $row['official_email_id'],
-                    'personal_email_id' => $row['personal_email_id'],
-                    'uan_number' => $row['uan_no'],
-                    'esic_status' => $row['esic_status'],
-                    'esic_no' => $row['esic_no'],
-                    'compliance_branch' => $row['compliance_branch'],
-                    'department' => $row['department'],
+                    // 'personal_email_id' => $row['personal_email_id'],
+                    // 'uan_number' => $row['uan_no'],
+                    // 'esic_status' => $row['esic_status'],
+                    // 'esic_no' => $row['esic_no'],
+                    // 'compliance_branch' => $row['compliance_branch'],
+                    // 'department' => $row['department'],
                     'pan' => $row['pan'],
                     'aadhar_number' => $row['aadhar_number'],
                     'account_number' => $row['account_number'],
                     'ifsc' => $row['ifsc_code'],
                     'bank_name' => $row['bank_name'],
                     'branch_name' => $row['branch_name'],
-                    'address_1' => $row['address_1'],
-                    'address_2' => $row['address_2'],
-                    'address_3' => $row['address_3'],
-                    'address_district' => $row['address_district'],
-                    'address_state' => $row['address_state'],
-                    'address_pin_code' => $row['address_pin_code'],
-                    'beneficiary_name'=>$row['beneficiary_name'],
-                    'account_base_type'=>$row['account_base_type'],
-                    'transfer_type'=>$row['transfer_type'],
-                    'account_type'=>$row['type'],
+                    // 'address_1' => $row['address_1'],
+                    // 'address_2' => $row['address_2'],
+                    // 'address_3' => $row['address_3'],
+                    // 'address_district' => $row['address_district'],
+                    // 'address_state' => $row['address_state'],
+                    // 'address_pin_code' => $row['address_pin_code'],
+                    // 'beneficiary_name'=>$row['beneficiary_name'],
+                    // 'account_base_type'=>$row['account_base_type'],
+                    // 'transfer_type'=>$row['transfer_type'],
+                    // 'account_type'=>$row['type'],
                     'iag_code'=>$row['iag_code'],
-                    'pfu'=>$row['pfu']
+                    'pfu'=>$pfu
 
                 ]);
             }else{
@@ -254,9 +270,16 @@ class BulkImport implements ToModel, WithHeadingRow
                 Sender::where('id', $sender_table->id)->update(['iag_code' => $row['iag_code']]);
 
             }
-            if ($sender_table->pfu != $row['pfu']) {
+
+            if ($sender_table->grade != $row['grade']) {
                 // print_r($sender_table->last_working_date);
-               Sender::where('id', $sender_table->id)->update(['pfu' => $row['pfu']]);
+                Sender::where('id', $sender_table->id)->update(['grade' => $row['grade']]);
+
+            }
+            
+            if ($sender_table->pfu != $pfu) {
+                // print_r($sender_table->last_working_date);
+               Sender::where('id', $sender_table->id)->update(['pfu' => $pfu]);
 
             }
 
@@ -271,6 +294,8 @@ class BulkImport implements ToModel, WithHeadingRow
                 $mobile_no_update = Sender::where('id', $sender_table->id)->update(['telephone_no' => $row['mobile_no']]);
 
             }
+
+            
 
 
             // print_r($lastworkingdate);

@@ -54,6 +54,7 @@ Route::post('/import', [ImportExportController::class,'Import']);
 Route::post('/save-sender', [SenderController::class,'addSender']);
 Route::get('/edit-sender/{id}', [SenderController::class,'editSender']);
 Route::post('/update-sender', [SenderController::class,'updateSender']);
+Route::post('/get_employee_details', [SenderController::class,'get_employee_details']);
 Route::post('senders/delete-sender', [SenderController::class, 'deleteSender']);
 
 Route::get('/autocomplete-search', [CourierController::class, 'autocompleteSearch']);
