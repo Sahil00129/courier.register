@@ -48,6 +48,9 @@ class TercourierController extends Controller
         $this->middleware('permission:full-and-final-data', ['only' => ['show_rejected_ter']]);
         $this->middleware('permission:payment_sheet', ['only' => ['payment_sheet']]);
         $this->middleware('permission:document_list', ['only' => ['received_docs']]);
+        $this->middleware('permission:update_status', ['only' => ['update_status']]);
+
+        
     }
     /**
      * Display a listing of the resource.
@@ -99,6 +102,43 @@ class TercourierController extends Controller
         // }
         // dd($data);
         return view('tercouriers.handover-list-tercourier', ['handovers' => $data, 'name' => $name]);
+    }
+
+    
+    public function update_status()
+    {
+    
+        $user = Auth::user();
+        $user_type = json_decode(json_encode($user));
+        $name = $user_type->roles[0]->name;
+        return view('tercouriers.update-finfect', [ 'name' => $name]);
+    }
+
+    public function update_unid_status(Request $request)
+    {
+
+        $data = $request->all();
+        $unique_id = $data['unique_id'];
+        $res = Tercourier::where('id', $unique_id)->get();
+        if($res[0]->status == "3")
+        {
+        $update = Tercourier::where('id', $unique_id)->update(array('status' => 2, 'sent_to_finfect_date' => "", 'finfect_response' => "",'refrence_transaction_id'=>"", 'final_payable'=>"",
+        'payable_amount'=>"",'voucher_code'=>"",
+        'updated_at' => date('Y-m-d H:i:s')));
+
+        return $update;
+
+        }
+        else{
+            return "not_possible";
+        }
+
+        
+
+        // $res = Tercourier::where('id', $unique_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
+      
+
+        
     }
 
     public function accept_handover(Request $request)
@@ -360,6 +400,10 @@ class TercourierController extends Controller
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
         $terdata['ax_id']    = $senders[0]->ax_id;
+        if(empty($ter_data['ax_id']))
+        {
+            $terdata['ax_id']  = $senders[0]->iag_code;
+        }
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
@@ -2066,6 +2110,14 @@ class TercourierController extends Controller
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
             return "pfu_missing";
+        }
+
+        // $ax_id="";
+
+        if (empty($ax_id)) {
+            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+
+            return "ax_id_missing";
         }
 
         if (empty($sender_data->account_number) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {

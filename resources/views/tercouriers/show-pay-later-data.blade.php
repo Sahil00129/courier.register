@@ -576,6 +576,8 @@
                             swal('error', "Bank Details are missing for this TER", 'error')
                         } else if (response.data === "pfu_missing") {
                             swal('error', "PFU is not available for this TER", 'error')
+                        } else if (response.data === "ax_id_missing") {
+                            swal('error', "AX-ID/IAG Code is not available for this TER", 'error')
                         } else {
                             swal('error', response.data[1], 'error')
                         }

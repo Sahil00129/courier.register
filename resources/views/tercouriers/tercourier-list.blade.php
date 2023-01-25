@@ -579,7 +579,7 @@
                                             <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
                                         <div class="senderLocation">
-                                            <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
+                                            <span>AX ID / IAG - {{ $tercourier->ax_id ?? '-' }}</span>
                                             <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
                                         </div>
                                     </div>
@@ -826,7 +826,7 @@
                                         <span class="senderName">@{{( tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
                                     </div>
                                     <div class="senderLocation">
-                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
+                                        <span>AX ID / IAG - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
                                         <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
                                     </div>
                                 </div>
@@ -1063,7 +1063,7 @@
                                             <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
                                         <div class="senderLocation">
-                                            <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
+                                            <span>AX ID / IAG - {{ $tercourier->ax_id ?? '-' }}</span>
                                             <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
                                         </div>
                                     </div>
@@ -1256,7 +1256,7 @@
                                         <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
                                     </div>
                                     <div class="senderLocation">
-                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
+                                        <span>AX ID / IAG - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
                                         <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
                                     </div>
                                 </div>
