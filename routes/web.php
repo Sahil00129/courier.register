@@ -160,6 +160,8 @@ Route::post('/submit_hr_remarks', [TercourierController::class,'submit_hr_remark
 Route::get('/document_list', [TercourierController::class,'received_docs']);
 Route::post('/accept_handover', [TercourierController::class,'accept_handover']);
 Route::post('/reject_handover', [TercourierController::class,'reject_handover']);
+Route::get('/update_status', [TercourierController::class,'update_status']);
+Route::post('/update_unid_status', [TercourierController::class,'update_unid_status']);
 
 
 Route::view('/reports','pages/export-data');
