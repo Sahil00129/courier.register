@@ -400,6 +400,10 @@ class TercourierController extends Controller
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
         $terdata['ax_id']    = $senders[0]->ax_id;
+        if(empty($ter_data['ax_id']))
+        {
+            $terdata['ax_id']  = $senders[0]->iag_code;
+        }
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
@@ -2106,6 +2110,14 @@ class TercourierController extends Controller
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
             return "pfu_missing";
+        }
+
+        // $ax_id="";
+
+        if (empty($ax_id)) {
+            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+
+            return "ax_id_missing";
         }
 
         if (empty($sender_data->account_number) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
