@@ -1731,6 +1731,22 @@ class TercourierController extends Controller
             $ax_code = $data_ter[0]->ax_id;
         }
 
+        if(empty($ax_code))
+        {
+            $get_ax_sender=DB::table('sender_details')->where('employee_id',$data_ter[0]->employee_id)->get();
+            if(empty($get_ax_sender[0]->ax_id))
+            {
+                $ax_code=$get_ax_sender[0]->iag_code;
+            }else{
+                $ax_code=$get_ax_sender[0]->ax_id;
+            }
+
+            DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_code,'updated_at' => date('Y-m-d H:i:s')]);
+        }
+
+        
+    
+
         $current_balance = $data['current_balance'];
         // return $data;
         $final_payable = 0;
