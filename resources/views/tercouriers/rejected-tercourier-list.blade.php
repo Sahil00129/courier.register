@@ -665,7 +665,7 @@
                         @if($role == "Hr Admin")
                         <div class="modal-footer">
                             <button type="button" style="width: 100px" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#rejectedRemarksModal" @click="open_rejected_remarks_modal()">Reject</button>
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter(<?php echo $tercourier->id; ?>)" value="<?php echo $tercourier->id; ?>">Approve</button>
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="pay_now_ter('default')">Approve</button>
                         </div>
                         @endif
 
@@ -1019,8 +1019,15 @@
 
 
             pay_now_ter: function($id) {
-                var unique_id = $id;
-                this.ter_id = $id;
+                var unique_id;
+                if($id == "default")
+                {
+                    unique_id = this.rejected_id;
+                }else{
+                     unique_id = $id;
+                }
+           
+                this.ter_id = unique_id;
                 axios.post('/status_change_to_handover', {
                         'selected_id': unique_id
                     })
