@@ -2113,7 +2113,11 @@ class TercourierController extends Controller
                 $ax_id=$check_sender;
             }
             //  $ax_id=
+
+          DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_id,'updated_at' => date('Y-m-d H:i:s')]);
         }
+
+        
         $pfu = $sender_table[0]->pfu;
         // $pfu="";
         if (empty($pfu)) {
