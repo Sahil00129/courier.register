@@ -2097,11 +2097,21 @@ class TercourierController extends Controller
         }
 
 
+        // return $ax_id;
         $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
         $emp_id = $get_emp_id[0]->employee_id;
         $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+
         if (empty($ax_id)) {
+            $check_sender=$sender_table[0]->ax_id;
+            if(empty($check_sender))
+            {
             $ax_id = $sender_table[0]->iag_code;
+            }
+            else
+            {
+                $ax_id=$check_sender;
+            }
             //  $ax_id=
         }
         $pfu = $sender_table[0]->pfu;
