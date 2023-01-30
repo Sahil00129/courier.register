@@ -399,8 +399,10 @@ class TercourierController extends Controller
 
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
+      
         $terdata['ax_id']    = $senders[0]->ax_id;
-        if(empty($ter_data['ax_id']))
+     
+        if(empty($terdata['ax_id']))
         {
             $terdata['ax_id']  = $senders[0]->iag_code;
         }
