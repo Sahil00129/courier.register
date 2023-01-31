@@ -406,6 +406,7 @@ class TercourierController extends Controller
         {
             $terdata['ax_id']  = $senders[0]->iag_code;
         }
+        $terdata['pfu'] = $senders[0]->pfu;
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
