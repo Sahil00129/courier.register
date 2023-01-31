@@ -76,16 +76,20 @@ class TercourierController extends Controller
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
 
-                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',2)->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',2)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
 
-                $invoice_list = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',1)->with('Po', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                // $invoice_list = Tercourier::whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',1)->with('Po', 'HandoverDetail')->orderby('id', 'DESC')->paginate(2);
 
             }
             //    echo'<pre>'; print_r($tercouriers); die;
         }
 
-        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers,'invoice_list'=>$invoice_list, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
+        // echo'<pre>'; print_r($invoice_list); die;
+        return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
+
+
+        // return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers,'invoice_list'=>$invoice_list, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
     }
 
     public function received_docs()

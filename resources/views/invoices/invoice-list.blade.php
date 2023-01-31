@@ -50,7 +50,7 @@
 
                                     <a href="<?php //echo URL::to('/export/excel'); ?>" class="btn btn-primary btn-cstm downloadEx ml-2" style="font-size: 15px; padding: 9px;" data-action="<?php //echo URL::to('/export/excel'); ?>" download><span>
                                     <i class="fa fa-download"></i> Export</span></a> -->
-
+                                    <a class="btn-primary btn-cstm btn ml-2" style="font-size: 15px; padding: 9px; width: 130px" href="{{'/tercouriers'}}"><span><i class="fa fa-plus"></i> Ter List</span></a>
                                 </div>
                             </div>
                         </div>

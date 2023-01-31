@@ -35,7 +35,7 @@ class Tercourier extends Model
 
     public function Po()
     {
-        return $this->hasone('App\Models\Po', 'po_id','id');
+        return $this->hasone('App\Models\Po', 'id','po_id');
     }
 
     // Dhruv's Code
@@ -52,8 +52,27 @@ class Tercourier extends Model
 
         $ter_team_ids = array();
         $hr_admin_ids = array();
+        $sourcing_team_ids=array();
 
         for ($i = 0; $i < sizeof($res); $i++) {
+
+            if($res[$i]->ter_type=="1")
+            {
+                $change['saved_by_id'] = $user_id;
+                $change['saved_by_name'] = $user_name;
+                $change['handover_date'] = date('Y-m-d');
+
+                $change['status'] = 11;
+                $change['copy_status'] = 2;
+                $change['given_to'] = "sourcing";
+              
+                    $sourcing_team_ids[] = $res[$i]->id;
+
+            }
+
+
+            if($res[$i]->ter_type=="2")
+            {
 
             $date = date_create($res[$i]->terto_date);
             date_add($date, date_interval_create_from_date_string("50 days"));
@@ -103,13 +122,18 @@ class Tercourier extends Model
             // print_r($date_check);
             // print_r($change);
             // exit;
+            }
             $data =  DB::table('tercouriers')->where('id', $res[$i]->id)->update($change);
         }
+
        
         $hr = implode(',', $hr_admin_ids);
         $ter = implode(',', $ter_team_ids);
+        $sourcing_ids=implode(',', $sourcing_team_ids);
         $size_hr = sizeof($hr_admin_ids);
         $size_ter = sizeof($ter_team_ids);
+        $size_sourcing = sizeof($sourcing_team_ids);
+
         $handover_data['created_at'] = date('Y-m-d H:i:s');
         $handover_data['updated_at'] = date('Y-m-d H:i:s');
         if (!empty($ter_team_ids)) {
@@ -155,6 +179,29 @@ class Tercourier extends Model
             if($res)
             {
                 $new_res = DB::table('tercouriers')->whereIn('id', $hr_admin_ids)->where('status', 11)->update(array("handover_id" => $handover_id));
+
+            }
+        }
+
+        if (!empty($sourcing_team_ids)) {
+            $handover_id = HandoverDetail::select('handover_id')->latest('handover_id')->first();
+            $handover_id = json_decode(json_encode($handover_id), true);
+            if (empty($handover_id) || $handover_id == null) {
+                $handover_id = 1000001;
+            } else {
+                $handover_id = $handover_id['handover_id'] + 1;
+            }
+            $handover_data['handover_id'] = $handover_id;
+            $handover_data['ter_id_count'] = $size_sourcing;
+            $handover_data['ter_ids'] = $sourcing_ids;
+            $handover_data['department'] = 'sourcing';
+            $handover_data['reception_action'] = '1';
+            $handover_data['doc_type'] = 'ter';
+            $handover_data['created_user_id'] = $user_id;
+           $res = HandoverDetail::insert($handover_data);
+            if($res)
+            {
+                $new_res = DB::table('tercouriers')->whereIn('id', $sourcing_team_ids)->where('status', 11)->update(array("handover_id" => $handover_id));
 
             }
         }

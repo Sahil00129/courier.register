@@ -11,6 +11,7 @@ use Helper;
 use Validator;
 use Config;
 use Session;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -19,56 +20,87 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $peritem = Config::get('variable.PER_PAGE');
-        $query = Tercourier::query();
+  
+     public function __construct()
+     {
+         // $this->middleware('auth');
+         $this->middleware('permission:invoices', ['only' => ['index']]);
+     }
+     
+     public function index(Request $request)
+     {
+         if (Auth::check()) {
+             $query = Tercourier::query();
+             $user = Auth::user();
+             $data = json_decode(json_encode($user));
+             $name = $data->roles[0]->name;
+             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
+                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                 $role = "reception";
+
+ 
+                 // $invoice_list = Tercourier::whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',1)->with('Po', 'HandoverDetail')->orderby('id', 'DESC')->paginate(2);
+ 
+             
+                // echo'<pre>'; print_r($tercouriers); die;
+         }
+ 
+         // echo'<pre>'; print_r($invoice_list); die;
+         return view('invoices.invoices-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
+ 
+ 
+         // return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers,'invoice_list'=>$invoice_list, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
+     }
+    // public function index(Request $request)
+    // {
+    //     $peritem = Config::get('variable.PER_PAGE');
+    //     $query = Tercourier::query();
         
-        if ($request->ajax()) {
-            if(isset($request->resetfilter)){
-                Session::forget('peritem');
-                $url = URL::to($this->prefix.'/'.$this->segment);
-                return response()->json(['success' => true,'redirect_url'=>$url]);
-            }
-            $query = $query;
+    //     if ($request->ajax()) {
+    //         if(isset($request->resetfilter)){
+    //             Session::forget('peritem');
+    //             $url = URL::to($this->prefix.'/'.$this->segment);
+    //             return response()->json(['success' => true,'redirect_url'=>$url]);
+    //         }
+    //         $query = $query;
 
-            if(!empty($request->search)){
-                $search = $request->search;
-                $searchT = str_replace("'","",$search);
-                $query->where(function ($query)use($search,$searchT) {
-                    $query->where('po_number', 'like', '%' . $search . '%')
-                    ->orWhere('ax_code', 'like', '%' . $search . '%')
-                    ->orWhere('vendor_name', 'like', '%' . $search . '%')
-                    ->orWhere('po_value', 'like', '%' . $search . '%')
-                    ->orWhere('unit', 'like', '%' . $search . '%');
-                });
-            }
+    //         if(!empty($request->search)){
+    //             $search = $request->search;
+    //             $searchT = str_replace("'","",$search);
+    //             $query->where(function ($query)use($search,$searchT) {
+    //                 $query->where('po_number', 'like', '%' . $search . '%')
+    //                 ->orWhere('ax_code', 'like', '%' . $search . '%')
+    //                 ->orWhere('vendor_name', 'like', '%' . $search . '%')
+    //                 ->orWhere('po_value', 'like', '%' . $search . '%')
+    //                 ->orWhere('unit', 'like', '%' . $search . '%');
+    //             });
+    //         }
 
-            if($request->peritem){
-                Session::put('peritem',$request->peritem);
-            }
+    //         if($request->peritem){
+    //             Session::put('peritem',$request->peritem);
+    //         }
       
-            $peritem = Session::get('peritem');
-            if(!empty($peritem)){
-                $peritem = $peritem;
-            }else{
-                $peritem = Config::get('variable.PER_PAGE');
-            }
+    //         $peritem = Session::get('peritem');
+    //         if(!empty($peritem)){
+    //             $peritem = $peritem;
+    //         }else{
+    //             $peritem = Config::get('variable.PER_PAGE');
+    //         }
 
-            $invoice = $query->where('ter_type',1)->orderBy('id', 'DESC')->paginate($peritem);
-            $invoice = $invoice->appends($request->query());
+    //         $invoice = $query->where('ter_type',1)->orderBy('id', 'DESC')->paginate($peritem);
+    //         $invoice = $invoice->appends($request->query());
 
-            $html =  view('invoices.invoice-list-ajax',['invoice' => $invoice,'peritem'=>$peritem])->render();
+    //         $html =  view('invoices.invoice-list-ajax',['invoice' => $invoice,'peritem'=>$peritem])->render();
             
-            return response()->json(['html' => $html]);
-        }
+    //         return response()->json(['html' => $html]);
+    //     }
 
 
-        $invoice = $query->where('ter_type',1)->orderBy('id','DESC')->paginate($peritem);
-        $invoice = $invoice->appends($request->query());
+    //     $invoice = $query->where('ter_type',1)->orderBy('id','DESC')->paginate($peritem);
+    //     $invoice = $invoice->appends($request->query());
         
-        return view('invoices.invoice-list', ['invoice' => $invoice, 'peritem'=>$peritem]);
-    }
+    //     return view('invoices.invoice-list', ['invoice' => $invoice, 'peritem'=>$peritem]);
+    // }
 
     /**
      * Show the form for creating a new resource.
