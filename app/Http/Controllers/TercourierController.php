@@ -161,7 +161,7 @@ class TercourierController extends Controller
 
         }
         else{
-            return "Unid Status isn't finfect";
+            return 'Unique ID : '.$unique_id.' Status is not Sent to Finfect in TER Portal';
         }
 
         
