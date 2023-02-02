@@ -718,7 +718,7 @@
                                     this.allow_flag = false;
                                     this.pay_data_array = [];
                                     swal('success', "Record has been updated Successfully!!!", 'success')
-                                    // window.location.href = "/tercouriers";
+                                    window.location.href = "/tercouriers";
                                     // this.get_data_by_id();
                                 } else if (response.data[0] === 0) {
                                     swal('error', response.data[1], 'error')
