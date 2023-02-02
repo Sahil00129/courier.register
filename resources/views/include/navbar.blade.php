@@ -751,6 +751,7 @@ $currentURL = url()->current();
                             <li><a href="{{url('/download_report/ter_updates')}}"> Updated TER </a></li>
                             <li><a href="{{url('/download_report/ter_user_wise')}}"> User wise Processed TER </a></li>
                             <li><a href="{{url('/download_report/emp_ledger')}}"> Employee TER Ledger </a></li>
+                            <li><a href="{{url('/download_report/emp_list')}}"> Export Sender Table </a></li>
                             <li><a href="#"> Employee Advance Ledger </a></li>
                             <li><a href="#"> Employee Ledger Balance </a></li>
                         </ul>

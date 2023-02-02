@@ -571,8 +571,11 @@
                     } else {
                         this.allow_flag = true;
                     }
+                   
                     d1 = new Date(ter_to);
-                    d2 = new Date(this.all_data.sender_detail.last_working_date);
+                    // alert(d1)
+                    d2 = new Date(last_date_array);
+                    // alert(d2)
     
                     if (d1 <= d2 || this.allow_flag) {
                         axios.post('/ter_pay_later', {
@@ -680,7 +683,6 @@
                     }
                     d1 = new Date(ter_to);
                     d2 = new Date(last_date_array);
-              
 
                     if (d1 <= d2 || this.allow_flag) {
 
