@@ -334,6 +334,17 @@
     .searchField input {
         padding-left: 30px;
     }
+
+    .unitBox {
+        background: #f0f0f0;
+        border-radius: 12px;
+        list-style: none;
+        padding: 8px 16px;
+    }
+    .unitBox li span{
+        font-weight: 500;
+        color: #000;
+    }
 </style>
 
 
@@ -497,7 +508,25 @@
                             </div>
                         </div>
                         <div v-else class="modal-body">
-                            <div class="mb-4" style="border-radius: 12px; height: 150px; width: 100%;">
+                            <div class="mb-4" style="border-radius: 12px; min-height: 150px; width: 100%;">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap" style="column-gap: 1rem; padding: 0 1rem">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label for="recipient-name" class="col-form-label">Old Units</label>
+                                        <ul class="unitBox">
+                                            <li>AX ID: <span>@{{old_units.ax_id}}</span></li>
+                                            <li>IAG: <span>@{{old_units.iag_code}}</span></li>
+                                            <li>PFU: <span>@{{old_units.pfu}}</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label for="recipient-name" class="col-form-label">New Unit</label>
+                                        <ul class="unitBox">
+                                            <li>AX ID: <span>@{{new_units.ax_id}}</span></li>
+                                            <li>IAG: <span>@{{new_units.iag_code}}</span></li>
+                                            <li>PFU: <span>@{{new_units.pfu}}</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="d-flex align-items-center justify-content-between flex-wrap" style="column-gap: 1rem; padding: 0 1rem">
                                     <div class="form-group" style="flex: 1;">
                                         <label for="recipient-name" class="col-form-label">TER Period From</label>
@@ -527,11 +556,13 @@
                         @if($role == "Hr Admin")
                         <div class="modal-footer" style="border-top: none;">
 
-                            <button type="button" class="btn" style="min-width: 100px" data-dismiss="modal" aria-label="Close" @click="hr_approval_modal=false;">
-                                Close
+                        <label for="recipient-name" class="col-form-label justify-center" style="flex: 1"><strong>Ter Paid From*</strong></label>
+
+                            <button type="button" class="btn btn-secondary" style="min-width: 100px; border-color: #e2a03f; background-color: #e2a03f;" data-dismiss="modal" aria-label="Close" @click="change_unit_status('old')">
+                                OLD Unit
                             </button>
-                            
-                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="change_unit_status">Submit</button>
+
+                            <button type="button" style="min-width: 100px" class="btn btn-primary" data-dismiss="modal" v-on:click="change_unit_status('new')">New Unit</button>
                         </div>
                         @endif
 
@@ -560,8 +591,11 @@
             hr_approval_modal: false,
             from_date: "",
             to_date: "",
-            effective_date:"",
-            remarks:"",
+            effective_date: "",
+            remarks: "",
+            old_units:{},
+            new_units:{},
+            selected_unit:"",
 
         },
         created: function() {
@@ -569,15 +603,16 @@
             //   alert('hello');
         },
         methods: {
-            change_unit_status: function() {
-                alert(this.remarks);
-                alert(this.to_date);
-                return 1;
-                if (this.hr_remarks != "") {
-                    axios.post('/submit_hr_remarks', {
-                            'hr_remarks': this.hr_remarks,
-                            'id': this.rejected_id,
-                            'type': ""
+            change_unit_status: function(unit) {
+                this.selected_unit=unit;
+                if (this.effective_date != "") {
+                    axios.post('/submit_change_unit', {
+                            'remarks': this.remarks,
+                            'id': this.ter_id,
+                            'selected_unit': this.selected_unit,
+                            'effective_date':this.effective_date,
+                            'from_date':this.from_date,
+                            'to_date':this.to_date
                         })
                         .then(response => {
                             if (response.data == '1') {
@@ -592,13 +627,15 @@
 
                         })
                 } else {
-                    swal('error', 'Hr Remarks Required', 'error')
+                    swal('error', 'Effective Date of Shifting is mandatory', 'error')
                 }
             },
             open_hr_approval_modal: function(ter_id) {
                 this.ter_id = ter_id;
-                this.from_date="";
-                this.to_date="";
+                this.from_date = "";
+                this.to_date = "";
+                this.old_units={};
+                this.new_units={};
                 // alert(this.remarks)
                 // alert(this.ter_id)
                 // return 1;
@@ -609,8 +646,10 @@
                         if (response.data) {
 
                             this.hr_approval_modal_details_loading = false;
-                            this.from_date=response.data[0].terfrom_date;
-                            this.to_date=response.data[0].terto_date;
+                            this.from_date = response.data[0].terfrom_date;
+                            this.to_date = response.data[0].terto_date;
+                            this.old_units=response.data[0];
+                            this.new_units=response.data[0].sender_detail;
 
                             // console.log(response.data[0].status)
                         }

@@ -50,8 +50,6 @@ class TercourierController extends Controller
         $this->middleware('permission:payment_sheet', ['only' => ['payment_sheet']]);
         $this->middleware('permission:document_list', ['only' => ['received_docs']]);
         $this->middleware('permission:update_status', ['only' => ['update_status']]);
-
-        
     }
     /**
      * Display a listing of the resource.
@@ -72,7 +70,7 @@ class TercourierController extends Controller
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
 
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11','12','13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
@@ -80,7 +78,7 @@ class TercourierController extends Controller
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
 
-                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11','12','13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
             //    echo'<pre>'; print_r($tercouriers); die;
@@ -92,7 +90,7 @@ class TercourierController extends Controller
     public function received_docs()
     {
         // $data = HandoverDetail::where('action_done', '0')->get();
-        $data = HandoverDetail::orderby('id','DESC')->get();
+        $data = HandoverDetail::orderby('id', 'DESC')->get();
         $user = Auth::user();
         $user_type = json_decode(json_encode($user));
         $name = $user_type->roles[0]->name;
@@ -105,14 +103,14 @@ class TercourierController extends Controller
         return view('tercouriers.handover-list-tercourier', ['handovers' => $data, 'name' => $name]);
     }
 
-    
+
     public function update_status()
     {
-    
+
         $user = Auth::user();
         $user_type = json_decode(json_encode($user));
         $name = $user_type->roles[0]->name;
-        return view('tercouriers.update-finfect', [ 'name' => $name]);
+        return view('tercouriers.update-finfect', ['name' => $name]);
     }
 
     public function update_unid_status(Request $request)
@@ -121,55 +119,105 @@ class TercourierController extends Controller
         $data = $request->all();
         $unique_id = $data['unique_id'];
         $res = Tercourier::where('id', $unique_id)->get();
-        if($res[0]->status == "3")
-        {
-        $update = Tercourier::where('id', $unique_id)->update(array('status' => 2, 'sent_to_finfect_date' => "", 'finfect_response' => "",'refrence_transaction_id'=>"", 'final_payable'=>"",
-        'payable_amount'=>"",'voucher_code'=>"",
-        'updated_at' => date('Y-m-d H:i:s')));
+        if ($res[0]->status == "3") {
+            $update = Tercourier::where('id', $unique_id)->update(array(
+                'status' => 2, 'sent_to_finfect_date' => "", 'finfect_response' => "", 'refrence_transaction_id' => "", 'final_payable' => "",
+                'payable_amount' => "", 'voucher_code' => "",
+                'updated_at' => date('Y-m-d H:i:s')
+            ));
 
-        return $update;
-
-        }
-        else{
+            return $update;
+        } else {
             return "not_possible";
         }
 
-        
+
 
         // $res = Tercourier::where('id', $unique_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
-      
 
-        
+
+
     }
+
+
+
+    public function submit_change_unit(Request $request)
+    {
+
+        $data =  $request->all();
+
+
+        $unique_id = $data['id'];
+        $selected_unit = $data['selected_unit'];
+        $unit_change_remarks = $data['remarks'];
+        $from_date = $data['from_date'];
+        $to_date = $data['to_date'];
+        $shifting_date = $data['effective_date'];
+        $res = Tercourier::where('id', $unique_id)->with('SenderDetail')->get();
+
+        $old_units_data = array();
+        $old_units_data['ax_id'] = $res[0]->ax_id;
+        $old_units_data['pfu'] = $res[0]->pfu;
+        $old_units_data['iag_code'] = $res[0]->iag_code;
+        // echo"<pre>";
+        // print_r($old_units_data);
+        // exit;
+
+        // print_r($res[0]->SenderDetail->ax_id) ;
+        // exit;
+
+        if ($selected_unit == "old") {
+
+            $update = Tercourier::where('id', $unique_id)->update(array(
+                'status' => 2, 'old_unit' => "old unit used", 'unit_change_remarks' => $unit_change_remarks, 'shifting_date' => $shifting_date,
+                'terfrom_date' => $from_date, 'terto_date' => $to_date, 'updated_at' => date('Y-m-d H:i:s')
+            ));
+        } else if ($selected_unit == "new") {
+            $update = Tercourier::where('id', $unique_id)->update(array(
+                'status' => 2, 'old_unit' => $old_units_data,
+                'ax_id' => $res[0]->SenderDetail->ax_id, 'pfu' => $res[0]->SenderDetail->pfu, 'iag_code' => $res[0]->SenderDetail->iag_code, 'unit_change_remarks' => $unit_change_remarks, 'shifting_date' => $shifting_date,
+                'terfrom_date' => $from_date, 'terto_date' => $to_date, 'updated_at' => date('Y-m-d H:i:s')
+            ));
+        } else {
+            $update = 1;
+        }
+
+
+
+        return $update;
+    }
+
+
+
+
 
 
     public function terportal_check(Request $request)
     {
 
-        $data=  $request->all();
+        $data =  $request->all();
 
         $unique_id = $data['unid'];
-        $response=$data['finfect_response'];
+        $response = $data['finfect_response'];
         $res = Tercourier::where('id', $unique_id)->get();
         // return $res;
-        if($res[0]->status == "3")
-        {
-        $update = Tercourier::where('id', $unique_id)->update(array('status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response,'refrence_transaction_id'=>"", 'final_payable'=>"",
-        'payable_amount'=>"",'voucher_code'=>"",'updated_at' => date('Y-m-d H:i:s')));
+        if ($res[0]->status == "3") {
+            $update = Tercourier::where('id', $unique_id)->update(array(
+                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
+                'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+            ));
 
-        return $update;
-
+            return $update;
+        } else {
+            return 'Unique ID : ' . $unique_id . ' Status is not Sent to Finfect in TER Portal';
         }
-        else{
-            return 'Unique ID : '.$unique_id.' Status is not Sent to Finfect in TER Portal';
-        }
 
-        
+
 
         // $res = Tercourier::where('id', $unique_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
-      
 
-        
+
+
     }
 
     public function accept_handover(Request $request)
@@ -201,7 +249,7 @@ class TercourierController extends Controller
         $handover_remarks = $data['handover_remarks'];
         $details = Auth::user();
         $user_id = $details->id;
-        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('handover_remarks' => $handover_remarks, 'action_done' => '1', 'user_id' => $user_id, 'reception_action' => '0','updated_at' => date('Y-m-d H:i:s')));
+        $res = HandoverDetail::where('handover_id', $handover_id)->update(array('handover_remarks' => $handover_remarks, 'action_done' => '1', 'user_id' => $user_id, 'reception_action' => '0', 'updated_at' => date('Y-m-d H:i:s')));
         if ($res) {
             $get_data = HandoverDetail::where('handover_id', $handover_id)->get();
             $ter_ids = $get_data[0]->ter_ids;
@@ -270,7 +318,15 @@ class TercourierController extends Controller
             } else if ($check_status == '11') {
                 $status = 11;
                 $flag = 1;
-            } else if ($check_status == 'fail') {
+            } else if ($check_status == '12') {
+                $status = 12;
+                $flag = 1;
+            }
+            else if ($check_status == '13') {
+                $status = 13;
+                $flag = 1;
+            }
+            else if ($check_status == 'fail') {
                 $status = 0;
                 $flag = 1;
             }
@@ -430,18 +486,17 @@ class TercourierController extends Controller
 
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
-      
+
         $terdata['ax_id']    = $senders[0]->ax_id;
-     
-     
+
+
         $terdata['iag_code']  = $senders[0]->iag_code;
         $terdata['pfu'] = $senders[0]->pfu;
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
-        if(empty($terdata['ax_id']) && empty($terdata['iag_code']) )
-        {
-        return "Both IAG Code and AX-ID Missing";
+        if (empty($terdata['ax_id']) && empty($terdata['iag_code'])) {
+            return "Both IAG Code and AX-ID Missing";
         }
 
         // echo "<pre>";print_r($ter_data);die;
@@ -1014,14 +1069,13 @@ class TercourierController extends Controller
 
 
 
-    Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
-    ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
-        Mail::to('vineet.thakur@eternitysolutions.net')->cc(['sahil.thakur@eternitysolutions.net', 'dhroov.kanwar@eternitysolutions.net'])->
-        send(new SendMail($terMailData));
+        Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
+            ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
+        Mail::to('vineet.thakur@eternitysolutions.net')->cc(['sahil.thakur@eternitysolutions.net', 'dhroov.kanwar@eternitysolutions.net'])->send(new SendMail($terMailData));
 
 
         // dd('Success! Email has been sent successfully.');
-    
+
     }
 
 
@@ -1766,7 +1820,7 @@ class TercourierController extends Controller
             $payable_amount = $data_ter[0]->payable_amount;
             $voucher_code = $data_ter[0]->voucher_code;
             $ax_code = $data_ter[0]->ax_id;
-            $iag_code=$data_ter[0]->iag_code;
+            $iag_code = $data_ter[0]->iag_code;
         }
 
         // if(empty($ax_code))
@@ -1782,8 +1836,8 @@ class TercourierController extends Controller
         //     DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_code,'updated_at' => date('Y-m-d H:i:s')]);
         // }
 
-        
-    
+
+
 
         $current_balance = $data['current_balance'];
         // return $data;
@@ -2150,13 +2204,18 @@ class TercourierController extends Controller
                 ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'], 'status' => 3]);
         }
 
-        $iag_code= $sender_table[0]->iag_code;
+
 
 
         // return $ax_id;
         $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
         $emp_id = $get_emp_id[0]->employee_id;
+        $iag_code = $get_emp_id[0]->iag_code;
         $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+        $pfu = $get_emp_id[0]->pfu;
+
+
+
 
         // if (empty($ax_id)) {
         //     $check_sender=$sender_table[0]->ax_id;
@@ -2173,8 +2232,7 @@ class TercourierController extends Controller
         //   DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_id,'updated_at' => date('Y-m-d H:i:s')]);
         // }
 
-        
-        $pfu = $sender_table[0]->pfu;
+
         // $pfu="";
         if (empty($pfu)) {
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
@@ -2635,28 +2693,26 @@ class TercourierController extends Controller
         $id = $data['id'];
         // return $data['emp_id'];
         $get_sender_data = DB::table('sender_details')->where('employee_id', $data['emp_id'])->get();
-        $sender_id= $get_sender_data[0]->id;
-        $get_ter_data=DB::table('tercouriers')->where('id',$id)->get();
+        $sender_id = $get_sender_data[0]->id;
+        $get_ter_data = DB::table('tercouriers')->where('id', $id)->get();
         $check_rejected = $get_ter_data[0]->is_rejected;
 
-      
-        if($check_rejected == '1')
-        {
-            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
-                'hr_admin_remark' => $data['remarks'],
-                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
-                'sender_id' => $sender_id, 'status' => 8,'txn_type' => 'rejected_ter','given_to'=>'TER-Team'
-            ]);
-        }else{
-            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
-                'hr_admin_remark' => $data['remarks'],
-                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
-                'sender_id' => $sender_id, 'status' => 2,'given_to'=>'TER-Team'
-            ]);
 
+        if ($check_rejected == '1') {
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 8, 'txn_type' => 'rejected_ter', 'given_to' => 'TER-Team'
+            ]);
+        } else {
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
+                'hr_admin_remark' => $data['remarks'],
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_id' => $sender_id, 'status' => 2, 'given_to' => 'TER-Team'
+            ]);
         }
 
-       
+
 
         return $tercourier_table;
     }
@@ -2740,9 +2796,9 @@ class TercourierController extends Controller
             $data = json_decode(json_encode($user));
             $name = $data->roles[0]->name;
             // return $name;
-            if($name == "Hr Admin"){
-            $tercouriers = Tercourier::where('is_unit_changed',1)->where('status',12)->with('SenderDetail')->get();
-            // echo'<pre>'; print_r($tercouriers); die;
+            if ($name == "Hr Admin") {
+                $tercouriers = Tercourier::where('is_unit_changed', 1)->where('status', 12)->with('SenderDetail')->get();
+                // echo'<pre>'; print_r($tercouriers); die;
             }
             return view('tercouriers.show-unit-change', ['tercouriers' => $tercouriers, 'role' => $name]);
         }
@@ -2751,13 +2807,13 @@ class TercourierController extends Controller
 
     public function get_unit_details(Request $request)
     {
-        $data=$request->all();
-        $id=$data['id'];
-        $tercouriers = Tercourier::where('id',$id)->with('SenderDetail')->get();
+        $data = $request->all();
+        $id = $data['id'];
+        $tercouriers = Tercourier::where('id', $id)->with('SenderDetail')->get();
         return $tercouriers;
     }
 
-    
+
 
 
     public function show_full_and_final_data(Request $request)

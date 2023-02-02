@@ -402,6 +402,8 @@
                                 <option value="7">Partially Paid</option>
                                 <option value="8">Rejected</option>
                                 <option value="9">Unknown</option>
+                                <option value="12">Unit Changed</option>
+                                <option value="13">Payment Reject</option>
                                 <option value="fail">Failed</option>
                             </select>
                         </div>
@@ -517,7 +519,15 @@
                                 } elseif ($tercourier->status == 9) {
                                     $status = 'Unknown';
                                     $class = 'btn-secondary';
-                                } else {
+                                }elseif ($tercourier->status == 12) {
+                                    $status = 'Unit Change';
+                                    $class = 'btn-secondary';
+                                }
+                                elseif ($tercourier->status == 13) {
+                                    $status = 'Payment Reject';
+                                    $class = 'btn-warning';
+                                }
+                                 else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
                                 }
@@ -542,6 +552,20 @@
                                     </button>
                                     @elseif($tercourier->status == 5 && $name=="tr admin")
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(<?php echo $tercourier->id ?>)">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 12)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 13)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -763,6 +787,25 @@
                                         Sent to Finfect
                                     </button>
                                 </div>
+                                <div v-if="tercourier.status == 12">
+                                    <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==12">
+                                        Unit Changed
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+                                    </div>
+
+                                    <div v-if="tercourier.status == 13">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==13">
+                                        Payment Reject
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+                                </div>
                                 <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         F&F Pay
@@ -843,11 +886,11 @@
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between " id="pay_sum" v-if="tercourier.status!=2">
                                                 <div class="heading">Paid:</div>
-                                                @{{arraySum(tercourier.payable_amount)}}
+                                              <div v-if="tercourier.payable_amount">  @{{arraySum(tercourier.payable_amount)}}</div>
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between " v-if="tercourier.status!=2">
                                                 <div class="heading">Deduction:</div>
-                                                @{{arraySum(tercourier.payable_amount) - tercourier.amount}}
+                                                <div v-if="tercourier.payable_amount">  @{{arraySum(tercourier.payable_amount) - tercourier.amount}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -864,14 +907,18 @@
                                         <div class="axVouchers flex-grow-1">
                                             <div class="heading" style="min-height: 30px;">
                                                 <div>
+                                                    <div v-if="tercourier.voucher_code">
                                                     <span v-for="vc in JSON.parse(tercourier.voucher_code)">
                                                         @{{ vc }}<br />
                                                     </span>
+                                                    </div>
                                                 </div>
                                                 <div>
+                                                <div v-if="tercourier.payable_amount">
                                                     <span class="d-flex flex-column align-items-end" v-for="pa in JSON.parse(tercourier.payable_amount)">
                                                         ₹@{{ pa }}<br />
                                                     </span>
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -997,7 +1044,14 @@
                                 } elseif ($tercourier->status == 9) {
                                     $status = 'Unknown';
                                     $class = 'btn-secondary';
-                                } else {
+                                } elseif ($tercourier->status == 12) {
+                                    $status = 'Unit Change';
+                                    $class = 'btn-secondary';
+                                }
+                                elseif ($tercourier->status == 13) {
+                                    $status = 'Payment Reject';
+                                    $class = 'btn-warning';
+                                }else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
                                 }
@@ -1030,6 +1084,20 @@
                                     @endif
                                     @elseif($tercourier->status == 0 || $tercourier->status == 1)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 12)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 13)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -1187,8 +1255,26 @@
                                         </svg>
 
                                     </button>
+                                </div>
 
+                                    <div v-if="tercourier.status == 12">
+                                    <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==12">
+                                        Unit Changed
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
 
+                                    </button>
+                                    </div>
+
+                                    <div v-if="tercourier.status == 13">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==13">
+                                        Payment Reject
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
                                 </div>
                                 <div v-if="tercourier.status == 3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">

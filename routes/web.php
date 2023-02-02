@@ -110,6 +110,8 @@ Route::post('ter_pay_now', [TercourierController::class, 'ter_pay_now']);
 Route::post('ter_pay_later', [TercourierController::class, 'ter_pay_later']);
 Route::post('open_verify_ter', [TercourierController::class, 'open_verify_ter']);
 Route::post('open_hr_verify_ter', [TercourierController::class, 'open_hr_verify_ter']);
+Route::post('submit_change_unit', [TercourierController::class, 'submit_change_unit']);
+
 
 
 Route::get('admin_update_ter/{id}', [TercourierController::class, 'admin_update_ter']);

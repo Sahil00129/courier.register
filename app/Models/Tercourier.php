@@ -175,7 +175,7 @@ class Tercourier extends Model
     {
         //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final,payment_status=4 is advance_payment, payment_status=5 is manually_paid,payment_status=6 deduction_settlement.
         // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter,Status=7 Partially Paid,Status=8 Rejected TER,Status=9 Emp Doesn't Exists,Ter Status=10 Reject_by_HR, Ter Status=11 Handover_Created,
-        // Ter Status=12 is Unit Changed, Ter Status=13 is Rejected_by_maker
+        // Ter Status=12 is Unit Changed, Ter Status=13 is Rejected_Payment
         $check_pay_type = DB::table('tercouriers')->select('payment_type')->where('id', $unique_id)->get();
         //    echo "<pre>";
         //    print_r($payment_status);
