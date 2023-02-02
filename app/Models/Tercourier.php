@@ -16,7 +16,8 @@ class Tercourier extends Model
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'recp_entry_time', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
         'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date','is_rejected', 
-        'pfu','old_unit','unit_change_remarks',
+        'pfu','old_unit','unit_change_remarks','is_unit_changed', 'iag_code','shifting_date',
+
 
     ];
 
@@ -173,7 +174,8 @@ class Tercourier extends Model
     public static function add_voucher_payable($payable_data, $unique_id, $user_id, $user_name, $payment_status, $final_payable)
     {
         //If Payment_Status = 1 than pay now if Payment_Status = 2 pay later payment_status=3 is full and final,payment_status=4 is advance_payment, payment_status=5 is manually_paid,payment_status=6 deduction_settlement.
-        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter,Status=7 Partially Paid,Status=8 Rejected TER,Status=9 Emp Doesn't Exists,Ter Status=10 Reject_by_HR, Ter Status=11 Handover_Created
+        // Status=1 is Received, Status=2 is Handover, Status=3 is Sent to Finfect,For pay later and full & final Status=4 is Pay, Status=0 is Failed Payment,Status=5 is Paid,Status=6 is cancelled ter,Status=7 Partially Paid,Status=8 Rejected TER,Status=9 Emp Doesn't Exists,Ter Status=10 Reject_by_HR, Ter Status=11 Handover_Created,
+        // Ter Status=12 is Unit Changed, Ter Status=13 is Rejected_by_maker
         $check_pay_type = DB::table('tercouriers')->select('payment_type')->where('id', $unique_id)->get();
         //    echo "<pre>";
         //    print_r($payment_status);

@@ -45,6 +45,7 @@ class TercourierController extends Controller
         $this->middleware('permission:hr_admin_edit_ter', ['only' => ['show_emp_not_exist']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_full_and_final_data']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_settlement_deduction']]);
+        $this->middleware('permission:unit-change', ['only' => ['show_unit_change']]);
         $this->middleware('permission:full-and-final-data', ['only' => ['show_rejected_ter']]);
         $this->middleware('permission:payment_sheet', ['only' => ['payment_sheet']]);
         $this->middleware('permission:document_list', ['only' => ['received_docs']]);
@@ -131,6 +132,36 @@ class TercourierController extends Controller
         }
         else{
             return "not_possible";
+        }
+
+        
+
+        // $res = Tercourier::where('id', $unique_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
+      
+
+        
+    }
+
+
+    public function terportal_check(Request $request)
+    {
+
+        $data=  $request->all();
+
+        $unique_id = $data['unid'];
+        $response=$data['finfect_response'];
+        $res = Tercourier::where('id', $unique_id)->get();
+        // return $res;
+        if($res[0]->status == "3")
+        {
+        $update = Tercourier::where('id', $unique_id)->update(array('status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response,'refrence_transaction_id'=>"", 'final_payable'=>"",
+        'payable_amount'=>"",'voucher_code'=>"",'updated_at' => date('Y-m-d H:i:s')));
+
+        return $update;
+
+        }
+        else{
+            return "Unid Status isn't finfect";
         }
 
         
@@ -402,13 +433,16 @@ class TercourierController extends Controller
       
         $terdata['ax_id']    = $senders[0]->ax_id;
      
-        if(empty($terdata['ax_id']))
-        {
-            $terdata['ax_id']  = $senders[0]->iag_code;
-        }
+     
+        $terdata['iag_code']  = $senders[0]->iag_code;
         $terdata['pfu'] = $senders[0]->pfu;
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
+
+        if(empty($terdata['ax_id']) && empty($terdata['iag_code']) )
+        {
+        return "Both IAG Code and AX-ID Missing";
+        }
 
         // echo "<pre>";print_r($ter_data);die;
 
@@ -1732,20 +1766,21 @@ class TercourierController extends Controller
             $payable_amount = $data_ter[0]->payable_amount;
             $voucher_code = $data_ter[0]->voucher_code;
             $ax_code = $data_ter[0]->ax_id;
+            $iag_code=$data_ter[0]->iag_code;
         }
 
-        if(empty($ax_code))
-        {
-            $get_ax_sender=DB::table('sender_details')->where('employee_id',$data_ter[0]->employee_id)->get();
-            if(empty($get_ax_sender[0]->ax_id))
-            {
-                $ax_code=$get_ax_sender[0]->iag_code;
-            }else{
-                $ax_code=$get_ax_sender[0]->ax_id;
-            }
+        // if(empty($ax_code))
+        // {
+        //     $get_ax_sender=DB::table('sender_details')->where('employee_id',$data_ter[0]->employee_id)->get();
+        //     if(empty($get_ax_sender[0]->ax_id))
+        //     {
+        //         $ax_code=$get_ax_sender[0]->iag_code;
+        //     }else{
+        //         $ax_code=$get_ax_sender[0]->ax_id;
+        //     }
 
-            DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_code,'updated_at' => date('Y-m-d H:i:s')]);
-        }
+        //     DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_code,'updated_at' => date('Y-m-d H:i:s')]);
+        // }
 
         
     
@@ -2115,26 +2150,28 @@ class TercourierController extends Controller
                 ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date'], 'status' => 3]);
         }
 
+        $iag_code= $sender_table[0]->iag_code;
+
 
         // return $ax_id;
         $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
         $emp_id = $get_emp_id[0]->employee_id;
         $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
 
-        if (empty($ax_id)) {
-            $check_sender=$sender_table[0]->ax_id;
-            if(empty($check_sender))
-            {
-            $ax_id = $sender_table[0]->iag_code;
-            }
-            else
-            {
-                $ax_id=$check_sender;
-            }
-            //  $ax_id=
+        // if (empty($ax_id)) {
+        //     $check_sender=$sender_table[0]->ax_id;
+        //     if(empty($check_sender))
+        //     {
+        //     $ax_id = $sender_table[0]->iag_code;
+        //     }
+        //     else
+        //     {
+        //         $ax_id=$check_sender;
+        //     }
+        //     //  $ax_id=
 
-          DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_id,'updated_at' => date('Y-m-d H:i:s')]);
-        }
+        //   DB::table('tercouriers')->where('id', $id)->update(['ax_id' => $ax_id,'updated_at' => date('Y-m-d H:i:s')]);
+        // }
 
         
         $pfu = $sender_table[0]->pfu;
@@ -2147,10 +2184,12 @@ class TercourierController extends Controller
 
         // $ax_id="";
 
-        if (empty($ax_id)) {
+
+
+        if (empty($ax_id) && empty($iag_code)) {
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
-            return "ax_id_missing";
+            return "Both ax_id and iag_code missing";
         }
 
         if (empty($sender_data->account_number) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
@@ -2245,6 +2284,7 @@ class TercourierController extends Controller
                             \"terid\": \"$ter_id\",
                             \"ptype\": \"$payment_type\",
                             \"ax_id\":\"$ax_id\",
+                            \"iag_code\":\"$iag_code\",
                             \"territory\":\"$sender_data->territory\"
                             }]",
 
@@ -2690,6 +2730,34 @@ class TercourierController extends Controller
         }
         //    echo'<pre>'; print_r($name); die;
     }
+
+    public function show_unit_change(Request $request)
+    {
+
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->roles[0]->name;
+            // return $name;
+            if($name == "Hr Admin"){
+            $tercouriers = Tercourier::where('is_unit_changed',1)->where('status',12)->with('SenderDetail')->get();
+            // echo'<pre>'; print_r($tercouriers); die;
+            }
+            return view('tercouriers.show-unit-change', ['tercouriers' => $tercouriers, 'role' => $name]);
+        }
+        //    echo'<pre>'; print_r($name); die;
+    }
+
+    public function get_unit_details(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['id'];
+        $tercouriers = Tercourier::where('id',$id)->with('SenderDetail')->get();
+        return $tercouriers;
+    }
+
+    
 
 
     public function show_full_and_final_data(Request $request)

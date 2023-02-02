@@ -13,6 +13,7 @@ use App\Exports\ExportTerUpdates;
 use App\Exports\ExportTerUserWise;
 use App\Exports\ExportTerEmpLedger;
 use Response;
+use DB;
 
 class ImportExportController extends Controller
 {
@@ -96,9 +97,16 @@ class ImportExportController extends Controller
                 Excel::import(new BulkImport, request()->file('file'));
 
                 $response['success'] = true;
+                if($response['success'])
+                {
+                   $pfu_change= self::check_unit_pfu_change();
+                }
+                if($pfu_change)
+                {
                 $response['messages'] = 'Succesfully imported';
                 $response['import_type'] = $type;
                 return Response::json($response);
+                }
             } catch (\Exception $e) {
                 $response['success'] = false;
                 $response['messages'] = 'something wrong'. $e;
@@ -240,6 +248,51 @@ class ImportExportController extends Controller
         }
     }
 
+    public static function check_unit_pfu_change()
+    {
+        $get_handover_unid=DB::table('tercouriers')->where('status',2)->get();
+     $res="";
+        for($i=0;$i<sizeof($get_handover_unid);$i++)
+        {
+           $get_emp_id = $get_handover_unid[$i]->employee_id;
+           $id=$get_handover_unid[$i]->id;
+           $get_sender_data=DB::table('sender_details')->where('employee_id',$get_emp_id)->get();
+
+        //    print_r($get_handover_unid[$i]->iag_code);
+        //    print_r($get_sender_data[0]->iag_code);
+        //    exit;
+        if($get_handover_unid[$i]->pfu !="")
+        {
+           if($get_handover_unid[$i]->pfu != $get_sender_data[0]->pfu)
+           {
+            $res= DB::table('tercouriers')->where('id',$id)->update(['status'=>12,'is_unit_changed'=>1,
+            'updated_at'=>date('Y-m-d H:i:s')]);
+           }
+        }
+       if($get_handover_unid[$i]->ax_id !="")
+        {
+           if($get_handover_unid[$i]->ax_id != $get_sender_data[0]->ax_id)
+           {
+            $res= DB::table('tercouriers')->where('id',$id)->update(['status'=>12,'is_unit_changed'=>1,
+            'updated_at'=>date('Y-m-d H:i:s')]);
+           }
+        } 
+      if($get_handover_unid[$i]->iag_code !="")
+        {
+           if($get_handover_unid[$i]->iag_code != $get_sender_data[0]->iag_code)
+           {
+            $res= DB::table('tercouriers')->where('id',$id)->update(['status'=>12,'is_unit_changed'=>1,
+            'updated_at'=>date('Y-m-d H:i:s')]);
+           }
+        }
+       
+          $res=1;
+        
+    }
+ 
+        return $res;
+        
+    }
     public function ExportSender()
     {
         return Excel::download(new ExportEmployee, 'employee_report.xlsx');

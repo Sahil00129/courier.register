@@ -272,7 +272,7 @@ $(document).ready(function (e) {
                         window.location.href = data.redirect_url;
                     }, 2000);
                 } else {
-                    swal("Error!", data.messages, "error");
+                    swal("Error!", data, "error");
                 }
             },
         });
