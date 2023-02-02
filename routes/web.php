@@ -110,6 +110,8 @@ Route::post('ter_pay_now', [TercourierController::class, 'ter_pay_now']);
 Route::post('ter_pay_later', [TercourierController::class, 'ter_pay_later']);
 Route::post('open_verify_ter', [TercourierController::class, 'open_verify_ter']);
 Route::post('open_hr_verify_ter', [TercourierController::class, 'open_hr_verify_ter']);
+Route::post('submit_change_unit', [TercourierController::class, 'submit_change_unit']);
+
 
 
 Route::get('admin_update_ter/{id}', [TercourierController::class, 'admin_update_ter']);
@@ -122,10 +124,18 @@ Route::get('show_emp_not_exist', [TercourierController::class, 'show_emp_not_exi
 Route::get('show_settlement_deduction', [TercourierController::class, 'show_settlement_deduction']);
 Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_now']);
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
+Route::get('show_unit_change', [TercourierController::class, 'show_unit_change']);
+Route::post('get_unit_details', [TercourierController::class, 'get_unit_details']);
+
+
 
 
 Route::get('/export_emp_table', [ImportExportController::class,'ExportSender']);
 Route::get('/export_ter_user_entry', [ImportExportController::class,'ExportSavedEntry']);
+Route::get('/check_unit', [ImportExportController::class,'check_unit_pfu_change']);
+
+
+
 
 Route::get('edit_ter_reception', [TercourierController::class, 'edit_ter_reception']);
 Route::post('edit_tercourier', [TercourierController::class, 'edit_tercourier']);

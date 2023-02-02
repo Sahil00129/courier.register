@@ -683,7 +683,6 @@
                     }
                     d1 = new Date(ter_to);
                     d2 = new Date(last_date_array);
-                   
 
                     if (d1 <= d2 || this.allow_flag) {
 

@@ -717,6 +717,9 @@ $currentURL = url()->current();
                             <li><a href="{{url('show_pay_later_data')}}"> Pay Later TER </a></li>
                             @endcan
                             <li><a href="{{url('show_settlement_deduction')}}"> Deduction Settlements TER </a></li>
+                           @can('unit-change')
+                            <li><a href="{{url('show_unit_change')}}">Unit Change TER </a></li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
