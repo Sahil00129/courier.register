@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Maatwebsite\Excel\Concerns\ToArray;
 use App\Models\HandoverDetail;
+date_default_timezone_set('Asia/Kolkata');
 
 class Tercourier extends Model
 {

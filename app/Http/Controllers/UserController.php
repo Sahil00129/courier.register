@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\Company;
 use App\Models\Location;
 use App\Models\Department;
+date_default_timezone_set('Asia/Kolkata');
 
 class UserController extends Controller
 {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+date_default_timezone_set('Asia/Kolkata');
 
 class EmployeeBalance extends Model
 {

@@ -6,6 +6,7 @@ use App\Models\Tercourier;
 use Carbon\Carbon;
 use DB;
 use Response;
+date_default_timezone_set('Asia/Kolkata');
 
 class HomeController extends Controller
 {
