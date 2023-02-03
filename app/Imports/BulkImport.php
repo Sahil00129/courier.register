@@ -12,8 +12,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
-
-
+date_default_timezone_set('Asia/Kolkata');
 
 class BulkImport implements ToModel, WithHeadingRow
 {

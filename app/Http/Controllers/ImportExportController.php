@@ -14,6 +14,7 @@ use App\Exports\ExportTerUserWise;
 use App\Exports\ExportTerEmpLedger;
 use Response;
 use DB;
+date_default_timezone_set('Asia/Kolkata');
 
 class ImportExportController extends Controller
 {

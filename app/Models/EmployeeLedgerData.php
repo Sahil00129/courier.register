@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\EmployeeBalance;
 use DB;
-
+date_default_timezone_set('Asia/Kolkata');
 
 class EmployeeLedgerData extends Model
 {

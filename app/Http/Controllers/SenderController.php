@@ -11,6 +11,7 @@ use URL;
 use Response;
 use Validator;
 use Illuminate\Support\Facades\Auth;
+date_default_timezone_set('Asia/Kolkata');
 
 class SenderController extends Controller
 {
