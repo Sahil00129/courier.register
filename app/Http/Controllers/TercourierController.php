@@ -495,10 +495,13 @@ class TercourierController extends Controller
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
+        if($terdata['ax_id'] != 0 && $terdata['sender_name']!="Unknown Employee")
+        {
+
         if (empty($terdata['ax_id']) && empty($terdata['iag_code'])) {
             return "Both IAG Code and AX-ID Missing";
         }
-
+    }
         // echo "<pre>";print_r($ter_data);die;
 
         $tercourier = Tercourier::create($terdata);
@@ -1090,7 +1093,7 @@ class TercourierController extends Controller
         for ($i = 0; $i < $size; $i++) {
             // print_r($get_data_db[$i]->id);
             $id = $get_data_db[$i]->id;
-            // $id="1508";
+            // $id="1088";
             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
             $curl = curl_init();
 
@@ -1110,6 +1113,8 @@ class TercourierController extends Controller
             curl_close($curl);
             if ($response) {
                 $received_data = json_decode($response);
+                // print_r($received_data);
+                // exit;
                 $status_code = $received_data->status_code;
 
                 //    status needs to be checked before updating the finfect_response for deduction table
@@ -1131,6 +1136,26 @@ class TercourierController extends Controller
                         $res = $sms_lib->send_paid_sms($id, $amount);
                         // $sms_lib->send_paid_sms($get_data_db[$i]->id);
                     }
+                    // return $res;
+                } elseif ($status_code == 4) {
+                    $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                        'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
+                        'final_payable'=>"",'voucher_code'=>"",'payable_amount'=>"",'sent_to_finfect_date'=>"",
+                         'updated_at' => date('Y-m-d H:i:s'),'refrence_transaction_id'=>"",
+                        'payment_type' => 'bank_failed_payment'
+                    ]);
+
+                    // if ($update_ter_data) {
+                    //     // echo "<pre>";
+                    //     // print_r($id);
+                    //     // echo "<pre>";
+                    //     // print_r($response);
+                    //     $res = EmployeeLedgerData::finfect_paid_payment($get_data_db[$i]->id);
+                    //     $amount = $received_data->amount;
+                    //     $sms_lib = new Sms_lib();
+                    //     $res = $sms_lib->send_paid_sms($id, $amount);
+                    //     // $sms_lib->send_paid_sms($get_data_db[$i]->id);
+                    // }
                     // return $res;
                 }
             }
