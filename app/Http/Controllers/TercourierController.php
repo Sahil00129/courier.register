@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use PDF;
 
+date_default_timezone_set('Asia/Kolkata');
+
 
 class TercourierController extends Controller
 {
@@ -646,16 +648,19 @@ class TercourierController extends Controller
             // print_r($res);
             // exit;
             if ($res->status == "success") {
+                $date= date("d-m-Y h:m a");
+                $sent_to_finfect_date= date("Y-m-d");
+
 
                 $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                     'status' => 3, 'finfect_response' => $res->status,
-                    'refrence_transaction_id' => $res->refrence_transaction_id, 'updated_at' => date('Y-m-d H:i:s'),
-                    'sent_to_finfect_date' => date('Y-m-d')
+                    'refrence_transaction_id' => $res->refrence_transaction_id, 'updated_at' => $date,
+                    'sent_to_finfect_date' => $sent_to_finfect_date
                 ]);
             } else {
                 $update_ter_data = DB::table('tercouriers')->where('id',  $get_data_db[$i]->id)->update(array(
                     'finfect_response' => $res->status, 'payment_status' => 2,
-                    'status' => 0
+                    'status' => 0,  'sent_to_finfect_date' => $sent_to_finfect_date
                 ));
             }
         }
