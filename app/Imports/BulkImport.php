@@ -495,18 +495,19 @@ class BulkImport implements ToModel, WithHeadingRow
         }
         if ($_POST['import_type'] == 7) {
             // echo "<pre>"; print_r($row);
-            $get_data_ter_courier=DB::table('tercouriers')->where('id',$row['un_id'])->get()->toArray();
+            $get_data_ter_courier=DB::table('tercouriers')->where('id',$row['id'])->get()->toArray();
             if(!empty($get_data_ter_courier)){
-            if($row['un_id'] == $get_data_ter_courier[0]->id)
+            if($row['id'] == $get_data_ter_courier[0]->id)
             {
-                // echo "<pre>";
-                // print_r($row['un_id']." = " );
-                // print_r($get_data_ter_courier[0]->id." " );
-                // print_r($row['old_sender_id']." = " );
-                // print_r($get_data_ter_courier[0]->sender_id." Changed to ");
-                // print_r($row['new_sender_id']);
-                $updated_data=DB::table('tercouriers')->where('id',$row['un_id'])->update(['sender_name'=>$row['sender_name'],'ax_id'=>$row['ax_id'],'employee_id'=>$row['employee_id']]);
+               $emp_id=$get_data_ter_courier[0]->employee_id;
+               $get_sender_data=Sender::where('employee_id',$emp_id)->get();
+              
+               $ax_id=$get_sender_data[0]->ax_id;
+               $iag_code=$get_sender_data[0]->iag_code;
+               $pfu=$get_sender_data[0]->pfu;
+                $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['ax_id'=>$ax_id,'iag_code'=>$iag_code,'pfu'=>$pfu]);
                 print_r($updated_data);
+                
             }
             // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
             }
