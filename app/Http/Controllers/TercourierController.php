@@ -2234,11 +2234,11 @@ class TercourierController extends Controller
 
 
         // $pfu="";
-        if (empty($pfu)) {
-            DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+        // if (empty($pfu)) {
+        //     DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'pfu is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
-            return "pfu_missing";
-        }
+        //     return "pfu_missing";
+        // }
 
         // $ax_id="";
 
