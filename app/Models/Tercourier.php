@@ -53,6 +53,7 @@ class Tercourier extends Model
 
         for ($i = 0; $i < sizeof($res); $i++) {
 
+            $date="";
             $date = date_create($res[$i]->terto_date);
             date_add($date, date_interval_create_from_date_string("50 days"));
             $date_check = date_format($date, "Y-m-d");
@@ -132,8 +133,8 @@ class Tercourier extends Model
                 $new_res = DB::table('tercouriers')->whereIn('id', $ter_team_ids)->where('status', 11)->update(array("handover_id" => $handover_id));
 
             }
-        }
-        
+        }    
+       
         if (!empty($hr_admin_ids)) {
             $handover_id = HandoverDetail::select('handover_id')->latest('handover_id')->first();
             $handover_id = json_decode(json_encode($handover_id), true);

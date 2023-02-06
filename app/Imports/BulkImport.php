@@ -245,9 +245,6 @@ class BulkImport implements ToModel, WithHeadingRow
                     'pfu'=>$pfu
 
                 ]);
-            }else{
-            // print_r("Dsd");
-                // return "Data is already added";
             }
 
             // 'account_number' => $row['account_number'],
@@ -342,7 +339,7 @@ class BulkImport implements ToModel, WithHeadingRow
 
             // print_r($lastworkingdate);
             // exit;
-            if (!empty($lastworkingdate)) {
+            if (!empty($lastworkingdate) || $row['date_of_leaving']!=$sender_table->last_working_date) {
                 $month_number = explode("-", $lastworkingdate);
 
                 switch ($month_number[1]) {
@@ -400,7 +397,7 @@ class BulkImport implements ToModel, WithHeadingRow
                             // print_r($updated_record_detail);
                         }
                     } 
-                    else if(strtotime($sender_table->last_working_date) > strtotime($lastworkingdate) ) {
+                    else if(strtotime($sender_table->last_working_date) >= strtotime($lastworkingdate) ) {
                         // echo "<pre>";
                         // print_r($lastworkingdate."  ");
                         // print_r("Sender Table Entry  ");
