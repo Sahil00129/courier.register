@@ -501,7 +501,9 @@ class BulkImport implements ToModel, WithHeadingRow
                $ax_id=$get_sender_data[0]->ax_id;
                $iag_code=$get_sender_data[0]->iag_code;
                $pfu=$get_sender_data[0]->pfu;
-                $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['ax_id'=>$ax_id,'iag_code'=>$iag_code,'pfu'=>$pfu]);
+                // $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['ax_id'=>$ax_id,'iag_code'=>$iag_code,'pfu'=>$pfu]);
+                $updated_data=DB::table('tercouriers')->where('id',$row['id'])->update(['pfu'=>$pfu]);
+
                 print_r($updated_data);
                 
             }
