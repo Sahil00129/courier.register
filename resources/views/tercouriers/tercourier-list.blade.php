@@ -1480,7 +1480,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
-                                        <input type="file" accept=".jpg,.pdf" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
+                                        <input type="file" accept="image/*" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
                                     </div>
                                 </form>
                             </div>
