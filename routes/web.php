@@ -126,6 +126,9 @@ Route::post('pay_later_ter_now', [TercourierController::class, 'pay_later_ter_no
 Route::post('group_pay_now', [TercourierController::class, 'group_pay_now']);
 Route::get('show_unit_change', [TercourierController::class, 'show_unit_change']);
 Route::post('get_unit_details', [TercourierController::class, 'get_unit_details']);
+Route::post('update_payable_amount', [TercourierController::class, 'update_payable_amount']);
+
+
 
 
 
