@@ -219,6 +219,7 @@ class TercourierController extends Controller
                 'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
                 'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
             ]);
+            return $settlement_deduction;
         } else {
             return 'Unique ID : ' . $unique_id . ' Status is not Sent to Finfect in TER Portal';
         }
