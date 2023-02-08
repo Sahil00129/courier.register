@@ -2478,7 +2478,7 @@ class TercourierController extends Controller
                 if ($settlement_deduction) {
                     $new_data['finfect_response'] = $res_data->message;
                     $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
-                        'finfect_response' => $new_data['finfect_response'],
+                        'finfect_response' => $new_data['finfect_response'].''.$pfu,
                         'status' => 0
                     ));
                 } else {
