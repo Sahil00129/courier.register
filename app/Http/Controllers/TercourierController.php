@@ -216,7 +216,7 @@ class TercourierController extends Controller
             $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $res[0]->id)->orderby("book_date", "DESC")->first();
 
             $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
-                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
+                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'reference_transaction_id' => "", 'final_payable' => "",
                 'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
             ]);
             return $settlement_deduction;
