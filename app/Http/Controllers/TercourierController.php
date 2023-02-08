@@ -2281,6 +2281,8 @@ class TercourierController extends Controller
         } else {
             $ax_id = $check_deduction_table->ax_code;
             $pfu = $check_deduction_table->pfu;
+            print_r($pfu);
+            exit;
             $iag_code = $check_deduction_table->iag_code;
             $payable_sum = $check_deduction_table->final_payable;
             $voucher_code = $check_deduction_table->voucher_code;
