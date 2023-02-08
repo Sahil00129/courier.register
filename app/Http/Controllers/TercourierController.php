@@ -215,11 +215,20 @@ class TercourierController extends Controller
         {
             $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $res[0]->id)->orderby("book_date", "DESC")->first();
 
+            // $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+            //     'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'reference_transaction_id' => "", 'final_payable' => "",
+            //     'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+            // ]);
             $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
-                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'reference_transaction_id' => "", 'final_payable' => "",
-                'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+                'status' => 13, 'finfect_response' => $response, 'updated_at' => date('Y-m-d H:i:s')
             ]);
-            return $settlement_deduction;
+           if($settlement_deduction)
+           {
+            $ter= DB::table('tercouriers')->where('id', $res[0]->id)->update([
+                'status' => 5, 'updated_at' => date('Y-m-d H:i:s')
+            ]);
+           }
+           return $ter;
         } else {
             return 'Unique ID : ' . $unique_id . ' Status is not Sent to Finfect in TER Portal';
         }
