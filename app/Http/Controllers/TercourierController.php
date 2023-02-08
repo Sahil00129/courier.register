@@ -2278,11 +2278,13 @@ class TercourierController extends Controller
             $amount = $tercourier_data->amount;
             $ter_id = $tercourier_data->id;
             $payment_type = $tercourier_data->payment_type;
+            $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
+            $emp_id = $get_emp_id[0]->employee_id;
+            $iag_code = $get_emp_id[0]->iag_code;
+            $pfu = $get_emp_id[0]->pfu;
         } else {
             $ax_id = $check_deduction_table->ax_code;
             $pfu = $check_deduction_table->pfu;
-            print_r($pfu);
-            exit;
             $iag_code = $check_deduction_table->iag_code;
             $payable_sum = $check_deduction_table->final_payable;
             $voucher_code = $check_deduction_table->voucher_code;
@@ -2306,11 +2308,9 @@ class TercourierController extends Controller
 
 
         // return $ax_id;
-        $get_emp_id = DB::table('tercouriers')->where('id', $id)->get();
-        $emp_id = $get_emp_id[0]->employee_id;
-        $iag_code = $get_emp_id[0]->iag_code;
-        $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
-        $pfu = $get_emp_id[0]->pfu;
+    
+        // $sender_table = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+     
 
 
 
@@ -2480,7 +2480,7 @@ class TercourierController extends Controller
                 if ($settlement_deduction) {
                     $new_data['finfect_response'] = $res_data->message;
                     $res = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update(array(
-                        'finfect_response' => $new_data['finfect_response'].''.$pfu,
+                        'finfect_response' => $new_data['finfect_response'],
                         'status' => 0
                     ));
                 } else {
