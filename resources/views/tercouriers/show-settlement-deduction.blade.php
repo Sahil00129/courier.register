@@ -935,7 +935,7 @@
                         'id': this.id,
                     })
                     .then(response => {
-                        this.view_file_name = 'partially_paid_ter_uploads/' + response.data;
+                        this.view_file_name = 'uploads/' + response.data;
                         this.file_view_modal = true;
                     }).catch(error => {
 
@@ -1040,8 +1040,8 @@
                     .then(response => {
                         console.log(response.data);
                         if (response.data == 1) {
-
-                            // location.reload();
+                            swal('success', "Ter ID : "+unique_id +" Sent to Finfect", 'success')
+                            location.reload();
                         } else {
                             swal('error', "System Error", 'error')
                         }

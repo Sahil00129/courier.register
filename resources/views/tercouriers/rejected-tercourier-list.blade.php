@@ -657,6 +657,8 @@
                             <div class="mb-4 d-flex align-items-center justify-content-center" style="border-radius: 12px; height: 150px; width: 100%; border: 1px dashed;">
                                 <img :src="rejected_file_name" alt="attachment" style="max-width: 100%; max-height: 130px; border-radius: 12px; object-fit: cover;" />
                             </div>
+                            <p v-if="request_type==1"><strong>Request Type: Cancel TER</strong></p>
+                            <p v-if="request_type==0"><strong>Request Type: Approve TER</strong></p>
                             <!-- <p><strong>Payable Amount: </strong>@{{rejected_payable_amount}}</p>
                             <p><strong>Voucher Code: </strong>@{{rejected_voucher}}</p> -->
                             <p><strong>Remarks: </strong>@{{remarks_rejected}}</p>
@@ -730,7 +732,9 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal">Save changes
+                            <button type="button" class="btn btn-secondary" @click="update_payment('reject')" data-dismiss="modal">Request to Cancel
+                            </button>
+                            <button type="button" class="btn btn-primary" @click="update_payment('accept')" data-dismiss="modal">Request to Approve
                             </button>
                             <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
                             <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
@@ -808,6 +812,8 @@
             rejected_file_name: "",
             remarks_rejected: "",
             hr_remarks: "",
+            ter_type:"",
+            request_type:"",
 
 
         },
@@ -866,6 +872,7 @@
                             // this.rejected_voucher = response.data[0].voucher_code;
                             this.rejected_file_name = 'rejected_ter_uploads/' + response.data[0].file_name;
                             this.remarks_rejected = response.data[0].remarks;
+                            this.request_type=response.data[0].cancel_reject;
                             this.hr_approval_modal_details_loading = false;
                             // console.log(response.data[0].status)
                         }
@@ -899,7 +906,14 @@
                         this.ter_id = "";
                     })
             },
-            update_payment: function() {
+            update_payment: function(type) {
+                if(type== 'reject')
+                {
+                    this.ter_type='cancel';
+                }else if(type == 'accept')
+                {
+                    this.ter_type='accept';
+                }
                 this.total_amount = document.getElementById('total_amount').value;
                 if (this.ter_remarks != "" && this.file != null) {
                     if (parseInt(this.total_amount) >= this.payable_amount) {
@@ -912,7 +926,7 @@
                         formData.append('file', this.file);
                         formData.append('ter_id', this.ter_id);
                         formData.append('remarks', this.ter_remarks);
-                        // formData.append('voucher_code', this.voucher_code);
+                        formData.append('ter_type', this.ter_type);
                         // formData.append('payable_amount', this.payable_amount);
 
 
@@ -1036,7 +1050,11 @@
                         if (response.data == 1) {
                             swal('success', "Ter Id :" + this.ter_id + " has been approved", 'success')
                             location.reload();
-                        } else {
+                        }    else if (response.data == 2) {
+                            swal('success', "Ter Id :" + this.ter_id + " has been Cancelled", 'success')
+                            location.reload();
+                        }
+                        else {
                             swal('error', response.data[1], 'error')
                             this.ter_id = "";
                         }

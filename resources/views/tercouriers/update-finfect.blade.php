@@ -114,6 +114,9 @@
                 <label>
                     <input type="text" class="form-control" placeholder="Enter UN ID" v-model="unique_id" aria-controls="html5-extension" style="height: 30px;">
                 </label>
+                <label>
+                    <input type="text" class="form-control" placeholder="Enter Remarks" v-model="remarks" aria-controls="html5-extension" style="height: 30px;">
+                </label>
                 <button class="btn btn-success" v-on:click="get_data_by_id()" style="height: 30px; width: 80px; padding: 0; border-radius: 8px"> @{{button_text}}
                 </button>
             </div>
@@ -144,6 +147,7 @@
             unique_id: "",
             all_data: {},
             button_text: "Submit",
+            remarks:"",
         },
         mounted: function() {
             this.button_text = "Submit";
@@ -152,12 +156,15 @@
         methods: {
 
             get_data_by_id: function() {
+                if(this.remarks != "")
+                {
                 this.button_text = "Submiting...";
                 // alert(this.unique_id);
                 // return 1;
 
                 axios.post('/update_unid_status', {
                         'unique_id': this.unique_id,
+                        'remarks':this.remarks
                     })
                     .then(response => {
 
@@ -182,6 +189,10 @@
 
 
                     })
+                }else{
+                    swal('error', "Please Enter the Remarks", 'error')
+
+                }
             },
         }
 

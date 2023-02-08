@@ -364,6 +364,7 @@
                             <th>Sender</th>
                             <th>TER</th>
                             <th>AX Detail</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="tb">
@@ -402,6 +403,7 @@
                                                     </p>
                                                 </div>
                                                 <p><strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
+                                                <p><strong>HR Remarks:</strong> {{ ucfirst($tercourier->hr_admin_remark) ?? '-' }}
                                                 <p><strong>Response from
                                                         Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
                                                 </p>
@@ -557,6 +559,18 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="action d-flex justify-content-center align-items-center">
+                                        @if($role == "Hr Admin" && $tercourier->status != 0)
+                                        <a target="_blank" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>,<?php echo $tercourier->final_payable ?>)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </a>
+                                        @endif
+                                    </div>
+                                </td>
 
                             </tr>
                             @endforeach
@@ -565,6 +579,47 @@
 
                     </tbody>
                 </table>
+
+                          <!-- Modal -->
+                          <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Update TER Payable</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="ter_id" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Actual Payable Amount:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="payable_amount" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">New Payable Amount:</label>
+                                        <input type="number" class="form-control form-control-sm" id="recipient-name" v-model="new_payable_amount">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="hr_admin_remarks">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="update_payable()" data-dismiss="modal">Save changes
+                                </button>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -584,12 +639,25 @@
         data: {
             unique_amount_id: "",
             unique_coupon_id: "",
+            ter_modal: false,
+            payable_amount:"",
+            ter_id:"",
+            new_payable_amount:"",
+            hr_admin_remarks:"",
+            db_pay_data_array:[],
         },
         created: function() {
             // alert(this.got_details)
             //   alert('hello');
         },
         methods: {
+            open_ter_modal: function(id,amount) {
+                this.ter_id=id;
+                this.payable_amount=amount;
+                this.ter_modal = true;
+                this.new_payable_amount="";
+                this.hr_admin_remarks="";
+            },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
                 var y = this.$el.querySelectorAll(".selected_box");
@@ -602,6 +670,37 @@
                         y[i].checked = false;
                     }
                 }
+            },
+            update_payable:function(){
+                this.db_pay_data_array.push(this.new_payable_amount);
+
+                if(this.new_payable_amount<this.payable_amount)
+                {
+
+                    axios.post('/update_payable_amount', {
+                        'ter_id': this.ter_id,
+                        'hr_admin_remarks':this.hr_admin_remarks,
+                        'new_payable':this.new_payable_amount,
+                    })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.data == 1) {
+                            swal('success', "Payable Amount updated Successfully..", 'success')
+                            location.reload();
+                        } 
+
+                    }).catch(error => {
+
+                        console.log(response)
+                        this.apply_offer_btn = 'Apply';
+
+                    })
+
+                }else{
+                    swal('error', "New Payable Amount "+this.new_payable_amount+" can't be greater than actual payable amount "+this.payable_amount, 'error')
+
+                }
+
             },
 
             group_pay_now: function() {

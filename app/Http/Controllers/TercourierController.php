@@ -72,7 +72,7 @@ class TercourierController extends Controller
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
 
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11','12','13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
@@ -80,7 +80,7 @@ class TercourierController extends Controller
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
 
-                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11','12','13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
             //    echo'<pre>'; print_r($tercouriers); die;
@@ -120,11 +120,12 @@ class TercourierController extends Controller
 
         $data = $request->all();
         $unique_id = $data['unique_id'];
+        $remarks = $data['remarks'];
         $res = Tercourier::where('id', $unique_id)->get();
         if ($res[0]->status == "3") {
             $update = Tercourier::where('id', $unique_id)->update(array(
                 'status' => 2, 'sent_to_finfect_date' => "", 'finfect_response' => "", 'refrence_transaction_id' => "", 'final_payable' => "",
-                'payable_amount' => "", 'voucher_code' => "",
+                'payable_amount' => "", 'voucher_code' => "", 'super_admin_remarks' => $remarks,
                 'updated_at' => date('Y-m-d H:i:s')
             ));
 
@@ -210,10 +211,20 @@ class TercourierController extends Controller
             ));
 
             return $update;
+        }else if($res[0]->status == "7")
+        {
+            $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $res[0]->id)->orderby("book_date", "DESC")->first();
+
+            $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table[0]->id)->update([
+                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
+                'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+            ]);
         } else {
             return 'Unique ID : ' . $unique_id . ' Status is not Sent to Finfect in TER Portal';
         }
 
+
+       
 
 
         // $res = Tercourier::where('id', $unique_id)->update(array('is_received' => 1, 'action_done' => '1', 'user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')));
@@ -323,12 +334,10 @@ class TercourierController extends Controller
             } else if ($check_status == '12') {
                 $status = 12;
                 $flag = 1;
-            }
-            else if ($check_status == '13') {
+            } else if ($check_status == '13') {
                 $status = 13;
                 $flag = 1;
-            }
-            else if ($check_status == 'fail') {
+            } else if ($check_status == 'fail') {
                 $status = 0;
                 $flag = 1;
             }
@@ -374,7 +383,7 @@ class TercourierController extends Controller
     {
         $data = $request->all();
         $id = $data['id'];
-        $get_file_name = DB::table('tercouriers')->select('file_name')->where('id', $id)->get();
+        $get_file_name = DB::table('ter_deduction_settlements')->select('file_name')->where('id', $id)->get();
         $name = $get_file_name[0]->file_name;
         return $name;
     }
@@ -497,13 +506,12 @@ class TercourierController extends Controller
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
-        if($terdata['ax_id'] != 0 && $terdata['sender_name']!="Unknown Employee")
-        {
+        if ($terdata['ax_id'] != 0 && $terdata['sender_name'] != "Unknown Employee") {
 
-        if (empty($terdata['ax_id']) && empty($terdata['iag_code'])) {
-            return "Both IAG Code and AX-ID Missing";
+            if (empty($terdata['ax_id']) && empty($terdata['iag_code'])) {
+                return "Both IAG Code and AX-ID Missing";
+            }
         }
-    }
         // echo "<pre>";print_r($ter_data);die;
 
         $tercourier = Tercourier::create($terdata);
@@ -648,8 +656,8 @@ class TercourierController extends Controller
             // print_r($res);
             // exit;
             if ($res->status == "success") {
-                $date= date("d-m-Y h:m a");
-                $sent_to_finfect_date= date("Y-m-d");
+                $date = date("d-m-Y h:m a");
+                $sent_to_finfect_date = date("Y-m-d");
 
 
                 $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
@@ -1091,13 +1099,23 @@ class TercourierController extends Controller
     public function check_paid_status()
     {
         ini_set('max_execution_time', 0); // 0 = Unlimited
-        $get_data_db = DB::table('tercouriers')->select('id')->where('status', 3)->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
         $size = sizeof($get_data_db);
         // $size=3;
         // return $get_data_db;
         for ($i = 0; $i < $size; $i++) {
             // print_r($get_data_db[$i]->id);
             $id = $get_data_db[$i]->id;
+            if($get_data_db[$i]->status == "7")
+            {
+                // $type="deduction_setllement";
+                $deduction_table= DB::table('ter_deduction_settlements')->where('parent_ter_id',$id)->orderby("book_date", "DESC")->first();
+                // return $deduction_table;  
+                if($deduction_table->status != 3)
+                  {
+                    $id="FIN101";
+                  }
+            }
             // $id="1088";
             $url = 'https://finfect.biz/api/get_payment_response/' . $id;
             $curl = curl_init();
@@ -1118,17 +1136,40 @@ class TercourierController extends Controller
             curl_close($curl);
             if ($response) {
                 $received_data = json_decode($response);
+                // print_r($id);
                 // print_r($received_data);
                 // exit;
                 $status_code = $received_data->status_code;
 
                 //    status needs to be checked before updating the finfect_response for deduction table
                 if ($status_code == 2) {
+                    if ($get_data_db[$i]->status == 7) {
+                        $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                            'status' => 5, 'finfect_response' => 'Paid',
+                           'updated_at' => date('Y-m-d H:i:s'),
+                            
+                        ]);
+                        $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();
+                    
+                        $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                            'status' => 5, 'finfect_response' => 'Paid',
+                            'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
+                            'paid_date' => date('Y-m-d')
+                        ]);
+                    } else {
+                        $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                            'status' => 5, 'finfect_response' => 'Paid',
+                            'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
+                            'paid_date' => date('Y-m-d')
+                        ]);
+                    }
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 5, 'finfect_response' => 'Paid',
                         'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
                         'paid_date' => date('Y-m-d')
                     ]);
+
+
 
                     if ($update_ter_data) {
                         // echo "<pre>";
@@ -1143,12 +1184,32 @@ class TercourierController extends Controller
                     }
                     // return $res;
                 } elseif ($status_code == 4) {
+
+                    if ($get_data_db[$i]->status == 7) {
+                        $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                            'status' => 7,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                        $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();
+
+                        $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                            'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
+                            'final_payable' => "", 'voucher_code' => "", 'payable_amount' => "", 'sent_to_finfect_date' => "",
+                            'updated_at' => date('Y-m-d H:i:s'), 'refrence_transaction_id' => "",
+                            'payment_type' => 'bank_failed_payment'
+                        ]);
+                    }
+                    else{
+
+                    
                     $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                         'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
-                        'final_payable'=>"",'voucher_code'=>"",'payable_amount'=>"",'sent_to_finfect_date'=>"",
-                         'updated_at' => date('Y-m-d H:i:s'),'refrence_transaction_id'=>"",
+                        'final_payable' => "", 'voucher_code' => "", 'payable_amount' => "", 'sent_to_finfect_date' => "",
+                        'updated_at' => date('Y-m-d H:i:s'), 'refrence_transaction_id' => "",
                         'payment_type' => 'bank_failed_payment'
                     ]);
+                }
 
                     // if ($update_ter_data) {
                     //     // echo "<pre>";
@@ -1162,6 +1223,9 @@ class TercourierController extends Controller
                     //     // $sms_lib->send_paid_sms($get_data_db[$i]->id);
                     // }
                     // return $res;
+                }
+                else{
+
                 }
             }
         }
@@ -2216,6 +2280,8 @@ class TercourierController extends Controller
             $payment_type = $tercourier_data->payment_type;
         } else {
             $ax_id = $check_deduction_table->ax_code;
+            $pfu = $check_deduction_table->pfu;
+            $iag_code = $check_deduction_table->iag_code;
             $payable_sum = $check_deduction_table->final_payable;
             $voucher_code = $check_deduction_table->voucher_code;
             $ax_data[0]['amount'] = $check_deduction_table->payable_amount;
@@ -2587,6 +2653,14 @@ class TercourierController extends Controller
         // $get_ter_data=DB::table('tercouriers')->where('id',$data['ter_id'])->get();
         $details = Auth::user();
 
+        if ($data['ter_type'] == 'cancel') {
+            $insert['cancel_reject'] = 1;
+        }
+
+        if ($data['ter_type'] == 'accept') {
+            $insert['cancel_reject'] = 0;
+        }
+
 
         // $insert['payable_amount'][0] = $data['payable_amount'];
         // $insert['voucher_code'][0] = $data['voucher_code'];
@@ -2634,10 +2708,26 @@ class TercourierController extends Controller
         $get_ter_data = DB::table('tercouriers')->where('id', $data['ter_id'])->get();
         $details = Auth::user();
 
+        $sender_info = DB::table('sender_details')->where('employee_id', $get_ter_data[0]->employee_id)->get();
+
+        $insert['pfu'] = $get_ter_data[0]->pfu;
+        $insert['iag_code'] = $get_ter_data[0]->iag_code;
+        $insert['ax_code'] = $get_ter_data[0]->ax_id;
+
+
+        if (empty($insert['ax_code'])) {
+            $insert['ax_code'] = $sender_info[0]->ax_id;
+        }
+
+        if (empty($insert['pfu'])) {
+            $insert['pfu'] = $sender_info[0]->pfu;
+        }
+        if (empty($insert['iag_code'])) {
+            $insert['iag_code'] = $sender_info[0]->iag_code;
+        }
         $insert['parent_ter_id'] = $data['ter_id'];
         $insert['employee_name'] = $get_ter_data[0]->sender_name;
         $insert['employee_id'] = $get_ter_data[0]->employee_id;
-        $insert['ax_code'] = $get_ter_data[0]->ax_id;
         $insert['terfrom_date'] = $get_ter_data[0]->terfrom_date;
         $insert['terto_date'] = $get_ter_data[0]->terto_date;
         $insert['actual_amount'] = $data['actual_amount'];
@@ -2883,7 +2973,14 @@ class TercourierController extends Controller
     {
         $data = $request->all();
         $id = $data['selected_id'];
-        $ter = DB::table('tercouriers')->where('id', $id)->update(['status' => 2]);
+        $get_ter_data = DB::table('tercouriers')->where('id', $id)->get();
+        if ($get_ter_data[0]->cancel_reject == 1) {
+            $ter = DB::table('tercouriers')->where('id', $id)->update(['status' => 6]);
+            $ter = 2;
+        } else {
+            $ter = DB::table('tercouriers')->where('id', $id)->update(['status' => 2]);
+        }
+
         return $ter;
     }
     public function partially_paid_details(Request $request)
@@ -2894,6 +2991,21 @@ class TercourierController extends Controller
         return $ter;
     }
 
+    public function update_payable_amount(Request $request)
+    {
+        $data = $request->all();
+        $hr_remarks = $data['hr_admin_remarks'];
+        $id = $data['ter_id'];
+        $new_payable = $data['new_payable'];
+        $updated_payable[0] = $new_payable;
+        $ter_data = Tercourier::where('id', $id)->get();
+        if ($ter_data[0]->final_payable > $new_payable) {
+            $ter = Tercourier::where('id', $id)->update(['hr_admin_remark' => $hr_remarks, 'payable_amount' => $updated_payable, 'final_payable' => $new_payable]);
+        } else {
+            return "New Payable is greater than Actual Payable Amount";
+        }
+        return $ter;
+    }
 
     public function submit_hr_remarks(Request $request)
     {
@@ -2908,7 +3020,7 @@ class TercourierController extends Controller
             // exit;
             // update(['hr_admin_remark'=> $hr_remarks,'status'=>10]);
         } else {
-            $ter = DB::table('tercouriers')->where('id', $id)->update(['hr_admin_remark' => $hr_remarks, 'status' => 10]);
+            $ter = DB::table('tercouriers')->where('id', $id)->update(['hr_admin_remark' => $hr_remarks, 'cancel_reject' => 0, 'status' => 10]);
         }
         return $ter;
     }
