@@ -1125,9 +1125,12 @@ class TercourierController extends Controller
                   {
                     $id="FIN101";
                   }
+                  $type="deduction_settlement";
+            }else{
+                $type="others";
             }
             // $id="1088";
-            $url = 'https://finfect.biz/api/get_payment_response/' . $id;
+            $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -1155,8 +1158,8 @@ class TercourierController extends Controller
                 if ($status_code == 2) {
                     if ($get_data_db[$i]->status == 7) {
                         $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
-                            'status' => 5, 'finfect_response' => 'Paid',
-                           'updated_at' => date('Y-m-d H:i:s'),
+                            'status' => 5, 'finfect_response' => 'Paid','dedcution_paid'=>1,
+                           'updated_at' => date('Y-m-d H:i:s')
                             
                         ]);
                         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();
