@@ -1130,7 +1130,7 @@ class TercourierController extends Controller
                 $type="others";
             }
             // $id="1088";
-            $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
+            $url = 'https://finfect.biz/api/get_payment_response/'. $id.'/'.$type;
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
