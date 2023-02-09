@@ -215,10 +215,20 @@ class TercourierController extends Controller
         {
             $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $res[0]->id)->orderby("book_date", "DESC")->first();
 
-            $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table[0]->id)->update([
-                'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
-                'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+            // $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+            //     'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'reference_transaction_id' => "", 'final_payable' => "",
+            //     'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
+            // ]);
+            $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                'status' => 13, 'finfect_response' => $response, 'updated_at' => date('Y-m-d H:i:s')
             ]);
+           if($settlement_deduction)
+           {
+            $ter= DB::table('tercouriers')->where('id', $res[0]->id)->update([
+                'status' => 5, 'updated_at' => date('Y-m-d H:i:s')
+            ]);
+           }
+           return $ter;
         } else {
             return 'Unique ID : ' . $unique_id . ' Status is not Sent to Finfect in TER Portal';
         }
@@ -1115,9 +1125,12 @@ class TercourierController extends Controller
                   {
                     $id="FIN101";
                   }
+                  $type="deduction_settlement";
+            }else{
+                $type="others";
             }
             // $id="1088";
-            $url = 'https://finfect.biz/api/get_payment_response/' . $id;
+            $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -1145,8 +1158,8 @@ class TercourierController extends Controller
                 if ($status_code == 2) {
                     if ($get_data_db[$i]->status == 7) {
                         $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
-                            'status' => 5, 'finfect_response' => 'Paid',
-                           'updated_at' => date('Y-m-d H:i:s'),
+                            'status' => 5, 'finfect_response' => 'Paid','dedcution_paid'=>1,
+                           'updated_at' => date('Y-m-d H:i:s')
                             
                         ]);
                         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();

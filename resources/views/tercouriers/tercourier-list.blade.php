@@ -556,6 +556,13 @@
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 5 && $name=="tr admin")
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    @elseif($tercourier->status == 5 && $name=="tr admin && $tercourier->dedcution_paid == 0")
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(<?php echo $tercourier->id ?>)">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -576,7 +583,7 @@
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 5 && $name=="Hr Admin")
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
                                         {{ $status }}
                                     </button>
                                     @else
@@ -831,7 +838,15 @@
                                         Pay
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 5">
+                                <div v-if="tercourier.status == 5 &&  tercourier.dedcution_paid == 1">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton">
+                                        Paid
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 5 && tercourier.dedcution_paid == 0">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_partial_paid_modal(tercourier.id)">
                                         Paid
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">

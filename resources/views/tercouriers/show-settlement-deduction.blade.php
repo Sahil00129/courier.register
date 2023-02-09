@@ -435,7 +435,11 @@
                                 } elseif ($tercourier->status == 5) {
                                     $status = 'Paid';
                                     $class = 'btn-success';
-                                } else {
+                                } elseif ($tercourier->status == 13) {
+                                    $status = 'Payment Reject';
+                                    $class = 'btn-warning';
+                                }
+                                else {
                                     $status = 'Repay';
                                     $class = 'btn-danger';
                                 }
@@ -461,8 +465,22 @@
                                     </div>
                                     @elseif ($tercourier->status == 3 || $role == "tr admin")
                                     <button type="button" class="btn statusButton btn-rounded {{ $class }}" disabled>{{ $status }}</button>
+                                    @elseif($tercourier->status == 13)
+                                    <div style="position: relative;">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" >
+                                            {{ $status }}
+                                        </button>
+                                        <div class="finfectResponseDetail">
+                                            <p>
+                                                <strong>Response form Finfect:</strong> {{ ucfirst($tercourier->finfect_response) ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
                                     @elseif ($tercourier->status == 7)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" data-toggle="modal" data-target="#hrApprovalModal" @click="open_hr_approval_modal(<?php echo $tercourier->parent_ter_id; ?>)" value="<?php echo $tercourier->id; ?>"> {{ $status }}
+                                    </button>
+                                    @elseif ($tercourier->status == 5)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" > {{ $status }}
                                     </button>
                                     @elseif($tercourier->status == 0)
                                     @if($role != "tr admin")
