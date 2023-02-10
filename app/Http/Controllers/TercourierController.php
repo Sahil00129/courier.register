@@ -1142,7 +1142,7 @@ class TercourierController extends Controller
             // $id="1088";
             $live_host_name = request()->getHttpHost();
     
-            if($live_host_name == 'localhost:8000')
+            if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
             {
             $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
             }else{
