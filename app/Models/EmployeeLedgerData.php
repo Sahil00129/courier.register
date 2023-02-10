@@ -13,7 +13,8 @@ class EmployeeLedgerData extends Model
     use HasFactory;
     protected $table = 'employee_ledger_data';
     protected $fillable = [
-        'employee_id', 'wallet_id', 'ter_id', 'ter_expense', 'ledger_balance', 'ax_voucher_number', 'updated_date', 'incoming_payment', 'utilize_amount', 'action_done', 'user_id', 'user_name', 'created_at', 'updated_at'
+        'employee_id', 'wallet_id', 'ter_id', 'ter_expense', 'ledger_balance', 'ax_voucher_number', 'updated_date', 'incoming_payment', 'utilize_amount', 'action_done', 'user_id', 'user_name', 'created_at', 'updated_at',
+        'payment_type',
     ];
 
 
@@ -168,11 +169,22 @@ class EmployeeLedgerData extends Model
         // print_r($get_ter_data);
         // exit;
         $data['employee_id']=$get_ter_data[0]->employee_id;
-        $data['incoming_payment']=$get_ter_data[0]->final_payable;
+      
+        if($get_ter_data[0]->dedcution_paid == 1)
+        {
+            $deduction_settlement=DB::table('ter_deduction_settlements')->where('parent_ter_id',$ter_id)->get();
+            $data['payment_type']='deduction';
+            $data['incoming_payment']=$deduction_settlement[0]->final_payable;
+            $data['ax_voucher_number']=$deduction_settlement[0]->voucher_code;
+        }else{
+            $data['payment_type']='regular';
+            $data['incoming_payment']=$get_ter_data[0]->final_payable;
+            $data['ax_voucher_number']=$get_ter_data[0]->voucher_code;
+        }
         $data['ter_id']=$ter_id;
         $data['updated_date']= date('Y-m-d');
         $data['action_done']="Ter_Paid";
-        $data['ax_voucher_number']=$get_ter_data[0]->voucher_code;
+      
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['updated_at'] = date('Y-m-d H:i:s');
         $get_ledger_balance=EmployeeLedgerData::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
@@ -191,6 +203,97 @@ class EmployeeLedgerData extends Model
         // exit;
       $res=  EmployeeLedgerData::insert($data);
       return $res;
+
+    }
+
+    public static function finfect_failed_payment($ter_id)
+    {
+        $get_ter_data=DB::table('tercouriers')->where('id',$ter_id)->get();
+        // echo "<pre>";
+        // print_r($get_ter_data);
+        // exit;
+        $data['employee_id']=$get_ter_data[0]->employee_id;
+
+      
+        if($get_ter_data[0]->status == 7)
+        {
+            $deduction_settlement=DB::table('ter_deduction_settlements')->where('parent_ter_id',$ter_id)->get();
+            $insert_data['payment_type']='deduction';
+      
+            $insert_data['ax_voucher_number']=$deduction_settlement[0]->voucher_code;
+
+            $get_emp_ledger = EmployeeLedgerData::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
+            if($deduction_settlement[0]->advance_used != "")
+            {
+                $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
+                $insert_data['ter_expense'] = $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
+            }else{
+                $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $deduction_settlement[0]->final_payable;
+                $insert_data['ter_expense'] = $deduction_settlement[0]->final_payable;
+            }
+            $insert_data['incoming_payment'] = $insert_data['ter_expense'];
+           
+            $insert_data['wallet_id'] = 0;
+         
+            $insert_data['action_done'] = 'Payment_Failed';
+            $insert_data['utilize_amount'] = 0;
+            $insert_data['updated_date'] = date('Y-m-d');
+            $insert_data['employee_id'] = $data['employee_id'];
+            $insert_data['ter_id'] = $deduction_settlement[0]->parent_ter_id;
+            $insert_data['user_name'] = "Bank Failed Payment";
+            $insert_data['created_at'] = date('Y-m-d H:i:s');
+            $insert_data['updated_at'] = date('Y-m-d H:i:s');
+            EmployeeLedgerData::insert($insert_data);
+
+        }else{
+            $data['payment_type']='regular';
+            $data['ax_voucher_number']=$get_ter_data[0]->voucher_code;
+            $get_emp_ledger = EmployeeLedgerData::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
+            if($get_ter_data[0]->advance_used != "")
+            {
+                $data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_ter_data[0]->final_payable+$get_ter_data[0]->advance_used;
+                $data['ter_expense'] = $get_ter_data[0]->final_payable+$get_ter_data[0]->advance_used;
+            }else{
+                $data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_ter_data[0]->final_payable;
+                $data['ter_expense'] = $get_ter_data[0]->final_payable;
+            }
+            $data['incoming_payment'] = $data['ter_expense'];
+           
+            $data['wallet_id'] = 0;
+         
+            $data['action_done'] = 'Payment_Failed';
+            $data['utilize_amount'] = 0;
+            $data['updated_date'] = date('Y-m-d');
+            $data['employee_id'] = $data['employee_id'];
+            $data['ter_id'] = $get_ter_data[0]->id;
+            $data['user_name'] = "Bank Failed Payment";
+            $data['created_at'] = date('Y-m-d H:i:s');
+            $data['updated_at'] = date('Y-m-d H:i:s');
+            EmployeeLedgerData::insert($data);
+
+        }
+
+        
+        $get_emp_acc = EmployeeBalance::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
+   
+            $insert_emp_data['updated_date'] = date('Y-m-d');
+            $insert_emp_data['employee_id'] =  $data['employee_id'];
+            $insert_emp_data['advance_amount'] = 0;
+            $insert_emp_data['ter_id'] = $get_emp_acc->ter_id;
+            $insert_emp_data['ax_voucher_number'] = $get_emp_acc->ax_voucher_number;
+            $insert_emp_data['utilize_amount'] = $get_emp_acc->utilize_amount;
+            $insert_emp_data['current_balance'] = $get_emp_acc->utilize_amount + $get_emp_acc->current_balance;
+            $insert_emp_data['action_done'] = 'Payment_Failed';
+            $insert_emp_data['user_id'] = $get_emp_acc->user_id;
+            $insert_emp_data['user_name'] = $get_emp_acc->user_name;
+            $insert_emp_data['created_at'] = date('Y-m-d H:i:s');
+            $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
+            // return $insert_data;
+            $table_update = EmployeeBalance::insert($insert_emp_data);
+        
+    
+
+    return 1;
 
     }
 

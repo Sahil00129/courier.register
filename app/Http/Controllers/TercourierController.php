@@ -205,6 +205,7 @@ class TercourierController extends Controller
         $res = Tercourier::where('id', $unique_id)->get();
         // return $res;
         if ($res[0]->status == "3") {
+             EmployeeLedgerData::finfect_failed_payment($unique_id);
             $update = Tercourier::where('id', $unique_id)->update(array(
                 'status' => 13, 'sent_to_finfect_date' => "", 'finfect_response' => $response, 'refrence_transaction_id' => "", 'final_payable' => "",
                 'payable_amount' => "", 'voucher_code' => "", 'updated_at' => date('Y-m-d H:i:s')
@@ -213,6 +214,7 @@ class TercourierController extends Controller
             return $update;
         }else if($res[0]->status == "7")
         {
+            EmployeeLedgerData::finfect_failed_payment($unique_id);
             $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $res[0]->id)->orderby("book_date", "DESC")->first();
 
             // $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
@@ -1109,8 +1111,15 @@ class TercourierController extends Controller
 
     public function check_paid_status()
     {
+ 
         ini_set('max_execution_time', 0); // 0 = Unlimited
         $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
+        // $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1492)->get()->toArray();
+
+
+    //    echo "<pre>";
+    //    print_r($get_data_db);
+    //    exit;
         $size = sizeof($get_data_db);
         // $size=3;
         // return $get_data_db;
@@ -1131,7 +1140,15 @@ class TercourierController extends Controller
                 $type="others";
             }
             // $id="1088";
-            $url = 'https://finfect.biz/api/get_payment_response/'. $id.'/'.$type;
+            $live_host_name = request()->getHttpHost();
+    
+            if($live_host_name == 'localhost:8000')
+            {
+            $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
+            }else{
+                $url = 'https://finfect.biz/api/get_payment_response/'. $id.'/'.$type;
+            }
+            // dd($url);
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -1177,11 +1194,6 @@ class TercourierController extends Controller
                             'paid_date' => date('Y-m-d')
                         ]);
                     }
-                    $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
-                        'status' => 5, 'finfect_response' => 'Paid',
-                        'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
-                        'paid_date' => date('Y-m-d')
-                    ]);
 
 
 
@@ -1196,21 +1208,28 @@ class TercourierController extends Controller
                         $res = $sms_lib->send_paid_sms($id, $amount);
                         // $sms_lib->send_paid_sms($get_data_db[$i]->id);
                     }
+              
+                    
                     // return $res;
                 } elseif ($status_code == 4) {
+                    $res = EmployeeLedgerData::finfect_failed_payment($get_data_db[$i]->id);
+
+                    if($res){
 
                     if ($get_data_db[$i]->status == 7) {
-                        $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
-                            'status' => 7,
+
+                        DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                            'status' => 5,
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
                         
+                        
                         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();
 
-                        $settlement_deduction = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                        $update_ter_data = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
                             'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
                             'final_payable' => "", 'voucher_code' => "", 'payable_amount' => "", 'sent_to_finfect_date' => "",
-                            'updated_at' => date('Y-m-d H:i:s'), 'refrence_transaction_id' => "",
+                            'updated_at' => date('Y-m-d H:i:s'), 'reference_transaction_id' => "",
                             'payment_type' => 'bank_failed_payment'
                         ]);
                     }
@@ -1225,22 +1244,21 @@ class TercourierController extends Controller
                     ]);
                 }
 
-                    // if ($update_ter_data) {
-                    //     // echo "<pre>";
-                    //     // print_r($id);
-                    //     // echo "<pre>";
-                    //     // print_r($response);
-                    //     $res = EmployeeLedgerData::finfect_paid_payment($get_data_db[$i]->id);
-                    //     $amount = $received_data->amount;
-                    //     $sms_lib = new Sms_lib();
-                    //     $res = $sms_lib->send_paid_sms($id, $amount);
-                    //     // $sms_lib->send_paid_sms($get_data_db[$i]->id);
-                    // }
+                // if ($update_ter_data) {
+                    // echo "<pre>";
+                    // print_r($id);
+                    // echo "<pre>";
+                    // print_r($response);
+                  
+                    // $amount = $received_data->amount;
+                    // $sms_lib = new Sms_lib();
+                    // $res = $sms_lib->send_paid_sms($id, $amount);
+                    // $sms_lib->send_paid_sms($get_data_db[$i]->id);
+                // }
                     // return $res;
                 }
-                else{
-
-                }
+               
+            }
             }
         }
         return 1;
@@ -1899,6 +1917,23 @@ class TercourierController extends Controller
                         // return $insert_data;
                         $table_update = EmployeeBalance::insert($insert_emp_data);
                     }
+                }else{
+                    $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                    $advance_amt = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+                    // dd($advance_amt);
+                    if($data_ter[0]->status == 7)
+                    {
+                    if($advance_amt > 0)
+                    {
+                    DB::table('ter_deduction_settlements')->where('parent_ter_id',$id)->update(['advance_used'=>$advance_amt]);
+                    }
+                }else{
+                    if($advance_amt > 0)
+                    {
+                    DB::table('tercouriers')->where('id',$id)->update(['advance_used'=>$advance_amt]);
+                    }
+
+                }
                 }
                 return $res;
             }
@@ -2180,6 +2215,7 @@ class TercourierController extends Controller
         // print_r($res);
         // print_r("dss");
         // exit;
+   
         if ($res != '1') {
             $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
             $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
@@ -2215,7 +2251,24 @@ class TercourierController extends Controller
                 // return $insert_data;
                 $table_update = EmployeeBalance::insert($insert_emp_data);
             }
-        }
+        }else{
+            $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                    $advance_amt = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+                    // dd($advance_amt);
+                    if($data_ter[0]->status == 7)
+                    {
+                    if($advance_amt > 0)
+                    {
+                    DB::table('ter_deduction_settlements')->where('parent_ter_id',$id)->update(['advance_used'=>$advance_amt]);
+                    }
+                }else{
+                    if($advance_amt > 0)
+                    {
+                    DB::table('tercouriers')->where('id',$id)->update(['advance_used'=>$advance_amt]);
+                    }
+
+                }
+             }
         return $res;
     }
 

@@ -17,7 +17,7 @@ class Tercourier extends Model
         'date_of_receipt', 'docket_no', 'docket_date', 'courier_id', 'sender_id', 'sender_name', 'ax_id', 'employee_id', 'location', 'company_name', 'terfrom_date', 'terto_date', 'details', 'amount', 'delivery_date', 'remarks', 'recp_entry_time', 'given_to', 'status', 'created_at', 'updated_at', 'finfect_response', 'refrence_transaction_id',
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
         'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date','is_rejected', 
-        'pfu','old_unit','unit_change_remarks','is_unit_changed', 'iag_code','shifting_date','super_admin_remarks','cancel_reject','dedcution_paid',
+        'pfu','old_unit','unit_change_remarks','is_unit_changed', 'iag_code','shifting_date','super_admin_remarks','cancel_reject','dedcution_paid','advance_used',
 
 
     ];
