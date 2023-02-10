@@ -395,8 +395,17 @@ class TercourierController extends Controller
     {
         $data = $request->all();
         $id = $data['id'];
-        $get_file_name = DB::table('ter_deduction_settlements')->select('file_name')->where('id', $id)->get();
-        $name = $get_file_name[0]->file_name;
+        $ter_data = DB::table('tercouriers')->where('id', $id)->get();
+        if($ter_data[0]->status == '7')
+        {
+            $get_file_name = DB::table('ter_deduction_settlements')->select('file_name')->where('id', $id)->get();
+            $name = $get_file_name[0]->file_name;
+        }
+        else{
+                $name=$ter_data[0]->file_name;
+        }
+
+       
         return $name;
     }
 
