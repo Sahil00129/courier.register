@@ -2308,9 +2308,17 @@ class TercourierController extends Controller
         if (empty($check_deduction_table)) {
             $all_data = DB::table('tercouriers')->where('id', $id)->get()->toArray();
             if ($all_data[0]->payment_type == "full_and_final_payment") {
+                if($all_data[0]->final_payable == 0)
+                {
+                    $data['paid_date'] = date('Y-m-d');
+                    $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
+                        ->update(['paid_date' => $data['paid_date'],'status' => 5,'utr'=>"paid by hr"]);
+                        return "f&fpaid";
+                }else{
                 $data['sent_to_finfect_date'] = date('Y-m-d');
                 $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)
                     ->update(['sent_to_finfect_date' => $data['sent_to_finfect_date']]);
+                }
             } else if ($all_data[0]->payment_type == "pay_later_payment") {
                 $data['sent_to_finfect_date'] = date('Y-m-d');
                 $query =  DB::table('tercouriers')->where('id', $all_data[0]->id)

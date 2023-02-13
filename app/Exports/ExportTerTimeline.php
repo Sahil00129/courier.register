@@ -18,9 +18,11 @@ class ExportTerTimeline implements FromCollection, WithHeadings
             $size = sizeof($data);
             $arr_instrulist_excel[] =array();
             for ($i = 0; $i < $size; $i++) {
+                $status = $data[$i]->status;
+                if($status == 1 || $status == 2 || $status == 3 || $status == 4 || $status == 5 ||$status == 6 ||$status == 0)
+               {
                 $id = $data[$i]->id;
                 $sum1=0;
-                $status = $data[$i]->status;
                 if ($status == 1) {
                     $actual_status = "Received";
                 } else if ($status == 2) {
@@ -65,7 +67,7 @@ class ExportTerTimeline implements FromCollection, WithHeadings
                             $paid_amount="";
                     }
                
-
+                }
              
               
                 }

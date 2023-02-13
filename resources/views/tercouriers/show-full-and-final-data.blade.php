@@ -756,9 +756,12 @@
                     .then(response => {
                         console.log(response.data);
                         if (response.data == 1) {
-
                             location.reload();
-                        } else if (response.data === "bank_details_missing") {
+                        }  else if (response.data === "f&fpaid") {
+                            swal('success', "Ter Paid Successfully ...", 'success')
+                            location.reload();
+                        } 
+                        else if (response.data === "bank_details_missing") {
                             swal('error', "Bank Details are missing for this TER", 'error')
                         } else if (response.data === "ax_id_missing") {
                             swal('error', "AX-ID/IAG Code is not available for this TER", 'error')
