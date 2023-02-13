@@ -2853,8 +2853,8 @@ class TercourierController extends Controller
         } else {
             $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
                 'hr_admin_remark' => $data['remarks'],
-                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
-                'sender_id' => $sender_id, 'status' => 2, 'given_to' => 'TER-Team'
+                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],'iag_code' => $get_sender_data[0]->iag_code,
+                'pfu' => $get_sender_data[0]->pfu,'sender_id' => $sender_id, 'status' => 2, 'given_to' => 'TER-Team'
             ]);
         }
 
