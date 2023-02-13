@@ -156,6 +156,7 @@
                                 <th>Closing Balance</th>
                                 <th>Description</th>
                                 <th>AX Voucher Number</th>
+                                <th>Payment Type</th>
                             </tr>
                         </thead>
                         <tbody id="tb">
@@ -220,6 +221,7 @@
                                        {{$status}}
                                     </td>
                                     <td>{{$data->ax_voucher_number}}</td>
+                                    <td>{{$data->payment_type}}
 
                                 </tr>
                             <?php } ?>

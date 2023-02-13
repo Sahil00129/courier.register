@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPfuToTerDeductionSettlementsTable extends Migration
+class AddAdvanceUsedToTercouriersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class AddPfuToTerDeductionSettlementsTable extends Migration
      */
     public function up()
     {
-        Schema::table('ter_deduction_settlements', function (Blueprint $table) {
+        Schema::table('tercouriers', function (Blueprint $table) {
             //
-            $table->string('pfu')->after('ax_code')->nullable();
-            $table->string('iag_code')->after('pfu')->nullable();
             $table->string('advance_used')->after('voucher_code')->nullable();
-
-
-
         });
     }
 
@@ -31,7 +26,7 @@ class AddPfuToTerDeductionSettlementsTable extends Migration
      */
     public function down()
     {
-        Schema::table('ter_deduction_settlements', function (Blueprint $table) {
+        Schema::table('tercouriers', function (Blueprint $table) {
             //
         });
     }
