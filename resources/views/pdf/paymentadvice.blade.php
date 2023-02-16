@@ -29,6 +29,8 @@
         <tr>
             <?php
             $src_logo = public_path('assets\img\f15.png');
+            print_r($src_logo);
+            exit;
             ?>
             <td valign="middle">
                 <img src="{{$src_logo}}" style="max-height: 50px" />
