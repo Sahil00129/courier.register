@@ -28,7 +28,7 @@ use App\Exports\ExportTerStatusList;
 use App\Models\HandoverDetail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
-use Barryvdh\DomPDF\Facade\PDF;
+use PDF;
 
 date_default_timezone_set('Asia/Kolkata');
 
@@ -1260,6 +1260,7 @@ class TercourierController extends Controller
                         {
                             // print_r($live_host_name);
                             // // exit;
+                            $live_host_name="dd";
                             if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
                                 {
                                    
