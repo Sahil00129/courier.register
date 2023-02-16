@@ -1258,9 +1258,9 @@ class TercourierController extends Controller
                         ]);
                         if($update_ter_data)
                         {
-                            // print_r($live_host_name);
-                            // // exit;
-                            $live_host_name="dd";
+                            print_r($live_host_name);
+                            // exit;
+                          
                             if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
                                 {
                                    
