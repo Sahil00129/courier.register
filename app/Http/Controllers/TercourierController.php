@@ -28,7 +28,7 @@ use App\Exports\ExportTerStatusList;
 use App\Models\HandoverDetail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
-use PDF;
+use Barryvdh\DomPDF\Facade\PDF;
 
 date_default_timezone_set('Asia/Kolkata');
 
@@ -983,6 +983,60 @@ class TercourierController extends Controller
     //     }
 
 
+    public static function send_payment_advice($id)
+    {
+       
+        $terdata=DB::table('tercouriers')->where('id',$id)->get();
+        $sender_details=DB::table('sender_details')->where('employee_id',$terdata[0]->employee_id)->get();
+        if(!empty($terdata[0]->deduction_options))
+        {
+        $dedution_selected = explode(',', $terdata[0]->deduction_options);
+        }else{
+            $dedution_selected="";
+        }
+
+        if(!empty($terdata[0]->advance_used))
+        {
+        $advance_money = $terdata[0]->advance_used;
+        }else{
+            $advance_money="";
+        }
+  
+       $pay_array = json_decode($terdata[0]->payable_amount);
+       $payable_sum=0;
+       for($i=0;$i<sizeof($pay_array);$i++)
+       {
+        $payable_sum=$payable_sum+$pay_array[$i];
+
+       }
+
+    //    return  view('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
+    //    'advance_money'=>$advance_money]);
+    
+        $pdf = PDF::loadView('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
+                                                   'advance_money'=>$advance_money]);
+        // return $pdf->download('invoice.pdf');
+     
+        $paid_date =Helper::ShowFormatDate($terdata[0]->paid_date);
+
+        $data["title"] = "Payment Advice for Paid TER UNID ".$id;
+        $data["body"] = "We have released TER payment in your account on ".$paid_date." as per details attached. ";
+        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        $data["email"] = $sender_details[0]->personal_email_id;
+        $data['employee_id']=$terdata[0]->employee_id;
+        $data['employee_name']=$terdata[0]->sender_name;
+        $data['id']=$id;
+  
+     Mail::send('emails.payadvicemail', $data, function($message)use($data, $pdf) {
+             $message->to($data["email"], $data["email"])
+                     ->subject($data["title"])
+                     ->attachData($pdf->output(), "payment_advice_".$data['id'].".pdf");
+                    
+    });
+   
+}
+
+
     public function check_email_trigger()
     {
         $today_date = date('Y-m-d');
@@ -1122,8 +1176,8 @@ class TercourierController extends Controller
     {
  
         ini_set('max_execution_time', 0); // 0 = Unlimited
-        $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
-        // $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1492)->get()->toArray();
+        // $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 820)->get()->toArray();
 
 
     //    echo "<pre>";
@@ -1202,9 +1256,19 @@ class TercourierController extends Controller
                             'utr' => $received_data->bank_refrence_no, 'updated_at' => date('Y-m-d H:i:s'),
                             'paid_date' => date('Y-m-d')
                         ]);
+                        if($update_ter_data)
+                        {
+                            // print_r($live_host_name);
+                            // // exit;
+                            if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
+                                {
+                                   
+                                }else{
+                                    self::send_payment_advice($get_data_db[$i]->id);
+                                }
+                            ;
+                        }
                     }
-
-
 
                     if ($update_ter_data) {
                         // echo "<pre>";
@@ -1645,6 +1709,11 @@ class TercourierController extends Controller
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
         $length = sizeof($payable_data);
+        $selected_options=$data['selected_options'];
+        if(!empty($selected_options))
+        {
+            DB::table('tercouriers')->where('id',$id)->update(['deduction_options'=>$selected_options]);
+        }
 
         $check_dates = DB::table('tercouriers')->where('id', $id)->get();
 
@@ -1867,6 +1936,12 @@ class TercourierController extends Controller
         // return $check_ifsc;
         if (strlen($check_ifsc[0]->ifsc) != 11) {
             return "ifsc_error";
+        }
+
+        $selected_options=$data['selected_options'];
+        if(!empty($selected_options))
+        {
+            DB::table('tercouriers')->where('id',$id)->update(['deduction_options'=>$selected_options]);
         }
 
         $response = self::advance_payment_check($data, $total_payable_sum);
@@ -2918,9 +2993,98 @@ class TercourierController extends Controller
             ]);
         }
 
+        $live_host_name = request()->getHttpHost();
+    
+        if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
+        {
+
+        }else{
+            
+
+            if ($tercourier_table) {
+                // $type =     config('services.finfect_key.finfect_url');
+                // if ($type == "https://stagging.finfect.biz/api/non_finvendors_payments") {
+                //     // return "hello";
+                //     $response['success'] = true;
+                //     $response['messages'] = 'Succesfully Submitted';
+                //     // $response['redirect_url'] = URL::to('/tercouriers');
+                //     return 1;
+                // }
+                //    exit;
+               return 1;
+                $getsender = Sender::where('employee_id', $data['emp_id'])->first();
+    
+                $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
+                $peid = "1201159713185947382"; // Get Key from DLT
+                $sender_id = "FAPLHR"; // Approved from DLT
+                $mob = $getsender->telephone_no; // Get Mobile Number from Sender
+                // $mob = '9569096896'; // Get Mobile Number from Sender
+                $name = $getsender->name;
+                // print_r($getsender);
+                // exit;
+                
+    
+                $from_period = Helper::ShowFormat($get_ter_data[0]->terfrom_date);
+                $to_period = Helper::ShowFormat($get_ter_data[0]->terto_date);
+    
+                $UNID = $get_ter_data[0]->id;
+                $umsg = "Dear $name , your TER for Period $from_period to $to_period has been received and is under process. TER UNID is $UNID Thanks! Frontiers";
+    
+                $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey=' . $API . '&senderid=' . $sender_id . '&channel=Trans&DCS=0&flashsms=0&number=' . urlencode($mob) . '&text=' . urlencode($umsg) . '&route=2&peid=' . urlencode($peid) . '';
+    
+              $this->SendTSMS($url);
+
+            
+
+            //   Mail::to($getsender->personal_email_id)->send(new SendUnknownMail($getsender));
+        
+    
+            }
+        }
+        
 
 
-        return $tercourier_table;
+
+        return 1;
+    }
+
+    public function check_pdf()
+    {
+        return 1;
+        $id = '1920';
+        // return $data['emp_id'];
+        $get_ter_data = DB::table('tercouriers')->where('id', $id)->get();
+        $getsender = Sender::where('employee_id', $get_ter_data[0]->employee_id)->first();
+
+        $from_date =Helper::ShowFormatDate($get_ter_data[0]->terfrom_date);
+        $get_month=explode("-",$from_date);
+        $ter_month=$get_month[1];
+       
+        $data["title"] = "Missing Detail in – TER claim for ".$ter_month;
+
+        // $body = "We have received your TER with UNID ".$id.". You have not mentioned your E.Code. ";
+        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        $data["email"] = $getsender->personal_email_id;
+        // $employee_id=$getsender->employee_id;
+        // $employee_name=$getsender->name;
+        $data['id']=$id;
+        $data['employee_name']=$getsender->name;
+        $data['employee_id']=$getsender->employee_id;
+        $data['body'] = "We have received your TER with UNID ".$id.". You have not mentioned your E.Code. ";
+
+        // return  $employee_name;
+
+        // return view('emails.unknownEmployee',['body'=>$body,'employee_id'=>$employee_id,'employee_name'=>$employee_name]);
+
+  
+
+        Mail::send('emails.unknownEmployee', $data, function($message)use($data) {
+          $message->to($data["email"], $data["email"])
+                  ->subject($data["title"]);
+                  
+                
+ });
+
     }
 
     public function get_emp_list(Request $request)

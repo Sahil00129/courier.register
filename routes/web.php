@@ -113,6 +113,8 @@ Route::post('open_hr_verify_ter', [TercourierController::class, 'open_hr_verify_
 Route::post('submit_change_unit', [TercourierController::class, 'submit_change_unit']);
 
 
+Route::get('check_pdf', [TercourierController::class, 'check_pdf']);
+
 
 Route::get('admin_update_ter/{id}', [TercourierController::class, 'admin_update_ter']);
 Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
