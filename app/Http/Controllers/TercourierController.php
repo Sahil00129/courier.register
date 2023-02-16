@@ -1205,7 +1205,7 @@ class TercourierController extends Controller
             // $id="1088";
             $live_host_name = request()->getHttpHost();
     
-            if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
+            if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
             {
             $url = 'https://stagging.finfect.biz/api/get_payment_response/'. $id.'/'.$type;
             }else{
@@ -1258,10 +1258,9 @@ class TercourierController extends Controller
                         ]);
                         if($update_ter_data)
                         {
-                            print_r($live_host_name);
-                            // exit;
+                           $live_host_name="cc";
                           
-                            if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
+                            if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
                                 {
                                    
                                 }else{
@@ -2996,7 +2995,7 @@ class TercourierController extends Controller
 
         $live_host_name = request()->getHttpHost();
     
-        if($live_host_name == 'localhost:8000' || $live_host_name == "https://test-courier.easemyorder.com")
+        if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
         {
 
         }else{
