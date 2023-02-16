@@ -28,9 +28,8 @@
     <table style="width: 100%; margin-bottom: 1.3rem">
         <tr>
             <?php
-            $src_logo = public_path('assets\img\f15.png');
-            print_r($src_logo);
-            exit;
+             $live_host_name = request()->getHttpHost();
+            $src_logo = "https://".$live_host_name."/assets/img/f15.png";
             ?>
             <td valign="middle">
                 <img src="{{$src_logo}}" style="max-height: 50px" />
