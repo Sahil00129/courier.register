@@ -30,6 +30,8 @@
             <?php
              $live_host_name = request()->getHttpHost();
             $src_logo = "https://".$live_host_name."/assets/img/f15.png";
+            print_r($src_logo);
+            exit;
             ?>
             <td valign="middle">
                 <img src="{{$src_logo}}" style="max-height: 50px" />
