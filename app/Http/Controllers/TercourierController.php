@@ -1258,8 +1258,7 @@ class TercourierController extends Controller
                         ]);
                         if($update_ter_data)
                         {
-                            self::send_payment_advice($get_data_db[$i]->id);
-                          
+
                             if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
                                 {
                                    
@@ -1335,6 +1334,8 @@ class TercourierController extends Controller
             }
             }
         }
+        $id=1388;
+        self::send_payment_advice($id);
         return 1;
     }
 
