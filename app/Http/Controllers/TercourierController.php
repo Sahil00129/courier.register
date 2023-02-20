@@ -1177,7 +1177,7 @@ class TercourierController extends Controller
  
         ini_set('max_execution_time', 0); // 0 = Unlimited
         // $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
-        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 820)->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1602)->get()->toArray();
 
 
     //    echo "<pre>";
@@ -1234,7 +1234,7 @@ class TercourierController extends Controller
                 // print_r($received_data);
                 // exit;
                 $status_code = $received_data->status_code;
-
+              
                 //    status needs to be checked before updating the finfect_response for deduction table
                 if ($status_code == 2) {
                     if ($get_data_db[$i]->status == 7) {
@@ -1264,6 +1264,7 @@ class TercourierController extends Controller
                                 {
                                    
                                 }else{
+                                    
                                     self::send_payment_advice($get_data_db[$i]->id);
                                 }
                             ;
@@ -3050,6 +3051,38 @@ class TercourierController extends Controller
 
     public function check_pdf()
     {
+        $id=1602;
+        $terdata=DB::table('tercouriers')->where('id',$id)->get();
+        $sender_details=DB::table('sender_details')->where('employee_id',$terdata[0]->employee_id)->get();
+        if(!empty($terdata[0]->deduction_options))
+        {
+        $dedution_selected = explode(',', $terdata[0]->deduction_options);
+        }else{
+            $dedution_selected="";
+        }
+
+        if(!empty($terdata[0]->advance_used))
+        {
+        $advance_money = $terdata[0]->advance_used;
+        }else{
+            $advance_money="";
+        }
+  
+       $pay_array = json_decode($terdata[0]->payable_amount);
+       $payable_sum=0;
+       for($i=0;$i<sizeof($pay_array);$i++)
+       {
+        $payable_sum=$payable_sum+$pay_array[$i];
+
+       }
+
+    //    return  view('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
+    //    'advance_money'=>$advance_money]);
+    
+        $pdf = PDF::loadView('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
+                                                   'advance_money'=>$advance_money]);
+        return $pdf->download('invoice.pdf');
+
         return 1;
         $id = '1920';
         // return $data['emp_id'];
