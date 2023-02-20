@@ -2984,6 +2984,7 @@ class TercourierController extends Controller
             $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
                 'hr_admin_remark' => $data['remarks'],
                 'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'pfu' => $get_sender_data[0]->pfu,
                 'sender_id' => $sender_id, 'status' => 8, 'txn_type' => 'rejected_ter', 'given_to' => 'TER-Team'
             ]);
         } else {
