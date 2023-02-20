@@ -1021,8 +1021,8 @@ class TercourierController extends Controller
 
         $data["title"] = "Payment Advice for Paid TER UNID ".$id;
         $data["body"] = "We have released TER payment in your account on ".$paid_date." as per details attached. ";
-        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
-        $data["email"] = $sender_details[0]->personal_email_id;
+        $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        // $data["email"] = $sender_details[0]->personal_email_id;
         $data['employee_id']=$terdata[0]->employee_id;
         $data['employee_name']=$terdata[0]->sender_name;
         $data['id']=$id;
@@ -1177,7 +1177,7 @@ class TercourierController extends Controller
  
         ini_set('max_execution_time', 0); // 0 = Unlimited
         // $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
-        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1602)->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1388)->get()->toArray();
 
 
     //    echo "<pre>";
@@ -3051,38 +3051,6 @@ class TercourierController extends Controller
 
     public function check_pdf()
     {
-        $id=1388;
-        $terdata=DB::table('tercouriers')->where('id',$id)->get();
-        $sender_details=DB::table('sender_details')->where('employee_id',$terdata[0]->employee_id)->get();
-        if(!empty($terdata[0]->deduction_options))
-        {
-        $dedution_selected = explode(',', $terdata[0]->deduction_options);
-        }else{
-            $dedution_selected="";
-        }
-
-        if(!empty($terdata[0]->advance_used))
-        {
-        $advance_money = $terdata[0]->advance_used;
-        }else{
-            $advance_money="";
-        }
-  
-       $pay_array = json_decode($terdata[0]->payable_amount);
-       $payable_sum=0;
-       for($i=0;$i<sizeof($pay_array);$i++)
-       {
-        $payable_sum=$payable_sum+$pay_array[$i];
-
-       }
-
-    //    return  view('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
-    //    'advance_money'=>$advance_money]);
-    
-        $pdf = PDF::loadView('pdf.paymentadvice',['terdata'=> $terdata,'payable_sum'=>$payable_sum,'dedution_selected'=>$dedution_selected,'sender_details'=>$sender_details,
-                                                   'advance_money'=>$advance_money]);
-        return $pdf->download('invoice.pdf');
-
         return 1;
         $id = '1920';
         // return $data['emp_id'];
