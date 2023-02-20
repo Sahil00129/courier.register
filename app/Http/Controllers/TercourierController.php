@@ -399,7 +399,7 @@ class TercourierController extends Controller
         $ter_data = DB::table('tercouriers')->where('id', $id)->get();
         if($ter_data[0]->status == '7')
         {
-            $get_file_name = DB::table('ter_deduction_settlements')->select('file_name')->where('id', $id)->get();
+            $get_file_name = DB::table('ter_deduction_settlements')->select('file_name')->where('parent_ter_id', $id)->get();
             $name = $get_file_name[0]->file_name;
         }
         else{

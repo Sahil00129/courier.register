@@ -631,7 +631,7 @@
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
                                         @if($tercourier->file_name != "")
-                                        <a href="" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal({{$tercourier->id }})">
+                                        <a href="" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal({{$tercourier->parent_ter_id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
                                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                                 <circle cx="12" cy="12" r="3"></circle>
@@ -949,6 +949,7 @@
                 // file=document.getElementById('table_file_name').value;
                 this.id = ter_id;
                 this.file_view_modal = true;
+            
                 axios.post('/get_file_name', {
                         'id': this.id,
                     })
