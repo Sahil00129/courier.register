@@ -104,7 +104,7 @@
         <tr>
             <td style="text-align: center" valign="middle">1</td>
             <td style="text-align: left" valign="middle">{{$terdata[0]->id}}</td>
-            <td style="text-align: left" valign="middle">{{$terdata[0]->terfrom_date}} to {{$terdata[0]->terto_date}}</td>
+            <td style="text-align: left" valign="middle">{{ Helper::ShowFormatDate($terdata[0]->terfrom_date) }} - {{ Helper::ShowFormatDate($terdata[0]->terto_date) }}</td>
             <td style="text-align: left" valign="middle">{{$terdata[0]->amount}}</td>
             <td style="text-align: left" valign="middle">{{$payable_sum}}</td>
             <td style="text-align: left" valign="middle">{{(int)$terdata[0]->amount - (int)$payable_sum}}</td>
