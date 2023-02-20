@@ -1176,8 +1176,8 @@ class TercourierController extends Controller
     {
  
         ini_set('max_execution_time', 0); // 0 = Unlimited
-        // $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
-        $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1690)->get()->toArray();
+        $get_data_db = DB::table('tercouriers')->select('*')->whereIn('status', [3, 7])->get()->toArray();
+        // $get_data_db = DB::table('tercouriers')->select('*')->where('id', 1690)->get()->toArray();
 
 
     //    echo "<pre>";
@@ -1261,7 +1261,7 @@ class TercourierController extends Controller
 
                             if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
                                 {
-                                    self::send_payment_advice($get_data_db[$i]->id);
+
                                 }else{
                                     
                                     self::send_payment_advice($get_data_db[$i]->id);
