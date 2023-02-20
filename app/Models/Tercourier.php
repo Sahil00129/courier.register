@@ -50,10 +50,12 @@ class Tercourier extends Model
 
         $ter_team_ids = array();
         $hr_admin_ids = array();
+        $date="";
+        $change['is_rejected']=0;
 
         for ($i = 0; $i < sizeof($res); $i++) {
 
-            $date="";
+          
             $date = date_create($res[$i]->terto_date);
             date_add($date, date_interval_create_from_date_string("50 days"));
             $date_check = date_format($date, "Y-m-d");
@@ -103,6 +105,8 @@ class Tercourier extends Model
             // print_r($change);
             // exit;
             $data =  DB::table('tercouriers')->where('id', $res[$i]->id)->update($change);
+            $date="";
+            $change['is_rejected']=0;
         }
        
         $hr = implode(',', $hr_admin_ids);
