@@ -3051,7 +3051,7 @@ class TercourierController extends Controller
 
     public function check_pdf()
     {
-        $id=1602;
+        $id=1388;
         $terdata=DB::table('tercouriers')->where('id',$id)->get();
         $sender_details=DB::table('sender_details')->where('employee_id',$terdata[0]->employee_id)->get();
         if(!empty($terdata[0]->deduction_options))
