@@ -1023,7 +1023,7 @@ class TercourierController extends Controller
         $data["title"] = "Payment Advice for Paid TER UNID ".$id;
         $data["body"] = "We have released TER payment in your account on ".$paid_date." as per details attached. ";
         // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
-        $data["email"] = $sender_details[0]->personal_email_id;
+        $data["email"] = $sender_details[0]->official_email_id;
         $data['employee_id']=$terdata[0]->employee_id;
         $data['employee_name']=$terdata[0]->sender_name;
         $data['id']=$id;
