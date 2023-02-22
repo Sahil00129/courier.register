@@ -1039,6 +1039,13 @@ class TercourierController extends Controller
 
     public function check_email_trigger()
     {
+
+        $live_host_name = request()->getHttpHost();
+    
+        if($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com")
+        {
+        return "not possible";
+        }else{
         $today_date = date('Y-m-d');
         $received_ids_arr = array();
         $handover_ids_arr = array();
@@ -1167,6 +1174,7 @@ class TercourierController extends Controller
 
 
         // dd('Success! Email has been sent successfully.');
+    }
 
     }
 
