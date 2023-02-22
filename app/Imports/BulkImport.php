@@ -334,6 +334,12 @@ class BulkImport implements ToModel, WithHeadingRow
 
             }
 
+            if ($sender_table->official_email_id != $row['official_email_id']) {
+                // print_r($sender_table->last_working_date);
+                $mobile_no_update = Sender::where('id', $sender_table->id)->update(['official_email_id' => $row['official_email_id']]);
+
+            }
+
             
 
 
