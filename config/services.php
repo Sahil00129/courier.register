@@ -32,6 +32,9 @@ return [
     'finfect_key' => [
         'finfect_url' => env('FINFECT_API_URL'),
     ],
+    'cc_email' => [
+        'email_id' => 'ter@frontierag.com',
+    ],
 
 
 

@@ -296,8 +296,8 @@ class TercourierController extends Controller
         $data['date_diff'] = abs(round($diff / 86400));
 
         // $body = "We have received your TER with UNID ".$id.". You have not mentioned your E.Code. ";
-        // $data["email"] = "itsupport@frontierag.com";
-        $data["email"] = $getsender->official_email_id;
+        $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        // $data["email"] = $getsender->official_email_id;
 
         $data['id'] = $id;
         $data['employee_name'] = $getsender->name;
@@ -310,11 +310,10 @@ class TercourierController extends Controller
         // return view('emails.rejectedTER',['date_diff' => $data['date_diff'],'last_ter_date'=> $data['last_ter_date'],'terdata'=> $data['terdata'],'body'=>$data['body'],'body_two'=> $data['body_two'] ,'title'=>$data['title'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
 
 
-        Mail::mailer('smtp2')->send('emails.rejectedTER', $data, function ($message) use ($data) {
+
+        Mail::send('emails.rejectedTER', $data, function ($message) use ($data) {
             $message->to($data["email"], $data["email"])
-                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                ->subject($data["title"])
-                ->cc(config('services.cc_email.email_id'));
+                ->subject($data["title"]);
         });
     }
     public function reject_handover(Request $request)
@@ -1074,11 +1073,8 @@ class TercourierController extends Controller
         $data['employee_name'] = $terdata[0]->sender_name;
         $data['id'] = $id;
 
-
-
-        Mail::mailer('smtp2')->send('emails.payadvicemail', $data, function ($message) use ($data, $pdf) {
+        Mail::send('emails.payadvicemail', $data, function ($message) use ($data, $pdf) {
             $message->to($data["email"], $data["email"])
-                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                 ->subject($data["title"])
                 ->attachData($pdf->output(), "payment_advice_" . $data['id'] . ".pdf");
         });
@@ -3077,7 +3073,9 @@ class TercourierController extends Controller
 
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
+
+
 
 
         // echo "<pre>";
@@ -3119,7 +3117,7 @@ class TercourierController extends Controller
         // exit;
 
 
-        $data["title"] = "Reminder to submit TER CLAIM for " . $Month_name . "-" . $get_month[2];
+        $data["title"] = "Reminder to submit TER for " . $Month_name . "-" . $get_month[2];
         // return $data['title'];
 
         // $data["email"] = "itsupport@frontierag.com";
@@ -3149,12 +3147,10 @@ class TercourierController extends Controller
 
         if (empty($check_mail_tracker)) {
 
-            if (true) {
-                Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
+            if (false) {
+                Mail::send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                     $message->to($data["email"], $data["email"])
-                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                        ->subject($data["title"])
-                        ->cc(config('services.cc_email.email_id'));
+                        ->subject($data["title"]);
                 });
             }
 
@@ -3162,11 +3158,9 @@ class TercourierController extends Controller
         } else {
             if ($check_mail_tracker->ter_month != $ter_month) {
 
-                Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
+                Mail::send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                     $message->to($data["email"], $data["email"])
-                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                        ->subject($data["title"])
-                        ->cc(config('services.cc_email.email_id'));
+                        ->subject($data["title"]);
                 });
 
                 $res = EmployeeMailTracker::create($emp_data);
@@ -3184,163 +3178,149 @@ class TercourierController extends Controller
 
     public function check_pdf()
     {
-        $live_host_name = request()->getHttpHost();
+        // $live_host_name = request()->getHttpHost();
 
-        if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
-            return "not possible";
-        }
+        // if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+        //     return "not possible";
+        // }
 
-        //   return   self::send_reject_mail(2314);
-        //         self::send_unknown_mail('2308');
-        //  return 33;
+        //   return   self::send_reject_mail(2172);
+
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-19');
+        $today_date = date('2023-03-19');
         $final_date = "";
 
 
         $date_number = explode("-", $today_date);
 
-
         // start of final mail
-        $check_date = date_create($today_date);
-        $check_date_result = date_format($check_date, "d-F-Y");
 
-        $check_details = EmployeeMailTracker::where('ter_received', '0')->where('last_mail_date', $check_date_result)->where('mail_number', '4')->get();
-
-
-        if (!empty($check_details)) {
+        if ($date_number[2] == "18") {
 
             // ter_reject
 
             $final_date = date_create($today_date);
-            date_add($final_date, date_interval_create_from_date_string("-47 days"));
+            date_add($final_date, date_interval_create_from_date_string("-60 days"));
             $date_form = date_format($final_date, "d-m-Y");
             $last_date = Helper::ShowFormatDate($date_form);
 
 
-            $check_date_month = date_format($final_date, "d-F-Y");
-            $get_date_month_full = explode("-", $check_date_month);
-            $get_ter_month = $get_date_month_full[1];
 
             $get_month = explode("-", $last_date);
             $ter_month = $get_month[1];
-            // return $ter_month;
 
-            // $mail_num = 4;
+            $mail_num = 4;
 
-            // $get_details = EmployeeMailTracker::where('ter_received', '0')->where('ter_month', $ter_month)->where('mail_number', $mail_num)->get();
-            $size = sizeof($check_details);
+            $get_details = EmployeeMailTracker::where('ter_received', '0')->where('ter_month', $ter_month)->where('mail_number', $mail_num)->get();
+            $size = sizeof($get_details);
 
 
             for ($i = 0; $i < $size; $i++) {
 
-                $check_ter_table = Tercourier::where('employee_id', $check_details[$i]->employee_id)->orderby('id', 'desc')->first();
+                $check_ter_table = Tercourier::where('employee_id', $get_details[$i]->employee_id)->orderby('id', 'desc')->first();
                 if (!empty($check_ter_table)) {
                     $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
                     $month = explode("-", $check_ter_month);
                     if ($month[1] == $ter_month) {
-                        $id = $check_details[$i]->id;
+                        $id = $get_details[$i]->id;
                         $res = EmployeeMailTracker::where('id', $id)->update(['ter_received' => '1']);
                     } else {
                         // return "FD";
                         // print_r($month[1]);
 
-                        $getsender = Sender::where('employee_id', $check_details[$i]->employee_id)->get();
+                        $getsender = Sender::where('employee_id', $get_details[$i]->employee_id)->get();
 
 
-                        $data["title"] = "Rejection of TER for " . $get_ter_month . "-" . $get_month[2];
+                        $data["title"] = "Rejection of TER for " . $ter_month . " month.";
 
                         // $data["email"] = "itsupport@frontierag.com";
                         $data["email"] = $getsender[0]->official_email_id;
                         $data['employee_name'] = $getsender[0]->name;
                         $data['employee_id'] = $getsender[0]->employee_id;
-                        // $data['body'] = "This is to inform you that you have failed to submit your TER for " . $ter_month . " till " . $check_details[$i]->saved_last_date . ". We presume you do not have any travel expense to claim for the month of " . $ter_month . ". The time period of 45 days for submission has been expired. TER claim received for " . $ter_month . " will not be paid.";
-                        $data['body'] = "This is to inform you that you have failed to submit your Travel Expense Reimbursement (TER) to HO " . $get_ter_month . "-" . $get_month[2] . " till " . $check_details[$i]->saved_last_date . " . We presume you do not have any travel expense to claim for the month of " . $get_ter_month . "-" . $get_month[2] . " . The time of 45 days for submission has expired. TER Claim received for " . $get_ter_month . "-" . $get_month[2] . " will not be paid. ";
+                        $data['body'] = "This is to inform you that you have failed to submit your TER for " . $ter_month . " till " . $get_details[$i]->saved_last_date . ". We presume you do not have any travel expense to claim for the month of " . $ter_month . ". The time period of 45 days for submission has been expired. TER claim received for " . $ter_month . " will not be paid.";
+
                         $data['body_2'] = "In future, please ensure to timely submit your claims to avoid any fine /rejection of your TER claim.";
-                        // return   $data["title"];
+                        // return  $employee_name;
 
-                        // return view('emails.CancelTerSubmissionMail', ['body' => $data['body'], 'title' => $data['title'], 'employee_id' => $data['employee_id'], 'employee_name' => $data['employee_name'], 'body_2' => $data['body_2']]);
-                        $check_mail_tracker = EmployeeMailTracker::where('employee_id', $check_details[$i]->employee_id)->where('ter_received', '0')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
+                        return view('emails.CancelTerSubmissionMail', ['body' => $data['body'], 'title' => $data['title'], 'employee_id' => $data['employee_id'], 'employee_name' => $data['employee_name'], 'body_2' => $data['body_2']]);
+                        $check_mail_tracker = EmployeeMailTracker::where('employee_id', $get_details[$i]->employee_id)->where('ter_received', '0')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
 
-                        $check_mail_sent = EmployeeMailTracker::where('employee_id', $check_details[$i]->employee_id)->where('ter_received', '1')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
+                        $check_mail_sent = EmployeeMailTracker::where('employee_id', $get_details[$i]->employee_id)->where('ter_received', '1')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
                         if (!empty($check_mail_sent)) {
-                        } else {
-
-                            $emp_data['last_mail_date'] = $check_details[$i]->last_mail_date;
-                            $emp_data['employee_id'] = $getsender[0]->employee_id;
-                            $emp_data['ter_month'] = $ter_month;
-                            $emp_data['mail_date'] = $today_date;
-                            $emp_data['mail_sent'] = '1';
-                            $emp_data['saved_last_date'] = $check_details[$i]->saved_last_date;
-                            $emp_data['mail_number'] = '5';
-                            $emp_data['ter_received'] = '1';
-                            $emp_data['ter_reject'] = '1';
-
-
-
-                            if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
-                                        $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
-                                    });
-                                }
-
-                                $res =  EmployeeMailTracker::create($emp_data);
-                            }
+                            return 1;
                         }
-                    }
-                } else {
-                    // return "FD";
-                    // print_r($month[1]);
 
-                    $getsender = Sender::where('employee_id', $check_details[$i]->employee_id)->get();
-
-
-                    $data["title"] = "Rejection of TER for " . $get_ter_month . "-" . $get_month[2];
-
-                    // $data["email"] = "itsupport@frontierag.com";
-                    $data["email"] = $getsender[0]->official_email_id;
-                    $data['employee_name'] = $getsender[0]->name;
-                    $data['employee_id'] = $getsender[0]->employee_id;
-                    // $data['body'] = "This is to inform you that you have failed to submit your TER for " . $ter_month . " till " . $check_details[$i]->saved_last_date . ". We presume you do not have any travel expense to claim for the month of " . $ter_month . ". The time period of 45 days for submission has been expired. TER claim received for " . $ter_month . " will not be paid.";
-                    $data['body'] = "This is to inform you that you have failed to submit your Travel Expense Reimbursement (TER) to HO " . $get_ter_month . "-" . $get_month[2] . " till " . $check_details[$i]->saved_last_date . " . We presume you do not have any travel expense to claim for the month of " . $get_ter_month . "-" . $get_month[2] . " . The time of 45 days for submission has expired. TER Claim received for " . $get_ter_month . "-" . $get_month[2] . " will not be paid. ";
-                    $data['body_2'] = "In future, please ensure to timely submit your claims to avoid any fine /rejection of your TER claim.";
-                    // return   $data["title"];
-
-                    // return view('emails.CancelTerSubmissionMail', ['body' => $data['body'], 'title' => $data['title'], 'employee_id' => $data['employee_id'], 'employee_name' => $data['employee_name'], 'body_2' => $data['body_2']]);
-                    $check_mail_tracker = EmployeeMailTracker::where('employee_id', $check_details[$i]->employee_id)->where('ter_received', '0')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
-
-                    $check_mail_sent = EmployeeMailTracker::where('employee_id', $check_details[$i]->employee_id)->where('ter_received', '1')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
-                    if (!empty($check_mail_sent)) {
-                    } else {
-
-                        $emp_data['last_mail_date'] = $check_details[$i]->last_mail_date;
                         $emp_data['employee_id'] = $getsender[0]->employee_id;
                         $emp_data['ter_month'] = $ter_month;
                         $emp_data['mail_date'] = $today_date;
                         $emp_data['mail_sent'] = '1';
-                        $emp_data['saved_last_date'] = $check_details[$i]->saved_last_date;
+                        $emp_data['saved_last_date'] = $get_details[$i]->saved_last_date;
                         $emp_data['mail_number'] = '5';
                         $emp_data['ter_received'] = '1';
                         $emp_data['ter_reject'] = '1';
 
 
 
+
                         if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
+                            if (false) {
+                                Mail::send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
                                     $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
+                                        ->subject($data["title"]);
                                 });
                             }
 
                             $res =  EmployeeMailTracker::create($emp_data);
                         }
+                    }
+                } else {
+
+                    // return "FD";
+                    // print_r($month[1]);
+
+                    $getsender = Sender::where('employee_id', $get_details[$i]->employee_id)->get();
+
+
+                    $data["title"] = "Rejection of TER for " . $ter_month . " month.";
+
+                    // $data["email"] = "itsupport@frontierag.com";
+                    $data["email"] = $getsender[0]->official_email_id;
+                    $data['employee_name'] = $getsender[0]->name;
+                    $data['employee_id'] = $getsender[0]->employee_id;
+                    $data['body'] = "This is to inform you that you have failed to submit your TER for " . $ter_month . " till " . $get_details[$i]->saved_last_date . ". We presume you do not have any travel expense to claim for the month of " . $ter_month . ". The time period of 45 days for submission has been expired. TER claim received for " . $ter_month . " will not be paid.";
+
+                    $data['body_2'] = "In future, please ensure to timely submit your claims to avoid any fine /rejection of your TER claim.";
+                    // return  $employee_name;
+
+                    // return view('emails.CancelTerSubmissionMail', ['body' => $data['body'], 'title' => $data['title'], 'employee_id' => $data['employee_id'], 'employee_name' => $data['employee_name'], 'body_2' => $data['body_2']]);
+                    $check_mail_tracker = EmployeeMailTracker::where('employee_id', $get_details[$i]->employee_id)->where('ter_received', '0')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
+
+                    $check_mail_sent = EmployeeMailTracker::where('employee_id', $get_details[$i]->employee_id)->where('ter_received', '1')->where('ter_month', $ter_month)->orderby('id', 'desc')->first();
+                    if (!empty($check_mail_sent)) {
+                        return 1;
+                    }
+
+                    $emp_data['employee_id'] = $getsender[0]->employee_id;
+                    $emp_data['ter_month'] = $ter_month;
+                    $emp_data['mail_date'] = $today_date;
+                    $emp_data['mail_sent'] = '1';
+                    $emp_data['saved_last_date'] = $get_details[$i]->saved_last_date;
+                    $emp_data['mail_number'] = '5';
+                    $emp_data['ter_received'] = '1';
+                    $emp_data['ter_reject'] = '1';
+
+
+
+
+                    if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
+                        if (false) {
+                            Mail::send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
+                                $message->to($data["email"], $data["email"])
+                                    ->subject($data["title"]);
+                            });
+                        }
+
+                        $res =  EmployeeMailTracker::create($emp_data);
                     }
                 }
             }
@@ -3350,83 +3330,69 @@ class TercourierController extends Controller
 
         if ($date_number[2] == "01") {
 
-            $getsender = Sender::where('status', 'Active')->get();
-            // $getsender = Sender::whereIN('id', ['1946','3'])->get();
-            // $getsender = Sender::whereIN('id', ['1946'])->get();
+            // $getsender = Sender::where('status', 'Active')->get();
+            $getsender = Sender::whereIN('id', ['1946'])->get();
 
-            // echo "<pre>";
-            // print_r($getsender);
-            // exit;
-            // MARKET DEVELOPMENT REPRESENTATIVE
             for ($i = 0; $i < sizeof($getsender); $i++) {
 
                 // echo"<pre>";
-                // print_r(strtolower($getsender[$i]->designation));
+                // print_r();
                 // exit;
-                $degignation_check = "";
-                $degignation_check = strtolower($getsender[$i]->designation);
-                if (
-                    $degignation_check == 'market development representative' ||
-                    $degignation_check == 'field executive'
-                    || $degignation_check == 'project officer'
-                ) {
+                if (empty($last_working_date)) {
+
+                    $res =   self::active_employees($getsender[$i]);
+                    return $res;
                 } else {
-                    if (empty($last_working_date)) {
+                    $last_working_date = $getsender[0]->last_working_date;
+                    $month_number = explode("-", $last_working_date);
+                    $final_exit_date = $month_number[2] . '-' . $month_number[1] . '-' . $month_number[0];
 
-                        $res =   self::active_employees($getsender[$i]);
-                        // return $res;
+                    if (ctype_alpha($month_number[1])) {
+                        switch ($month_number[1]) {
+                            case "Jan":
+                                $month_number[1] = '01';
+                                break;
+                            case "Feb":
+                                $month_number[1] = '02';
+                                break;
+                            case "Mar":
+                                $month_number[1] = '03';
+                                break;
+                            case "Apr":
+                                $month_number[1] = '04';
+                                break;
+                            case "May":
+                                $month_number[1] = '05';
+                                break;
+                            case "Jun":
+                                $month_number[1] = '06';
+                            case "Jul":
+                                $month_number[1] = '07';
+                                break;
+                            case "Aug":
+                                $month_number[1] = '08';
+                                break;
+                            case "Sep":
+                                $month_number[1] = '09';
+                                break;
+                            case "Oct":
+                                $month_number[1] = '10';
+                                break;
+                            case "Nov":
+                                $month_number[1] = '11';
+                                break;
+                            case "Dec":
+                                $month_number[1] = '12';
+                                break;
+                        }
+
+
+                        if ($final_exit_date >= $today_date) {
+                            $res =  self::active_employees($getsender[$i]);
+                        }
                     } else {
-                        $last_working_date = $getsender[0]->last_working_date;
-                        $month_number = explode("-", $last_working_date);
-                        $final_exit_date = $month_number[2] . '-' . $month_number[1] . '-' . $month_number[0];
-
-                        if (ctype_alpha($month_number[1])) {
-                            switch ($month_number[1]) {
-                                case "Jan":
-                                    $month_number[1] = '01';
-                                    break;
-                                case "Feb":
-                                    $month_number[1] = '02';
-                                    break;
-                                case "Mar":
-                                    $month_number[1] = '03';
-                                    break;
-                                case "Apr":
-                                    $month_number[1] = '04';
-                                    break;
-                                case "May":
-                                    $month_number[1] = '05';
-                                    break;
-                                case "Jun":
-                                    $month_number[1] = '06';
-                                case "Jul":
-                                    $month_number[1] = '07';
-                                    break;
-                                case "Aug":
-                                    $month_number[1] = '08';
-                                    break;
-                                case "Sep":
-                                    $month_number[1] = '09';
-                                    break;
-                                case "Oct":
-                                    $month_number[1] = '10';
-                                    break;
-                                case "Nov":
-                                    $month_number[1] = '11';
-                                    break;
-                                case "Dec":
-                                    $month_number[1] = '12';
-                                    break;
-                            }
-
-
-                            if ($final_exit_date >= $today_date) {
-                                $res =  self::active_employees($getsender[$i]);
-                            }
-                        } else {
-                            if ($final_exit_date >= $today_date) {
-                                $res =  self::active_employees($getsender[$i]);
-                            }
+                        if ($final_exit_date >= $today_date) {
+                            $res =  self::active_employees($getsender[$i]);
                         }
                     }
                 }
@@ -3490,15 +3456,15 @@ class TercourierController extends Controller
                         $getsender = Sender::where('employee_id', $get_details[$i]->employee_id)->get();
 
 
-                        $data["title"] = "Alert: Reminder " . $reminder . ", TER Claim not submitted for  " . $Month_name . "-" . $get_month[2];
+                        $data["title"] = "Alert: Reminder " . $reminder . ", Ter Claim not submitted for  " . $Month_name . "-" . $get_month[2];
 
                         // $data["email"] = "itsupport@frontierag.com";
                         $data["email"] = $getsender[0]->official_email_id;
                         $data['employee_name'] = $getsender[0]->name;
                         $data['employee_id'] = $getsender[0]->employee_id;
-                        $data['body'] = "This is to remind you that we have not received your TER Claim for " . $Month_name . "-" . $get_month[2] . ". Please ensure the TER Claim is submitted by " . $get_details[$i]->saved_last_date . " to HO. ";
+                        $data['body'] = "This is to remind you that we have not received your TER Claim for " . $Month_name . "-" . $get_month[2] . ". Please ensure the TER claim is submitted by " . $get_details[$i]->saved_last_date . " to HO. ";
 
-                        $data['body_2'] = "In case TER claim for " . $Month_name . "-" . $get_month[2] . " is not submitted at HO by " . $get_details[$i]->saved_last_date . " then no TER Claim for " . $Month_name . "-" . $get_month[2] . " will be payable.";
+                        $data['body_2'] = "In case TER claim for " . $Month_name . "-" . $get_month[2] . " is not submitted at HO by " . $get_details[$i]->saved_last_date . " then no TER claim for January month will be payable.";
                         // return   $data["title"] ;
 
                         // return view('emails.CommonTerSubmissionMail',['body'=>$data['body'],'title'=>$data['title'],'employee_id'=> $data['employee_id'],'employee_name'=> $data['employee_name'],'body_2'=>$data['body_2']]);
@@ -3511,19 +3477,14 @@ class TercourierController extends Controller
                         $emp_data['last_mail_date'] = $get_details[$i]->last_mail_date;
                         // return   $data["title"] ;
 
-
-
-
                         if ($date_number[2] == "17") {
                             $emp_data['mail_number'] = '2';
 
                             if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                if (false) {
+                                    Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
+                                            ->subject($data["title"]);
                                     });
                                 }
 
@@ -3537,12 +3498,10 @@ class TercourierController extends Controller
                         if ($date_number[2] == "27") {
                             $emp_data['mail_number'] = '3';
                             if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                if (false) {
+                                    Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
+                                            ->subject($data["title"]);
                                     });
                                 }
                                 $res =  EmployeeMailTracker::create($emp_data);
@@ -3552,12 +3511,10 @@ class TercourierController extends Controller
                         if ($date_number[2] == "08") {
                             $emp_data['mail_number'] = '4';
                             if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                if (false) {
+                                    Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
+                                            ->subject($data["title"]);
                                     });
                                 }
                                 $res =  EmployeeMailTracker::create($emp_data);
@@ -3566,21 +3523,21 @@ class TercourierController extends Controller
                     }
                 } else {
 
-                    // return "FD2";
+                    //   return "FD";
                     // print_r($month[1]);
 
                     $getsender = Sender::where('employee_id', $get_details[$i]->employee_id)->get();
 
 
-                    $data["title"] = "Alert: Reminder " . $reminder . ", TER Claim not submitted for  " . $Month_name . "-" . $get_month[2];
+                    $data["title"] = "Alert: Reminder " . $reminder . ", Ter Claim not submitted for  " . $Month_name . "-" . $get_month[2];
 
                     // $data["email"] = "itsupport@frontierag.com";
                     $data["email"] = $getsender[0]->official_email_id;
                     $data['employee_name'] = $getsender[0]->name;
                     $data['employee_id'] = $getsender[0]->employee_id;
-                    $data['body'] = "This is to remind you that we have not received your TER Claim for " . $Month_name . "-" . $get_month[2] . ". Please ensure the TER Claim is submitted by " . $get_details[$i]->saved_last_date . " to HO. ";
+                    $data['body'] = "This is to remind you that we have not received your TER Claim for " . $Month_name . "-" . $get_month[2] . ". Please ensure the TER claim is submitted by " . $get_details[$i]->saved_last_date . " to HO. ";
 
-                    $data['body_2'] = "In case TER claim for " . $Month_name . "-" . $get_month[2] . " is not submitted at HO by " . $get_details[$i]->saved_last_date . " then no TER Claim for " . $Month_name . "-" . $get_month[2] . " will be payable.";
+                    $data['body_2'] = "In case TER claim for " . $Month_name . "-" . $get_month[2] . " is not submitted at HO by " . $get_details[$i]->saved_last_date . " then no TER claim for January month will be payable.";
                     // return   $data["title"] ;
 
                     // return view('emails.CommonTerSubmissionMail',['body'=>$data['body'],'title'=>$data['title'],'employee_id'=> $data['employee_id'],'employee_name'=> $data['employee_name'],'body_2'=>$data['body_2']]);
@@ -3590,22 +3547,15 @@ class TercourierController extends Controller
                     $emp_data['mail_date'] = $today_date;
                     $emp_data['mail_sent'] = '1';
                     $emp_data['saved_last_date'] = $get_details[$i]->saved_last_date;
-                    $emp_data['last_mail_date'] = $get_details[$i]->last_mail_date;
-                    // return   $data["title"] ;
-
-
-
 
                     if ($date_number[2] == "17") {
                         $emp_data['mail_number'] = '2';
 
                         if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                            if (false) {
+                                Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                     $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
+                                        ->subject($data["title"]);
                                 });
                             }
 
@@ -3613,18 +3563,15 @@ class TercourierController extends Controller
                         }
                     }
 
-                    // return view('emails.CommonTerSubmissionMail',['body'=>$data['body'],'title'=>$data['title'],'employee_id'=> $data['employee_id'],'employee_name'=> $data['employee_name'],'body_2'=>$data['body_2']]);
 
 
                     if ($date_number[2] == "27") {
                         $emp_data['mail_number'] = '3';
                         if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                            if (false) {
+                                Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                     $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
+                                        ->subject($data["title"]);
                                 });
                             }
                             $res =  EmployeeMailTracker::create($emp_data);
@@ -3634,12 +3581,10 @@ class TercourierController extends Controller
                     if ($date_number[2] == "08") {
                         $emp_data['mail_number'] = '4';
                         if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                            if (false) {
+                                Mail::send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                     $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
+                                        ->subject($data["title"]);
                                 });
                             }
                             $res =  EmployeeMailTracker::create($emp_data);
@@ -3650,7 +3595,7 @@ class TercourierController extends Controller
 
             return 1;
         }
-
+        
 
 
         return 1;
@@ -3664,36 +3609,29 @@ class TercourierController extends Controller
         $get_ter_data = DB::table('tercouriers')->where('id', $id)->get();
         $getsender = Sender::where('employee_id', $get_ter_data[0]->employee_id)->first();
 
-        // $from_date = Helper::ShowFormatDate($get_ter_data[0]->terfrom_date);
-        // $get_month = explode("-", $from_date);
-        // $ter_month = $get_month[1];
-
-        $from_date = date_create($get_ter_data[0]->terfrom_date);
-        $received_date = date_format($from_date, "d-F-Y");
-        $get_month =  explode("-", $received_date);
+        $from_date = Helper::ShowFormatDate($get_ter_data[0]->terfrom_date);
+        $get_month = explode("-", $from_date);
         $ter_month = $get_month[1];
 
-        $data["title"] = "Missing Detail in – TER CLAIM for " . $ter_month;
+        $data["title"] = "Missing Detail in – TER claim for " . $ter_month;
 
         // $body = "We have received your TER with UNID ".$id.". You have not mentioned your E.Code. ";
-        // $data["email"] = "itsupport@frontierag.com";
+        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
         $data["email"] = $getsender->official_email_id;
         // $employee_id=$getsender->employee_id;
         // $employee_name=$getsender->name;
         $data['id'] = $id;
         $data['employee_name'] = $getsender->name;
         $data['employee_id'] = $getsender->employee_id;
-        $data['body'] = "We have received your TER with UNID " . $id . ". You have not mentioned your Employee Code (E.Code.) ";
+        $data['body'] = "We have received your TER with UNID " . $id . ". You have not mentioned your E.Code. ";
 
         // return  $employee_name;
 
         // return view('emails.unknownEmployee',['body'=>$data['body'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
 
-        Mail::mailer('smtp2')->send('emails.unknownEmployee', $data, function ($message) use ($data) {
+        Mail::send('emails.unknownEmployee', $data, function ($message) use ($data) {
             $message->to($data["email"], $data["email"])
-                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                ->subject($data["title"])
-                ->cc(config('services.cc_email.email_id'));
+                ->subject($data["title"]);
         });
     }
 
