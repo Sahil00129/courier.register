@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -12,10 +13,12 @@
         Dear <?php echo $employee_name ?>,<br />
         Employee Code: <?php echo  $employee_id ?><br />
         <br />
-        <?php echo  $body ?>
-    </p>
-    <p>Please ensure to mention your Employee Code (E.Code) for all future claims and correspondence. </p>
-    <br />
+        <?php echo  $body ?><br />
+        <br/>
+        <strong> <?php echo  $body_2 ?></strong><br/><br/>
+        Please ensure to submit your claim to avoid rejection of your TER claim.
+    </p><br />
+   <br />
 
     <p>
         Thanks & Regards <br />

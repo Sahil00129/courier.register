@@ -640,14 +640,15 @@ class BulkImport implements ToModel, WithHeadingRow
         }
         if ($_POST['import_type'] == 12) {
             // echo "<pre>"; print_r($row['employee_code']);exit;
-            $get_employee_data=DB::table('sender_details')->where('employee_id',$row['employee_code'])->get()->toArray();
+            $get_employee_data=DB::table('sender_details')->where('employee_id',$row['emp_id'])->get()->toArray();
             if(!empty($get_employee_data)){
-            if($row['employee_code'] == $get_employee_data[0]->employee_id)
+            if($row['emp_id'] == $get_employee_data[0]->employee_id)
             {
-                $updated_data=DB::table('sender_details')->where('employee_id',$row['employee_code'])->update(['iag_code'=>$row['iag_code'],
-                'pfu'=>$row['pfu'],'updated_at' => date('Y-m-d H:i:s')]);
+                // $updated_data=DB::table('sender_details')->where('employee_id',$row['emp_id'])->update(['iag_code'=>$row['iag_code'],
+                // 'pfu'=>$row['pfu'],'updated_at' => date('Y-m-d H:i:s')]);
                 // return $updated_data;
                
+                $updated_data=DB::table('sender_details')->where('employee_id',$row['emp_id'])->delete();
                 // print_r($get_employee_data[0]->employee_id);
                 // print_r($row['employee_id']);
                 // exit;
