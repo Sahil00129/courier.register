@@ -3185,7 +3185,7 @@ class TercourierController extends Controller
 
     public function send_employee_mails()
     {
-        ini_set('max_execution_time', -1);
+        ini_set('max_execution_time', 0);
 
         $live_host_name = request()->getHttpHost();
 
