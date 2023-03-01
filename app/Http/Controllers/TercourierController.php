@@ -3182,7 +3182,7 @@ class TercourierController extends Controller
 
 
 
-    public function check_pdf()
+    public function send_employee_mails()
     {
         $live_host_name = request()->getHttpHost();
 
