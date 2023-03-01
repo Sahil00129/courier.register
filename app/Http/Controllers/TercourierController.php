@@ -3184,6 +3184,7 @@ class TercourierController extends Controller
 
     public function send_employee_mails()
     {
+        ini_set('max_execution_time', 0);
         $live_host_name = request()->getHttpHost();
 
         if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
