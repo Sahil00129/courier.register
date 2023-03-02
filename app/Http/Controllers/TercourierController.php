@@ -29,9 +29,11 @@ use App\Exports\ExportTerStatusList;
 use App\Models\HandoverDetail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\MailnotSent;
 use PDF;
 
 date_default_timezone_set('Asia/Kolkata');
+ini_set('max_execution_time', -1);
 
 
 class TercourierController extends Controller
@@ -296,7 +298,7 @@ class TercourierController extends Controller
         $data['date_diff'] = abs(round($diff / 86400));
 
         // $body = "We have received your TER with UNID ".$id.". You have not mentioned your E.Code. ";
-        // $data["email"] = "itsupport@frontierag.com";
+        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
         $data["email"] = $getsender->official_email_id;
 
         $data['id'] = $id;
@@ -309,13 +311,19 @@ class TercourierController extends Controller
 
         // return view('emails.rejectedTER',['date_diff' => $data['date_diff'],'last_ter_date'=> $data['last_ter_date'],'terdata'=> $data['terdata'],'body'=>$data['body'],'body_two'=> $data['body_two'] ,'title'=>$data['title'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
 
-
-        Mail::mailer('smtp2')->send('emails.rejectedTER', $data, function ($message) use ($data) {
-            $message->to($data["email"], $data["email"])
-                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                ->subject($data["title"])
-                ->cc(config('services.cc_email.email_id'));
-        });
+        try {
+            Mail::mailer('smtp2')->send('emails.rejectedTER', $data, function ($message) use ($data) {
+                $message->to($data["email"], $data["email"])
+                    ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                    ->subject($data["title"])
+                    ->cc(config('services.cc_email.email_id'));
+            });
+        } catch (\Exception $e) {
+            // dd("f");
+            // print_r("DS");
+            $mail_not_sent['mail_response'] = $e;
+            $res = MailnotSent::create($mail_not_sent);
+        }
     }
     public function reject_handover(Request $request)
     {
@@ -1075,6 +1083,7 @@ class TercourierController extends Controller
         $data['id'] = $id;
 
 
+        try{
 
         Mail::mailer('smtp2')->send('emails.payadvicemail', $data, function ($message) use ($data, $pdf) {
             $message->to($data["email"], $data["email"])
@@ -1082,6 +1091,13 @@ class TercourierController extends Controller
                 ->subject($data["title"])
                 ->attachData($pdf->output(), "payment_advice_" . $data['id'] . ".pdf");
         });
+    }
+    catch(\Exception $e){
+        // dd("f");
+        // print_r("DS");
+        $mail_not_sent['mail_response'] =$e;
+        $res = MailnotSent::create($mail_not_sent);
+    }
     }
 
 
@@ -3077,7 +3093,7 @@ class TercourierController extends Controller
 
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
 
 
         // echo "<pre>";
@@ -3122,7 +3138,7 @@ class TercourierController extends Controller
         $data["title"] = "Reminder to submit TER CLAIM for " . $Month_name . "-" . $get_month[2];
         // return $data['title'];
 
-        // $data["email"] = "itsupport@frontierag.com";
+        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
         $data["email"] = $getsender->official_email_id;
         $data['employee_name'] = $getsender->name;
         $data['employee_id'] = $getsender->employee_id;
@@ -3144,32 +3160,50 @@ class TercourierController extends Controller
         $emp_data['saved_last_date'] = $save_last_date;
         $emp_data['last_mail_date'] = $saved_last_mail_date;
 
+        $mail_not_sent['employee_id'] = $getsender->employee_id;
+        $mail_not_sent['emp_email'] = $getsender->official_email_id;
+        $mail_not_sent['mail_response'] = "";
+        $mail_not_sent['mail_date'] = $today_date;
 
 
 
         if (empty($check_mail_tracker)) {
 
             if (true) {
-                Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
-                    $message->to($data["email"], $data["email"])
-                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                        ->subject($data["title"])
-                        ->cc(config('services.cc_email.email_id'));
-                });
-            }
+                try {
 
-            $res = EmployeeMailTracker::create($emp_data);
+                    $t =  Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
+                        $message->to($data["email"], $data["email"])
+                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                            ->subject($data["title"])
+                            ->cc(config('services.cc_email.email_id'));
+                    });
+                    $res = EmployeeMailTracker::create($emp_data);
+                } catch (\Exception $e) {
+                    // dd("f");
+                    // print_r("DS");
+                    $mail_not_sent['mail_response'] = $e;
+                    $res = MailnotSent::create($mail_not_sent);
+                }
+            }
         } else {
             if ($check_mail_tracker->ter_month != $ter_month) {
 
-                Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
-                    $message->to($data["email"], $data["email"])
-                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                        ->subject($data["title"])
-                        ->cc(config('services.cc_email.email_id'));
-                });
+                try {
+                    Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
+                        $message->to($data["email"], $data["email"])
+                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                            ->subject($data["title"])
+                            ->cc(config('services.cc_email.email_id'));
+                    });
 
-                $res = EmployeeMailTracker::create($emp_data);
+                    $res = EmployeeMailTracker::create($emp_data);
+                } catch (\Exception $e) {
+                    // dd("f");
+                    // print_r("DS");
+                    $mail_not_sent['mail_response'] = $e;
+                    $res = MailnotSent::create($mail_not_sent);
+                }
             }
         }
 
@@ -3184,18 +3218,19 @@ class TercourierController extends Controller
 
     public function send_employee_mails()
     {
-        ini_set('max_execution_time', 0);
+        ini_set('max_execution_time', -1);
         $live_host_name = request()->getHttpHost();
 
         if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
             return "not possible";
         }
+        //  2446,2437
 
-        //   return   self::send_reject_mail(2314);
+        //   self::send_reject_mail(2437);
         //         self::send_unknown_mail('2308');
         //  return 33;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-19');
+        $today_date = date('2023-03-01');
         $final_date = "";
 
 
@@ -3280,16 +3315,23 @@ class TercourierController extends Controller
 
 
                             if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
-                                        $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
-                                    });
-                                }
+                                try {
+                                    if (true) {
+                                        Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
+                                            $message->to($data["email"], $data["email"])
+                                                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                                ->subject($data["title"])
+                                                ->cc(config('services.cc_email.email_id'));
+                                        });
+                                    }
 
-                                $res =  EmployeeMailTracker::create($emp_data);
+                                    $res =  EmployeeMailTracker::create($emp_data);
+                                } catch (\Exception $e) {
+                                    // dd("f");
+                                    // print_r("DS");
+                                    $mail_not_sent['mail_response'] = $e;
+                                    $res = MailnotSent::create($mail_not_sent);
+                                }
                             }
                         }
                     }
@@ -3331,16 +3373,23 @@ class TercourierController extends Controller
 
 
                         if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
-                                    $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
-                                });
-                            }
+                            try {
+                                if (true) {
+                                    Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
+                                        $message->to($data["email"], $data["email"])
+                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                            ->subject($data["title"])
+                                            ->cc(config('services.cc_email.email_id'));
+                                    });
+                                }
 
-                            $res =  EmployeeMailTracker::create($emp_data);
+                                $res =  EmployeeMailTracker::create($emp_data);
+                            } catch (\Exception $e) {
+                                // dd("f");
+                                // print_r("DS");
+                                $mail_not_sent['mail_response'] = $e;
+                                $res = MailnotSent::create($mail_not_sent);
+                            }
                         }
                     }
                 }
@@ -3353,7 +3402,7 @@ class TercourierController extends Controller
 
             $getsender = Sender::where('status', 'Active')->get();
             // $getsender = Sender::whereIN('id', ['1946','3'])->get();
-            // $getsender = Sender::whereIN('id', ['1946'])->get();
+            // $getsender = Sender::whereIN('id', ['1753'])->get();
 
             // echo "<pre>";
             // print_r($getsender);
@@ -3519,16 +3568,23 @@ class TercourierController extends Controller
                             $emp_data['mail_number'] = '2';
 
                             if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                        $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
-                                    });
-                                }
+                                try {
+                                    if (true) {
+                                        Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                            $message->to($data["email"], $data["email"])
+                                                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                                ->subject($data["title"])
+                                                ->cc(config('services.cc_email.email_id'));
+                                        });
+                                    }
 
-                                $res =  EmployeeMailTracker::create($emp_data);
+                                    $res =  EmployeeMailTracker::create($emp_data);
+                                } catch (\Exception $e) {
+                                    // dd("f");
+                                    // print_r("DS");
+                                    $mail_not_sent['mail_response'] = $e;
+                                    $res = MailnotSent::create($mail_not_sent);
+                                }
                             }
                         }
 
@@ -3538,30 +3594,44 @@ class TercourierController extends Controller
                         if ($date_number[2] == "27") {
                             $emp_data['mail_number'] = '3';
                             if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                        $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
-                                    });
+                                try {
+                                    if (true) {
+                                        Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                            $message->to($data["email"], $data["email"])
+                                                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                                ->subject($data["title"])
+                                                ->cc(config('services.cc_email.email_id'));
+                                        });
+                                    }
+                                    $res =  EmployeeMailTracker::create($emp_data);
+                                } catch (\Exception $e) {
+                                    // dd("f");
+                                    // print_r("DS");
+                                    $mail_not_sent['mail_response'] = $e;
+                                    $res = MailnotSent::create($mail_not_sent);
                                 }
-                                $res =  EmployeeMailTracker::create($emp_data);
                             }
                         }
 
                         if ($date_number[2] == "08") {
                             $emp_data['mail_number'] = '4';
                             if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                                if (true) {
-                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                        $message->to($data["email"], $data["email"])
-                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                            ->subject($data["title"])
-                                            ->cc(config('services.cc_email.email_id'));
-                                    });
+                                try {
+                                    if (true) {
+                                        Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                            $message->to($data["email"], $data["email"])
+                                                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                                ->subject($data["title"])
+                                                ->cc(config('services.cc_email.email_id'));
+                                        });
+                                    }
+                                    $res =  EmployeeMailTracker::create($emp_data);
+                                } catch (\Exception $e) {
+                                    // dd("f");
+                                    // print_r("DS");
+                                    $mail_not_sent['mail_response'] = $e;
+                                    $res = MailnotSent::create($mail_not_sent);
                                 }
-                                $res =  EmployeeMailTracker::create($emp_data);
                             }
                         }
                     }
@@ -3601,16 +3671,23 @@ class TercourierController extends Controller
                         $emp_data['mail_number'] = '2';
 
                         if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                    $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
-                                });
-                            }
+                            try {
+                                if (true) {
+                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                        $message->to($data["email"], $data["email"])
+                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                            ->subject($data["title"])
+                                            ->cc(config('services.cc_email.email_id'));
+                                    });
+                                }
 
-                            $res =  EmployeeMailTracker::create($emp_data);
+                                $res =  EmployeeMailTracker::create($emp_data);
+                            } catch (\Exception $e) {
+                                // dd("f");
+                                // print_r("DS");
+                                $mail_not_sent['mail_response'] = $e;
+                                $res = MailnotSent::create($mail_not_sent);
+                            }
                         }
                     }
 
@@ -3620,30 +3697,44 @@ class TercourierController extends Controller
                     if ($date_number[2] == "27") {
                         $emp_data['mail_number'] = '3';
                         if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                    $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
-                                });
+                            try {
+                                if (true) {
+                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                        $message->to($data["email"], $data["email"])
+                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                            ->subject($data["title"])
+                                            ->cc(config('services.cc_email.email_id'));
+                                    });
+                                }
+                                $res =  EmployeeMailTracker::create($emp_data);
+                            } catch (\Exception $e) {
+                                // dd("f");
+                                // print_r("DS");
+                                $mail_not_sent['mail_response'] = $e;
+                                $res = MailnotSent::create($mail_not_sent);
                             }
-                            $res =  EmployeeMailTracker::create($emp_data);
                         }
                     }
 
                     if ($date_number[2] == "08") {
                         $emp_data['mail_number'] = '4';
                         if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                            if (true) {
-                                Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
-                                    $message->to($data["email"], $data["email"])
-                                        ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                                        ->subject($data["title"])
-                                        ->cc(config('services.cc_email.email_id'));
-                                });
+                            try {
+                                if (true) {
+                                    Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
+                                        $message->to($data["email"], $data["email"])
+                                            ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                                            ->subject($data["title"])
+                                            ->cc(config('services.cc_email.email_id'));
+                                    });
+                                }
+                                $res =  EmployeeMailTracker::create($emp_data);
+                            } catch (\Exception $e) {
+                                // dd("f");
+                                // print_r("DS");
+                                $mail_not_sent['mail_response'] = $e;
+                                $res = MailnotSent::create($mail_not_sent);
                             }
-                            $res =  EmployeeMailTracker::create($emp_data);
                         }
                     }
                 }
@@ -3689,13 +3780,19 @@ class TercourierController extends Controller
         // return  $employee_name;
 
         // return view('emails.unknownEmployee',['body'=>$data['body'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
-
-        Mail::mailer('smtp2')->send('emails.unknownEmployee', $data, function ($message) use ($data) {
-            $message->to($data["email"], $data["email"])
-                ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                ->subject($data["title"])
-                ->cc(config('services.cc_email.email_id'));
-        });
+        try {
+            Mail::mailer('smtp2')->send('emails.unknownEmployee', $data, function ($message) use ($data) {
+                $message->to($data["email"], $data["email"])
+                    ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+                    ->subject($data["title"])
+                    ->cc(config('services.cc_email.email_id'));
+            });
+        } catch (\Exception $e) {
+            // dd("f");
+            // print_r("DS");
+            $mail_not_sent['mail_response'] = $e;
+            $res = MailnotSent::create($mail_not_sent);
+        }
     }
 
     public function get_emp_list(Request $request)
