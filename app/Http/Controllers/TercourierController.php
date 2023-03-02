@@ -35,7 +35,6 @@ use PDF;
 date_default_timezone_set('Asia/Kolkata');
 ini_set('max_execution_time', -1);
 
-
 class TercourierController extends Controller
 {
     public function __construct()
@@ -450,6 +449,7 @@ class TercourierController extends Controller
         }
     }
 
+   
     public function get_file_name(Request $request)
     {
         $data = $request->all();
