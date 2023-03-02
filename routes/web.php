@@ -112,10 +112,6 @@ Route::post('open_verify_ter', [TercourierController::class, 'open_verify_ter'])
 Route::post('open_hr_verify_ter', [TercourierController::class, 'open_hr_verify_ter']);
 Route::post('submit_change_unit', [TercourierController::class, 'submit_change_unit']);
 
-
-Route::get('send_employee_mails', [TercourierController::class, 'send_employee_mails']);
-
-
 Route::get('admin_update_ter/{id}', [TercourierController::class, 'admin_update_ter']);
 Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
 
@@ -193,6 +189,9 @@ Route::get('/get-po', [InvoiceController::class, 'getPo']);
 });
 
 Route::get('/forgot-session', [HomeController::class, 'ForgotSession']);
+
+Route::get('send_employee_mails', [TercourierController::class, 'send_employee_mails']);
+
 
 Route::get('/check_paid_status', [TercourierController::class,'check_paid_status']);
 Route::get('/check_deduction_paid_status', [TercourierController::class,'check_deduction_paid_status']);
