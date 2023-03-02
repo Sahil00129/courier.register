@@ -32,6 +32,8 @@ use App\Mail\SendMail;
 use PDF;
 
 date_default_timezone_set('Asia/Kolkata');
+ini_set('max_execution_time', -1);
+
 
 
 class TercourierController extends Controller
@@ -3185,7 +3187,6 @@ class TercourierController extends Controller
 
     public function send_employee_mails()
     {
-        ini_set('max_execution_time', 0);
 
         $live_host_name = request()->getHttpHost();
 
