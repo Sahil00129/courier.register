@@ -3078,7 +3078,7 @@ class TercourierController extends Controller
 
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
 
 
         // echo "<pre>";
@@ -3197,7 +3197,7 @@ class TercourierController extends Controller
         //         self::send_unknown_mail('2308');
         //  return 33;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
         $final_date = "";
 
 
