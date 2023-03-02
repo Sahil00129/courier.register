@@ -3095,7 +3095,7 @@ class TercourierController extends Controller
 
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
 
 
         // echo "<pre>";
@@ -3140,8 +3140,8 @@ class TercourierController extends Controller
         $data["title"] = "Reminder to submit TER CLAIM for " . $Month_name . "-" . $get_month[2];
         // return $data['title'];
 
-        // $data["email"] = "dhroov.kanwar@eternitysolutions.net";
-        $data["email"] = $getsender->official_email_id;
+        $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        // $data["email"] = $getsender->official_email_id;
         $data['employee_name'] = $getsender->name;
         $data['employee_id'] = $getsender->employee_id;
         $data['body'] = "Please prepare your Travel Expense Reimbursement Claim (TER Claim) for the month of " . $Month_name . "-" . $get_month[2] . ".";
@@ -3177,8 +3177,8 @@ class TercourierController extends Controller
                     $t =  Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                            ->subject($data["title"])
-                            ->cc(config('services.cc_email.email_id'));
+                            ->subject($data["title"]);
+                            // ->cc(config('services.cc_email.email_id'));
                     });
                     $res = EmployeeMailTracker::create($emp_data);
                 } else {
@@ -3195,8 +3195,8 @@ class TercourierController extends Controller
                     Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
-                            ->subject($data["title"])
-                            ->cc(config('services.cc_email.email_id'));
+                            ->subject($data["title"]);
+                            // ->cc(config('services.cc_email.email_id'));
                     });
 
                     $res = EmployeeMailTracker::create($emp_data);
@@ -3222,6 +3222,7 @@ class TercourierController extends Controller
     {
         ini_set('max_execution_time', -1);
         $live_host_name = request()->getHttpHost();
+        $live_host_name="Ds";
 
         if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
             return "not possible";
@@ -3232,7 +3233,7 @@ class TercourierController extends Controller
         //         self::send_unknown_mail('2308');
         //  return 33;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
+        $today_date = date('2023-03-01');
         $final_date = "";
 
 
