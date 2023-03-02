@@ -310,17 +310,18 @@ class TercourierController extends Controller
 
         // return view('emails.rejectedTER',['date_diff' => $data['date_diff'],'last_ter_date'=> $data['last_ter_date'],'terdata'=> $data['terdata'],'body'=>$data['body'],'body_two'=> $data['body_two'] ,'title'=>$data['title'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
 
-        try {
+        if(!empty($data["email"]) || $data["email"] != 0) {
+
             Mail::mailer('smtp2')->send('emails.rejectedTER', $data, function ($message) use ($data) {
                 $message->to($data["email"], $data["email"])
                     ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                     ->subject($data["title"])
                     ->cc(config('services.cc_email.email_id'));
             });
-        } catch (\Exception $e) {
+        } else {
             // dd("f");
             // print_r("DS");
-            $mail_not_sent['mail_response'] = $e;
+            $mail_not_sent['mail_response'] = 'No Email Found';
             $res = MailnotSent::create($mail_not_sent);
         }
     }
@@ -1083,7 +1084,8 @@ class TercourierController extends Controller
         $data['id'] = $id;
 
 
-        try{
+        if(!empty($data["email"]) || $data["email"] != 0) {
+
 
         Mail::mailer('smtp2')->send('emails.payadvicemail', $data, function ($message) use ($data, $pdf) {
             $message->to($data["email"], $data["email"])
@@ -1092,10 +1094,10 @@ class TercourierController extends Controller
                 ->attachData($pdf->output(), "payment_advice_" . $data['id'] . ".pdf");
         });
     }
-    catch(\Exception $e){
+    else {
         // dd("f");
         // print_r("DS");
-        $mail_not_sent['mail_response'] =$e;
+        $mail_not_sent['mail_response'] ='No Email Id Found';
         $res = MailnotSent::create($mail_not_sent);
     }
     }
@@ -3170,7 +3172,7 @@ class TercourierController extends Controller
         if (empty($check_mail_tracker)) {
 
             if (true) {
-                try {
+               if(!empty($data["email"]) || $data["email"] != 0) {
 
                     $t =  Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
@@ -3179,17 +3181,17 @@ class TercourierController extends Controller
                             ->cc(config('services.cc_email.email_id'));
                     });
                     $res = EmployeeMailTracker::create($emp_data);
-                } catch (\Exception $e) {
+                } else {
                     // dd("f");
                     // print_r("DS");
-                    $mail_not_sent['mail_response'] = $e;
+                    $mail_not_sent['mail_response'] = "No Email Id Found";
                     $res = MailnotSent::create($mail_not_sent);
                 }
             }
         } else {
             if ($check_mail_tracker->ter_month != $ter_month) {
 
-                try {
+                if(!empty($data["email"]) || $data["email"] != 0) {
                     Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
@@ -3198,10 +3200,10 @@ class TercourierController extends Controller
                     });
 
                     $res = EmployeeMailTracker::create($emp_data);
-                } catch (\Exception $e) {
+                } else {
                     // dd("f");
                     // print_r("DS");
-                    $mail_not_sent['mail_response'] = $e;
+                    $mail_not_sent['mail_response'] = 'No Email Id Found';
                     $res = MailnotSent::create($mail_not_sent);
                 }
             }
@@ -3315,7 +3317,7 @@ class TercourierController extends Controller
 
 
                             if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                                try {
+                                if(!empty($data["email"]) || $data["email"] != 0) {
                                     if (true) {
                                         Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
                                             $message->to($data["email"], $data["email"])
@@ -3326,10 +3328,10 @@ class TercourierController extends Controller
                                     }
 
                                     $res =  EmployeeMailTracker::create($emp_data);
-                                } catch (\Exception $e) {
+                                } else {
                                     // dd("f");
                                     // print_r("DS");
-                                    $mail_not_sent['mail_response'] = $e;
+                                    $mail_not_sent['mail_response'] = 'No Email Id Found';
                                     $res = MailnotSent::create($mail_not_sent);
                                 }
                             }
@@ -3373,7 +3375,7 @@ class TercourierController extends Controller
 
 
                         if ($check_mail_tracker->mail_number == 4 && $check_mail_tracker->mail_sent == 1) {
-                            try {
+                            if(!empty($data["email"]) || $data["email"] != 0) {
                                 if (true) {
                                     Mail::mailer('smtp2')->send('emails.CancelTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
@@ -3384,10 +3386,10 @@ class TercourierController extends Controller
                                 }
 
                                 $res =  EmployeeMailTracker::create($emp_data);
-                            } catch (\Exception $e) {
+                            } else {
                                 // dd("f");
                                 // print_r("DS");
-                                $mail_not_sent['mail_response'] = $e;
+                                $mail_not_sent['mail_response'] = 'No Email Id Found';
                                 $res = MailnotSent::create($mail_not_sent);
                             }
                         }
@@ -3568,7 +3570,7 @@ class TercourierController extends Controller
                             $emp_data['mail_number'] = '2';
 
                             if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                                try {
+                                if(!empty($data["email"]) || $data["email"] != 0) {
                                     if (true) {
                                         Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                             $message->to($data["email"], $data["email"])
@@ -3579,10 +3581,10 @@ class TercourierController extends Controller
                                     }
 
                                     $res =  EmployeeMailTracker::create($emp_data);
-                                } catch (\Exception $e) {
+                                } else {
                                     // dd("f");
                                     // print_r("DS");
-                                    $mail_not_sent['mail_response'] = $e;
+                                    $mail_not_sent['mail_response'] = 'No Email Id Found';
                                     $res = MailnotSent::create($mail_not_sent);
                                 }
                             }
@@ -3594,7 +3596,8 @@ class TercourierController extends Controller
                         if ($date_number[2] == "27") {
                             $emp_data['mail_number'] = '3';
                             if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                                try {
+                                if(!empty($data["email"]) || $data["email"] != 0) {
+
                                     if (true) {
                                         Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                             $message->to($data["email"], $data["email"])
@@ -3604,10 +3607,10 @@ class TercourierController extends Controller
                                         });
                                     }
                                     $res =  EmployeeMailTracker::create($emp_data);
-                                } catch (\Exception $e) {
+                                } else {
                                     // dd("f");
                                     // print_r("DS");
-                                    $mail_not_sent['mail_response'] = $e;
+                                    $mail_not_sent['mail_response'] = 'No Email Id Found';
                                     $res = MailnotSent::create($mail_not_sent);
                                 }
                             }
@@ -3616,7 +3619,8 @@ class TercourierController extends Controller
                         if ($date_number[2] == "08") {
                             $emp_data['mail_number'] = '4';
                             if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                                try {
+                                if(!empty($data["email"]) || $data["email"] != 0) {
+
                                     if (true) {
                                         Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                             $message->to($data["email"], $data["email"])
@@ -3626,10 +3630,10 @@ class TercourierController extends Controller
                                         });
                                     }
                                     $res =  EmployeeMailTracker::create($emp_data);
-                                } catch (\Exception $e) {
+                                } else {
                                     // dd("f");
                                     // print_r("DS");
-                                    $mail_not_sent['mail_response'] = $e;
+                                    $mail_not_sent['mail_response'] = 'No Email Found';
                                     $res = MailnotSent::create($mail_not_sent);
                                 }
                             }
@@ -3671,7 +3675,7 @@ class TercourierController extends Controller
                         $emp_data['mail_number'] = '2';
 
                         if ($check_mail_tracker->mail_number == 1 && $check_mail_tracker->mail_sent == 1) {
-                            try {
+                            if(!empty($data["email"]) || $data["email"] != 0) {
                                 if (true) {
                                     Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
@@ -3682,10 +3686,10 @@ class TercourierController extends Controller
                                 }
 
                                 $res =  EmployeeMailTracker::create($emp_data);
-                            } catch (\Exception $e) {
+                            } else {
                                 // dd("f");
                                 // print_r("DS");
-                                $mail_not_sent['mail_response'] = $e;
+                                $mail_not_sent['mail_response'] = 'No Email Id Found';
                                 $res = MailnotSent::create($mail_not_sent);
                             }
                         }
@@ -3697,7 +3701,7 @@ class TercourierController extends Controller
                     if ($date_number[2] == "27") {
                         $emp_data['mail_number'] = '3';
                         if ($check_mail_tracker->mail_number == 2 && $check_mail_tracker->mail_sent == 1) {
-                            try {
+                            if(!empty($data["email"]) || $data["email"] != 0) {
                                 if (true) {
                                     Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
@@ -3707,10 +3711,10 @@ class TercourierController extends Controller
                                     });
                                 }
                                 $res =  EmployeeMailTracker::create($emp_data);
-                            } catch (\Exception $e) {
+                            } else {
                                 // dd("f");
                                 // print_r("DS");
-                                $mail_not_sent['mail_response'] = $e;
+                                $mail_not_sent['mail_response'] = 'No Email Id Found';
                                 $res = MailnotSent::create($mail_not_sent);
                             }
                         }
@@ -3719,7 +3723,8 @@ class TercourierController extends Controller
                     if ($date_number[2] == "08") {
                         $emp_data['mail_number'] = '4';
                         if ($check_mail_tracker->mail_number == 3 && $check_mail_tracker->mail_sent == 1) {
-                            try {
+                            if(!empty($data["email"]) || $data["email"] != 0) {
+
                                 if (true) {
                                     Mail::mailer('smtp2')->send('emails.CommonTerSubmissionMail', $data, function ($message) use ($data) {
                                         $message->to($data["email"], $data["email"])
@@ -3729,10 +3734,10 @@ class TercourierController extends Controller
                                     });
                                 }
                                 $res =  EmployeeMailTracker::create($emp_data);
-                            } catch (\Exception $e) {
+                            } else {
                                 // dd("f");
                                 // print_r("DS");
-                                $mail_not_sent['mail_response'] = $e;
+                                $mail_not_sent['mail_response'] = 'No Email Id Found';
                                 $res = MailnotSent::create($mail_not_sent);
                             }
                         }
@@ -3780,17 +3785,18 @@ class TercourierController extends Controller
         // return  $employee_name;
 
         // return view('emails.unknownEmployee',['body'=>$data['body'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
-        try {
+        if(!empty($data["email"]) || $data["email"] != 0) {
+
             Mail::mailer('smtp2')->send('emails.unknownEmployee', $data, function ($message) use ($data) {
                 $message->to($data["email"], $data["email"])
                     ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                     ->subject($data["title"])
                     ->cc(config('services.cc_email.email_id'));
             });
-        } catch (\Exception $e) {
+        } else {
             // dd("f");
             // print_r("DS");
-            $mail_not_sent['mail_response'] = $e;
+            $mail_not_sent['mail_response'] = 'No Email Found';
             $res = MailnotSent::create($mail_not_sent);
         }
     }
