@@ -3174,15 +3174,21 @@ class TercourierController extends Controller
             if (true) {
                if(!empty($data["email"]) && $data["email"] != 0) {
 
-                if(false){
+           
                     $t =  Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                             ->subject($data["title"]);
                             // ->cc(config('services.cc_email.email_id'));
                     });
-                }
-                    $res = EmployeeMailTracker::create($emp_data);
+                    if (Mail::failures()) {
+                        $mail_not_sent['mail_response'] = "No Email Id Found";
+                        $res = MailnotSent::create($mail_not_sent);
+                    }else{
+                        $res = EmployeeMailTracker::create($emp_data);
+                    }
+                
+                    
                 } else {
                     // dd("f");
                     // print_r("DS");
@@ -3194,14 +3200,19 @@ class TercourierController extends Controller
             if ($check_mail_tracker->ter_month != $ter_month) {
 
                 if(!empty($data["email"]) && $data["email"] != 0) {
-                    if(false){
+                  
                     Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                             ->subject($data["title"]);
                             // ->cc(config('services.cc_email.email_id'));
                     });
-                }
+                    if (Mail::failures()) {
+                        $mail_not_sent['mail_response'] = "No Email Id Found";
+                        $res = MailnotSent::create($mail_not_sent);
+                    }else{
+                        $res = EmployeeMailTracker::create($emp_data);
+                    }
 
                     $res = EmployeeMailTracker::create($emp_data);
                 } else {
