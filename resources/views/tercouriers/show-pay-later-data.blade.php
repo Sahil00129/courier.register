@@ -282,6 +282,7 @@
                             <th>Sender</th>
                             <th>TER</th>
                             <th>AX Detail</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="tb">
@@ -470,12 +471,49 @@
                                     </div>
                                 </td>
 
+                                <td data-toggle="modal" data-target="#partialpaidModal" style="cursor:pointer" @click="view_uploaded_image(<?php echo $tercourier->id; ?>)">View</td>
+
                             </tr>
 
                         <?php } ?>
                     </tbody>
 
                 </table>
+
+                <!-- Partial Paid Modal -->
+                <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="partialpaidModalLabel"> TER ID: @{{ter_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="pay_later_remarks" disabled>
+                                </div>
+                                <div class="mb-4 d-flex align-items-center justify-content-center" style="border-radius: 12px; height: 150px; width: 100%; border: 1px dashed;">
+                                    <img :src="file_name" alt="attachment" style="max-width: 100%; max-height: 130px; border-radius: 12px; object-fit: cover;" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a :href="file_name" target="_blank" class="btn btn-outline-primary" style="border-radius: 8px; display: flex; align-items: center; gap: 6px;">
+                                    Open in New Tab
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px;">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </a>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
@@ -497,12 +535,48 @@
         data: {
             unique_amount_id: "",
             unique_coupon_id: "",
+            ter_modal: "",
+            ter_id: "",
+            file_name: "",
+            pay_later_remarks: "",
         },
         created: function() {
             // alert(this.got_details)
             //   alert('hello');
         },
         methods: {
+            view_uploaded_image: function($id) {
+                this.file_name = "";
+                this.ter_id = $id;
+                this.pay_later_remarks = "";
+                this.ter_modal = true;
+
+                axios.post('/get_paylater_details', {
+                        'id': this.ter_id
+                    })
+                    .then(response => {
+
+                        if (response.data) {
+
+
+                            this.file_name = 'paylater_ter_uploads/' + response.data[0]['paylater_uploads'];
+                            // 
+                            // alert(this.file_name)
+                            this.pay_later_remarks = response.data[0]['paylater_remarks'];
+
+
+                        } else {
+                            swal('error', 'Server Issue ', 'error')
+                        }
+
+                    }).catch(error => {
+
+                        console.log(response)
+                        this.apply_offer_btn = 'Apply';
+
+                    })
+
+            },
             select_all_trx: function() {
                 var x = this.$el.querySelector("#select_all");
                 var y = this.$el.querySelectorAll(".selected_box");

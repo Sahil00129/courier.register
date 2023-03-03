@@ -1769,11 +1769,17 @@ class TercourierController extends Controller
     public function ter_pay_later(Request $request)
     {
         $data = $request->all();
+        // return json_decode($data['payable_data']);
+        
+        $pay_data =json_decode($data['payable_data']);
+        $payable_data=array();
+    
         $id = $data['unique_id'];
-        $payable_data = $data['payable_data'];
+        $paylater_remarks=$data['pay_later_remarks'];
+      
         $ter_total_amount = $data['ter_total_amount'];
         $total_payable_sum = 0;
-        $length = sizeof($payable_data);
+        $length = sizeof($pay_data);
         $selected_options = $data['selected_options'];
         if (!empty($selected_options)) {
             DB::table('tercouriers')->where('id', $id)->update(['deduction_options' => $selected_options]);
@@ -1810,12 +1816,21 @@ class TercourierController extends Controller
             }
         }
 
+        if (!empty($pay_data)) {
+            for ($i = 0; $i < $length; $i++) {
+                $payable_data[$i]['voucher_code'] = $pay_data[$i]->voucher_code;
+                $payable_data[$i]['payable_amount'] = $pay_data[$i]->payable_amount;
+            }
+          
+        }
+
         /////////////////////////////////////////////// Start of duplicate voucher check /////////////////////////////////////////////////////////////////////////
 
         if (!empty($payable_data)) {
             for ($i = 0; $i < $length; $i++) {
                 $voucher_data[$i] = $payable_data[$i]['voucher_code'];
             }
+          
             $data['voucher_code'] = $voucher_data;
         }
 
@@ -1881,7 +1896,16 @@ class TercourierController extends Controller
         $final_payable = $total_payable_sum;
         $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
         $tercourier_ax_check = $data_ter[0];
+
+        $image = $request->file('file');
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'paylater_ter_uploads';
+        $image->move($destinationPath, $fileName);
+
         if ($tercourier_ax_check->ax_id  != 0) {
+
+            DB::table('tercouriers')->where('id',$id)->update(['paylater_uploads'=>$fileName,'paylater_remarks'=>$paylater_remarks]);
+
             $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
             // $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status);
         } else {
@@ -1889,6 +1913,15 @@ class TercourierController extends Controller
         }
         // $response = Tercourier::add_voucher_payable($voucher_code, $payable_amount, $id, $log_in_user_id, $log_in_user_name,$payment_status);
         return $response;
+    }
+
+
+    public function get_paylater_details(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['id'];
+        $res=DB::table('tercouriers')->where('id',$id)->get();
+        return $res;
     }
 
     public function ter_pay_now(Request $request)

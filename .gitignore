@@ -16,3 +16,4 @@ yarn-error.log
 /composer.lock
 /public/uploads
 /public/rejected_ter_uploads
+/public/paylater_ter_uploads
