@@ -3133,7 +3133,6 @@ class TercourierController extends Controller
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
 
-
         // echo "<pre>";
         // print_r($getsender->name);
         // exit;
