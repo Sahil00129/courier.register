@@ -208,7 +208,7 @@ class BulkImport implements ToModel, WithHeadingRow
                     'last_working_date' => $lastworkingdate,
                     'status' => $status,
                     'grade' => $row['grade'],
-                    // 'designation' => $row['designation'],
+                    'designation' => $row['designation'],
                     // 'hq_state' => $row['hq_state'],
                     'territory' => $row['territory'],
                     // 'team' => $row['team'],
@@ -307,6 +307,13 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->iag_code != $row['iag_code']) {
                 // print_r($sender_table->last_working_date);
                 Sender::where('id', $sender_table->id)->update(['iag_code' => $row['iag_code']]);
+
+            }
+
+            
+            if ($sender_table->designation != $row['designation']) {
+                // print_r($sender_table->last_working_date);
+                Sender::where('id', $sender_table->id)->update(['designation' => $row['designation']]);
 
             }
 

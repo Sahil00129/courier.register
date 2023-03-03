@@ -1740,6 +1740,10 @@ class TercourierController extends Controller
             $data_error['status_of_data'] = "8";
             return $data_error;
         }
+        if ($tercourier_table[0]->status == 11) {
+            $data_error['status_of_data'] = "11";
+            return $data_error;
+        }
         $senders =  DB::table('sender_details')->get();
         $balance_data = DB::table('employee_balance')->select('current_balance')->where('employee_id', $tercourier_table[0]->employee_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
@@ -3095,8 +3099,6 @@ class TercourierController extends Controller
 
         // $last_working_date=$getsender[0]->last_working_date;
         $today_date = date('Y-m-d');
-        // $today_date = date('2023-03-01');
-
 
         // echo "<pre>";
         // print_r($getsender->name);
@@ -3174,13 +3176,21 @@ class TercourierController extends Controller
             if (true) {
                if(!empty($data["email"]) && $data["email"] != 0) {
 
+           
                     $t =  Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                             ->subject($data["title"])
                             ->cc(config('services.cc_email.email_id'));
                     });
-                    $res = EmployeeMailTracker::create($emp_data);
+                    if (Mail::failures()) {
+                        $mail_not_sent['mail_response'] = "No Email Id Found";
+                        $res = MailnotSent::create($mail_not_sent);
+                    }else{
+                        $res = EmployeeMailTracker::create($emp_data);
+                    }
+                
+                    
                 } else {
                     // dd("f");
                     // print_r("DS");
@@ -3192,12 +3202,19 @@ class TercourierController extends Controller
             if ($check_mail_tracker->ter_month != $ter_month) {
 
                 if(!empty($data["email"]) && $data["email"] != 0) {
+                  
                     Mail::mailer('smtp2')->send('emails.TerSubmissionMail1', $data, function ($message) use ($data) {
                         $message->to($data["email"], $data["email"])
                             ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                             ->subject($data["title"])
                             ->cc(config('services.cc_email.email_id'));
                     });
+                    if (Mail::failures()) {
+                        $mail_not_sent['mail_response'] = "No Email Id Found";
+                        $res = MailnotSent::create($mail_not_sent);
+                    }else{
+                        $res = EmployeeMailTracker::create($emp_data);
+                    }
 
                     $res = EmployeeMailTracker::create($emp_data);
                 } else {
@@ -3222,6 +3239,7 @@ class TercourierController extends Controller
     {
         ini_set('max_execution_time', -1);
         $live_host_name = request()->getHttpHost();
+
 
         if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
             return "not possible";
