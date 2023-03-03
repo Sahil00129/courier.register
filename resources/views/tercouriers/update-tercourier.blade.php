@@ -878,6 +878,10 @@
                             this.button_text = "Search";
                             swal('error', "No Record Found", 'error')
                         }
+                        if (response.data.status_of_data === "11") {
+                            this.button_text = "Search";
+                            swal('error', "Record is in Created Handover Stage", 'error')
+                        }
                         if (response.data.status_of_data === "3") {
                             this.button_text = "Search";
                             swal('error', "Record Already submitted to Finfect", 'error')
