@@ -338,6 +338,7 @@
                                         @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}} ,
                                         Voucher Code : @{{payment_data_new.voucher_code}}</b>
                                 </li>
+                            
                             </ul>
                         </div>
 
@@ -1006,7 +1007,7 @@
                             this.payable_amount = this.all_data.payable_amount;
                             this.voucher_code = this.all_data.voucher_code;
                             this.current_balance = response.data.current_balance;
-                            string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,]/g, '');
+                            string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,.]/g, '');
                             split_data_pay_amt = string_pay.split(",");
                             pay_data_len = split_data_pay_amt.length;
                             // console.log(pay_data_len)

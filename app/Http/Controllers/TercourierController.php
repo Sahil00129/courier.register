@@ -585,12 +585,24 @@ class TercourierController extends Controller
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
+        $degignation_check = strtolower($senders[0]->designation);
+
+        if (
+            $degignation_check == 'market development representative' ||
+            $degignation_check == 'field executive'
+            || $degignation_check == 'project officer'
+        ) {
+            return "UNID can't generate for this Employee Designation";
+        }
+
         if ($terdata['ax_id'] != 0 && $terdata['sender_name'] != "Unknown Employee") {
 
             if (empty($terdata['ax_id']) && empty($terdata['iag_code'])) {
                 return "Both IAG Code and AX-ID Missing";
             }
         }
+
+     
         // echo "<pre>";print_r($ter_data);die;
 
         $tercourier = Tercourier::create($terdata);
