@@ -338,6 +338,7 @@
                                         @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}} ,
                                         Voucher Code : @{{payment_data_new.voucher_code}}</b>
                                 </li>
+                            
                             </ul>
                         </div>
 
@@ -394,13 +395,54 @@
                             </div>
                         </div>
 
+                            <!-- Partial Paid Modal -->
+            <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="partialpaidModalLabel"> TER ID: @{{unique_id}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="pay_later_remarks">
+                                </div>
+                                <!-- <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Payable Amount</label>
+                                    <input type="number" class="form-control" id="recipient-name" v-model="payable_amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Voucher Code</label>
+                                    <input type="text" class="form-control" id="recipient-name" v-model="voucher_code">
+                                </div> -->
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Upload File</label>
+                                    <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"  v-on:click="ter_pay_later()" :disabled="update_ter_flag" data-dismiss="modal">Submit
+                            </button>
+                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
                         <div class="d-flex justify-content-end align-items-center mt-3" style="gap: 8px;" v-if="pay_btn_flag">
                             <button type=" submit" class="btn btn-primary addButton" v-on:click="ter_pay_now()" :disabled="update_ter_flag">
                                 <span class="indicator-label">Pay Now</span>
                                 </span>
                             </button>
 
-                            <button type=" submit" class="btn btn-primary addButton" v-on:click="ter_pay_later()" :disabled="update_ter_flag">
+                            <button type=" submit" class="btn btn-primary addButton" data-toggle="modal" data-target="#partialpaidModal" @click="ter_modal=true">
                                 <span class="indicator-label">Pay Later</span>
                                 </span>
                             </button>
@@ -564,6 +606,9 @@
             loader: false,
             word_amount: ".",
             selected_options: [],
+            ter_modal :"",
+            pay_later_remarks:"",
+            file:"",
 
         },
         created: function() {
@@ -589,6 +634,9 @@
 
         },
         methods: {
+            upload_file(e) {
+                this.file = e.target.files[0];
+            },
             addAnotherpayment() {
                 this.pay_btn_flag = "true";
                 // your logic here...
@@ -665,16 +713,32 @@
                 // alert(d2)
 
                 if (d1 <= d2 || this.allow_flag) {
-                    axios.post('/ter_pay_later', {
-                            'payable_data': this.pay_data_array,
-                            'unique_id': this.all_data.id,
-                            'payment_status': "2",
-                            "ter_total_amount": this.amount,
-                            "terfrom": this.terfrom,
-                            'terto': this.terto,
-                            'selected_options':this.selected_options
 
-                        })
+                    if(this.file!="" && this.pay_later_remarks!="")
+                    {
+
+                    const config = {
+                            headers: {
+                                'content-type': 'multipart/form-data',
+                            }
+                        }
+                        let formData = new FormData();
+
+                     
+                        
+                        formData.append('file', this.file);
+                        formData.append('payable_data',JSON.stringify(this.pay_data_array));
+                        formData.append('pay_later_remarks', this.pay_later_remarks);
+                        formData.append('unique_id', this.all_data.id);
+                        formData.append('payment_status', "2");
+                        formData.append('ter_total_amount', this.amount);
+                        formData.append('terfrom', this.terfrom);
+                        formData.append('terto', this.terto);
+                        formData.append('selected_options', this.selected_options);
+
+                        // formData.append('payable_amount', this.payable_amount);
+
+                    axios.post('/ter_pay_later',formData, config)
                         .then(response => {
                             // console.log(response.data);
                             if (response.data == "error_sum_amount") {
@@ -705,6 +769,9 @@
 
 
                         })
+                    }else{
+                        swal('error', "Either File/Remark is Empty ", 'error')
+                    }
 
                 } else {
                     swal('error', "TER Dates needs update", 'error')
@@ -940,7 +1007,7 @@
                             this.payable_amount = this.all_data.payable_amount;
                             this.voucher_code = this.all_data.voucher_code;
                             this.current_balance = response.data.current_balance;
-                            string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,]/g, '');
+                            string_pay = this.payable_amount.replace(/[^a-zA-Z0-9,.]/g, '');
                             split_data_pay_amt = string_pay.split(",");
                             pay_data_len = split_data_pay_amt.length;
                             // console.log(pay_data_len)

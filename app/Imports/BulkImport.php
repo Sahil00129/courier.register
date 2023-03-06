@@ -349,9 +349,22 @@ class BulkImport implements ToModel, WithHeadingRow
 
             
 
-
-            // print_r($lastworkingdate);
+            // echo "<pre>";
+            // print_r($row['employee_code']);
             // exit;
+            if(empty($row['date_of_leaving']) && !empty($sender_table->last_working_date))
+            {
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
+                    $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
+                    if ($date_of_leaving_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";
+                        // print_r($updated_record_detail);
+                    }
+                
+            }
+            else{
             if (!empty($lastworkingdate) || $row['date_of_leaving']!=$sender_table->last_working_date) {
                 $month_number = explode("-", $lastworkingdate);
 
@@ -447,7 +460,8 @@ class BulkImport implements ToModel, WithHeadingRow
                             // echo "<pre>";
                             // print_r($updated_record_detail);
                         }
-                    } else {
+                    } 
+                    else {
                         $updated_details['updated_id'] = $sender_table->id;
                         $table_date = strtotime($sender_table->last_working_date);
                         if ($exit_date != $table_date) {
@@ -473,6 +487,9 @@ class BulkImport implements ToModel, WithHeadingRow
                 }
             }
         }
+
+    }
+    
         if ($_POST['import_type'] == 6) {
             // echo "<pre>"; print_r($row);
             $get_data_ter_courier=DB::table('tercouriers')->where('id',$row['un_id'])->get()->toArray();

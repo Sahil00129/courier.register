@@ -103,6 +103,9 @@ Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
 Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
 Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
 Route::post('add_multiple_data', [TercourierController::class, 'add_multi_details_to_DB']);
+Route::post('get_paylater_details', [TercourierController::class, 'get_paylater_details']);
+
+
 // Route::get('update_ter', [TercourierController::class, 'update_ter']);
 Route::get('update_ter/{id}', [TercourierController::class, 'update_ter']);
 Route::post('get_all_data', [TercourierController::class, 'get_all_data']);
