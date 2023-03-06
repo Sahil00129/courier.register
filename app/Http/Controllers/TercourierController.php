@@ -585,12 +585,12 @@ class TercourierController extends Controller
         $terdata['sender_id'] = $senders[0]->id;
         $terdata['sender_name']  = $senders[0]->name;
 
-        $degignation_check = strtolower($senders[0]->designation);
+        $designation_check = strtolower($senders[0]->designation);
 
         if (
-            $degignation_check == 'market development representative' ||
-            $degignation_check == 'field executive'
-            || $degignation_check == 'project officer'
+            $designation_check == 'market development representative' ||
+            $designation_check == 'field executive'
+            || $designation_check == 'project officer'
         ) {
             return "UNID can't generate for this Employee Designation";
         }
@@ -601,6 +601,7 @@ class TercourierController extends Controller
                 return "Both IAG Code and AX-ID Missing";
             }
         }
+        
 
      
         // echo "<pre>";print_r($ter_data);die;
@@ -3478,12 +3479,12 @@ class TercourierController extends Controller
                 // echo"<pre>";
                 // print_r(strtolower($getsender[$i]->designation));
                 // exit;
-                $degignation_check = "";
-                $degignation_check = strtolower($getsender[$i]->designation);
+                $designation_check = "";
+                $designation_check = strtolower($getsender[$i]->designation);
                 if (
-                    $degignation_check == 'market development representative' ||
-                    $degignation_check == 'field executive'
-                    || $degignation_check == 'project officer'
+                    $designation_check == 'market development representative' ||
+                    $designation_check == 'field executive'
+                    || $designation_check == 'project officer'
                 ) {
                 } else {
                     if (empty($last_working_date)) {
