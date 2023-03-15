@@ -2406,8 +2406,9 @@
                         }
                     }
                 }
-                // alert(trx_str)
-
+                const myArray = trx_str.split("|");
+                if(myArray.length < 11)
+                  {
                 axios.post('/change_status', {
                         'selected_value': trx_str
                     })
@@ -2425,6 +2426,9 @@
                         this.apply_offer_btn = 'Apply';
 
                     })
+                }else{
+                    swal('error', "Maximum 10 TER can be pushed at one time", 'error')
+                }
             },
 
             check_amount_id: function($value) {
