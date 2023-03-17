@@ -188,6 +188,28 @@ Route::get('/get_departments', [UserController::class, 'getDepartment']);
 Route::resource('pos', PoController::class);
 Route::resource('invoices', InvoiceController::class);
 Route::get('/get-po', [InvoiceController::class, 'getPo']);
+Route::get('/check_invoice_paid_status/{id}', [InvoiceController::class, 'check_invoice_paid_status']);
+Route::post('get_all_invoice_data', [InvoiceController::class, 'get_all_invoice_data']);
+Route::post('get_po_list', [InvoiceController::class, 'get_po_list']);
+Route::post('submit_sourcing_remarks', [InvoiceController::class, 'submit_sourcing_remarks']);
+Route::post('handover_invoices_document', [InvoiceController::class, 'handover_invoices_document']);
+Route::get('/invoice_handover', [InvoiceController::class,'invoice_handover']);
+Route::post('/accept_invoice_handover', [InvoiceController::class,'accept_invoice_handover']);
+Route::post('/reject_invoice_handover', [InvoiceController::class,'reject_invoice_handover']);
+Route::post('/update_scanning_data', [InvoiceController::class,'update_scanning_data']);
+Route::post('/get_searched_invoice', [InvoiceController::class,'get_searched_data']);
+Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
+
+
+
+
+
+
+
+
+
+
+
 
 });
 

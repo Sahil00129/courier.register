@@ -359,6 +359,9 @@
                         <button class="actionButtons btn btn-success" v-on:click="change_to_handover()">
                             Handover
                         </button>
+                        <button class="actionButtons btn btn-success" v-on:click="redirect_to_invoice()">
+                            Invoice List
+                        </button>
                         @endif
 
                         <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
@@ -2064,6 +2067,11 @@
 
                     })
 
+
+            },
+            redirect_to_invoice:function(){
+                // this.url = '/download_handshake_report';
+                            window.location.href = '/invoices';
 
             },
             get_sender_data: function(data) {
