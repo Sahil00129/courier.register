@@ -237,7 +237,7 @@ class BulkImport implements ToModel, WithHeadingRow
                     // 'address_district' => $row['address_district'],
                     // 'address_state' => $row['address_state'],
                     // 'address_pin_code' => $row['address_pin_code'],
-                    // 'beneficiary_name'=>$row['beneficiary_name'],
+                    'beneficiary_name'=>$row['beneficiary_name'],
                     // 'account_base_type'=>$row['account_base_type'],
                     // 'transfer_type'=>$row['transfer_type'],
                     // 'account_type'=>$row['type'],
@@ -273,6 +273,19 @@ class BulkImport implements ToModel, WithHeadingRow
                 $updated_details['updated_field'] = 'Account Number  Changed from ' . $sender_table->account_number . ' to ' . $row['account_number'];
 
                 if ($account_number_update) {
+                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                    // echo "<pre>";print_r($updated_record_detail);
+                }
+            }
+
+            if ($sender_table->beneficiary_name != $row['beneficiary_name']) {
+                // print_r($sender_table->last_working_date);
+                $updated_details['updated_id'] = $sender_table->id;
+                $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['beneficiary_name' => $row['beneficiary_name']]);
+
+                $updated_details['updated_field'] = 'Beneficiary Name  Changed from ' . $sender_table->beneficiary_name . ' to ' . $row['beneficiary_name'];
+
+                if ($ifsc_code_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                     // echo "<pre>";print_r($updated_record_detail);
                 }
