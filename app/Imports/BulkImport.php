@@ -473,7 +473,7 @@ class BulkImport implements ToModel, WithHeadingRow
 
                     if (empty($sender_table->last_working_date)) {
                         $updated_details['updated_id'] = $sender_table->id;
-                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $final_exit_date, 'status' => 'Active']);
+                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
                         $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $final_exit_date;
                         if ($date_of_leaving_update) {
                             $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
