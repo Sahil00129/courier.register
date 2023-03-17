@@ -382,7 +382,10 @@ class BulkImport implements ToModel, WithHeadingRow
                 
             }
             else{
+        
+
             if (!empty($lastworkingdate) || $row['date_of_leaving']!=$sender_table->last_working_date) {
+       
                 $month_number = explode("-", $lastworkingdate);
 
                 switch ($month_number[1]) {
@@ -479,10 +482,11 @@ class BulkImport implements ToModel, WithHeadingRow
                         }
                     } 
                     else {
+                      
                         $updated_details['updated_id'] = $sender_table->id;
                         $table_date = strtotime($sender_table->last_working_date);
                         if ($exit_date != $table_date) {
-                            $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $final_exit_date, 'status' => 'Active']);
+                            $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
                             $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $final_exit_date;
                             if ($date_of_leaving_update) {
                                 $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
