@@ -247,6 +247,26 @@ class ImportExportController extends Controller
                 return Response::json($response);
             }
         }
+
+        elseif ($_POST['import_type'] == 14) {
+            try {
+                // echo'<pre>'; print_r($rows); die;
+                // $rows = Excel::toArray(new BulkImport, request()->file('file'));
+                // return response()->json(["rows"=>$rows]);
+                $type = $_POST['import_type'];
+                $rows = Excel::toArray(new BulkImport, request()->file('file'));
+                Excel::import(new BulkImport, request()->file('file'));
+// exit;
+                $response['success'] = true;
+                $response['messages'] = 'Succesfully imported';
+                $response['import_type'] = $type;
+                return Response::json($response);
+            } catch (\Exception $e) {
+                $response['success'] = false;
+                $response['messages'] = 'something wrong'. $e;
+                return Response::json($response);
+            }
+        }
     }
 
     public static function check_unit_pfu_change()

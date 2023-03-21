@@ -111,6 +111,7 @@ $currentURL = url()->current();
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="employee_doc"
                             data-parent="#topAccordion">
                             <li><a href="{{url('sender-table')}}">Employees </a></li>
+                            <li><a href="{{url('vendor-table')}}">Vendors </a></li>
                             <!-- <li><a href="{{url('sender-table')}}">Vendors </a></li> -->
                         </ul>
                     </li>

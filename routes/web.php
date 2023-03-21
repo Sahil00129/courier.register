@@ -15,6 +15,8 @@ use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\TercourierController;
 use App\Http\Controllers\PoController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\VendorController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -201,13 +203,9 @@ Route::post('/get_searched_invoice', [InvoiceController::class,'get_searched_dat
 Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
 
 
-
-
-
-
-
-
-
+Route::get('/vendor-table', [VendorController::class,'vendorTable']);
+Route::get('/get_vendors/{type}', [VendorController::class,'get_vendors']);
+Route::post('add_vendor_details', [VendorController::class, 'add_vendor_details']);
 
 
 

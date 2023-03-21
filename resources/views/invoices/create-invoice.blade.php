@@ -21,12 +21,11 @@
                     <div class="statbox widget box box-shadow">
                         <form class="general_form row" method="POST" action="{{url('/invoices')}}" id="createinvoice">
                             <div class="form-group mb-4 col-md-6">
-                                <label for="exampleFormControlInput2">Ax Code</label>
+                                <label for="exampleFormControlInput2">PO Number</label>
                                 <select class="form-control form-control-sm basic" name="po_id" id="select_po" required>
                                     <option selected disabled>search..</option>
                                     @foreach($pos as $po)
-                                    <option value="{{$po->id}}">{{$po->ax_code}}
-                                        : {{$po->vendor_name}} : {{Helper::PoUnit($po->unit)}}
+                                    <option value="{{$po->id}}">{{$po->po_number}}  
                                     </option>
                                     @endforeach
                                 </select>
@@ -36,9 +35,22 @@
                                 <input type="text" class="form-control" name="po_value" id="po_value" placeholder="" readonly>
                             </div>
                             <div class="form-group mb-4 col-md-6">
-                                <label for="exampleFormControlInput2">Courier Received Date</label>
-                                <input type="date" class="form-control" name="received_date" id="received_date" placeholder="">
+                                <label for="exampleFormControlInput2">Vendor Code</label>
+                                <input type="text" class="form-control" name="vendor_code" id="vendor_code" placeholder="" readonly >
                             </div>
+                            <div class="form-group mb-4 col-md-6">
+                                <label for="exampleFormControlInput2">Vendor Name</label>
+                                <input type="text" class="form-control" name="vendor_name" id="vendor_name" placeholder="" readonly >
+                            </div>
+                            <div class="form-group mb-4 col-md-6">
+                                <label for="exampleFormControlInput2">Unit</label>
+                                <input type="text" class="form-control" name="po_unit" id="po_unit" placeholder="" readonly >
+                            </div>
+                            <div class="form-group mb-4 col-md-6">
+                                <label for="exampleFormControlInput2">Invoice Number</label>
+                                <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
+                            </div>
+                        
                             <div class="form-group mb-4 col-md-6">
                                 <label for="exampleFormControlInput2">Basic Amount</label>
                                 <input type="text" class="form-control" name="basic_amount" id="basic_amount" placeholder="">
@@ -47,19 +59,10 @@
                                 <label for="exampleFormControlInput2">Total Amount</label>
                                 <input type="text" class="form-control" name="total_amount" id="total_amount" placeholder="">
                             </div>
+                         
                             <div class="form-group mb-4 col-md-6">
-                                <label for="exampleFormControlInput2">Unit</label>
-                                <select class="form-control" name="po_unit" id="po_unit" readonly>
-                                    <option value="">Select Unit</option>
-                                    <option value="1">SD1</option>
-                                    <option value="2">SD3</option>
-                                    <option value="3">MA2</option>
-                                    <option value="4">MA4</option>
-                                </select>
-                            </div>
-                            <div class="form-group mb-4 col-md-6">
-                                <label for="exampleFormControlInput2">Invoice Number</label>
-                                <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
+                                <label for="exampleFormControlInput2">Courier Received Date</label>
+                                <input type="date" class="form-control" name="received_date" id="received_date" placeholder="">
                             </div>
                             <div class="form-group mb-4 col-md-6">
                                 <label for="exampleFormControlInput2">Invoice Date</label>

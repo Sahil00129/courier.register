@@ -7,6 +7,7 @@ use App\Models\Sender;
 use App\Models\CourierCompany;
 use App\Models\Category;
 use App\Models\ForCompany;
+use App\Models\VendorDetails;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -712,6 +713,29 @@ class BulkImport implements ToModel, WithHeadingRow
             //         'for_company'  => $row['for_company']
             //     ]);
             // }
+        }
+
+        if ($_POST['import_type'] == 14) {
+            // echo "<pre>"; print_r($row['employee_code']);exit;
+            $get_employee_data=DB::table('vendor_details')->where('erp_code',$row['erp_code'])->get()->toArray();
+            if(empty($get_employee_data)){
+         
+                return new VendorDetails([
+                    'name' => $row['name'],
+                    'unit' => $row['unit'],
+                    'erp_code' => $row['erp_code'],
+
+                ]);
+            // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+            }else{
+                if($row['unit'] != $get_employee_data[0]->unit)
+                {
+    
+                    $updated_data=DB::table('vendor_details')->where('erp_code',$row['erp_code'])->update(['name'=>$row['name'],'unit'=>$row['unit']]);
+                  
+                }
+            }
+         
         }
     }
 }

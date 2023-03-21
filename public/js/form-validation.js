@@ -89,18 +89,30 @@ jQuery(document).ready(function () {
                 //lettersonly:true
             },
             vendor_name: {
-                // required: true,
+                required: true,
+            },
+            vendor_code: {
+                required: true,
             },
             po_value: {
-                // required: true,
+                required: true,
+            },
+            activity: {
+                required: true,
             },
             unit: {
                 // required: true,
             },
         },
         messages: {
+            activity: {
+                required: "Activity is required",
+            },
             po_number: {
                 required: "PO number is required",
+            },
+            vendor_code: {
+                required: "Vendor Code is required",
             },
             vendor_name: {
                 required: "Vendor name is required",

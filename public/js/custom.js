@@ -225,8 +225,12 @@ $("#select_po").change(function (e) {
         },
         success: function (res) {
             if(res.data){
+                console.log(res.data)
                 $("#po_value").val(res.data.po_value);
                 $("#po_unit").val(res.data.unit);
+                $("#vendor_code").val(res.data.vendor_code);
+                $("#vendor_name").val(res.data.vendor_name);
+
             }
         },
     });

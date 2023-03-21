@@ -36,7 +36,7 @@ class PoController extends Controller
                 $searchT = str_replace("'","",$search);
                 $query->where(function ($query)use($search,$searchT) {
                     $query->where('po_number', 'like', '%' . $search . '%')
-                    ->orWhere('ax_code', 'like', '%' . $search . '%')
+                    ->orWhere('vendor_code', 'like', '%' . $search . '%')
                     ->orWhere('vendor_name', 'like', '%' . $search . '%')
                     ->orWhere('po_value', 'like', '%' . $search . '%')
                     ->orWhere('unit', 'like', '%' . $search . '%');
@@ -103,21 +103,31 @@ class PoController extends Controller
             return response()->json($response);
         }
 
-        if(!empty($request->ax_code)){
-            $addpo['ax_code'] = $request->ax_code;
-        }
 
-        if(!empty($request->po_number)){
-            $addpo['po_number'] = $request->po_number;
-        }
+
+        $po_number = Po::select('po_number')->latest('po_number')->first();
+            $po_number = json_decode(json_encode($po_number), true);
+            if (empty($po_number) || $po_number == null) {
+                $addpo['po_number'] = 10001;
+            } else {
+                $addpo['po_number'] = $po_number['po_number'] + 1;
+            }
+
+    
         if(!empty($request->vendor_name)){
             $addpo['vendor_name'] = $request->vendor_name;
+        }
+        if(!empty($request->vendor_code)){
+            $addpo['vendor_code'] = $request->vendor_code;
         }
         if(!empty($request->po_value)){
             $addpo['po_value'] = $request->po_value;
         }
         if(!empty($request->unit)){
             $addpo['unit'] = $request->unit;
+        }
+        if(!empty($request->activity)){
+            $addpo['activity'] = $request->activity;
         }
         $addpo['status'] = 1;
 
