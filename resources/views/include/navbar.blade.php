@@ -89,24 +89,18 @@ $currentURL = url()->current();
                 </li>
 
                 @can('sourcing-user')
-                <li class="menu single-menu">
-                        <a href="{{url('vendor-table')}}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <li class="menu single-menu @if(Str::contains($currentURL, 'admin_update_ter')) active @endif">
+                        <a href="{{url('vendor-table')}}">
                             <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                      stroke-linejoin="round" class="feather feather-layers">
                                     <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                                     <polyline points="2 17 12 22 22 17"></polyline>
                                     <polyline points="2 12 12 17 22 12"></polyline>
                                 </svg>
-
                                 <span>Vendors</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-chevron-down">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
                         </a>
                     </li>
                     @endcan
