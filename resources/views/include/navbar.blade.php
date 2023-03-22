@@ -37,6 +37,10 @@
     } */
 </style>
 
+<?php $user = Auth::user();
+             $data = json_decode(json_encode($user));
+             $name = $data->roles[0]->name; ?>
+
 <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
@@ -148,7 +152,11 @@ $currentURL = url()->current();
                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
+                                @if($name == "sourcing")
+                                <span>Handover Receivable</span>
+                                @else
                                 <span>Handover Table</span>
+                                @endif
                             </div>
                         </a>
                     </li>
@@ -167,7 +175,11 @@ $currentURL = url()->current();
                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
-                                <span>Invoice Handover Table</span>
+                                @if($name == "sourcing")
+                                <span>Handover Forwarded</span>
+                                @else
+                                <span>Handover Table</span>
+                                @endif
                             </div>
                         </a>
                     </li>

@@ -84,7 +84,7 @@
     }
 
     .senderBlock {
-        max-width: 300px;
+        max-width: 165px;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -120,7 +120,7 @@
         border-radius: 4px;
         background: #83838320;
         position: relative;
-        width: 170px;
+        width: 130px;
         padding: 2px 8px;
     }
 
@@ -436,7 +436,9 @@
                             <th>Status</th>
                             <th>Dates</th>
                             <th>Sender</th>
-                            <th>TER</th>
+                            <th>Doc Details</th>
+                            <th>PO Details</th>
+                            <th>Payments</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -446,9 +448,12 @@
                             // dd($tercourier)
                         ?>
                             <tr>
-                                @if($role== "reception")
+                                @if($role== "reception")    
                                 <td style="padding: 10px 21px;">
+                                @if($tercourier->status == 1)
                                     <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
+                                @else <input type="checkbox" disabled>
+                                @endif
                                 </td>
                                 @endif
 
@@ -471,7 +476,8 @@
                                 <td width="100px">
                                     <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
-                                        <div class="uid">
+
+                                        <!-- <div class="uid">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
                                                 <circle cx="12" cy="12" r="10"></circle>
                                                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -497,12 +503,13 @@
                                                 <p><strong>Time taken:</strong> {{ $tercourier->recp_entry_time ?? '-' }} hrs
                                                 </p>
                                             </div>
-                                        </div>
+                                        </div> -->
+
                                     </div>
                                 </td>
                                 <?php
-                               
-                                    if ($tercourier->status == 1) {
+
+                                if ($tercourier->status == 1) {
                                     $status = 'Received';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
@@ -526,11 +533,10 @@
                                 } elseif ($tercourier->status == 7) {
                                     $status = 'Handover to Scanning';
                                     $class = 'btn-success';
-                                }elseif ($tercourier->status == 8) {
+                                } elseif ($tercourier->status == 8) {
                                     $status = 'Ready for Scanning';
                                     $class = 'btn-success';
-                                }
-                                 elseif ($tercourier->status == 9) {
+                                } elseif ($tercourier->status == 9) {
                                     $status = 'Paid & Scanned';
                                     $class = 'btn-success';
                                 } else {
@@ -592,19 +598,39 @@
                                             Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
                                     </ul>
                                 </td>
+
+                                <!-- sender details -->
                                 <td>
-                                    <div class="senderBlock">
-                                        <div class="senderId">
-                                            <span>Emp ID: {{ $tercourier->employee_id ?? '-' }}</span>
+                                    <div class="senderBlock flex-wrap" style="gap: 0">
+                                        <div class="senderId" style="width: 100%">
                                             <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
-                                        <div class="senderLocation">
-                                            <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
-                                            <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
+                                        <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
+                                            <span>ERP - {{ $tercourier->ax_id ?? '-' }} / {{ ucwords($tercourier->location) ?? '-' }}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <!--ter-->
+
+                                <!--doc-->
+                                <td>
+                                    <div class="terBlock">
+                                        <div class="terDates flex-grow-1">
+                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Claimed:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!--po-->
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
@@ -618,6 +644,26 @@
                                         </div>
                                     </div>
                                 </td>
+
+                                <!--payment details-->
+                                <td>
+                                    <div class="terBlock" style="padding: 4px 8px;">
+                                        <div class="terDates flex-grow-1">
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Paid:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                                 <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+
                                 @if ($role == 'reception' && $tercourier->status== 1)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
@@ -649,12 +695,12 @@
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
                                     </div>
                                 </td>
-                    
+
                                 @else
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
@@ -664,7 +710,7 @@
                                         </svg>
                                     </div>
                                 </td>
-                            @endif
+                                @endif
                             </tr>
 
                         <?php } ?>
@@ -764,25 +810,25 @@
                                         Ready for Accounts
                                     </button>
                                 </div>
-                            
+
                                 <div v-if="tercourier.status == 5">
-                                <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                       Unpaid
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Unpaid
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 6">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                      Paid & Ready
+                                        Paid & Ready
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 7">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Handover for Scanning
+                                        Handover for Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 8">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Ready for Scanning
+                                        Ready for Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 9">
@@ -806,33 +852,69 @@
                             </td>
 
 
-                            <td>
-                                <div class="senderBlock">
-                                    <div class="senderId">
-                                        <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
-                                        <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
+                                       <!-- sender details -->
+                                       <td>
+                                    <div class="senderBlock flex-wrap" style="gap: 0">
+                                        <div class="senderId" style="width: 100%">
+                                            <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
+                                        </div>
+                                        <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
+                                            <span>ERP - {{ $tercourier->ax_id ?? '-' }} / {{ ucwords($tercourier->location) ?? '-' }}</span>
+                                        </div>
                                     </div>
-                                    <div class="senderLocation">
-                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
-                                        <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <!--ter-->
+                                </td>
 
-                            <td>
-                                <div class="terBlock">
-                                    <div class="terDates flex-grow-1">
-                                        <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
-                                        <div class="dates d-flex flex-column justify-content-center">
-                                            <div class="amount d-flex align-items-center justify-content-between ">
-                                                <div class="heading">Claimed:</div>
-                                                ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                                <!--doc-->
+                                <td>
+                                    <div class="terBlock">
+                                        <div class="terDates flex-grow-1">
+                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Claimed:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
+                                </td>
+
+                                <!--po-->
+                                <td>
+                                    <div class="terBlock">
+                                        <div class="terDates flex-grow-1">
+                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Claimed:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!--payment details-->
+                                <td>
+                                    <div class="terBlock" style="padding: 4px 8px;">
+                                        <div class="terDates flex-grow-1">
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Paid:</div>
+                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                                 <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->amount ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
 
                             <td v-if="tercourier.status== 1">
                                 <div class="action d-flex justify-content-center align-items-center">
@@ -914,7 +996,7 @@
                                         <label for="recipient-name" class="col-form-label pb-0">Scanning Remarks:</label>
                                         <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="scanning_remarks">
                                     </div>
-                        
+
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
                                         <input type="file" accept=".jpg,.pdf" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
@@ -934,35 +1016,35 @@
 
 
                 <div class="modal fade show" id="viewFileModal" v-if="file_view_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Uploaded File for @{{file_id}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="file_view_modal=false;">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="col-md-12 bg-black">
-                                <img id="view-src" :src="view_file_name" alt="sample image" style="width: 100%; max-height: 300px; border-radius: 12px;" />
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Uploaded File for @{{file_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="file_view_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-outline-primary" :href="view_file_name" target="_blank" style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
-                                Open in New Tab
-                                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                    <polyline points="15 3 21 3 21 9"></polyline>
-                                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                                </svg>
-                            </a>
-                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
-                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                        </div>
+                            <div class="modal-body">
+                                <div class="col-md-12 bg-black">
+                                    <img id="view-src" :src="view_file_name" alt="sample image" style="width: 100%; max-height: 300px; border-radius: 12px;" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-outline-primary" :href="view_file_name" target="_blank" style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
+                                    Open in New Tab
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </a>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                            </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
 
                 <!-- Edit Reception TER Modal -->
                 <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
@@ -1142,11 +1224,11 @@
             forPeiod: "",
             po_value: "",
             unid: "",
-            scanning_id:"",
-            file_id:"",
-            file_view_modal:false,
-            view_file_name:"",
-            
+            scanning_id: "",
+            file_id: "",
+            file_view_modal: false,
+            view_file_name: "",
+
 
 
         },
@@ -1172,7 +1254,7 @@
                 }
 
                 axios.post('/edit_invoice_details', {
-                        'unid':this.unique_id,
+                        'unid': this.unique_id,
                         'po_id': po_id,
                         'po_value': this.po_value,
                         'received_date': this.date_of_receipt,
@@ -1396,7 +1478,7 @@
                             this.ter_all_data = response.data[0];
                             // console.log(this.ter_all_data.courier_company.courier_name)
                             // if (this.page_role == "reception") {
-                                this.search_flag = true;
+                            this.search_flag = true;
 
                             // }
                             if (this.page_role == "Tr Admin") {
@@ -1574,9 +1656,9 @@
 
                     })
             },
-            
+
             open_file_view_modal: function(id) {
-               this.file_id = id;
+                this.file_id = id;
                 this.file_view_modal = true;
                 axios.post('/get_file_name', {
                         'id': this.file_id,
@@ -1593,38 +1675,38 @@
             },
             update_scanning_data: function() {
                 if (this.scanning_remarks != "" && this.file != null) {
-                        const config = {
-                            headers: {
-                                'content-type': 'multipart/form-data',
-                            }
+                    const config = {
+                        headers: {
+                            'content-type': 'multipart/form-data',
                         }
-                        let formData = new FormData();
-                        formData.append('file', this.file);
-                        formData.append('unid', this.scanning_id);
-                        formData.append('remarks', this.scanning_remarks);
+                    }
+                    let formData = new FormData();
+                    formData.append('file', this.file);
+                    formData.append('unid', this.scanning_id);
+                    formData.append('remarks', this.scanning_remarks);
 
 
-                        axios.post('/update_scanning_data', formData, config)
-                            .then(response => {
-                                if (response.data[0] === "duplicate_voucher") {
-                                    swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
-                                } else if (response.data) {
-                                    swal('success', "Ter Id :" + this.ter_id + " has been sent to HR for payment", 'success')
-                                    location.reload();
-                                } else {
-                                    swal('error', "System Error", 'error')
-                                    this.scanning_modal = false;
-                                    this.ter_id = "";
-                                    location.reload();
-                                }
-
-                            }).catch(error => {
-
-                                swal('error', error, 'error')
+                    axios.post('/update_scanning_data', formData, config)
+                        .then(response => {
+                            if (response.data[0] === "duplicate_voucher") {
+                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                            } else if (response.data) {
+                                swal('success', "Ter Id :" + this.ter_id + " has been sent to HR for payment", 'success')
+                                location.reload();
+                            } else {
+                                swal('error', "System Error", 'error')
                                 this.scanning_modal = false;
                                 this.ter_id = "";
-                            })
-                  
+                                location.reload();
+                            }
+
+                        }).catch(error => {
+
+                            swal('error', error, 'error')
+                            this.scanning_modal = false;
+                            this.ter_id = "";
+                        })
+
                 } else {
                     swal('error', "Fields are Empty", 'error')
                 }
@@ -1662,9 +1744,9 @@
                 this.ter_id = ter_id;
                 this.ter_modal = true;
             },
-            open_scanning_modal:function(id){
-                this.scanning_modal =true;
-                this.scanning_id=id;
+            open_scanning_modal: function(id) {
+                this.scanning_modal = true;
+                this.scanning_id = id;
             },
             open_partial_paid_modal: function(ter_id) {
                 this.scanning_modal = true;
@@ -1879,7 +1961,7 @@
 
             },
 
-            handover_invoices_document:function($type){
+            handover_invoices_document: function($type) {
                 var x = this.$el.querySelector("#tb");
                 if (x == null) {
                     x = "";
@@ -1903,7 +1985,7 @@
 
                 axios.post('/handover_invoices_document', {
                         'selected_value': trx_str,
-                        'user_type' : $type
+                        'user_type': $type
                     })
                     .then(response => {
                         console.log(response.data);

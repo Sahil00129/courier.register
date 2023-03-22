@@ -49,10 +49,14 @@ class InvoiceController extends Controller
                 $role="accounts";
                 $tercouriers = $query->whereIn('status', [ '4','5', '6','7'])->where('ter_type',1)->orderby('id', 'DESC')->paginate(20);
                 }
-                else if($name == "reception"){
-                 $role = "reception";
+                else if($name == "superadmin"){
+                 $role = "superadmin";
                  $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }
+                else if($name == "reception"){
+                    $role = "reception";
+                    $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                   }
                 else if($name == "scanning"){
                     $role = "scanning";
                     $tercouriers = $query->whereIn('status', ['7','8','9'])->where('ter_type',1)->orderby('id', 'DESC')->paginate(20);
