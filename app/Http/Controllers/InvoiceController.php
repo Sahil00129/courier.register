@@ -167,7 +167,7 @@ class InvoiceController extends Controller
         $saveinvoice['sender_id'] = $request->po_id;
 
         $get_all_po=DB::table('pos')->where('id',$request->po_id)->get();
-        $saveinvoice['ax_id']= $get_all_po[0]->ax_code;
+        // $saveinvoice['ax_id']= $get_all_po[0]->ax_code;
         $saveinvoice['sender_id']= $request->po_id;
         $saveinvoice['sender_name']= $get_all_po[0]->vendor_name;
         $saveinvoice['pfu']= Helper::PoUnit($get_all_po[0]->unit);
