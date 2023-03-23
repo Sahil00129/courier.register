@@ -152,6 +152,12 @@ jQuery(document).ready(function () {
             received_date: {
                 required: true,
 
+            },
+            courier_name: {
+                required: true
+            },
+            docket_no: {
+                required: true
             }
         },
         messages: {
@@ -172,6 +178,12 @@ jQuery(document).ready(function () {
             },
             received_date: {
                 required: "Received Date is required",
+            },
+            courier_name: {
+                required: "Courier Name is required",
+            },
+            docket_no: {
+                required: "Docket Number is required",
             },
         },
         submitHandler: function (form) {

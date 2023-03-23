@@ -43,23 +43,23 @@ class InvoiceController extends Controller
                 if($name == "sourcing")
                 {
                 $role="sourcing";
-                $tercouriers = $query->whereIn('status', ['2', '3','4','11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['2', '3','4','11'])->where('ter_type',1)->with('PoDetail','CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }else if($name == "accounts")
                 {
                 $role="accounts";
-                $tercouriers = $query->whereIn('status', [ '4','5', '6','7'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', [ '4','5', '6','7'])->where('ter_type',1)->with('PoDetail','CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }
                 else if($name == "superadmin"){
                  $role = "superadmin";
-                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('PoDetail','CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }
                 else if($name == "reception"){
                     $role = "reception";
-                    $tercouriers = $query->whereIn('status', ['1', '11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                    $tercouriers = $query->whereIn('status', ['1', '11'])->where('ter_type',1)->with('PoDetail','CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                    }
                 else if($name == "scanning"){
                     $role = "scanning";
-                    $tercouriers = $query->whereIn('status', ['7','8','9'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                    $tercouriers = $query->whereIn('status', ['7','8','9'])->where('ter_type',1)->with('PoDetail','CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                    }
 
  
@@ -134,8 +134,10 @@ class InvoiceController extends Controller
     public function create()
     {
         $pos =  Po::where('status', 1)->orderby('id', 'ASC')->get();
+        $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
 
-        return view('invoices.create-invoice',['pos'=>$pos]);
+
+        return view('invoices.create-invoice',['pos'=>$pos,'couriers' => $couriers]);
     }
 
     /**
@@ -193,6 +195,15 @@ class InvoiceController extends Controller
         }
         if(!empty($request->received_date)){
             $saveinvoice['received_date'] = $request->received_date;
+        }
+        if(!empty($request->courier_id)){
+            $saveinvoice['courier_id']  = $request->courier_id;
+        }
+        if(!empty($request->docket_no)){
+            $saveinvoice['docket_no']  = $request->docket_no;
+        }
+        if(!empty($request->docket_date)){
+            $saveinvoice['docket_date']  = $request->docket_date;
         }
         $saveinvoice['date_of_receipt'] = date('Y-m-d');
         

@@ -168,24 +168,24 @@
             <div class="widget-content widget-content-area br-6">
                 <!---searchbar--->
                 <div class="d-flex justify-content-end align-items-center px-4 py-4 " style="gap: 1rem; flex-wrap: wrap;">
-             
-                @if($role == "sourcing")
-                <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
+
+                    @if($role == "sourcing")
+                    <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
                         <div class="winery_btn_n btn-section px-0 text-right">
-                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal"  style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                     Vendors</span></a>
 
                         </div>
                     </div>
                     <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
                         <div class="winery_btn_n btn-section px-0 text-right">
-                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal"  style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
+                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
                                     Vendors</span></a>
 
                         </div>
                     </div>
                     @endif
-           
+
 
                     <div class="searchField" style="width: 200px; position: relative;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" onclick="ss()">
@@ -194,7 +194,7 @@
                         </svg>
                         <input type="search" class="form-control form-control-sm form-control-sm-30px" placeholder="Search..." id="myInput" style="padding-left: 30px" v-model="search_keyword" @keyup="search_keyword_fn()">
                     </div>
-            
+
                 </div>
 
                 <table id="html5-extension" class="html5-extension table table-hover non-hover" style="width:100%">
@@ -275,10 +275,10 @@
 
     <!-- Edit Reception TER Modal -->
     <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
+        <div class="modal-dialog" role="document" style="min-width: min(90%, 400px)">
             <div class="modal-content" style="position: relative;">
                 <div class="editTer modal-body editTer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close" style="position: absolute;right: 1rem;">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="15" y1="9" x2="9" y2="15"></line>
                         <line x1="9" y1="9" x2="15" y2="15"></line>
@@ -289,20 +289,18 @@
                     <div class="form-row mb-4">
 
                         <!--------------- Vendor Name ---------->
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                             <label for="inputPassword4">Vendor Name* </label>
-                            <div style="height: 20px;"></div>
                             <input type="text" class="form-control form-control-sm" v-model="vendor_name">
                         </div>
                         <!--------------- Vendor Code ---------->
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                             <label for="inputPassword4">Vendor Code* </label>
-                            <div style="height: 20px;"></div>
                             <input type="text" class="form-control form-control-sm" v-model="vendor_code">
                         </div>
                         <!--------------- end ------------------>
 
-                        <div class="form-group mb-4 col-md-6">
+                        <div class="form-group mb-4 col-md-12">
                             <label for="exampleFormControlInput2">Unit</label>
                             <select class="form-control" name="unit" v-model="unit">
                                 <option value="">Select Unit</option>
@@ -314,9 +312,9 @@
                             <!-- <input type="text" class="form-control" name="unit" id="unit" placeholder=""> -->
                         </div>
 
-                      
 
-                        <div class="d-flex justify-content-end align-items-center">
+
+                        <div class="d-flex justify-content-end align-items-center" style="width: 100%">
                             <button type=" submit" class="btn btn-primary" style="width: 100px" @click="add_vendor_details()">
                                 <span class="indicator-label">Save</span>
                                 </span>
@@ -362,34 +360,33 @@
             },
             methods: {
                 search_keyword_fn() {
-                var table = $('.html5-extension').DataTable();
-                table.search(this.search_keyword).draw();
-            },
+                    var table = $('.html5-extension').DataTable();
+                    table.search(this.search_keyword).draw();
+                },
                 add_vendor_details() {
 
-                    if(this.vendor_code!="" && this.vendor_name!="" && this.unit!="")
-                     {
-                    axios.post('/add_vendor_details', {
-                            'name': this.vendor_name,
-                            'erp_code': this.vendor_code,
-                            'unit': this.unit
-                        })
-                        .then(response => {
-                            if (response.data) {
-                                swal('success', "Vendor Added Successfully..", 'success')
-                                location.reload();
-                            } else {
+                    if (this.vendor_code != "" && this.vendor_name != "" && this.unit != "") {
+                        axios.post('/add_vendor_details', {
+                                'name': this.vendor_name,
+                                'erp_code': this.vendor_code,
+                                'unit': this.unit
+                            })
+                            .then(response => {
+                                if (response.data) {
+                                    swal('success', "Vendor Added Successfully..", 'success')
+                                    location.reload();
+                                } else {
 
-                                swal('error', "Vendor Code Already Exists", 'error')
+                                    swal('error', "Vendor Code Already Exists", 'error')
 
-                            }
+                                }
 
-                        }).catch(error => {
+                            }).catch(error => {
 
 
-                        })
-                    }else{
-                        swal('error','Vendor Details are missing','error')
+                            })
+                    } else {
+                        swal('error', 'Vendor Details are missing', 'error')
                     }
                 }
 

@@ -599,10 +599,11 @@
                                 <td>
                                     <div class="senderBlock flex-wrap" style="gap: 0">
                                         <div class="senderId" style="width: 100%">
-                                            <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
+                                            <span class="senderName">Name- {{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
-                                        <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
-                                            <span>ERP - {{ $tercourier->employee_id ?? '-' }} / {{ ucwords($tercourier->pfu) ?? '-' }}</span>
+                                        <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
+                                            <span>ERP - {{ $tercourier->employee_id ?? '-' }}</span>
+                                            <span>Unit- {{ ucwords($tercourier->pfu) ?? '-' }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -611,7 +612,7 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ $tercourier->invoice_no }}</strong></span>
+                                            <span class="terDate"><strong>Inv No- {{ $tercourier->invoice_no }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
@@ -630,7 +631,7 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ $tercourier->PoDetail->po_number }}</strong></span>
+                                            <span class="terDate"><strong>PO No- {{ $tercourier->PoDetail->po_number }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
@@ -828,10 +829,11 @@
                                        <td>
                                     <div class="senderBlock flex-wrap" style="gap: 0">
                                         <div class="senderId" style="width: 100%">
-                                            <span class="senderName">@{{ tercourier.sender_name  }}</span>
+                                            <span class="senderName">Name- @{{ tercourier.sender_name  }}</span>
                                         </div>
-                                        <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
-                                            <span>ERP - @{{ tercourier.employee_id  }} / @{{ tercourier.pfu }}</span>
+                                        <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
+                                            <span>ERP - @{{ tercourier.employee_id  }}</span>
+                                            <span>Unit-  @{{ tercourier.pfu }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -840,7 +842,7 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>@{{ tercourier.invoice_no }} </strong></span>
+                                            <span class="terDate"><strong>Inv No- @{{ tercourier.invoice_no }} </strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
@@ -859,7 +861,7 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>@{{ tercourier.po_detail.po_number }}</strong></span>
+                                            <span class="terDate"><strong>PO No- @{{ tercourier.po_detail.po_number }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
