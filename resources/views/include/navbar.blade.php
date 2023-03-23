@@ -39,7 +39,7 @@
 
 <?php $user = Auth::user();
              $data = json_decode(json_encode($user));
-             $name = $data->roles[0]->name; ?>
+               $name=$data->role ?>
 
 <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -296,6 +296,7 @@ $currentURL = url()->current();
                 {{--                    </li>--}}
                 {{--                @endcan--}}
 
+                @can('po-list')
                 <li class="menu single-menu @if($currentURL == url('pos')) active @endif">
                         <a href="{{url('pos')}}">
                             <div class="">
@@ -312,7 +313,10 @@ $currentURL = url()->current();
                             </div>
                         </a>
                     </li>
+                    @endcan
 
+
+                    @if(false)
                     @can('tercouriers/create')
                        <!-- receive documents -->
                        <li class="menu single-menu">
@@ -342,6 +346,43 @@ $currentURL = url()->current();
                         </ul>
                     </li>
                     @endcan
+                    @endif
+
+                    @can('tercouriers/create')
+                    <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
+                        <a href="{{url('invoices/create')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Add Invoice</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
+                        <a href="{{url('tercouriers/create')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Add TER</span>
+                            </div>
+                        </a>
+                    </li>
+                @endcan
+
 
                 @can('tercouriers')
                     <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
@@ -438,6 +479,7 @@ $currentURL = url()->current();
                 @endcan -->
 
 
+                @if(false)
                 @can('edit-new-ter')
                     <li class="menu single-menu @if($currentURL == url('edit_ter_reception')) active @endif">
                         <a href="{{url('edit_ter_reception')}}">
@@ -454,6 +496,7 @@ $currentURL = url()->current();
                         </a>
                     </li>
                 @endcan
+                @endif  
 
                 @can('users')
                     <li class="menu single-menu @if($currentURL == url('tercouriers/create')) active @endif">

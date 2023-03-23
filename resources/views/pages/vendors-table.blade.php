@@ -168,13 +168,24 @@
             <div class="widget-content widget-content-area br-6">
                 <!---searchbar--->
                 <div class="d-flex justify-content-end align-items-center px-4 py-4 " style="gap: 1rem; flex-wrap: wrap;">
-                <div class="col-lg lead_bladebtop1_n pl-0">
+             
+                @if($role == "sourcing")
+                <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
+                        <div class="winery_btn_n btn-section px-0 text-right">
+                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal"  style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                                    Vendors</span></a>
+
+                        </div>
+                    </div>
+                    <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
                         <div class="winery_btn_n btn-section px-0 text-right">
                             <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal"  style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
                                     Vendors</span></a>
 
                         </div>
                     </div>
+                    @endif
+           
 
                     <div class="searchField" style="width: 200px; position: relative;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" onclick="ss()">
@@ -260,19 +271,18 @@
     </div>
 
 
-    <a href="" style="cursor:pointer; text-align: center;" data-toggle="modal" data-target="#editTerModal" class="floatingButton btn btn-lg btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span class="text">Add Vendor</span>
-    </a>
+
 
     <!-- Edit Reception TER Modal -->
     <div class="modal fade show" id="editTerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
             <div class="modal-content" style="position: relative;">
                 <div class="editTer modal-body editTer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
 
                     <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Add Vendor Details</h3>
 
@@ -304,7 +314,7 @@
                             <!-- <input type="text" class="form-control" name="unit" id="unit" placeholder=""> -->
                         </div>
 
-
+                      
 
                         <div class="d-flex justify-content-end align-items-center">
                             <button type=" submit" class="btn btn-primary" style="width: 100px" @click="add_vendor_details()">
@@ -320,11 +330,6 @@
                     <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
                         Loading...
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
                 </div>
             </div>
         </div>
@@ -362,6 +367,8 @@
             },
                 add_vendor_details() {
 
+                    if(this.vendor_code!="" && this.vendor_name!="" && this.unit!="")
+                     {
                     axios.post('/add_vendor_details', {
                             'name': this.vendor_name,
                             'erp_code': this.vendor_code,
@@ -381,6 +388,9 @@
 
 
                         })
+                    }else{
+                        swal('error','Vendor Details are missing','error')
+                    }
                 }
 
             }

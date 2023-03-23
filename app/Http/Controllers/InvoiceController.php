@@ -43,23 +43,23 @@ class InvoiceController extends Controller
                 if($name == "sourcing")
                 {
                 $role="sourcing";
-                $tercouriers = $query->whereIn('status', ['2', '3','4','11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['2', '3','4','11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }else if($name == "accounts")
                 {
                 $role="accounts";
-                $tercouriers = $query->whereIn('status', [ '4','5', '6','7'])->where('ter_type',1)->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', [ '4','5', '6','7'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }
                 else if($name == "superadmin"){
                  $role = "superadmin";
-                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                 }
                 else if($name == "reception"){
                     $role = "reception";
-                    $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8','9','11'])->where('ter_type',1)->with('CourierCompany','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                    $tercouriers = $query->whereIn('status', ['1', '11'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                    }
                 else if($name == "scanning"){
                     $role = "scanning";
-                    $tercouriers = $query->whereIn('status', ['7','8','9'])->where('ter_type',1)->orderby('id', 'DESC')->paginate(20);
+                    $tercouriers = $query->whereIn('status', ['7','8','9'])->where('ter_type',1)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
                    }
 
  
@@ -171,10 +171,10 @@ class InvoiceController extends Controller
         $saveinvoice['sender_id'] = $request->po_id;
 
         $get_all_po=DB::table('pos')->where('id',$request->po_id)->get();
-        // $saveinvoice['ax_id']= $get_all_po[0]->ax_code;
+        $saveinvoice['employee_id']= $get_all_po[0]->vendor_code;
         $saveinvoice['sender_id']= $request->po_id;
         $saveinvoice['sender_name']= $get_all_po[0]->vendor_name;
-        $saveinvoice['pfu']= Helper::PoUnit($get_all_po[0]->unit);
+        $saveinvoice['pfu']= $get_all_po[0]->unit;
         $saveinvoice['po_value']= $get_all_po[0]->po_value;
 
         
@@ -194,7 +194,7 @@ class InvoiceController extends Controller
         if(!empty($request->received_date)){
             $saveinvoice['received_date'] = $request->received_date;
         }
-        
+        $saveinvoice['date_of_receipt'] = date('Y-m-d');
         
         $saveinvoice['ter_type'] = 1;
         $saveinvoice['status'] = 1;
@@ -479,11 +479,11 @@ class InvoiceController extends Controller
             // return $flag;
             if ($flag) {
 
-                $tercouriers = $query->where('ter_type',1)->where('status', $status)->orderby('id', 'DESC')->
+                $tercouriers = $query->where('ter_type',1)->where('status', $status)->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->
                 get();
                 return [$tercouriers];
             } else {
-                $tercouriers = $query->where('ter_type',1)->where('id', 'like', '%' . $searched_item . '%')->orWhere('invoice_no', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
+                $tercouriers = $query->where('ter_type',1)->where('id', 'like', '%' . $searched_item . '%')->orWhere('invoice_no', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->with('PoDetail','SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->get();
                 // dd($tercouriers);
                 // return $tercouriers;
                 $ter_data = array();

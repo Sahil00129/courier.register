@@ -133,7 +133,7 @@
     }
 
     .terBlock {
-        padding: 13px 8px 2px;
+        padding: 13px 4px 2px;
     }
 
     .terBlock .terDates,
@@ -159,7 +159,7 @@
     }
 
     .amount .heading {
-        width: 60px !important;
+        width: 46px !important;
         margin-right: 4px;
     }
 
@@ -376,6 +376,7 @@
                         </button>
                         @endif
 
+                        @if(false)
                         <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
@@ -392,21 +393,22 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
+                        @endif
                     </div>
                     <div class="d-flex align-items-center" style="gap: 6px;">
                         <div class="form-group form-group-sm mb-0">
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
-                                @if($role =="reception")<option value="1">Received</option>@endif
-                                <option value="2">Handover</option>
-                                <option value="11">Handover Created</option>
-                                <option value="3">Verify</option>
-                                <option value="4">Ready for Accounts</option>
+                                @if($role =="reception")<option value="1"> Received at Reception</option>@endif
+                                <option value="11">Handover to Sourcing</option>
+                                <option value="2">Received at Sourcing</option>
+                                <option value="3">Verified at Sourcing</option>
+                                <option value="4">Handover to Accounts</option>
                                 <option value="5">Unpaid</option>
-                                <option value="6">Paid & Ready</option>
+                                <option value="6">Paid</option>
                                 <option value="7">Handover to Scanning</option>
-                                <option value="8">Ready for Scanning</option>
-                                <option value="9">Paid & Scanned</option>
+                                <option value="8">Received at Scanning</option>
+                                <option value="9">Invoice Scanned</option>
                                 <!-- <option value="fail">Failed</option> -->
                             </select>
                         </div>
@@ -510,34 +512,34 @@
                                 <?php
 
                                 if ($tercourier->status == 1) {
-                                    $status = 'Received';
+                                    $status = 'Received at Recption';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
-                                    $status = 'Created Handover';
+                                    $status = 'Handover to Sourcing';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
-                                    $status = 'Handover';
+                                    $status = 'Received at Sourcing';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 3) {
-                                    $status = 'Verify';
+                                    $status = 'Verified at Sourcing';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 4) {
-                                    $status = 'Ready for Accounts';
+                                    $status = 'Handover to Accounts';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
                                     $status = 'Unpaid';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 6) {
-                                    $status = 'Paid & Ready';
+                                    $status = 'Paid';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 7) {
                                     $status = 'Handover to Scanning';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 8) {
-                                    $status = 'Ready for Scanning';
+                                    $status = 'Received at Scanning';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 9) {
-                                    $status = 'Paid & Scanned';
+                                    $status = 'Invoice Scanned';
                                     $class = 'btn-success';
                                 } else {
                                     $status = 'Failed';
@@ -549,18 +551,12 @@
                                     @if(!empty($tercourier->HandoverDetail) && $tercourier->status == 1 )
                                     @if($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks!="")
                                     <div style="position: relative;">
-                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" >
                                             {{ $status }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                                 <polyline points="6 9 12 15 18 9"></polyline>
                                             </svg>
                                         </button>
-                                        <div class="finfectResponseDetail">
-                                            <p>
-                                                <strong>Cancel Remark:</strong> {{ ucfirst($tercourier->HandoverDetail->handover_remarks) ?? '-' }}
-
-                                            </p>
-                                        </div>
                                     </div>
                                     @elseif($tercourier->status == 11 )
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
@@ -571,7 +567,7 @@
                                     </button>
                                     @endif
                                     @elseif($tercourier->status == 0 || $tercourier->status == 1)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -585,13 +581,13 @@
                                 </td>
                                 <td>
                                     <ul class="dates d-flex flex-column justify-content-center">
-                                        @if($tercourier->date_of_receipt)
-                                        <li>
-                                            Recieved: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
-
                                         @if($tercourier->received_date)
                                         <li>
-                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+                                            Recieved: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+
+                                        @if($tercourier->date_of_receipt)
+                                        <li>
+                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
 
                                         @if($tercourier->handover_date)
                                         <li>
@@ -606,7 +602,7 @@
                                             <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
                                         <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
-                                            <span>ERP - {{ $tercourier->ax_id ?? '-' }} / {{ ucwords($tercourier->location) ?? '-' }}</span>
+                                            <span>ERP - {{ $tercourier->employee_id ?? '-' }} / {{ ucwords($tercourier->pfu) ?? '-' }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -615,15 +611,15 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <span class="terDate"><strong>{{ $tercourier->invoice_no }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
-                                                    {{ $tercourier->amount ?? '-' }}
+                                                    {{ $tercourier->invoice_date ?? '-' }}
                                                 </div>
                                                 <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Claimed:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    <div class="heading">Amount:</div>
+                                                    ₹{{ $tercourier->basic_amount ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -634,11 +630,11 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <span class="terDate"><strong>{{ $tercourier->PoDetail->po_number }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Claimed:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    <div class="heading">Date:</div>
+                                                    {{ DateTime::createFromFormat("Y-m-d H:i:s",$tercourier->PoDetail->created_at)->format("d/m/Y") ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -652,11 +648,11 @@
                                             <div class="dates d-flex flex-column justify-content-center">
                                             <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Paid:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    ₹{{ $tercourier->total_amount ?? '-' }}
                                                 </div>
                                                  <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
-                                                    {{ $tercourier->amount ?? '-' }}
+                                                    {{ $tercourier->paid_date ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -664,7 +660,7 @@
                                 </td>
 
 
-                                @if ($role == 'reception' && $tercourier->status== 1)
+                                @if ($role == 'reception' && $tercourier->status== 1 && false)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
@@ -718,38 +714,14 @@
                     <tbody id="tb1" v-else>
 
                         <tr v-for="tercourier in ter_all_data">
-                            <td style="padding: 10px 21px;">
-                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
+                        @if($role== "reception" || $role== "sourcing" || $role== "accounts" )
+                        <td style="padding: 10px 21px;">
+                                <input type="checkbox" id="selectboxid8" name="select_boxd[]" class="selected_boxd" disabled>
                             </td>
+                        @endif    
                             <td width="100px">
                                 <div class="d-flex align-items-center" style="gap: 4px;">
                                     @{{ tercourier.id }}
-                                    <div class="uid">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                        </svg>
-                                        <div class="terDetails">
-                                            <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
-                                                <strong>@{{ tercourier.delivery_date }}</strong>
-                                            </p>
-                                            <div class="courier d-flex align-items-center" style="gap: 1rem">
-                                                <p><strong>Courier
-                                                        Name:</strong>
-                                                </p> |
-                                                <p><strong>Docket No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
-                                                </p>
-                                                |
-                                                <p><strong>Docket Date:</strong> @{{ tercourier.docket_date }}
-                                                </p>
-                                            </div>
-                                            <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
-                                            </p>
-                                            <p><strong>Time taken:</strong> @{{ tercourier.recp_entry_time ? tercourier.recp_entry_time : '-' }} hrs
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </td>
 
@@ -765,8 +737,8 @@
                                     </button>
                                 </div> -->
                                 <div v-if="tercourier.status == 1">
-                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
-                                        Received
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" >
+                                        Received at Reception
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -780,7 +752,7 @@
                                 </button>
                                 <div v-if="tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
-                                        Handover
+                                    Received at Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -791,7 +763,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 11">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
-                                        Handover Created
+                                    Handover to Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -802,12 +774,12 @@
                                 </div>
                                 <div v-if="tercourier.status == 3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Verify
+                                    Verified at Sourcing
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 4">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Ready for Accounts
+                                    Handover to Accounts
                                     </button>
                                 </div>
 
@@ -818,7 +790,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 6">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Paid & Ready
+                                        Paid
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 7">
@@ -828,12 +800,12 @@
                                 </div>
                                 <div v-if="tercourier.status == 8">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Ready for Scanning
+                                    Received at Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 9">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Paid & Scanned
+                                    Invoice Scanned
                                     </button>
                                 </div>
                                 <!-- </div> -->
@@ -842,10 +814,10 @@
 
                             <td>
                                 <ul class="dates d-flex flex-column justify-content-center">
-                                    <li v-if="tercourier.date_of_receipt">
-                                        Received: @{{ tercourier.date_of_receipt }}</li>
                                     <li v-if="tercourier.received_date">
-                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @{{ tercourier.received_date }}</li>
+                                        Received: @{{ tercourier.received_date }}</li>
+                                    <li v-if="tercourier.date_of_receipt">
+                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @{{ tercourier.date_of_receipt }}</li>
                                     <li v-if="tercourier.handover_date">
                                         Handover: @{{ tercourier.handover_date }}</li>
                                 </ul>
@@ -856,10 +828,10 @@
                                        <td>
                                     <div class="senderBlock flex-wrap" style="gap: 0">
                                         <div class="senderId" style="width: 100%">
-                                            <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
+                                            <span class="senderName">@{{ tercourier.sender_name  }}</span>
                                         </div>
                                         <div class="senderLocation flex-row justify-content-start" style="gap: 8px">
-                                            <span>ERP - {{ $tercourier->ax_id ?? '-' }} / {{ ucwords($tercourier->location) ?? '-' }}</span>
+                                            <span>ERP - @{{ tercourier.employee_id  }} / @{{ tercourier.pfu }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -868,15 +840,15 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <span class="terDate"><strong>@{{ tercourier.invoice_no }} </strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
-                                                    {{ $tercourier->amount ?? '-' }}
+                                                    @{{ tercourier.invoice_date  }}
                                                 </div>
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Claimed:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    ₹@{{ tercourier.basic_amount  }}
                                                 </div>
                                             </div>
                                         </div>
@@ -887,11 +859,12 @@
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <span class="terDate"><strong>@{{ tercourier.po_detail.po_number }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Claimed:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    <div class="heading">Date:</div>
+                                                    @{{ trim_date(tercourier.po_detail.created_at) }}
+
                                                 </div>
                                             </div>
                                         </div>
@@ -905,18 +878,18 @@
                                             <div class="dates d-flex flex-column justify-content-center">
                                             <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Paid:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    ₹@{{ tercourier.total_amount }}
                                                 </div>
                                                  <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
-                                                    {{ $tercourier->amount ?? '-' }}
+                                                    @{{ tercourier.paid_date}}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
 
-                            <td v-if="tercourier.status== 1">
+                            <td v-if="tercourier.status== 1 && false">
                                 <div class="action d-flex justify-content-center align-items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1239,6 +1212,10 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            trim_date(date){
+                const changed_date = date.split("T");
+                return changed_date[0];
+            },
             open_invoice_remark: function(id) {
                 this.unid = id;
                 this.ter_modal = true;
@@ -1691,7 +1668,7 @@
                             if (response.data[0] === "duplicate_voucher") {
                                 swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
                             } else if (response.data) {
-                                swal('success', "Ter Id :" + this.ter_id + " has been sent to HR for payment", 'success')
+                                swal('success', "UNID :" + this.ter_id + " has been submitted", 'success')
                                 location.reload();
                             } else {
                                 swal('error', "System Error", 'error')

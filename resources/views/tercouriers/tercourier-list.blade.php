@@ -395,7 +395,7 @@
                         <div class="form-group form-group-sm mb-0">
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
-                                @if($role =="reception")<option value="1">Received</option>@endif
+                                @if($role =="reception")<option value="1">Received at Reception</option>@endif
                                 <option value="2">Handover</option>
                                 <option value="11">Handover Created</option>
                                 <option value="3">Finfect</option>
@@ -495,7 +495,7 @@
 
                                 <?php
                               if ($tercourier->status == 1) {
-                                    $status = 'Received';
+                                    $status = 'Received at Reception';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
                                     $status = 'Created Handover';
@@ -1037,7 +1037,7 @@
                                 <?php
                                 if (!empty($tercourier->HandoverDetail) && $tercourier->status == 1) {
                                     if ($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks != "") {
-                                        $status = 'Received';
+                                        $status = ' Received at Reception';
                                         $class = 'btn-danger';
                                     }
                                     elseif ($tercourier->status == 11) {
@@ -1045,7 +1045,7 @@
                                         $class = 'btn-warning';
                                     }
                                 } else if ($tercourier->status == 1) {
-                                    $status = 'Received';
+                                    $status = ' Received at Reception';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
                                     $status = 'Created Handover';
@@ -1250,7 +1250,7 @@
                            
                                 <div v-if="tercourier.status == 1">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
-                                        Received
+                                    Received at Reception
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>

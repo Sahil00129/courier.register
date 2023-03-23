@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\VendorDetails;
+use Illuminate\Support\Facades\Auth;
 date_default_timezone_set('Asia/Kolkata');
 
 
@@ -17,7 +18,13 @@ class VendorController extends Controller
     public function vendorTable(Request $request)
     {
         $vendors = VendorDetails::all();
-        return view('pages.vendors-table',  ['vendors' => $vendors])->with('i', ($request->input('page', 1) - 1) * 5);
+        if (Auth::check()) {
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->name;
+           
+        }
+        return view('pages.vendors-table',  ['vendors' => $vendors,'role' =>$name])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     /**

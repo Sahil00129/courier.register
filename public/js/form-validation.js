@@ -138,33 +138,40 @@ jQuery(document).ready(function () {
                 //lettersonly:true
             },
             basic_amount: {
-                // required: true,
+                required: true,
             },
             total_amount: {
-                // required: true,
+                required: true,
             },
             invoice_no: {
-                // required: true,
+                required: true,
             },
             invoice_date: {
-                // required: true,
+                required: true,
             },
+            received_date: {
+                required: true,
+
+            }
         },
         messages: {
             po_id: {
                 required: "PO number is required",
             },
             basic_amount: {
-                required: "Vendor name is required",
+                required: "Basic Amount is required",
             },
             total_amount: {
-                required: "Po value is required",
+                required: "Total Amount is required",
             },
             invoice_no: {
-                required: "Unit is required",
+                required: "Invoice Number is required",
             },
             invoice_date: {
-                required: "Unit is required",
+                required: "Invoice Date is required",
+            },
+            received_date: {
+                required: "Received Date is required",
             },
         },
         submitHandler: function (form) {

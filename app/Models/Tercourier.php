@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Maatwebsite\Excel\Concerns\ToArray;
 use App\Models\HandoverDetail;
+use App\Models\Po;
 use App\Models\InvoiceHandoverDetail;
 date_default_timezone_set('Asia/Kolkata');
 
@@ -36,6 +37,10 @@ class Tercourier extends Model
     public function HandoverDetail()
     {
         return $this->hasone('App\Models\HandoverDetail', 'handover_id','handover_id');
+    }
+    public function PoDetail()
+    {
+        return $this->hasone('App\Models\Po', 'id','po_id');
     }
 
     // Dhruv's Code
