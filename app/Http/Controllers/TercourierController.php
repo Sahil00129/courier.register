@@ -262,9 +262,6 @@ class TercourierController extends Controller
                 $get_ter_data = Tercourier::where('id', $id)->first();
                 $status = $get_ter_data->copy_status;
                 $update_data = Tercourier::where('id', $id)->update(array('status' => $status, 'copy_status' => ""));
-                if ($status == 8) {
-                    self::send_reject_mail($id);
-                }
             }
         }
         return $update_data;
@@ -324,6 +321,8 @@ class TercourierController extends Controller
             $mail_not_sent['mail_response'] = 'No Email Found';
             $res = MailnotSent::create($mail_not_sent);
         }
+        
+        return 1;
     }
     public function reject_handover(Request $request)
     {
@@ -618,6 +617,18 @@ class TercourierController extends Controller
                 return Response::json($response);
             }
             //    exit;
+
+            $date = date_create($terdata['terfrom_date']);
+            date_add($date, date_interval_create_from_date_string("50 days"));
+            $date_check = date_format($date, "Y-m-d");
+          
+
+            $today_date = date('Y-m-d');
+            
+            if ($today_date >= $date_check) {
+                   self::send_reject_mail($tercourier->id);
+            }
+          
 
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
