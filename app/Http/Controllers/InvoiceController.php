@@ -11,7 +11,9 @@ use Helper;
 use Validator;
 use Config;
 use Session;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\ExportInvoiceFullList;
 use ReflectionFunctionAbstract;
 use App\Models\InvoiceHandoverDetail;
 date_default_timezone_set('Asia/Kolkata');
@@ -553,5 +555,50 @@ class InvoiceController extends Controller
         } else {
             return 0;
         }
+    }
+
+    public function open_verify_invoice(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $res = URL::to('/update_invoice/' . $id);
+        return $res;
+    }
+
+    public function update_invoice($id)
+    {
+        $get_data=DB::table('tercouriers')->where('id',$id)->get();
+        $get_po_details = DB::table('pos')->where('id',$get_data[0]->po_id)->get();
+        if(!empty($get_data[0]->courier_id))
+        {
+        $couriers = DB::table('courier_companies')->where('id',$get_data[0]->courier_id)->get();
+        }else{
+            $courier_name = "not defined";
+        }
+        if(!empty($couriers))
+        {
+           $courier_name= $couriers[0]->courier_name ;
+        }
+        else{
+            $courier_name = "not defined";
+        }
+     
+        // echo "<pre>";
+        // print_r($get_data);
+        // exit;
+        return view('invoices.sourcing-remarks', ['invoices_data' => $get_data[0],'po_data' =>$get_po_details[0],'courier_name' =>$courier_name]);
+        // if($id == '0')
+        // {
+        //     return view('tercouriers.update-tercourier');
+
+        // }else{
+        //     return view('tercouriers.update-tercourier', ['unique_id' => $id]);
+        // }
+
+    }
+
+    public function download_invoice_list()
+    {
+        return Excel::download(new ExportInvoiceFullList, 'invoices_list.xlsx');
     }
 }

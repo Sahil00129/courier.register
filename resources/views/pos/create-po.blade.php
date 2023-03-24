@@ -23,7 +23,7 @@
 
                         <div class="form-group mb-4 col-md-6">
                                 <label for="exampleFormControlInput2">PO Unit</label>
-                                <select class="form-control" name="unit" v-model="unit" v-on:change="get_vendor_details(unit)">
+                                <select class="form-control" name="unit" v-model="unit" id="select_unit">
                                     <option value="">Select Unit</option>
                                     <option value="SD1">SD1</option>
                                     <option value="SD3">SD3</option>
@@ -33,27 +33,21 @@
                                 <!-- <input type="text" class="form-control" name="unit" id="unit" placeholder=""> -->
                             </div>
 
-                         
+                                <div class="form-group mb-4 col-md-6 poInputToggle" style="display: none;" >
+                                    <label for="exampleFormControlInput2">Select Vendor Details</label>
+                                    <select class="form-control form-control-sm my-select2" name="po_id" id="select_pos" required>
+                                        <option selected disabled>search..</option>
+                                    </select>
+                                </div>
 
-                            <div class="form-group mb-4 col-md-6" v-if="vendor_block"> 
-                                <label for="exampleFormControlInput2">Select Vendor Details</label>
-                                <input type="text" class="form-control form-control-sm" v-on:change="set_vendor_data(vendor_all_info)" v-model="vendor_all_info"  list="vendor_data" />
-                                        <datalist class="select2-selection__rendered" id="vendor_data">
-                                            <option v-for="vendor_all_info in vendors_data" :key="vendor_all_info.id">
-                                                @{{vendor_all_info.id}} :
-                                                @{{vendor_all_info.name}} : @{{vendor_all_info.erp_code}} : @{{vendor_all_info.unit}}
-                                            </option>
-                                        </datalist>
-                            </div>
-
-                            <div class="form-group mb-4 col-md-6" v-if="vendor_block">
+                            <div class="form-group mb-4 col-md-6 poInputToggle"  style="display: none;">
                                 <label for="exampleFormControlInput2">Vendor Code</label>
-                                <input type="text" class="form-control" name="vendor_code" id="vendor_code" v-model="vendor_code" placeholder="" readonly>
+                                <input type="text" class="form-control" name="vendor_code" id="vendor_code"  placeholder="" readonly>
                             </div>
                      
-                            <div class="form-group mb-4 col-md-6" v-if="vendor_block">
+                            <div class="form-group mb-4 col-md-6 poInputToggle"  style="display: none;">
                                 <label for="exampleFormControlInput2">Vendor Name</label>
-                                <input type="text" class="form-control" name="vendor_name" id="vendor_name"  v-model="vendor_name"  placeholder="" readonly>
+                                <input type="text" class="form-control" name="vendor_name" id="vendor_name"   placeholder="" readonly>
                             </div>
 
                             <div class="form-group mb-4 col-md-6">
@@ -80,6 +74,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     new Vue({

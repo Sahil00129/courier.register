@@ -377,7 +377,7 @@
                         @endif
 
                         @if(false)
-                        <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
+                        <button class="actionButtons btn btn-success" @click="download_invoice_list()">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -385,6 +385,9 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
+                        @endif
+
+                        @if(false)
                         <button class="actionButtons btn btn-success" @click="download_ter_status_list()" v-if="!ter_full_excel">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
@@ -620,7 +623,7 @@
                                                 </div>
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Amount:</div>
-                                                    ₹{{ $tercourier->basic_amount ?? '-' }}
+                                                    ₹{{ $tercourier->total_amount ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -636,6 +639,10 @@
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
                                                     {{ DateTime::createFromFormat("Y-m-d H:i:s",$tercourier->PoDetail->created_at)->format("d/m/Y") ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Amount:</div>
+                                                    ₹{{ $tercourier->PoDetail->po_value ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -673,7 +680,7 @@
                                 @elseif ($role == 'sourcing' && $tercourier->status== 2)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#exampleModal" v-on:click="open_invoice_remark(<?php echo $tercourier->id ?>)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_verify_invoice(<?php echo $tercourier->id ?>)">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>
@@ -850,7 +857,7 @@
                                                 </div>
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Claimed:</div>
-                                                    ₹@{{ tercourier.basic_amount  }}
+                                                    ₹@{{ tercourier.total_amount  }}
                                                 </div>
                                             </div>
                                         </div>
@@ -867,6 +874,10 @@
                                                     <div class="heading">Date:</div>
                                                     @{{ trim_date(tercourier.po_detail.created_at) }}
 
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Amount:</div>
+                                                    ₹@{{ tercourier.po_detail.po_value  }}
                                                 </div>
                                             </div>
                                         </div>
@@ -913,12 +924,12 @@
                     </tbody>
                 </table>
 
-                <a href="{{url('tercouriers/create')}}" class="floatingButton btn btn-lg btn-primary">
+                <a href="{{url('invoices/create')}}" class="floatingButton btn btn-lg btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span class="text">TER Courier</span>
+                    <span class="text">Invoice Courier</span>
                 </a>
 
 
@@ -1120,6 +1131,9 @@
                     </div>
                 </div>
 
+                <div class="d-flex justify-content-center" id="cover-spin" v-if="loader">
+                         </div>
+
 
                 <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
                     {{ $tercouriers->links() }}
@@ -1203,6 +1217,7 @@
             file_id: "",
             file_view_modal: false,
             view_file_name: "",
+            invoice_id:"",
 
 
 
@@ -1356,13 +1371,13 @@
                 }
                 return unit;
             },
-            open_verify_ter(id) {
-                this.unique_id = id;
+            open_verify_invoice(id) {
+                this.invoice_id = id;
                 this.loader = true;
                 // window.location="/pages/employee-passbook";
                 // setTimeout(() => {window.location.href = "/employee-passbook"},2000);
-                axios.post('/open_verify_ter', {
-                        'id': this.unique_id
+                axios.post('/open_verify_invoice', {
+                        'id': this.invoice_id
                     })
                     .then(response => {
                         if (response.data) {
@@ -1912,20 +1927,14 @@
 
             },
 
-            download_ter_list: function() {
+            download_invoice_list: function() {
 
-                axios.get('/download_ter_list', {
+                axios.get('/download_invoice_list', {
 
                     })
                     .then(response => {
                         console.log(response.data);
-                        if (response.data == 1) {
-                            this.url = '/download_ter_full_list';
-                            window.location.href = this.url;
-                        } else {
-                            this.url = '/download_reception_list';
-                            window.location.href = this.url;
-                        }
+                      
 
                     }).catch(error => {
 

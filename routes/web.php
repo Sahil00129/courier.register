@@ -201,6 +201,12 @@ Route::post('/reject_invoice_handover', [InvoiceController::class,'reject_invoic
 Route::post('/update_scanning_data', [InvoiceController::class,'update_scanning_data']);
 Route::post('/get_searched_invoice', [InvoiceController::class,'get_searched_data']);
 Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
+Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoice']);
+Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
+Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
+
+
+
 
 
 Route::get('/vendor-table', [VendorController::class,'vendorTable']);

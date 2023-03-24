@@ -236,6 +236,59 @@ $("#select_po").change(function (e) {
     });
 });
 
+/*======get consigner on regional client =====*/
+$("#select_unit").change(function (e) {
+    $('#select_pos').empty();
+    $('.poInputToggle').hide();
+    $("#vendor_code").val("");
+    $("#vendor_name").val("");
+    var unit = $(this).val();
+  
+    // $("#items_table").find("tr:gt(1)").remove();
+   
+    $.ajax({
+        url: "/get_vendors/"+unit,
+        type: "get",
+        cache: false,
+        // data: { po_id: po_id },
+        dataType: "json",
+        headers: {
+            "X-CSRF-TOKEN": jQuery('meta[name="_token"]').attr("content"),
+        },
+        beforeSend: function () {
+            $("#select_consigner").empty();
+        },
+        success: function (res) {
+            if(res){
+                $("#select_pos").append('<option selected disabled>search..</option>');
+                $.each(res, function (index, value) {
+                    $("#select_pos").append(
+                        '<option value="' +
+                        value.id +":"+ value.name +":"+value.erp_code+
+                        '">' + ""+value.id+ " : "+
+                        value.name + " : " + value.erp_code + " : " + value.unit + 
+                        "</option>"
+                    );
+                });
+                $('.poInputToggle').show();
+
+                // $("#select_pos").val(res.data);
+                // $("#po_unit").val(res.data.unit);
+                // $("#vendor_code").val(res.data.vendor_code);
+                // $("#vendor_name").val(res.data.vendor_name);
+
+            }
+        },
+    });
+});
+
+$("#select_pos").change(function (e) {
+    console.log($("#select_pos").val());
+    const vendor_data_split = $("#select_pos").val().split(":");
+    console.log(vendor_data_split);
+    $("#vendor_code").val(vendor_data_split[2]);
+    $("#vendor_name").val(vendor_data_split[1]);
+});
 
 });
 // End ready function //

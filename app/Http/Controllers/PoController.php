@@ -108,7 +108,7 @@ class PoController extends Controller
         $po_number = Po::select('po_number')->latest('po_number')->first();
             $po_number = json_decode(json_encode($po_number), true);
             if (empty($po_number) || $po_number == null) {
-                $addpo['po_number'] = 10001;
+                $addpo['po_number'] = 230001;
             } else {
                 $addpo['po_number'] = $po_number['po_number'] + 1;
             }

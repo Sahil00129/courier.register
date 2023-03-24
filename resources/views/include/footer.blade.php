@@ -229,5 +229,26 @@ var ss = $(".basic").select2({
 }
 
 </script>
+<script>
+$(document).ready(function() {
+
+jQuery(function() {
+    $('.my-select2').each(function() {
+        $(this).select2({
+            theme: "bootstrap-5",
+            dropdownParent: $(this).parent(), // fix select2 search input focus bug
+        })
+    })
+
+    // fix select2 bootstrap modal scroll bug
+    $(document).on('select2:close', '.my-select2', function(e) {
+        var evt = "scroll.select2"
+        $(e.target).parents().off(evt)
+        $(window).off(evt)
+    })
+})
+
+});
+</script>
 </body>
 </html>
