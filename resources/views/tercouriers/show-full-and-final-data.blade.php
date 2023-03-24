@@ -766,7 +766,7 @@
                         } else if (response.data === "ax_id_missing") {
                             swal('error', "AX-ID/IAG Code is not available for this TER", 'error')
                         } else {
-                            swal('error', "System Error", 'error')
+                            swal('error',response.data, 'error')
                         }
 
                     }).catch(error => {
