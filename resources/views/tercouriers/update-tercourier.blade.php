@@ -903,7 +903,7 @@
                             } else {
                                 this.button_text = "Search";
                                 this.allow_flag = false;
-                                swal('error', "AX-ID missing in DB for this record", 'error')
+                                swal('error', response.data, 'error')
                             }
 
                         }).catch(error => {

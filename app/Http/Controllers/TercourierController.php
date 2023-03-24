@@ -2617,6 +2617,24 @@ class TercourierController extends Controller
             return "Both ax_id and iag_code missing";
         }
 
+        $character = "FA";
+
+        if (!empty($ax_id)) {
+            if (strpos($ax_id, $character) !== 0) {
+                DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+
+                return $ax_id . " AX-ID is not correct";
+            }
+        }
+
+        if (!empty($iag_code)) {
+            if (!is_numeric($iag_code)) {
+                DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
+
+                return $iag_code . " IAG Code is not correct";
+            }
+        }
+
         if (empty($sender_data->account_number) || empty($sender_data->beneficiary_name) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'Bank Details are missing', 'updated_at' => date('Y-m-d H:i:s')]);
 
