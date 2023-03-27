@@ -167,24 +167,22 @@
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
             <div class="widget-content widget-content-area br-6">
                 <!---searchbar--->
-                <div class="d-flex justify-content-end align-items-center px-4 py-4 " style="gap: 1rem; flex-wrap: wrap;">
+                <div class="d-flex justify-content-between align-items-center px-4 py-4 " style="gap: 1rem; flex-wrap: wrap;">
 
-                    @if($role == "sourcing")
-                    <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
-                        <div class="winery_btn_n btn-section px-0 text-right">
-                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
-                                    Vendors</span></a>
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px">
+                        @if($role == "sourcing")
 
-                        </div>
+                        <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                                Vendors</span></a>
+
+                        <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
+                            </span></a>
+
+                        @endif
+
+                        <a class="btn-primary btn-cstm btn ml-2" style="font-size: 12px; padding: 9px; width: 130px" href="{{'/download_vendor_list'}}"><span><i class="fa fa-plus"></i> Export
+                            </span></a>
                     </div>
-                    <div class="col-lg lead_bladebtop1_n pl-0 flex-grow-0">
-                        <div class="winery_btn_n btn-section px-0 text-right">
-                            <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
-                                    Vendors</span></a>
-
-                        </div>
-                    </div>
-                    @endif
 
 
                     <div class="searchField" style="width: 200px; position: relative;">

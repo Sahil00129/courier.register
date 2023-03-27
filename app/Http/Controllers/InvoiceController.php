@@ -14,6 +14,8 @@ use Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\ExportInvoiceFullList;
+use App\Exports\ExportVendorList;
+use App\Exports\ExportPoList;
 use ReflectionFunctionAbstract;
 use App\Models\InvoiceHandoverDetail;
 date_default_timezone_set('Asia/Kolkata');
@@ -600,5 +602,15 @@ class InvoiceController extends Controller
     public function download_invoice_list()
     {
         return Excel::download(new ExportInvoiceFullList, 'invoices_list.xlsx');
+    }
+
+    public function download_po_list()
+    {
+        return Excel::download(new ExportPoList, 'po_list.xlsx');
+    }
+
+    public function download_vendor_list()
+    {
+        return Excel::download(new ExportVendorList, 'vendor_list.xlsx');
     }
 }

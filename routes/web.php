@@ -204,6 +204,9 @@ Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_det
 Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoice']);
 Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
 Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
+Route::get('download_vendor_list', [InvoiceController::class, 'download_vendor_list']);
+Route::get('download_po_list', [InvoiceController::class, 'download_po_list']);
+
 
 
 
