@@ -309,7 +309,7 @@ class TercourierController extends Controller
 
         if(!empty($data["email"]) && $data["email"] != 0) {
 
-            Mail::mailer('smtp2')->send('emails.rejectedTER', $data, function ($message) use ($data) {
+            Mail::mailer('smtp2')->send('emails.rejectedTer', $data, function ($message) use ($data) {
                 $message->to($data["email"], $data["email"])
                     ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
                     ->subject($data["title"])
