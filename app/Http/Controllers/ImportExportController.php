@@ -271,7 +271,7 @@ class ImportExportController extends Controller
 
     public static function check_unit_pfu_change()
     {
-        $get_handover_unid=DB::table('tercouriers')->where('status',2)->whereNull('shifting_date')->get();
+        $get_handover_unid=DB::table('tercouriers')->where('ter_type',2)->where('status',2)->whereNull('shifting_date')->get();
      $res="";
         for($i=0;$i<sizeof($get_handover_unid);$i++)
         {
