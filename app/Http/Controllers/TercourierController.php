@@ -1131,19 +1131,40 @@ class TercourierController extends Controller
     {
 
         $live_host_name = request()->getHttpHost();
+        // $live_host_name="ds";
 
         if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
             return "not possible";
         } else {
             $today_date = date('Y-m-d');
             $received_ids_arr = array();
-            $handover_ids_arr = array();
-            $unknown_ids_arr = array();
             $rejected_ids_arr = array();
             $sent_to_finfect_arr = array();
             $payment_failed_arr = array();
             $pay_later_arr = array();
             $full_n_final_arr = array();
+            $handover_ids_arr_1=array();
+            $handover_ids_arr_2=array();
+            $handover_ids_arr_3=array();
+            $handover_ids_arr_4=array();
+            $finfect_ids_arr_1 = array();
+            $finfect_ids_arr_2 = array();
+            $finfect_ids_arr_3 = array();
+            $rejected_ids_arr_1 = array();
+            $rejected_ids_arr_2 = array();
+            $rejected_ids_arr_3 = array();
+            $pay_later_ids_arr_1 = array();
+            $pay_later_ids_arr_2 = array();
+            $full_n_final_ids_arr_1 = array();
+            $full_n_final_ids_arr_2 = array();
+            $unknown_ids_arr_1 = array();
+            $unknown_ids_arr_2 = array();
+
+
+
+            
+
+
 
 
             $check_received_email = Tercourier::where('status', 1)->whereDate('received_date', '<', $today_date)->get();
@@ -1152,37 +1173,374 @@ class TercourierController extends Controller
                 $received_ids_arr[] = $check_received_email[$i]->id;
             }
 
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-3 days"));
+                $date_check = date_format($date, "Y-m-d");
+                
+
+                $check_handover_email =  Tercourier::whereBetween('handover_date', [$date_check,$today_date])->where('status', 2)->where('ter_type',2)->get();
+                
+                $check_SD1_h1_count =  Tercourier::whereBetween('handover_date', [$date_check,$today_date])->where('status', 2)->where('ter_type',2)->where('pfu','SD1')->count();
+
+                $check_MA2_h1_count =  Tercourier::whereBetween('handover_date', [$date_check,$today_date])->where('status', 2)->where('ter_type',2)->where('pfu','MA2')->count();
+
+                $check_SD3_h1_count =  Tercourier::whereBetween('handover_date', [$date_check,$today_date])->where('status', 2)->where('ter_type',2)->where('pfu','SD3')->count();
+
+                $check_MA4_h1_count =  Tercourier::whereBetween('handover_date', [$date_check,$today_date])->where('status', 2)->where('ter_type',2)->where('pfu','MA4')->count();
+
+                $total_h1_count = $check_SD1_h1_count + $check_MA2_h1_count + $check_SD3_h1_count + $check_MA4_h1_count;
+
+
+
+                for ($i = 0; $i < sizeof($check_handover_email); $i++) {
+                    $handover_ids_arr_1[] = $check_handover_email[$i]->id;
+                }
+
+
+            
+
+                $check_handover_email = "";
+
+
+
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-7 days"));
+                $from = date_format($date, "Y-m-d");
+
+            
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-4 days"));
+                $to = date_format($date, "Y-m-d");
+
+            
+
+                $check_handover_email =  Tercourier::whereBetween('handover_date', [$from, $to])->where('status', 2)->where('ter_type',2)->get();
+                                
+                $check_SD1_h2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','SD1')->count();
+
+                $check_MA2_h2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','MA2')->count();
+
+                $check_SD3_h2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','SD3')->count();
+
+                $check_MA4_h2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','MA4')->count();
+
+                $total_h2_count = $check_SD1_h2_count + $check_MA2_h2_count + $check_SD3_h2_count + $check_MA4_h2_count;
+
+               
+
+                for ($i = 0; $i < sizeof($check_handover_email); $i++) {
+                    $handover_ids_arr_2[] = $check_handover_email[$i]->id;
+                }
+
+
+
+
+                $check_handover_email = "";
+
+
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-30 days"));
+                $from = date_format($date, "Y-m-d");
+
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-7 days"));
+                $to = date_format($date, "Y-m-d");
+
+            
+
+                $check_handover_email =  Tercourier::whereBetween('handover_date', [$from, $to])->where('status', 2)->where('ter_type',2)->get();
+               
+                $check_SD1_h3_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','SD1')->count();
+
+                $check_MA2_h3_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','MA2')->count();
+
+                $check_SD3_h3_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','SD3')->count();
+
+                $check_MA4_h3_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 2)->where('ter_type',2)->where('pfu','MA4')->count();
+
+                $total_h3_count = $check_SD1_h3_count + $check_MA2_h3_count + $check_SD3_h3_count + $check_MA4_h3_count;
+
+                // return [$total_h3_count,sizeof($check_handover_email)];
+
+                for ($i = 0; $i < sizeof($check_handover_email); $i++) {
+                    $handover_ids_arr_3[] = $check_handover_email[$i]->id;
+                }
+
+                $check_handover_email = "";
+
+
+                $date = date_create($today_date);
+                date_add($date, date_interval_create_from_date_string("-30 days"));
+                $to = date_format($date, "Y-m-d");
+
+                $check_handover_email =  Tercourier::whereDate('handover_date','<', $to)->where('status', 2)->where('ter_type',2)->get();
+              
+                $check_SD1_h4_count =  Tercourier::whereDate('handover_date','<', $to)->where('status', 2)->where('ter_type',2)->where('pfu','SD1')->count();
+
+                $check_MA2_h4_count =  Tercourier::whereDate('handover_date','<', $to)->where('status', 2)->where('ter_type',2)->where('pfu','MA2')->count();
+
+                $check_SD3_h4_count =  Tercourier::whereDate('handover_date','<', $to)->where('status', 2)->where('ter_type',2)->where('pfu','SD3')->count();
+
+                $check_MA4_h4_count =  Tercourier::whereDate('handover_date','<', $to)->where('status', 2)->where('ter_type',2)->where('pfu','MA4')->count();
+
+                $total_h4_count = $check_SD1_h4_count + $check_MA2_h4_count + $check_SD3_h4_count + $check_MA4_h4_count;
+
+
+
+                for ($i = 0; $i < sizeof($check_handover_email); $i++) {
+                    $handover_ids_arr_4[] = $check_handover_email[$i]->id;
+                }
+
+
+            
+            // Finfect 
             $date = date_create($today_date);
-            date_add($date, date_interval_create_from_date_string("-7 days"));
-            $date_check = date_format($date, "Y-m-d");
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $from = date_format($date, "Y-m-d");
+            $to=$today_date;
 
-            $check_handover_email = Tercourier::where('status', 2)->whereDate('handover_date', '<', $date_check)->get();
-            // echo "<pre>";
-            for ($i = 0; $i < sizeof($check_handover_email); $i++) {
-                $handover_ids_arr[] = $check_handover_email[$i]->id;
-            }
-
-            $check_unknown_email = Tercourier::where('status', 9)->whereDate('handover_date', '<', $today_date)->get();
-            // echo "<pre>";
-            for ($i = 0; $i < sizeof($check_unknown_email); $i++) {
-                $unknown_ids_arr[] = $check_unknown_email[$i]->id;
-            }
-
-            $date = date_create($today_date);
-            date_add($date, date_interval_create_from_date_string("-2 days"));
-            $date_check = date_format($date, "Y-m-d");
-
-            $check_reject_email = Tercourier::where('status', 8)->whereDate('handover_date', '<', $date_check)->get();
-            // echo "<pre>";
-            for ($i = 0; $i < sizeof($check_reject_email); $i++) {
-                $rejected_ids_arr[] = $check_reject_email[$i]->id;
-            }
-
-            $check_finfect_email = Tercourier::where('status', 3)->whereDate('sent_to_finfect_date', '<', $today_date)->get();
+            $check_finfect_email = Tercourier::where('status', 3)->whereBetween('sent_to_finfect_date', [$from,$to])->where('ter_type',2)->get();
             // echo "<pre>";
             for ($i = 0; $i < sizeof($check_finfect_email); $i++) {
-                $sent_to_finfect_arr[] = $check_finfect_email[$i]->id;
+                $finfect_ids_arr_1[] = $check_finfect_email[$i]->id;
             }
+            $check_SD1_f1_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_f1_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_f1_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_f1_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_f1_count = $check_SD1_f1_count + $check_MA2_f1_count + $check_SD3_f1_count + $check_MA4_f1_count;
+
+
+            // 2ND
+            $check_finfect_email ="";
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-2 days"));
+            $from = date_format($date, "Y-m-d");
+           
+            $date_2 = date_create($today_date);
+            date_add($date_2, date_interval_create_from_date_string("-1 days"));
+            $to = date_format($date_2, "Y-m-d");
+
+            $check_finfect_email = Tercourier::where('status', 3)->whereBetween('sent_to_finfect_date', [$from,$to])->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_finfect_email); $i++) {
+                $finfect_ids_arr_2[] = $check_finfect_email[$i]->id;
+            }
+            $check_SD1_f2_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_f2_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_f2_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_f2_count =  Tercourier::whereBetween('sent_to_finfect_date', [$from,$to])->where('status', 3)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_f2_count = $check_SD1_f2_count + $check_MA2_f2_count + $check_SD3_f2_count + $check_MA4_f2_count;
+
+            // 3rd
+            $check_finfect_email ="";
+        
+           
+            $date_2 = date_create($today_date);
+            date_add($date_2, date_interval_create_from_date_string("-2 days"));
+            $to = date_format($date_2, "Y-m-d");
+
+            $check_finfect_email = Tercourier::where('status', 3)->whereDate('sent_to_finfect_date','<' ,$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_finfect_email); $i++) {
+                $finfect_ids_arr_3[] = $check_finfect_email[$i]->id;
+            }
+            $check_SD1_f3_count =  Tercourier::whereDate('sent_to_finfect_date','<' ,$to)->where('status', 3)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_f3_count =  Tercourier::whereDate('sent_to_finfect_date','<' ,$to)->where('status', 3)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_f3_count =  Tercourier::whereDate('sent_to_finfect_date','<' ,$to)->where('status', 3)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_f3_count =  Tercourier::whereDate('sent_to_finfect_date','<' ,$to)->where('status', 3)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_f3_count = $check_SD1_f3_count + $check_MA2_f3_count + $check_SD3_f3_count + $check_MA4_f3_count;
+
+
+            // Rejected
+
+                
+        
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $from = date_format($date, "Y-m-d");
+            $to=$today_date;
+
+
+            $check_reject_email = Tercourier::where('status', 8)->whereBetween('handover_date', [$from,$to])->where('ter_type',2)->get();
+            // echo "<pre>";
+
+            for ($i = 0; $i < sizeof($check_reject_email); $i++) {
+                $rejected_ids_arr_1[] = $check_reject_email[$i]->id;
+            }
+            $check_SD1_r1_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_r1_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_r1_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_r1_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_r1_count = $check_SD1_r1_count + $check_MA2_r1_count + $check_SD3_r1_count + $check_MA4_r1_count;
+
+             // 2ND
+             $check_reject_email ="";
+             $date = date_create($today_date);
+             date_add($date, date_interval_create_from_date_string("-2 days"));
+             $from = date_format($date, "Y-m-d");
+            
+             $date_2 = date_create($today_date);
+             date_add($date_2, date_interval_create_from_date_string("-1 days"));
+             $to = date_format($date_2, "Y-m-d");
+
+             $check_reject_email = Tercourier::where('status', 8)->whereBetween('handover_date', [$from,$to])->where('ter_type',2)->get();
+             // echo "<pre>";
+ 
+             for ($i = 0; $i < sizeof($check_reject_email); $i++) {
+                 $rejected_ids_arr_2[] = $check_reject_email[$i]->id;
+             }
+             $check_SD1_r2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','SD1')->count();
+             $check_MA2_r2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','MA2')->count();
+             $check_SD3_r2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','SD3')->count();
+             $check_MA4_r2_count =  Tercourier::whereBetween('handover_date', [$from,$to])->where('status', 8)->where('ter_type',2)->where('pfu','MA4')->count();
+             $total_r2_count = $check_SD1_r2_count + $check_MA2_r2_count + $check_SD3_r2_count + $check_MA4_r2_count;
+
+
+               // 3rd
+            $check_reject_email ="";
+        
+           
+            $date_2 = date_create($today_date);
+            date_add($date_2, date_interval_create_from_date_string("-2 days"));
+            $to = date_format($date_2, "Y-m-d");
+
+            $check_reject_email = Tercourier::where('status', 8)->whereDate('handover_date','<',$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+
+            for ($i = 0; $i < sizeof($check_reject_email); $i++) {
+                $rejected_ids_arr_3[] = $check_reject_email[$i]->id;
+            }
+            $check_SD1_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_r3_count = $check_SD1_r3_count + $check_MA2_r3_count + $check_SD3_r3_count + $check_MA4_r3_count;
+
+
+            // Pay Later
+
+            // 1st
+
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-7 days"));
+            $from = date_format($date, "Y-m-d");
+            $to = $today_date;
+
+            $check_paylater_email = Tercourier::where('status', 4)->where('payment_status', 2)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_paylater_email); $i++) {
+                $pay_later_ids_arr_1[] = $check_paylater_email[$i]->id;
+            }
+            $check_SD1_pl1_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_pl1_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_pl1_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_pl1_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_pl1_count = $check_SD1_pl1_count + $check_MA2_pl1_count + $check_SD3_pl1_count + $check_MA4_pl1_count;
+             
+
+            // 2nd 
+            $check_paylater_email="";
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-7 days"));
+            $to = date_format($date, "Y-m-d");
+          
+
+            $check_paylater_email = Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_paylater_email); $i++) {
+                $pay_later_ids_arr_2[] = $check_paylater_email[$i]->id;
+            }
+            $check_SD1_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_pl2_count = $check_SD1_pl2_count + $check_MA2_pl2_count + $check_SD3_pl2_count + $check_MA4_pl2_count;
+
+
+
+              // Full n Final 
+
+            // 1st
+
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-15 days"));
+            $from = date_format($date, "Y-m-d");
+            $to = $today_date;
+
+            $check_full_n_final_email = Tercourier::where('status', 4)->where('payment_status', 3)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_full_n_final_email); $i++) {
+                $full_n_final_ids_arr_1[] = $check_full_n_final_email[$i]->id;
+            }
+            $check_SD1_fl1_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_fl1_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_fl1_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_fl1_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereBetween('verify_ter_date', [$from,$to])->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_fl1_count =   $check_SD1_fl1_count  + $check_MA2_fl1_count + $check_SD3_fl1_count + $check_MA4_fl1_count;
+
+            // 2nd
+            $check_full_n_final_email = "";
+
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-15 days"));
+            $to = date_format($date, "Y-m-d");
+    
+
+            $check_full_n_final_email = Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_full_n_final_email); $i++) {
+                $full_n_final_ids_arr_2[] = $check_full_n_final_email[$i]->id;
+            }
+            $check_SD1_fl2_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_fl2_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_fl2_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_fl2_count =  Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_fl2_count =   $check_SD1_fl2_count  + $check_MA2_fl2_count + $check_SD3_fl2_count + $check_MA4_fl2_count;
+
+
+
+            // unknown 
+
+            // 1st
+
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $from = date_format($date, "Y-m-d");
+            $to = $today_date;
+
+            $check_unknown_email = Tercourier::where('status', 9)->whereBetween('handover_date',[$from,$to])->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_unknown_email); $i++) {
+                $unknown_ids_arr_1[] = $check_unknown_email[$i]->id;
+            }
+            $check_SD1_u1_count =  Tercourier::where('status', 9)->whereBetween('handover_date',[$from,$to])->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_u1_count =  Tercourier::where('status', 9)->whereBetween('handover_date',[$from,$to])->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_u1_count =  Tercourier::where('status', 9)->whereBetween('handover_date',[$from,$to])->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_u1_count =  Tercourier::where('status', 9)->whereBetween('handover_date',[$from,$to])->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_u1_count = $check_SD1_u1_count + $check_MA2_u1_count + $check_SD3_u1_count + $check_MA4_u1_count;
+
+
+            // 2nd
+
+            $check_unknown_email = "";
+            
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $to = date_format($date, "Y-m-d");
+
+            $check_unknown_email = Tercourier::where('status', 9)->whereDate('handover_date','<',$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+            for ($i = 0; $i < sizeof($check_unknown_email); $i++) {
+                $unknown_ids_arr_2[] = $check_unknown_email[$i]->id;
+            }
+            $check_SD1_u2_count =  Tercourier::where('status', 9)->whereDate('handover_date','<',$to)->where('ter_type',2)->where('pfu','SD1')->count();
+            $check_MA2_u2_count =  Tercourier::where('status', 9)->whereDate('handover_date','<',$to)->where('ter_type',2)->where('pfu','MA2')->count();
+            $check_SD3_u2_count =  Tercourier::where('status', 9)->whereDate('handover_date','<',$to)->where('ter_type',2)->where('pfu','SD3')->count();
+            $check_MA4_u2_count =  Tercourier::where('status', 9)->whereDate('handover_date','<',$to)->where('ter_type',2)->where('pfu','MA4')->count();
+            $total_u2_count = $check_SD1_u2_count + $check_MA2_u2_count + $check_SD3_u2_count + $check_MA4_u2_count;
+
+
 
             $check_failed_email = Tercourier::where('status', 0)->whereDate('sent_to_finfect_date', '<', $today_date)->get();
             // echo "<pre>";
@@ -1190,68 +1548,170 @@ class TercourierController extends Controller
                 $payment_failed_arr[] = $check_failed_email[$i]->id;
             }
 
-            $date = date_create($today_date);
-            date_add($date, date_interval_create_from_date_string("-7 days"));
-            $date_check = date_format($date, "Y-m-d");
+           
+            // return $handover_ids_arr_1;
 
-            $check_paylater_email = Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date', '<', $date_check)->get();
-            // echo "<pre>";
-            for ($i = 0; $i < sizeof($check_paylater_email); $i++) {
-                $pay_later_arr[] = $check_paylater_email[$i]->id;
-            }
+            $handover_ids_1 = implode(', ',$handover_ids_arr_1);
+            $handover_ids_2 = implode(', ',$handover_ids_arr_2);
+            $handover_ids_3 = implode(', ',$handover_ids_arr_3);
+            $handover_ids_4 = implode(', ',$handover_ids_arr_4);
 
-            $date = date_create($today_date);
-            date_add($date, date_interval_create_from_date_string("-30 days"));
-            $date_check = date_format($date, "Y-m-d");
+            $finfect_ids_1 = implode(', ',$finfect_ids_arr_1);
+            $finfect_ids_2 = implode(', ',$finfect_ids_arr_2);
+            $finfect_ids_3 = implode(', ',$finfect_ids_arr_3);
 
-            $check_full_n_final_email = Tercourier::where('status', 4)->where('payment_status', 3)->whereDate('verify_ter_date', '<', $date_check)->get();
-            // echo "<pre>";
-            for ($i = 0; $i < sizeof($check_full_n_final_email); $i++) {
-                $full_n_final_arr[] = $check_full_n_final_email[$i]->id;
-            }
+            $rejected_ids_1 = implode(', ',$rejected_ids_arr_1);
+            $rejected_ids_2 = implode(', ',$rejected_ids_arr_2);
+            $rejected_ids_3 = implode(', ',$rejected_ids_arr_3);
 
+            $pay_later_ids_1 = implode(', ',$pay_later_ids_arr_1);
+            $pay_later_ids_2 = implode(', ',$pay_later_ids_arr_2);
 
-            $received_ids = implode(', ', $received_ids_arr);
-            $received_data_size = sizeof($received_ids_arr);
-            $handover_ids = implode(', ', $handover_ids_arr);
-            $handover_data_size = sizeof($handover_ids_arr);
-            $unknown_ids = implode(', ', $unknown_ids_arr);
-            $unknown_data_size = sizeof($unknown_ids_arr);
-            $rejected_ids = implode(', ', $rejected_ids_arr);
-            $rejected_data_size = sizeof($rejected_ids_arr);
-            $finfect_ids = implode(', ', $sent_to_finfect_arr);
-            $finfect_data_size = sizeof($sent_to_finfect_arr);
-            $failed_payment_ids = implode(', ', $payment_failed_arr);
-            $failed_data_size = sizeof($payment_failed_arr);
-            $paylater_ids = implode(', ', $pay_later_arr);
-            $paylater_data_size = sizeof($pay_later_arr);
-            $full_n_final_ids = implode(', ', $full_n_final_arr);
-            $full_n_final_data_size = sizeof($full_n_final_arr);
+            $full_n_final_ids_1 = implode(', ',$full_n_final_ids_arr_1);
+            $full_n_final_ids_2 = implode(', ',$full_n_final_ids_arr_2);
+
+            $unknown_ids_1 = implode(', ',$unknown_ids_arr_1);
+            $unknown_ids_2 = implode(', ',$unknown_ids_arr_2);
 
             //    print_r($handover_ids);
 
             $terMailData = [
                 'title' => "List of TER UNID's ",
-                'received' => $received_ids,
-                'received_size' => $received_data_size,
-                'handover' => $handover_ids,
-                'handover_size' => $handover_data_size,
-                'finfect' => $finfect_ids,
-                'finfect_size' => $finfect_data_size,
-                'unknown' => $unknown_ids,
-                'unknown_size' => $unknown_data_size,
-                'rejected' => $rejected_ids,
-                'rejected_size' => $rejected_data_size,
-                'failed' => $failed_payment_ids,
-                'failed_size' => $failed_data_size,
-                'paylater' => $paylater_ids,
-                'paylater_size' => $paylater_data_size,
-                'full_n_final' => $full_n_final_ids,
-                'full_n_final_size' => $full_n_final_data_size
+                'handover_ids_1' => $handover_ids_1,
+                'SD1_h1_count' => $check_SD1_h1_count,
+                'MA2_h1_count' => $check_MA2_h1_count,
+                'SD3_h1_count' => $check_SD3_h1_count,
+                'MA4_h1_count' => $check_MA4_h1_count,
+                'total_h1_count' => $total_h1_count,
+
+                'handover_ids_2' => $handover_ids_2,
+                'SD1_h2_count' => $check_SD1_h2_count,
+                'MA2_h2_count' => $check_MA2_h2_count,
+                'SD3_h2_count' => $check_SD3_h2_count,
+                'MA4_h2_count' => $check_MA4_h2_count,
+                'total_h2_count' => $total_h2_count,
+
+                'handover_ids_3' => $handover_ids_3,
+                'SD1_h3_count' => $check_SD1_h3_count,
+                'MA2_h3_count' => $check_MA2_h3_count,
+                'SD3_h3_count' => $check_SD3_h3_count,
+                'MA4_h3_count' => $check_MA4_h3_count,
+                'total_h3_count' => $total_h3_count,
+
+                'handover_ids_4' => $handover_ids_4,
+                'SD1_h4_count' => $check_SD1_h4_count,
+                'MA2_h4_count' => $check_MA2_h4_count,
+                'SD3_h4_count' => $check_SD3_h4_count,
+                'MA4_h4_count' => $check_MA4_h4_count,
+                'total_h4_count' => $total_h4_count,
+
+                'finfect_ids_1' => $finfect_ids_1,
+                'SD1_f1_count' => $check_SD1_f1_count,
+                'MA2_f1_count' => $check_MA2_f1_count,
+                'SD3_f1_count' => $check_SD3_f1_count,
+                'MA4_f1_count' => $check_MA4_f1_count,
+                'total_f1_count' => $total_f1_count,
+
+                'finfect_ids_2' => $finfect_ids_2,
+                'SD1_f2_count' => $check_SD1_f2_count,
+                'MA2_f2_count' => $check_MA2_f2_count,
+                'SD3_f2_count' => $check_SD3_f2_count,
+                'MA4_f2_count' => $check_MA4_f2_count,
+                'total_f2_count' => $total_f2_count,
+
+                'finfect_ids_3' => $finfect_ids_3,
+                'SD1_f3_count' => $check_SD1_f3_count,
+                'MA2_f3_count' => $check_MA2_f3_count,
+                'SD3_f3_count' => $check_SD3_f3_count,
+                'MA4_f3_count' => $check_MA4_f3_count,
+                'total_f3_count' => $total_f3_count,
+
+                'rejected_ids_1' => $rejected_ids_1,
+                'SD1_r1_count' => $check_SD1_r1_count,
+                'MA2_r1_count' => $check_MA2_r1_count,
+                'SD3_r1_count' => $check_SD3_r1_count,
+                'MA4_r1_count' => $check_MA4_r1_count,
+                'total_r1_count' => $total_r1_count,
+
+                'rejected_ids_2' => $rejected_ids_2,
+                'SD1_r2_count' => $check_SD1_r2_count,
+                'MA2_r2_count' => $check_MA2_r2_count,
+                'SD3_r2_count' => $check_SD3_r2_count,
+                'MA4_r2_count' => $check_MA4_r2_count,
+                'total_r2_count' => $total_r2_count,
+
+                'rejected_ids_3' => $rejected_ids_3,
+                'SD1_r3_count' => $check_SD1_r3_count,
+                'MA2_r3_count' => $check_MA2_r3_count,
+                'SD3_r3_count' => $check_SD3_r3_count,
+                'MA4_r3_count' => $check_MA4_r3_count,
+                'total_r3_count' => $total_r3_count,
+
+                'pay_later_ids_1' => $pay_later_ids_1,
+                'SD1_pl1_count' => $check_SD1_pl1_count,
+                'MA2_pl1_count' => $check_MA2_pl1_count,
+                'SD3_pl1_count' => $check_SD3_pl1_count,
+                'MA4_pl1_count' => $check_MA4_pl1_count,
+                'total_pl1_count' => $total_pl1_count,
+
+                'pay_later_ids_2' => $pay_later_ids_2,
+                'SD1_pl2_count' => $check_SD1_pl2_count,
+                'MA2_pl2_count' => $check_MA2_pl2_count,
+                'SD3_pl2_count' => $check_SD3_pl2_count,
+                'MA4_pl2_count' => $check_MA4_pl2_count,
+                'total_pl2_count' => $total_pl2_count,
+
+                'full_n_final_ids_1' => $full_n_final_ids_1,
+                'SD1_fl1_count' => $check_SD1_fl1_count,
+                'MA2_fl1_count' => $check_MA2_fl1_count,
+                'SD3_fl1_count' => $check_SD3_fl1_count,
+                'MA4_fl1_count' => $check_MA4_fl1_count,
+                'total_fl1_count' => $total_fl1_count,
+
+                'full_n_final_ids_2' => $full_n_final_ids_2,
+                'SD1_fl2_count' => $check_SD1_fl2_count,
+                'MA2_fl2_count' => $check_MA2_fl2_count,
+                'SD3_fl2_count' => $check_SD3_fl2_count,
+                'MA4_fl2_count' => $check_MA4_fl2_count,
+                'total_fl2_count' => $total_fl2_count,
+
+                'unknown_ids_1' => $unknown_ids_1,
+                'SD1_u1_count' => $check_SD1_u1_count,
+                'MA2_u1_count' => $check_MA2_u1_count,
+                'SD3_u1_count' => $check_SD3_u1_count,
+                'MA4_u1_count' => $check_MA4_u1_count,
+                'total_u1_count' => $total_u1_count,
+
+                'unknown_ids_2' => $unknown_ids_2,
+                'SD1_u2_count' => $check_SD1_u2_count,
+                'MA2_u2_count' => $check_MA2_u2_count,
+                'SD3_u2_count' => $check_SD3_u2_count,
+                'MA4_u2_count' => $check_MA4_u2_count,
+                'total_u2_count' => $total_u2_count,
+
+
             ];
 
+            // echo "<pre>";
 
-            // Mail::to(['vineet.thakur@eternitysolutions.net','dhroov.kanwar@eternitysolutions.net'])->cc(['sahil.thakur@eternitysolutions.net','sahildhruv1@gmail.com'])->send(new SendMail($terMailData));
+            // print_r($terMailData);
+            // exit;
+            
+            // $pdf=PDF::loadView('emails.Hrpdf',['terMailData' => $terMailData]);
+            // return $pdf->download('ter.xls');
+
+   
+
+            // $excel = Excel::download('emails.Hrpdf',['terMailData' => $terMailData], 'article-collection.xlsx');
+            // return $excel;
+
+
+            // return view('emails.Hrpdf',['terMailData' => $terMailData]);
+
+            // return view('emails.hrMail',['terMailData' => $terMailData]);
+
+
+            // Mail::to(['itsupport@frontierag.com','dhroov.kanwar@eternitysolutions.net'])->cc(['sahil.thakur@eternitysolutions.net','sahildhruv1@gmail.com'])->send(new SendMail($terMailData));
 
 
             Mail::to(['ter@frontierag.com', 'hrd@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
