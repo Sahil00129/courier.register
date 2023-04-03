@@ -294,6 +294,17 @@ function formSubmitRedirect(form)
 		          hideAfter           : delayTime,
 		          position            : 'top-right'
 		    	});
+                if (response.page == "add-vendors-form") {
+                    swal(
+                        "Success!",
+                        "Data has been Submitted successfully",
+                        "success"
+                    );
+                    setTimeout(() => {
+                        window.location.href = response.redirect_url;
+                    }, 1500);
+                }
+
 	        }
 	        if(response.resetform)
             {

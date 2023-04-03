@@ -69,12 +69,13 @@
         <div class="card-body">
             <form class="forms-sample" id="vForm" method="post" enctype="multipart/form-data" method="POST" action="{{url('/add_vendor_details')}}">
               
+            <!-- <form class="forms-sample" id="vForms" method="post" enctype="multipart/form-data" method="POST" > -->
 
                 <div class="form-row mb-4">
                     <h6><b>Vendor Info</b></h6>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Company Name</label>
-                        <input type="text" class="form-control form-control-sm" name="vname" id="vname" placeholder="Company Name">
+                        <input type="text" class="form-control form-control-sm" name="vname" required id="vname" placeholder="Company Name">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Nature of ASSESSEe</label>
@@ -230,4 +231,66 @@
         </div>
     </div>
 </section>
+<!-- <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+
+<script>
+            $('body').on('click', '.v-save-btn', function() {
+                // alert("dd");
+                // return 1;
+            var name, email, phone, pic, gsturl, mmseurl;
+            name = $("#vname").val();
+            email = $("#email").val();
+            phone = $('#phone').val();
+            pic = $('#url').val();
+            gsturl = $('#gst_url').val();
+            mmseurl = $('#mmse_url').val();
+      
+                var formData = new FormData($('#vForms')[0]);
+
+                formData.append('url', $('input[type=file]')[0].files[0]);
+                formData.append('gst_url', $('input[type=file]')[0].files[0]);
+                formData.append('others_url', $('input[type=file]')[0].files[0]);
+                formData.append('mmse_url', $('input[type=file]')[0].files[0]);
+                //alert(formdata);
+                $.ajax({
+                    url: 'https://beta.finfect.biz/api/add_vendor',
+                    method: 'post',
+                    data: formData,
+                    //use contentType, processData for sure.
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('.v-save-btn').text('PLEASE WAIT...');
+                        $('.v-save-btn').attr('disabled', true);
+                    },
+                    success: function(result, status, xhr) {
+                        $(".v-save-btn").text('SUBMIT');
+                        var da = jQuery.parseJSON(result);
+                        //console.log(da);
+                        if (da.status == 0) {
+                            $.notify({
+                                // options
+                                message: da.message
+                            }, {
+                                // settings
+                                type: 'danger'
+                            });
+                            $('.v-save-btn').attr('disabled', false);
+                        } else if (da.status == 1) {
+                            $.notify({
+                                // options
+                                message: da.message
+                            }, {
+                                // settings
+                                type: 'success'
+                            });
+                            $(".v-reset-btn").trigger('click');
+                            $('.v-save-btn').attr('disabled', false);
+                            location.reload();
+                        }
+                    }
+                });
+            
+        });
+</script> -->
 @endsection

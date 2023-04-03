@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\VendorDetails;
 use Illuminate\Support\Facades\Auth;
+use URL;
+use Illuminate\Support\Facades\Response;
 date_default_timezone_set('Asia/Kolkata');
 
 
@@ -85,9 +87,77 @@ class VendorController extends Controller
  public function add_vendor_details(Request $request)
  {
     $data=$request->all();
-    // return $data['url'];
-    // return  $data['url']->getClientOriginalName();
+    // return $request->file;
+    // return  $data['gst_url']->getPathName();
+    // print_r($data['gst_url']->getMimeType());
+    // print_r($data['gst_url']);
+
+    // exit;
     $vendor_data=array();
+
+    // [name] => wine3.jpg
+    // [type] => image/jpeg
+    // [tmp_name] => /tmp/phpbGPFXq
+
+    // $gst_url_type=array();
+
+    // print_r($_FILES['gst_url']['name']);
+    // exit;
+
+    // $cfile = curl_file_create($_FILES['gst_url']['tmp_name'],$_FILES['gst_url']['type'],$_FILES['gst_url']['name']);
+    // $postRequest = array(
+    //     'file' => $cfile,
+    //     'num1' => 54
+    // );
+
+
+    if(!empty($data['gst_url']))
+    {
+        $image = $data['gst_url'];
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'finfect_vendor_uploads';
+        $image->move($destinationPath, $fileName);
+        // $live_host_name = request()->getHttpHost();
+       $vendor_data['gst_url'] = URL::to('/finfect_vendor_uploads/'.$fileName);
+
+    }
+
+
+    
+    if(!empty($data['mmse_url']))
+    {
+        $image = $data['mmse_url'];
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'finfect_vendor_uploads';
+        $image->move($destinationPath, $fileName);
+        // $live_host_name = request()->getHttpHost();
+        // $live_host_name = URL::to('/finfect_vendor_uploads/'.$fileName);
+       $vendor_data['mmse_url'] = URL::to('/finfect_vendor_uploads/'.$fileName);
+    }
+
+    
+    if(!empty($data['others_url']))
+    {
+        $image = $data['others_url'];
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'finfect_vendor_uploads';
+        $image->move($destinationPath, $fileName);
+        // $live_host_name = request()->getHttpHost();
+       $vendor_data['others_url'] = URL::to('/finfect_vendor_uploads/'.$fileName);
+    }
+
+    if(!empty($data['url']))
+    {
+        $image = $data['url'];
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'finfect_vendor_uploads';
+        $image->move($destinationPath, $fileName);
+        // $live_host_name = request()->getHttpHost();
+       $vendor_data['url'] = URL::to('/finfect_vendor_uploads/'.$fileName);
+        // $vendor_data['url'] =new \CURLFILE($data['url']);
+    }
+    // return $vendor_data;
+
     
 
     if(!empty($data['vname']))
@@ -146,10 +216,7 @@ class VendorController extends Controller
     {
         $vendor_data['baddress'] =$data['baddress'];
     }
-    if(!empty($data['url']))
-    {
-        $vendor_data['url'] =new \CURLFILE($data['url']);
-    }
+ 
     if(!empty($data['msme_reg_no']))
     {
         $vendor_data['msme_reg_no'] =$data['msme_reg_no'];
@@ -170,21 +237,7 @@ class VendorController extends Controller
     }
 
     
-    if(!empty($data['gst_url']))
-    {
-        $vendor_data['gst_url'] = new \CURLFILE($data['gst_url']);
-    }
-
-    
-    if(!empty($data['mmse_url']))
-    {
-        $vendor_data['mmse_url'] =new \CURLFILE($data['mmse_url']);
-    }
-    
-    if(!empty($data['others_url']))
-    {
-        $vendor_data['others_url'] =new \CURLFILE($data['others_url']);
-    }
+ 
     
     if(!empty($data['pfu']))
     {
@@ -196,8 +249,7 @@ class VendorController extends Controller
     }
  
 
-
-    
+// print_r(gettype($gst_url_type));
 // print_r($vendor_data);
 // exit;
 
@@ -221,7 +273,34 @@ $response = curl_exec($curl);
 
 curl_close($curl);
 $res=json_decode($response);
-return $res;
+// return $res;
+$save_vendor_data=array();
+$save_vendor_data['name']=$data['vname'];
+$save_vendor_data['unit']=$data['pfu'];
+$save_vendor_data['api_sent_data']=json_encode($vendor_data);
+$save_vendor_data['api_response']=$response;
+if($res->status == 1)
+{
+$save_vendor_data['saved_on_finfect']=1;
+}
+else{
+$save_vendor_data['saved_on_finfect']=0;
+
+}
+if(!empty($res->data))
+{
+    $save_vendor_data['data_id']=$res->data;
+}
+
+
+
+
+$save_data= VendorDetails::create($save_vendor_data);
+$res_status['success'] = true;
+$res_status['page'] = "add-vendors-form";
+$res_status['messages'] = 'Succesfully Submitted';
+$res_status['redirect_url'] = URL::to('/vendor-table');
+return Response::json($res_status);
 
 // {"status":1,"message":"Vendor saved","data":10208}
 
