@@ -248,32 +248,35 @@ $("#select_unit").change(function (e) {
    
     $.ajax({
         url: "/get_vendors/"+unit,
+        // url: "https://beta.finfect.biz/api/getVendorList/"+unit,
         type: "get",
-        cache: false,
+        // cache: false,
         // data: { po_id: po_id },
-        dataType: "json",
-        headers: {
-            "X-CSRF-TOKEN": jQuery('meta[name="_token"]').attr("content"),
-        },
+        // dataType: "json",
         beforeSend: function () {
             $("#select_consigner").empty();
         },
         success: function (res) {
             if(res){
+               
+                //  console.log(res.data);return 1;
                 $("#select_pos").append('<option selected disabled>search..</option>');
-                $.each(res, function (index, value) {
+                $.each(res.data, function (index, value) {
+                
                     $("#select_pos").append(
                         '<option value="' +
-                        value.id +":"+ value.name +":"+value.erp_code+
-                        '">' + ""+value.id+ " : "+
-                        value.name + " : " + value.erp_code + " : " + value.unit + 
+                        value.vname +":"+value.vcode+
+                        '">' + ""+
+                        value.vname + " : " + value.vcode + " : " + unit + 
                         "</option>"
                     );
+              
+                
                 });
                 $('.poInputToggle').show();
 
                 // $("#select_pos").val(res.data);
-                // $("#po_unit").val(res.data.unit);
+                // $("#po_unit").val(unit);
                 // $("#vendor_code").val(res.data.vendor_code);
                 // $("#vendor_name").val(res.data.vendor_name);
 
@@ -286,9 +289,11 @@ $("#select_pos").change(function (e) {
     console.log($("#select_pos").val());
     const vendor_data_split = $("#select_pos").val().split(":");
     console.log(vendor_data_split);
-    $("#vendor_code").val(vendor_data_split[2]);
-    $("#vendor_name").val(vendor_data_split[1]);
+    $("#vendor_code").val(vendor_data_split[1]);
+    $("#vendor_name").val(vendor_data_split[0]);
 });
+
+
 
 });
 // End ready function //

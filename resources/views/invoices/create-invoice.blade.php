@@ -85,8 +85,8 @@
                     <!-- <div class="breadcrumb-title pe-3"><h5>Create User</h5></div> -->
                 </div>
                 <div class="col-lg-12 col-12 layout-spacing">
-                    <div class="statbox widget box box-shadow">
-                        <form class="general_form row mx-0" method="POST" action="{{url('/invoices')}}" id="createinvoice">
+                    <div class="statbox widget box box-shadow"> 
+                        <form class="general_form row mx-0" method="POST"  enctype="multipart/form-data" action="{{url('/invoices')}}" id="createinvoice">
 
                             <div class="form-row mb-4">
                                 <h6><b>PO Details</b></h6>
@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="form-group mb-4 col-md-6">
                                     <label for="exampleFormControlInput2">PO Value</label>
-                                    <input type="text" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
+                                    <input type="number" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
                                 </div>
                             </div>
 
@@ -148,8 +148,8 @@
 
                                 <div class="form-group col-md-3">
                                     <label for="inputState">Courier Name *</label>
-                                    <select id="slct" name="courier_id" id ="courier_id" class="form-control form-control-sm" required>
-                                    <option></option>
+                                    <select id="slct" name="courier_id" id="courier_id" class="form-control form-control-sm" required>
+                                        <option></option>
                                         @foreach($couriers as $courier)
                                         <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
                                         @endforeach
@@ -174,8 +174,14 @@
 
 
                             </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
+                                <input type="file" accept="image/*" multiple name="scanning_file[]" class="form-control-file  form-control-file-sm" id="fileupload">
+                            </div>
 
+                            <div id="appendImages">
 
+                            </div>
 
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
                                 <a class="btn btn-outline-primary" href="{{url('/pos') }}"> Back</a>
@@ -189,5 +195,25 @@
         </div>
     </div>
 </div>
+
+<script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+<script>
+    $("#basic_amount").blur(function() {
+        if ($("#basic_amount").val() > parseInt($("#po_value").val())) {
+            $("#basic_amount").val("");
+            swal('error', "Basic Amount Can't be Greater than PO Value")
+        }
+
+    });
+    $("#total_amount").blur(function() {
+        // alert($("#po_value").val());
+        // alert($("#total_amount").val());
+        if ($("#total_amount").val() > parseInt($("#po_value").val())) {
+            $("#total_amount").val("");
+            swal('error', "Total Amount Can't be Greater than PO Value")
+        }
+
+    });
+</script>
 
 @endsection

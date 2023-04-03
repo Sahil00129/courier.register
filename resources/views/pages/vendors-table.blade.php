@@ -172,7 +172,9 @@
                     <div class="d-flex align-items-center flex-wrap" style="gap: 8px">
                         @if($role == "sourcing")
 
-                        <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                        <!-- <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                                Vendors</span></a> -->
+                                <a class="btn-primary btn-cstm btn ml-2" href="/show_vendors_form" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                 Vendors</span></a>
 
                         <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import

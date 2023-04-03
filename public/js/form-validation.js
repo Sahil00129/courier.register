@@ -191,6 +191,68 @@ jQuery(document).ready(function () {
         },
     });
 
+        //create invoice
+        jQuery("#vForm").validate({
+            rules: {
+                // po_id: {
+                //     required: true,
+                //     //maxlength:25,
+                //     //lettersonly:true
+                // },
+                // basic_amount: {
+                //     required: true,
+                // },
+                // total_amount: {
+                //     required: true,
+                // },
+                // invoice_no: {
+                //     required: true,
+                // },
+                // invoice_date: {
+                //     required: true,
+                // },
+                // received_date: {
+                //     required: true,
+    
+                // },
+                // courier_name: {
+                //     required: true
+                // },
+                // docket_no: {
+                //     required: true
+                // }
+            },
+            messages: {
+                // po_id: {
+                //     required: "PO number is required",
+                // },
+                // basic_amount: {
+                //     required: "Basic Amount is required",
+                // },
+                // total_amount: {
+                //     required: "Total Amount is required",
+                // },
+                // invoice_no: {
+                //     required: "Invoice Number is required",
+                // },
+                // invoice_date: {
+                //     required: "Invoice Date is required",
+                // },
+                // received_date: {
+                //     required: "Received Date is required",
+                // },
+                // courier_name: {
+                //     required: "Courier Name is required",
+                // },
+                // docket_no: {
+                //     required: "Docket Number is required",
+                // },
+            },
+            submitHandler: function (form) {
+                formSubmitRedirect(form);
+            },
+        });
+
 });
 //end ready function//
 

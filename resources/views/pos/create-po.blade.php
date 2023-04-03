@@ -20,10 +20,10 @@
                 <div class="col-lg-12 col-12 layout-spacing">
                     <div class="statbox widget box box-shadow">
                         <form class="general_form row" method="POST" action="{{url('/pos')}}" id="createpo">
-
+                            @csrf
                         <div class="form-group mb-4 col-md-6">
                                 <label for="exampleFormControlInput2">PO Unit</label>
-                                <select class="form-control" name="unit" v-model="unit" id="select_unit">
+                                <select class="form-control" name="unit" v-model="unit" id="select_unit" >
                                     <option value="">Select Unit</option>
                                     <option value="SD1">SD1</option>
                                     <option value="SD3">SD3</option>

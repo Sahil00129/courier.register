@@ -158,6 +158,8 @@ class InvoiceController extends Controller
             // 'po_value'  => 'required',
             // 'unit'  => 'required',
         );
+     
+
         $validator = Validator::make($request->all() , $rules);
         if ($validator->fails())
         {
@@ -173,8 +175,27 @@ class InvoiceController extends Controller
             $saveinvoice['po_id'] = $request->po_id;
         }
 
+        $data=$request->all();
+
+        $size= sizeof($data['scanning_file']);
+        $save_file_names=array();
+
+        for($i=0;$i<$size;$i++)
+        {
+            $image =$data['scanning_file'][$i];
+            $fileName = $image->getClientOriginalName();
+            $save_file_names[$i]= $fileName;
+            $destinationPath = 'uploads/scan_doc';
+            $image->move($destinationPath, $fileName);
+           
+        }
+        $file_real_names = implode(', ',$save_file_names);
+     
+        
+
 
         $saveinvoice['sender_id'] = $request->po_id;
+        $saveinvoice['file_name'] =$file_real_names;
 
         $get_all_po=DB::table('pos')->where('id',$request->po_id)->get();
         $saveinvoice['employee_id']= $get_all_po[0]->vendor_code;
@@ -441,7 +462,6 @@ class InvoiceController extends Controller
         $image->move($destinationPath, $fileName);
         
         $res = DB::table('tercouriers')->where('id', $data['unid'])->update(['file_name'=>$fileName,'status'=>9,'scanning_remarks'=>$data['remarks']]);
-
 
         return $res;
     }
