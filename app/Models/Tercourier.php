@@ -20,7 +20,7 @@ class Tercourier extends Model
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
         'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type','handover_id','verify_ter_date','is_rejected', 
         'pfu','old_unit','unit_change_remarks','is_unit_changed', 'iag_code','shifting_date','super_admin_remarks','cancel_reject','dedcution_paid','advance_used','deduction_options','paylater_uploads','paylater_remarks','po_value','sourcing_remarks',
-        'scanning_remarks',
+        'scanning_remarks','not_eligible','vapi_res'
 
 
     ];

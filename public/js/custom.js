@@ -264,7 +264,7 @@ $("#select_unit").change(function (e) {
                 $.each(res.data, function (index, value) {
                 
                     $("#select_pos").append(
-                        '<option value="' +
+                        '<option value="'+value.id+":" +
                         value.vname +":"+value.vcode+
                         '">' + ""+
                         value.vname + " : " + value.vcode + " : " + unit + 
@@ -288,9 +288,11 @@ $("#select_unit").change(function (e) {
 $("#select_pos").change(function (e) {
     console.log($("#select_pos").val());
     const vendor_data_split = $("#select_pos").val().split(":");
-    console.log(vendor_data_split);
-    $("#vendor_code").val(vendor_data_split[1]);
-    $("#vendor_name").val(vendor_data_split[0]);
+    // console.log(vendor_data_split);
+    // return 1;
+    $("#vendor_unique_id").val(vendor_data_split[0]);
+    $("#vendor_code").val(vendor_data_split[2]);
+    $("#vendor_name").val(vendor_data_split[1]);
 });
 
 

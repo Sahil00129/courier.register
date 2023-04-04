@@ -113,6 +113,11 @@ class PoController extends Controller
                 $addpo['po_number'] = $po_number['po_number'] + 1;
             }
 
+            
+        if(!empty($request->vendor_unique_id)){
+            $addpo['vendor_unique_id'] = $request->vendor_unique_id;
+        }
+        // return $addpo;
     
         if(!empty($request->vendor_name)){
             $addpo['vendor_name'] = $request->vendor_name;

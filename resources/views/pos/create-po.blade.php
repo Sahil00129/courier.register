@@ -44,6 +44,8 @@
                                 <label for="exampleFormControlInput2">Vendor Code</label>
                                 <input type="text" class="form-control" name="vendor_code" id="vendor_code"  placeholder="" readonly>
                             </div>
+
+                            <input type="hidden" id="vendor_unique_id" name="vendor_unique_id" />
                      
                             <div class="form-group mb-4 col-md-6 poInputToggle"  style="display: none;">
                                 <label for="exampleFormControlInput2">Vendor Name</label>

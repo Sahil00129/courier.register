@@ -68,8 +68,8 @@
     <div class="row editTer">
         <div class="card-body">
             <form class="forms-sample" id="vForm" method="post" enctype="multipart/form-data" method="POST" action="{{url('/add_vendor_details')}}">
-              
-            <!-- <form class="forms-sample" id="vForms" method="post" enctype="multipart/form-data" method="POST" > -->
+
+                <!-- <form class="forms-sample" id="vForms" method="post" enctype="multipart/form-data" method="POST" > -->
 
                 <div class="form-row mb-4">
                     <h6><b>Vendor Info</b></h6>
@@ -134,6 +134,25 @@
                         <label for="">Address</label>
                         <textarea class="form-control" name="vaddress" id="vaddress" rows="1"></textarea>
                     </div>
+
+                    <div class="form-group col-md-3 n-chk align-self-center">
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input onchange="onChnageGstStatus()" id="registered" type="radio" class="new-control-input" name="gstStatus">
+                            <span class="new-control-indicator"></span>Registered
+                        </label>
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input checked="checked" onchange="onChnageGstStatus()" id="unRegistered" type="radio" class="new-control-input" name="gstStatus">
+                            <span class="new-control-indicator"></span>Un-registered
+                        </label>
+                    </div>
+                    <div class="form-group col-md-3" id="gstNo">
+                        <label for="">GSTIN</label>
+                        <input type="text" class="form-control" name="pincode" id="gst_no" placeholder="Pincode">
+                    </div>
+                    <div class="form-group col-md-3" id="panNo">
+                        <label for="">PAN</label>
+                        <input type="text" class="form-control" name="pincode" id="pan_no" placeholder="Pincode">
+                    </div>
                 </div>
 
 
@@ -142,7 +161,7 @@
                     <h6><b>Bank Info</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
-                        <select name="bname" id="bname" class="form-control"  style="width:99%;">
+                        <select name="bname" id="bname" class="form-control" style="width:99%;">
                             <option value="">--Select--</option>
                             @foreach($bank_json_data as $bank_names)
                             <option value="{{$bank_names['BankName']}}">{{$bank_names['BankName']}}</option>
@@ -220,7 +239,7 @@
                     </div>
                 </div>
 
-            
+
 
 
                 <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
@@ -231,9 +250,31 @@
         </div>
     </div>
 </section>
-<!-- <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+<script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 
 <script>
+    const registered = document.getElementById('registered')
+    const unRegistered = document.getElementById('unRegistered')
+
+    function onChnageGstStatus() {
+        if (registered.checked) {
+            document.getElementById('panNo').style('display', 'none');
+            document.getElementById('pan_no').setAttribute("required", "true");
+            document.getElementById('gst_no').removeAttribute("required")
+            document.getElementById('gstNo').style('display', 'flex');
+            alert('registered')
+        } else if (unRegistered.checked) {
+            document.getElementById('gstNo').style('display', 'none');
+            document.getElementById('gst_no').setAttribute("required", "true");
+            document.getElementById('pan_no').removeAttribute("required")
+            document.getElementById('panNo').style('display', 'flex');
+            alert('unRegistered')
+        }
+
+    }
+</script>
+
+<!--<script>
             $('body').on('click', '.v-save-btn', function() {
                 // alert("dd");
                 // return 1;
