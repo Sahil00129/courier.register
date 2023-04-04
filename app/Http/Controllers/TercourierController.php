@@ -1137,7 +1137,8 @@ class TercourierController extends Controller
             return "not possible";
         } else {
             $today_date = date('Y-m-d');
-            $received_ids_arr = array();
+            $received_ids_arr_1 = array();
+            $received_ids_arr_2 = array();
             $rejected_ids_arr = array();
             $sent_to_finfect_arr = array();
             $payment_failed_arr = array();
@@ -1159,19 +1160,51 @@ class TercourierController extends Controller
             $full_n_final_ids_arr_2 = array();
             $unknown_ids_arr_1 = array();
             $unknown_ids_arr_2 = array();
+            $failed_ids_arr_1 = array();
+            $failed_ids_arr_2 = array();
 
 
+            // $check_received_email = Tercourier::where('status', 1)->whereDate('received_date', '<', $today_date)->get();
+            // // echo "<pre>";
+            // for ($i = 0; $i < sizeof($check_received_email); $i++) {
+            //     $received_ids_arr[] = $check_received_email[$i]->id;
+            // }
 
+            // Received
+
+               // 1st
+
+               $date = date_create($today_date);
+               date_add($date, date_interval_create_from_date_string("-1 days"));
+               $from = date_format($date, "Y-m-d");
+               $to = $today_date;
+   
+               $check_received_email = Tercourier::where('status', 1)->whereBetween('received_date',[$from,$to])->where('ter_type',2)->get();
+               // echo "<pre>";
+               $received_arr_1_size=sizeof($check_received_email);
+               for ($i = 0; $i < sizeof($check_received_email); $i++) {
+                   $received_ids_arr_1[] = $check_received_email[$i]->id;
+               }
+
+                  // 2nd
+
+            $check_received_email = "";
             
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $to = date_format($date, "Y-m-d");
 
-
-
-
-            $check_received_email = Tercourier::where('status', 1)->whereDate('received_date', '<', $today_date)->get();
+            $check_received_email = Tercourier::where('status', 1)->whereDate('received_date','<',$to)->where('ter_type',2)->get();
             // echo "<pre>";
+            $received_arr_2_size=sizeof($check_received_email);
             for ($i = 0; $i < sizeof($check_received_email); $i++) {
-                $received_ids_arr[] = $check_received_email[$i]->id;
+                $received_ids_arr_2[] = $check_received_email[$i]->id;
             }
+           
+
+
+
+        
 
                 $date = date_create($today_date);
                 date_add($date, date_interval_create_from_date_string("-3 days"));
@@ -1500,6 +1533,37 @@ class TercourierController extends Controller
 
 
 
+             // Failed
+
+               // 1st
+
+               $date = date_create($today_date);
+               date_add($date, date_interval_create_from_date_string("-1 days"));
+               $from = date_format($date, "Y-m-d");
+               $to = $today_date;
+   
+               $check_failed_email = Tercourier::where('status', 0)->whereBetween('sent_to_finfect_date',[$from,$to])->where('ter_type',2)->get();
+               // echo "<pre>";
+               $failed_arr_1_size=sizeof($check_failed_email);
+               for ($i = 0; $i < sizeof($check_failed_email); $i++) {
+                   $failed_ids_arr_1[] = $check_failed_email[$i]->id;
+               }
+
+                  // 2nd
+
+            $check_failed_email = "";
+            
+            $date = date_create($today_date);
+            date_add($date, date_interval_create_from_date_string("-1 days"));
+            $to = date_format($date, "Y-m-d");
+
+            $check_failed_email = Tercourier::where('status', 0)->whereDate('sent_to_finfect_date','<',$to)->where('ter_type',2)->get();
+            // echo "<pre>";
+            $failed_arr_2_size=sizeof($check_failed_email);
+            for ($i = 0; $i < sizeof($check_failed_email); $i++) {
+                $failed_ids_arr_2[] = $check_failed_email[$i]->id;
+            }
+
             // unknown 
 
             // 1st
@@ -1551,6 +1615,10 @@ class TercourierController extends Controller
            
             // return $handover_ids_arr_1;
 
+            $received_ids_1 = implode(', ',$received_ids_arr_1);
+            $received_ids_2 = implode(', ',$received_ids_arr_2);
+
+
             $handover_ids_1 = implode(', ',$handover_ids_arr_1);
             $handover_ids_2 = implode(', ',$handover_ids_arr_2);
             $handover_ids_3 = implode(', ',$handover_ids_arr_3);
@@ -1570,6 +1638,9 @@ class TercourierController extends Controller
             $full_n_final_ids_1 = implode(', ',$full_n_final_ids_arr_1);
             $full_n_final_ids_2 = implode(', ',$full_n_final_ids_arr_2);
 
+            $failed_ids_1 = implode(', ',$failed_ids_arr_1);
+            $failed_ids_2 = implode(', ',$failed_ids_arr_2);
+
             $unknown_ids_1 = implode(', ',$unknown_ids_arr_1);
             $unknown_ids_2 = implode(', ',$unknown_ids_arr_2);
 
@@ -1577,6 +1648,12 @@ class TercourierController extends Controller
 
             $terMailData = [
                 'title' => "List of TER UNID's ",
+
+                'received_ids_1' => $received_ids_1,
+                'received_ids_2' => $received_ids_2,
+                'received_total_count_1' => $received_arr_1_size,
+                'received_total_count_2' => $received_arr_2_size,
+                
                 'handover_ids_1' => $handover_ids_1,
                 'SD1_h1_count' => $check_SD1_h1_count,
                 'MA2_h1_count' => $check_MA2_h1_count,
@@ -1674,6 +1751,11 @@ class TercourierController extends Controller
                 'SD3_fl2_count' => $check_SD3_fl2_count,
                 'MA4_fl2_count' => $check_MA4_fl2_count,
                 'total_fl2_count' => $total_fl2_count,
+
+                'failed_ids_1' => $failed_ids_1,
+                'failed_ids_2' => $failed_ids_2,
+                'failed_total_count_1' => $failed_arr_1_size,
+                'failed_total_count_2' => $failed_arr_2_size,
 
                 'unknown_ids_1' => $unknown_ids_1,
                 'SD1_u1_count' => $check_SD1_u1_count,
