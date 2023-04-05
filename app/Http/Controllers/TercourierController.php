@@ -623,7 +623,7 @@ class TercourierController extends Controller
                 return Response::json($response);
             }
 
-            $date = date_create($terdata['terfrom_date']);
+            $date = date_create($terdata['terto_date']);
             date_add($date, date_interval_create_from_date_string("50 days"));
             $date_check = date_format($date, "Y-m-d");
           
