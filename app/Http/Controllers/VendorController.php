@@ -7,6 +7,7 @@ use App\Models\VendorDetails;
 use Illuminate\Support\Facades\Auth;
 use URL;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 date_default_timezone_set('Asia/Kolkata');
 
 
@@ -109,6 +110,33 @@ class VendorController extends Controller
     //     'file' => $cfile,
     //     'num1' => 54
     // );
+
+    if(!empty($data['gst_url']))
+    {
+
+        $images = $data['gst_url'];
+      
+
+        $path = Storage::disk('s3')->put('vendors_images', $images);
+        // return $path;
+
+        $img_path = Storage::disk('s3')->url($path);
+        $img_path_save = Storage::disk('s3')->url($path);
+        return $img_path_save;
+
+        // $appmedia['consignment_no'] = $id;
+        // $appmedia['pod_img'] = $img_path_save;
+        // $appmedia['type'] = $type;
+
+        // $savedata = AppMedia::create($appmedia);
+        $image = $data['gst_url'];
+        $fileName = $image->getClientOriginalName();
+        $destinationPath = 'finfect_vendor_uploads';
+        $image->move($destinationPath, $fileName);
+        // $live_host_name = request()->getHttpHost();
+       $vendor_data['gst_url'] = URL::to('/finfect_vendor_uploads/'.$fileName);
+
+    }
 
 
     if(!empty($data['gst_url']))
