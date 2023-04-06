@@ -43,52 +43,6 @@
         </tr>
 
         <tr>
-            <td class="innerCell" valign="top" style=" text-align: center;">Received</td>
-            <td class="innerCell" valign="top" style=" text-align: center;">24 Hrs</td>
-            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['SD1_u1_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['MA2_u1_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['SD3_u1_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['MA4_u1_count']}}
-            </td> -->
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['received_total_count_1']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received_ids_1']}}</p>
-            </td>
-        </tr>
-
-        <tr>
-            <td></td>
-            <td class="innerCell" valign="top" style=" text-align: center;">>24 Hrs</td>
-            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['SD1_u2_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['MA2_u2_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['SD3_u2_count']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['MA4_u2_count']}}
-            </td> -->
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                {{$terMailData['received_total_count_2']}}
-            </td>
-            <td class="innerCell" valign="top" style=" text-align: center;">
-                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received_ids_2']}}</p>
-            </td>
-        </tr>
-
-        <tr>
             <td class="innerCell" valign="top" style="width: 15%; text-align: center;" rowspan="4">Handover</td>
             <td class="innerCell" valign="top" style="width: 15%; text-align: center;">0-3 Days</td>
             <!-- <td class="innerCell" valign="top" style="width: 8%; text-align: center;">{{$terMailData['SD1_h1_count']}}</td>
@@ -262,7 +216,7 @@
         </tr>
 
         <tr>
-            <td class="innerCell" valign="top" style=" text-align: center;">Payment Failed</td>
+            <td class="innerCell" valign="top" style=" text-align: center;" rowspan="2">Payment Failed</td>
             <td class="innerCell" valign="top" style=" text-align: center;">24 Hrs</td>
             <!-- <td class="innerCell" valign="top" style=" text-align: center;">
                 {{$terMailData['SD1_u1_count']}}
@@ -285,7 +239,6 @@
         </tr>
 
         <tr>
-            <td></td>
             <td class="innerCell" valign="top" style=" text-align: center;">>24 Hrs</td>
             <!-- <td class="innerCell" valign="top" style=" text-align: center;">
                 {{$terMailData['SD1_u2_count']}}
@@ -314,7 +267,7 @@
 
 
         <tr>
-            <td class="innerCell" valign="top" style=" text-align: center;">Unknown</td>
+            <td class="innerCell" valign="top" style=" text-align: center;" rowspan="2">Unknown</td>
             <td class="innerCell" valign="top" style=" text-align: center;">24 Hrs</td>
             <!-- <td class="innerCell" valign="top" style=" text-align: center;">
                 {{$terMailData['SD1_u1_count']}}
@@ -337,7 +290,6 @@
         </tr>
 
         <tr>
-            <td></td>
             <td class="innerCell" valign="top" style=" text-align: center;">>24 Hrs</td>
             <!-- <td class="innerCell" valign="top" style=" text-align: center;">
                 {{$terMailData['SD1_u2_count']}}
@@ -358,6 +310,52 @@
                 <p style="width: 100%; word-wrap: break-word;">{{$terMailData['unknown_ids_2']}}</p>
             </td>
         </tr>
+
+        <tr>
+            <td class="innerCell" valign="top" style=" text-align: center;" rowspan="2">Received</td>
+            <td class="innerCell" valign="top" style=" text-align: center;">24 Hrs</td>
+            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD1_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA2_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD3_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA4_u1_count']}}
+            </td> -->
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['received_total_count_1']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received_ids_1']}}</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="innerCell" valign="top" style=" text-align: center;">>24 Hrs</td>
+            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD1_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA2_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD3_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA4_u2_count']}}
+            </td> -->
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['received_total_count_2']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['received_ids_2']}}</p>
+            </td>
+        </tr>
+
 
 
 

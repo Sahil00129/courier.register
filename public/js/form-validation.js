@@ -187,6 +187,7 @@ jQuery(document).ready(function () {
             },
         },
         submitHandler: function (form) {
+            document.getElementById('loadingBlock').style.display="flex";
             formSubmitRedirect(form);
         },
     });
@@ -249,6 +250,7 @@ jQuery(document).ready(function () {
                 // },
             },
             submitHandler: function (form) {
+                document.getElementById('loadingBlock').style.display="flex";
                 formSubmitRedirect(form);
             },
         });
@@ -294,7 +296,9 @@ function formSubmitRedirect(form)
 		          hideAfter           : delayTime,
 		          position            : 'top-right'
 		    	});
+                
                 if (response.page == "add-vendors-form") {
+                    document.getElementById('loadingBlock').style.display="none";
                     swal(
                         "Success!",
                         "Data has been Submitted successfully",
@@ -402,6 +406,9 @@ function formSubmitRedirect(form)
                 hideAfter           : 4000,
                 position            : 'top-right'
             });
+            if (response.page == "add-vendors-form") {
+                document.getElementById('loadingBlock').style.display="none";
+            }
         }
     });
 }

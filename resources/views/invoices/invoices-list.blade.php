@@ -84,7 +84,7 @@
     }
 
     .senderBlock {
-        max-width: 165px;
+        max-width: 190px;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -98,6 +98,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .senderName {
+        width: 100% !important;
     }
 
     .senderBlock .senderId,
@@ -334,6 +338,31 @@
         opacity: 1;
         display: block;
     }
+
+    .paymentStatus {
+        font-size: 12px;
+        text-align: center;
+        color: red;
+    }
+
+    .invImg {
+        max-width: 140px;
+        max-height: 100px;
+        border-radius: 12px;
+        object-fit: contain;
+    }
+
+    .invA {
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: aliceblue;
+        box-shadow: 0 0 12px;
+    }
 </style>
 
 
@@ -376,7 +405,7 @@
                         </button>
                         @endif
 
-                    
+
                         <button class="actionButtons btn btn-success" @click="download_invoice_list()">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
@@ -385,7 +414,7 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
-                      
+
 
                         @if(false)
                         <button class="actionButtons btn btn-success" @click="download_ter_status_list()" v-if="!ter_full_excel">
@@ -453,12 +482,12 @@
                             // dd($tercourier)
                         ?>
                             <tr>
-                                @if($role== "reception")    
+                                @if($role== "reception")
                                 <td style="padding: 10px 21px;">
-                                @if($tercourier->status == 1)
+                                    @if($tercourier->status == 1)
                                     <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
-                                @else <input type="checkbox" disabled>
-                                @endif
+                                    @else <input type="checkbox" disabled>
+                                    @endif
                                 </td>
                                 @endif
 
@@ -478,7 +507,7 @@
                                     @endif
                                 </td>
                                 @endif
-                                <td width="100px">
+                                <td width="100px" style="cursor:pointer">
                                     <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
 
@@ -551,10 +580,11 @@
                                 ?>
 
                                 <td>
+                                    @if($tercourier->not_eligible)<div class="paymentStatus">Not Eligible</div>@endif
                                     @if(!empty($tercourier->HandoverDetail) && $tercourier->status == 1 )
                                     @if($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks!="")
                                     <div style="position: relative;">
-                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: pointer" >
+                                        <button class="btn {{ $class }} btn-sm btn-rounded statusButton" style="cursor: pointer">
                                             {{ $status }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -562,22 +592,24 @@
                                         </button>
                                     </div>
                                     @elseif($tercourier->status == 11 )
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+
                                     @endif
                                     @elseif($tercourier->status == 0 || $tercourier->status == 1)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+
                                     @else
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton" style="cursor: default">
                                         {{ $status }}
                                     </button>
                                     @endif
@@ -605,7 +637,7 @@
                                             <span class="senderName">Name- {{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
                                         <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
-                                            <span>ERP - {{ $tercourier->employee_id ?? '-' }}</span>
+                                            <span>{{ $tercourier->employee_id ?? '-' }}</span>
                                             <span>Unit- {{ ucwords($tercourier->pfu) ?? '-' }}</span>
                                         </div>
                                     </div>
@@ -654,11 +686,11 @@
                                     <div class="terBlock" style="padding: 4px 8px;">
                                         <div class="terDates flex-grow-1">
                                             <div class="dates d-flex flex-column justify-content-center">
-                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Paid:</div>
                                                     ₹{{ $tercourier->total_amount ?? '-' }}
                                                 </div>
-                                                 <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
                                                     {{ $tercourier->paid_date ?? '-' }}
                                                 </div>
@@ -668,53 +700,52 @@
                                 </td>
 
 
-                                @if ($role == 'reception' && $tercourier->status== 1 && false)
                                 <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </div>
-                                </td>
-                                @elseif ($role == 'sourcing' && $tercourier->status== 2)
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_verify_invoice(<?php echo $tercourier->id ?>)">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </div>
-                                </td>
-                                @elseif ($role == 'scanning' && $tercourier->status== 8)
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_scanning_modal(<?php echo $tercourier->id ?>)">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </div>
-                                </td>
-                                @elseif ($tercourier->status== 9)
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)">
+                                    <div class="d-flex align-items-center justify-content-center" style="gap: 8px">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)" style="height: 16px; width: 16px">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                             <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
-                                    </div>
-                                </td>
 
-                                @else
-                                <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor: not-allowed !important;">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
+                                        @if ($role == 'reception' && $tercourier->status== 1 && false)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($role == 'sourcing' && $tercourier->status== 2)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_verify_invoice(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($role == 'scanning' && $tercourier->status== 8)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_scanning_modal(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($tercourier->status== 9)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </div>
+                                        @else
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor: not-allowed !important;">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @endif
                                     </div>
                                 </td>
-                                @endif
                             </tr>
 
                         <?php } ?>
@@ -722,19 +753,20 @@
                     <tbody id="tb1" v-else>
 
                         <tr v-for="tercourier in ter_all_data">
-                        @if($role== "reception" || $role== "sourcing" || $role== "accounts" )
-                        <td style="padding: 10px 21px;">
+                            @if($role== "reception" || $role== "sourcing" || $role== "accounts" )
+                            <td style="padding: 10px 21px;">
                                 <input type="checkbox" id="selectboxid8" name="select_boxd[]" class="selected_boxd" disabled>
                             </td>
-                        @endif    
+                            @endif
                             <td width="100px">
-                                <div class="d-flex align-items-center" style="gap: 4px;">
+                                <div class="d-flex align-items-center" style="gap: 4px; cursor: pointer">
                                     @{{ tercourier.id }}
                                 </div>
                             </td>
 
 
                             <td>
+                                <div v-if="tercourier.not_eligible == 1" class="paymentStatus">Not Eligible</div>
                                 <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'"> -->
                                 <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'">
                                     <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
@@ -745,7 +777,7 @@
                                     </button>
                                 </div> -->
                                 <div v-if="tercourier.status == 1">
-                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" >
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1">
                                         Received at Reception
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -760,7 +792,7 @@
                                 </button>
                                 <div v-if="tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
-                                    Received at Sourcing
+                                        Received at Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -771,7 +803,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 11">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
-                                    Handover to Sourcing
+                                        Handover to Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -782,12 +814,12 @@
                                 </div>
                                 <div v-if="tercourier.status == 3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Verified at Sourcing
+                                        Verified at Sourcing
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 4">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Handover to Accounts
+                                        Handover to Accounts
                                     </button>
                                 </div>
 
@@ -808,12 +840,12 @@
                                 </div>
                                 <div v-if="tercourier.status == 8">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Received at Scanning
+                                        Received at Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 9">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                    Invoice Scanned
+                                        Invoice Scanned
                                     </button>
                                 </div>
                                 <!-- </div> -->
@@ -832,78 +864,79 @@
                             </td>
 
 
-                                       <!-- sender details -->
-                                       <td>
-                                    <div class="senderBlock flex-wrap" style="gap: 0">
-                                        <div class="senderId" style="width: 100%">
-                                            <span class="senderName">Name- @{{ tercourier.sender_name  }}</span>
-                                        </div>
-                                        <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
-                                            <span>ERP - @{{ tercourier.employee_id  }}</span>
-                                            <span>Unit-  @{{ tercourier.pfu }}</span>
-                                        </div>
+                            <!-- sender details -->
+                            <td>
+                                <div class="senderBlock flex-wrap" style="gap: 0">
+                                    <div class="senderId" style="width: 100%">
+                                        <span class="senderName">Name- @{{ tercourier.sender_name  }}</span>
                                     </div>
-                                </td>
-
-                                <!--doc-->
-                                <td>
-                                    <div class="terBlock">
-                                        <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>Inv No- @{{ tercourier.invoice_no }} </strong></span>
-                                            <div class="dates d-flex flex-column justify-content-center">
-                                                <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Date:</div>
-                                                    @{{ tercourier.invoice_date  }}
-                                                </div>
-                                                <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Claimed:</div>
-                                                    ₹@{{ tercourier.total_amount  }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
+                                        <span>@{{ tercourier.employee_id  }}</span>
+                                        <span>Unit- @{{ tercourier.pfu }}</span>
                                     </div>
-                                </td>
+                                </div>
+                            </td>
 
-                                <!--po-->
-                                <td>
-                                    <div class="terBlock">
-                                        <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>PO No- @{{ tercourier.po_detail.po_number }}</strong></span>
-                                            <div class="dates d-flex flex-column justify-content-center">
-                                                <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Date:</div>
-                                                    @{{ trim_date(tercourier.po_detail.created_at) }}
-
-                                                </div>
-                                                <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Amount:</div>
-                                                    ₹@{{ tercourier.po_detail.po_value  }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <!--payment details-->
-                                <td>
-                                    <div class="terBlock" style="padding: 4px 8px;">
-                                        <div class="terDates flex-grow-1">
-                                            <div class="dates d-flex flex-column justify-content-center">
+                            <!--doc-->
+                            <td>
+                                <div class="terBlock">
+                                    <div class="terDates flex-grow-1">
+                                        <span class="terDate"><strong>Inv No- @{{ tercourier.invoice_no }} </strong></span>
+                                        <div class="dates d-flex flex-column justify-content-center">
                                             <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Paid:</div>
-                                                    ₹@{{ tercourier.total_amount }}
-                                                </div>
-                                                 <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Date:</div>
-                                                    @{{ tercourier.paid_date}}
-                                                </div>
+                                                <div class="heading">Date:</div>
+                                                @{{ tercourier.invoice_date  }}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Claimed:</div>
+                                                ₹@{{ tercourier.total_amount  }}
                                             </div>
                                         </div>
                                     </div>
-                                </td>
+                                </div>
+                            </td>
+
+                            <!--po-->
+                            <td>
+                                <div class="terBlock">
+                                    <div class="terDates flex-grow-1">
+                                        <span class="terDate"><strong>PO No- @{{ tercourier.po_detail.po_number }}</strong></span>
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Date:</div>
+                                                @{{ trim_date(tercourier.po_detail.created_at) }}
+
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Amount:</div>
+                                                ₹@{{ tercourier.po_detail.po_value  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!--payment details-->
+                            <td>
+                                <div class="terBlock" style="padding: 4px 8px;">
+                                    <div class="terDates flex-grow-1">
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Paid:</div>
+                                                ₹@{{ tercourier.total_amount }}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Date:</div>
+                                                @{{ tercourier.paid_date}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
 
                             <td v-if="tercourier.status== 1 && false">
                                 <div class="action d-flex justify-content-center align-items-center">
+
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -911,7 +944,11 @@
                                 </div>
                             </td>
                             <td v-else>
-                                <div class="action d-flex justify-content-center align-items-center">
+                                <div class="action d-flex justify-content-center align-items-center" style="gap: 8px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(tercourier.id)" style="height: 16px; width: 16px">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380; cursor: not-allowed !important;">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1001,8 +1038,8 @@
                 </div>
 
 
-                <div class="modal fade show" id="viewFileModal" v-if="file_view_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                <div class="modal fade show" id="viewFileModal" v-if="file_view_modal && !image_flag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Uploaded File for @{{file_id}}</h5>
@@ -1011,23 +1048,21 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <div class="col-md-12 bg-black">
-                                    <img id="view-src" :src="view_file_name" alt="sample image" style="width: 100%; max-height: 300px; border-radius: 12px;" />
+                                <div class="col-md-12 bg-black" style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+
+
+                                    <div v-for="invImg in invImages" style="position: relative;">
+                                        <img class="invImg" :src="invImg" alt="sample image" />
+                                        <a class="btn btn-outline-primary invA" :href="invImg" target="_blank" style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <a class="btn btn-outline-primary" :href="view_file_name" target="_blank" style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
-                                    Open in New Tab
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                        <polyline points="15 3 21 3 21 9"></polyline>
-                                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                                    </svg>
-                                </a>
-                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
-                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -1132,7 +1167,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center" id="cover-spin" v-if="loader">
-                         </div>
+                </div>
 
 
                 <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
@@ -1144,6 +1179,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     new Vue({
@@ -1216,8 +1252,10 @@
             scanning_id: "",
             file_id: "",
             file_view_modal: false,
-            view_file_name: "",
-            invoice_id:"",
+            view_file_name: [],
+            invoice_id: "",
+            invImages: [],
+            image_flag: false,
 
 
 
@@ -1227,9 +1265,10 @@
             // var table=$('#html5-extension');
             // table.dataTable({dom : 'lrt'});
             // $('table').dataTable({bFilter: false, bInfo: false});
+            // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
-            trim_date(date){
+            trim_date(date) {
                 const changed_date = date.split("T");
                 return changed_date[0];
             },
@@ -1652,13 +1691,30 @@
             },
 
             open_file_view_modal: function(id) {
+                this.image_flag = false;
                 this.file_id = id;
                 this.file_view_modal = true;
                 axios.post('/get_file_name', {
                         'id': this.file_id,
                     })
                     .then(response => {
-                        this.view_file_name = 'uploads/scan_doc/' + response.data;
+                        // this.view_file_name = 'uploads/scan_doc/' + response.data;
+                        if (response.data == '') {
+                            this.image_flag = true;
+                            swal('error', 'No Images has been uploaded..')
+                            $('#viewFileModal').modal('hide');
+                            $('.modal-backdrop').removeClass("show");
+                        } else {
+                            this.image_flag = false;
+                        }
+
+                        const split_file_names = response.data.split(",");
+
+
+
+                        this.invImages = split_file_names.map((filename, index) => (`https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/${filename}`));
+
+                        // this.view_file_name = 'https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/' + response.data;
                         this.file_view_modal = true;
                     }).catch(error => {
 
@@ -1930,7 +1986,7 @@
             download_invoice_list: function() {
 
                 this.url = '/download_invoice_list';
-                            window.location.href = this.url;
+                window.location.href = this.url;
             },
             redirect_to_ter: function() {
                 // this.url = '/download_handshake_report';

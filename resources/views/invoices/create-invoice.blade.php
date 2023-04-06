@@ -67,11 +67,63 @@
         border-radius: 7px;
         box-shadow: 0 2px 2px #83838350;
     }
+
+    .imageBlock {
+        width: 150px;
+        height: 150px;
+    }
+
+    .imageBlock img {
+        margin: 10px;
+        width: 140px;
+        height: 140px;
+        border-radius: 8px;
+        object-fit: contain;
+    }
+
+    #imageUploadSection {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .loadingBlock {
+        position: fixed;
+        left: 50%;
+        top: 0;
+        background: #00000070;
+        width: 100vw;
+        height: 100%;
+        transform: translateX(-50%);
+        color: #fff;
+        z-index: 999999;
+        font-size: 1.1rem;
+    }
+
+    .appendedSection {
+        position: relative;
+    }
+
+    .closeIconX {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        cursor: pointer;
+        outline: 1px solid;
+        height: 1.2rem;
+        width: 1.2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 14px;
+        line-height: 14px;
+    }
 </style>
 
 <div class="layout-px-spacing">
     <div class="row layout-top-spacing editTer">
         <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+            <div id="loadingBlock" class="loadingBlock justify-content-center align-items-center" style="display: none;">Submitting...</div>
             <div class="page-header">
                 <nav class="breadcrumb-one" aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -85,8 +137,8 @@
                     <!-- <div class="breadcrumb-title pe-3"><h5>Create User</h5></div> -->
                 </div>
                 <div class="col-lg-12 col-12 layout-spacing">
-                    <div class="statbox widget box box-shadow"> 
-                        <form class="general_form row mx-0" method="POST"  enctype="multipart/form-data" action="{{url('/invoices')}}" id="createinvoice">
+                    <div class="statbox widget box box-shadow">
+                        <form class="general_form row mx-0" method="POST" enctype="multipart/form-data" action="{{url('/invoices')}}" id="createinvoice">
 
                             <div class="form-row mb-4">
                                 <h6><b>PO Details</b></h6>
@@ -174,14 +226,16 @@
 
 
                             </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
-                                <input type="file" accept="image/*" multiple name="scanning_file[]" class="form-control-file  form-control-file-sm" id="fileupload">
-                            </div>
 
-                            <div id="appendImages">
-
+                            <div id="imageUploadSection" class="row">
+                                <div class="form-group col-md-3">
+                                    <label class="col-form-label pb-0">Upload File</label>
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" name="scanning_file[0]" class="amit form-control-file  form-control-file-sm" id="fileupload-0" required />
+                                    <div class="imageBlock"></div>
+                                </div>
                             </div>
+                            <button id="appendButtons" class="btn btn-outline-secondary" style="display: none;" onclick="appendImageSection()" type="button">Add More Image</button>
+
 
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
                                 <a class="btn btn-outline-primary" href="{{url('/pos') }}"> Back</a>
@@ -213,6 +267,46 @@
             swal('error', "Total Amount Can't be Greater than PO Value")
         }
 
+    });
+
+
+
+
+    const imageUploadSection = $('#imageUploadSection')
+    let i = 1;
+
+    const appendImageSection = () => {
+        if (i < 5) {
+            console.log('sss ', i);
+            let sectionToAppend = ``;
+            sectionToAppend += `<div class="form-group col-md-3 appendedSection">
+                                    <label class="col-form-label pb-0">Upload File</label>
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" name="scanning_file[${i}]" class="amit form-control-file  form-control-file-sm" id="fileupload-${i}" required/>
+                                    <div class="imageBlock"></div>
+                                    <span class="closeIconX">x</span>
+                                </div>`;
+            imageUploadSection.append(sectionToAppend);
+            i++;
+        } else {
+            swal('error', 'Maximum upload limit is 5', 'error');
+        }
+    }
+
+    $(document).on("click", '.closeIconX', function(e) {
+        let currentSection = $(this).closest('.appendedSection');
+        console.log(currentSection);
+        currentSection.remove();
+    });
+
+
+    $(document).on("change", '.amit', function(e) {
+        let image = ``;
+        let imageBlock = $(this).next('.imageBlock')[0];
+        let imgSrc = URL.createObjectURL($(this)[0].files[0]);
+        image += `<img src="${imgSrc}" alt="your image">`;
+        console.log(image);
+        imageBlock.innerHTML = image;
+        $('#appendButtons').show();
     });
 </script>
 

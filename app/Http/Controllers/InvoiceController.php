@@ -13,6 +13,7 @@ use Config;
 use Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Exports\ExportInvoiceFullList;
 use App\Exports\ExportVendorList;
 use App\Exports\ExportPoList;
@@ -176,13 +177,19 @@ class InvoiceController extends Controller
 
         for ($i = 0; $i < $size; $i++) {
             $image = $data['scanning_file'][$i];
-            $fileName = $image->getClientOriginalName();
-            $save_file_names[$i] = $fileName;
-            $destinationPath = 'uploads/scan_doc';
-            $image->move($destinationPath, $fileName);
-        }
-        $file_real_names = implode(', ', $save_file_names);
+            // $fileName = $image->getClientOriginalName();
+            // $save_file_names[$i] = $fileName;
+            // $destinationPath = 'uploads/scan_doc';
+            // $image->move($destinationPath, $fileName);
 
+           
+            $path = Storage::disk('s3')->put('invoice_images', $image);
+            $get_real_names = explode('/', $path);
+            $save_file_names[$i] = $get_real_names[1];
+            $s3_path = Storage::disk('s3')->url($path);
+        }
+        $file_real_names = implode(',', $save_file_names);
+// return $file_real_names;
 
 
 
@@ -228,9 +235,10 @@ class InvoiceController extends Controller
         $saveinvoice['status'] = 1;
 
         $savepo = Tercourier::create($saveinvoice);
+        // return $s3_path;
+        $response['page'] = 'create-invoice';
         if ($savepo) {
             $response['success']    = true;
-            $response['page']       = 'create-invoice';
             $response['error']      = false;
             $response['success_message'] = "Invoices created successfully";
             $response['redirect_url'] = URL::to('/invoices');
