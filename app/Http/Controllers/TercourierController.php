@@ -563,6 +563,7 @@ class TercourierController extends Controller
         $terdata['delivery_date'] = $request->delivery_date;
         $terdata['received_date'] = date('Y-m-d');
         $terdata['status'] = 1;
+        $terdata['ter_type'] = 2;
 
         if ($request->terfrom_date && $request->terto_date) {
             $terdata['terfrom_date'] = $request->terfrom_date;
