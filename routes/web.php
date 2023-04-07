@@ -215,7 +215,11 @@ Route::get('download_po_list', [InvoiceController::class, 'download_po_list']);
 Route::get('/vendor-table', [VendorController::class,'vendorTable']);
 Route::get('/get_vendors/{type}', [VendorController::class,'get_vendors']);
 Route::post('add_vendor_details', [VendorController::class, 'add_vendor_details']);
+Route::post('edit_vendor_details', [VendorController::class, 'edit_vendor_details']);
 Route::get('/show_vendors_form', [VendorController::class,'show_vendors_form']);
+Route::post('/open_edit_vendor', [VendorController::class,'open_edit_vendor']);
+Route::get('/get_vendors_form/{id}', [VendorController::class,'get_vendors_form']);
+
 
 
 

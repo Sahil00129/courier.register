@@ -174,7 +174,7 @@
 
                         <!-- <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                 Vendors</span></a> -->
-                                <a class="btn-primary btn-cstm btn ml-2" href="/show_vendors_form" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
+                        <a class="btn-primary btn-cstm btn ml-2" href="/show_vendors_form" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                 Vendors</span></a>
 
                         <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
@@ -200,21 +200,40 @@
                 <table id="html5-extension" class="html5-extension table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Vendor Unique ID</th>
                             <th>Vendor Name</th>
-                            <th>Vendor Code</th>
                             <th>Unit</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($vendors as $vendor)
-                        <?php //echo '<pre>'; print_r($send); die;
+                        <?php //echo '<pre>'; print_r($vendor['id']); die;
                         ?>
                         <tr>
                             <td>{{$vendor->id}}</td>
-                            <td>{{$vendor->name}}</td>
-                            <td>{{$vendor->erp_code}}</td>
-                            <td>{{$vendor->unit}}</td>
+                            <td>{{$vendor->vname}}</td>
+                            <?php
+                            if ($vendor->pfu == "1") {
+                                $pfu = "SD1";
+                            } elseif ($vendor->pfu == "3") {
+                                $pfu = "SD3";
+                            } elseif ($vendor->pfu == "2") {
+                                $pfu = "MA2";
+                            } elseif ($vendor->pfu == "4") {
+                                $pfu = "MA4";
+                            }
+                            ?>
+                            <td>{{$pfu}}</td>
+                            @if(!$vendor->invdue_applicable)
+                            <td><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor:pointer" v-on:click="open_edit_vendor(<?php echo $vendor->id ?>)">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg></td>
+                            @else
+                            <td></td>
+                            @endif
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -353,12 +372,34 @@
                 search_keyword: "",
                 data_loaded: false,
                 sender_data: {},
+
             },
             created: function() {
 
 
             },
             methods: {
+                open_edit_vendor(id) {
+                    axios.post('/open_edit_vendor', {
+                            'id': id
+                        })
+                        .then(response => {
+                            if (response.data) {
+                                window.location = response.data;
+                                // swal('success', "Vendor Added Successfully..", 'success')
+                                // location.reload();
+                            } else {
+
+                                swal('error', "Vendor Code Already Exists", 'error')
+
+                            }
+
+                        }).catch(error => {
+
+
+                        })
+
+                },
                 search_keyword_fn() {
                     var table = $('.html5-extension').DataTable();
                     table.search(this.search_keyword).draw();
