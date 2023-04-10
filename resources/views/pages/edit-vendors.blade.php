@@ -67,6 +67,15 @@
         z-index: 999999;
         font-size: 1.1rem;
     }
+
+    .viewUploaded {
+        font-size: 11px;
+        background: #ffd525;
+        padding: 1px 6px;
+        border-radius: 12px;
+        color: #000;
+        font-weight: 600;
+    }
 </style>
 
 <section class="container" style="position: relative">
@@ -89,9 +98,9 @@
                     <h6><b>PO mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Select PFU</label>
-                        <select name="pfu" id="pfu" class="form-control"  style="width:99%;">
-                        <option selected disabled>{{$pfu}}
-                                    </option>
+                        <select name="pfu" id="pfu" class="form-control" style="width:99%;">
+                            <option selected disabled>{{$pfu}}
+                            </option>
                             <option value="">--Select--</option>
                             <option value="SD1">SD1</option>
                             <option value="MA2">MA2</option>
@@ -101,11 +110,11 @@
                     </div>
                     <div class="form-group col-md-12 n-chk align-self-center">
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="registered" name="registered"  type="radio" checked="checked" class="new-control-input" name="gstStatus">
+                            <input onchange="onChnageGstStatus()" id="registered" name="registered" type="radio" checked="checked" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Registered
                         </label>
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="unRegistered" name="unRegistered"  type="radio" class="new-control-input" name="gstStatus">
+                            <input onchange="onChnageGstStatus()" id="unRegistered" name="unRegistered" type="radio" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Un-registered
                         </label>
                     </div>
@@ -113,36 +122,36 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="form-control"  id="gst" name="gst" value ="<?php echo $vendor_data->gst?>" placeholder="GSTIN" >
+                        <input type="text" class="form-control" id="gst" name="gst" value="<?php echo $vendor_data->gst ?>" placeholder="GSTIN">
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" value ="<?php echo $vendor_data->gst?>"  placeholder="PAN">
+                        <input type="text" class="form-control" name="pan_no" id="pan_no" value="<?php echo $vendor_data->gst ?>" placeholder="PAN">
                     </div>
 
 
 
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Company Name</label>
-                        <input type="text" class="form-control form-control-sm" name="vname" value ="<?php echo $vendor_data->vname ?>"  required id="vname" placeholder="Company Name">
+                        <input type="text" class="form-control form-control-sm" name="vname" value="<?php echo $vendor_data->vname ?>" required id="vname" placeholder="Company Name">
                     </div>
 
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Name</label>
-                        <input type="text" class="form-control" name="contact_name" id="contact_name" value ="<?php echo $vendor_data->contact_name ?>" placeholder="Contact Name" required>
+                        <input type="text" class="form-control" name="contact_name" id="contact_name" value="<?php echo $vendor_data->contact_name ?>" placeholder="Contact Name" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone" value ="<?php echo $vendor_data->phone ?>" required>
+                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="form-control"  name="pincode" id="pincode"  value ="<?php echo $vendor_data->pincode ?>"  placeholder="Pincode">
+                        <input type="text" class="form-control" name="pincode" id="pincode" value="<?php echo $vendor_data->pincode ?>" placeholder="Pincode">
                     </div>
 
                     <!-- <div class="form-group col-md-3">
@@ -162,8 +171,8 @@
 
                     <div class="form-group col-md-3">
                         <label for="">State</label>
-                        <select name="state" id="state" class="form-control"  style="width:99%;">
-                        <option selected disabled>{{$vendor_data->state}}</option>
+                        <select name="state" id="state" class="form-control" style="width:99%;">
+                            <option selected disabled>{{$vendor_data->state}}</option>
                             <option value="">--Select--</option>
                             @foreach($state_json_data as $state_names)
                             <option value="{{$state_names['state']}}">{{$state_names['state']}}</option>
@@ -173,7 +182,7 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Address</label>
-                        <textarea class="form-control" name="vaddress"  id="vaddress" rows="1">{{$vendor_data->vaddress}}</textarea>
+                        <textarea class="form-control" name="vaddress" id="vaddress" rows="1">{{$vendor_data->vaddress}}</textarea>
                     </div>
 
 
@@ -183,20 +192,20 @@
                     <h6><b>Invoice booking Mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Account Holder Name</label>
-                        <input type="text" class="form-control" name="ahn" id="ahn" value ="<?php echo $vendor_data->ahn ?>"  placeholder="Acc Holder Name">
+                        <input type="text" class="form-control" name="ahn" id="ahn" value="<?php echo $vendor_data->ahn ?>" placeholder="Acc Holder Name">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Account No</label>
-                        <input type="number" class="form-control" name="ano" id="ano" value ="<?php echo $vendor_data->ano ?>"  placeholder="Acc No">
+                        <input type="number" class="form-control" name="ano" id="ano" value="<?php echo $vendor_data->ano ?>" placeholder="Acc No">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">IFSC Code</label>
-                        <input type="text" class="form-control" name="ifsc" id="ifsc"value ="<?php echo $vendor_data->ifsc ?>"   placeholder="IFSC Code">
+                        <input type="text" class="form-control" name="ifsc" id="ifsc" value="<?php echo $vendor_data->ifsc ?>" placeholder="IFSC Code">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
                         <select name="bname" id="bname" class="form-control" style="width:99%;">
-                        <option selected disabled>{{$vendor_data->bname}}</option>
+                            <option selected disabled>{{$vendor_data->bname}}</option>
                             <option value="">--Select--</option>
                             @foreach($bank_json_data as $bank_names)
                             <option value="{{$bank_names['BankName']}}">{{$bank_names['BankName']}}</option>
@@ -207,13 +216,13 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Bank Address</label>
-                        <textarea class="form-control" name="baddress"  id="baddress" rows="1">{{$vendor_data->baddress}}</textarea>
+                        <textarea class="form-control" name="baddress" id="baddress" rows="1">{{$vendor_data->baddress}}</textarea>
                     </div>
 
                     <div class="form-group col-md-12">
                         <label><strong> Cheque File Upload</strong></label>
                         @if(!empty($vendor_data->url))
-                        <a href="<?php echo $vendor_data->url ?>" target="_blank"/>Prev Upload</a>
+                        <a class="viewUploaded" href="<?php echo $vendor_data->url ?>" target="_blank">Prev Upload</a>
                         @endif
                         <input type="file" name="url" id="url" class="form-control file-upload-default">
                     </div>
@@ -227,7 +236,7 @@
                     <div class="form-group col-md-4">
                         <label for="">Nature of ASSESSEe</label>
                         <select class="form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
-                        <option selected disabled >{{$vendor_data->nature_of_assessee}}</option>
+                            <option selected disabled>{{$vendor_data->nature_of_assessee}}</option>
                             <option value="">--Select--</option>
                             <option value="Proprietorship">Proprietorship</option>
                             <option value="Partnership">Partnership</option>
@@ -246,47 +255,47 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Nature of Service or Goods</label>
-                        <input type="text" name="nosorg" class="form-control" id="nosorg" value ="<?php echo $vendor_data->nosorg ?>"  placeholder="Nature of Service or Goods">
+                        <input type="text" name="nosorg" class="form-control" id="nosorg" value="<?php echo $vendor_data->nosorg ?>" placeholder="Nature of Service or Goods">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">MSME Number</label>
-                        <input type="text" name="msme_reg_no" class="form-control" value ="<?php echo $vendor_data->msme_reg_no ?>"  id="msme_reg_no" placeholder="MSME Number">
+                        <input type="text" name="msme_reg_no" class="form-control" value="<?php echo $vendor_data->msme_reg_no ?>" id="msme_reg_no" placeholder="MSME Number">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Email</label>
                         <small id="ce" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="email" class="form-control" name="email" id="email" value ="<?php echo $vendor_data->email ?>"  placeholder="Email" >
+                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $vendor_data->email ?>" placeholder="Email">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Designation</label>
-                        <input type="text" class="form-control" name="cdesignation" id="cdesignation" value ="<?php echo $vendor_data->cdesignation ?>"  placeholder="Designation">
+                        <input type="text" class="form-control" name="cdesignation" id="cdesignation" value="<?php echo $vendor_data->cdesignation ?>" placeholder="Designation">
                     </div>
 
 
                     <div class="form-group col-md-4">
                         <label for="">Owner Name</label>
-                        <input type="text" name="owner_name" class="form-control" id="owner_name"  value ="<?php echo $vendor_data->owner_name ?>" placeholder="Owner Name">
+                        <input type="text" name="owner_name" class="form-control" id="owner_name" value="<?php echo $vendor_data->owner_name ?>" placeholder="Owner Name">
                     </div>
 
 
                     <div class="form-group col-md-4">
                         <label><strong> Certificate Upload</strong></label>
                         @if(!empty($vendor_data->gst_url))
-                        <a href="<?php echo $vendor_data->gst_url ?>" target="_blank"/>Prev Upload</a>
+                        <a class="viewUploaded" href="<?php echo $vendor_data->gst_url ?>" target="_blank">Prev Upload</a>
                         @endif
                         <input type="file" name="gst_url" id="gst_url" class="form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong>MSME Registration Number Upload</strong></label>
                         @if(!empty($vendor_data->mmse_url))
-                        <a href="<?php echo $vendor_data->mmse_url ?>" target="_blank"/>Prev Upload</a>
+                        <a class="viewUploaded" href="<?php echo $vendor_data->mmse_url ?>" target="_blank">Prev Upload</a>
                         @endif
                         <input type="file" name="mmse_url" id="mmse_url" class="form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong> File Upload</strong></label>
                         @if(!empty($vendor_data->others_url))
-                        <a href="<?php echo $vendor_data->others_url ?>" target="_blank"/>Prev Upload</a>
+                        <a class="viewUploaded" href="<?php echo $vendor_data->others_url ?>" target="_blank">Prev Upload</a>
                         @endif
                         <input type="file" name="others_url" id="others_url" class="form-control file-upload-default">
                     </div>
@@ -335,13 +344,13 @@
     //     // dataType: "json",
     //     beforeSend: function () {
     //         $("#state").empty();
-          
+
     //     },
     //     success: function (res) {
     //         if(res){
-               
+
     //              console.log(res.data[0].PostOffice[0].State);return 1;
-            
+
 
     //             $("#state").val(res.data[0].PostOffice[0].state);
     //             // $("#po_unit").val(unit);
@@ -351,7 +360,7 @@
     //         }
     //     },
     // });
-       
+
 
     // });
 </script>

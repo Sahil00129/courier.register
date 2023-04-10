@@ -148,6 +148,19 @@
         color: #838383;
         width: 100px;
     }
+
+    .action {
+        color: #474d66;
+        transition: all 200ms ease-in-out;
+        text-align: center;
+    }
+    
+    .action svg {
+        height: 16px;
+        width: 16px;
+        cursor: pointer;
+        transition: all 200ms ease-in-out;
+    }
 </style>
 
 <!-- END PAGE LEVEL CUSTOM STYLES -->
@@ -174,21 +187,21 @@
 
                         <!-- <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#editTerModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                 Vendors</span></a> -->
-                      
+
                         <a class="btn-primary btn-cstm btn ml-2" href="/show_vendors_form" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Add
                                 Vendors</span></a>
-                       
-                         @if(false)
+
+                        @if(false)
                         <a class="btn-primary btn-cstm btn ml-2" data-toggle="modal" data-target="#exampleModal" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i> Import
                             </span></a>
-                            @endif
+                        @endif
 
                         @endif
 
                         @if(false)
                         <a class="btn-primary btn-cstm btn ml-2" style="font-size: 12px; padding: 9px; width: 130px" href="{{'/download_vendor_list'}}"><span><i class="fa fa-plus"></i> Export
                             </span></a>
-                            @endif
+                        @endif
                     </div>
 
 
@@ -208,7 +221,7 @@
                             <th>Vendor Unique ID</th>
                             <th>Vendor Name</th>
                             <th>Unit</th>
-                            <th>Action</th>
+                            <th style="text-align: center;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -231,7 +244,7 @@
                             ?>
                             <td>{{$pfu}}</td>
                             @if(!$vendor->invdue_applicable)
-                            <td><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor:pointer" v-on:click="open_edit_vendor(<?php echo $vendor->id ?>)">
+                            <td class="action"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_edit_vendor(<?php echo $vendor->id ?>)">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg></td>
