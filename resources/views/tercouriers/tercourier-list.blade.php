@@ -1247,7 +1247,7 @@
 
                             <td>
                                 <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'"> -->
-                           
+
                                 <div v-if="tercourier.status == 1">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
                                     Received at Reception

@@ -635,6 +635,18 @@ class TercourierController extends Controller
             }
           
 
+            $date = date_create($terdata['terto_date']);
+            date_add($date, date_interval_create_from_date_string("50 days"));
+            $date_check = date_format($date, "Y-m-d");
+          
+
+            $today_date = date('Y-m-d');
+            
+            if ($today_date >= $date_check) {
+                   self::send_reject_mail($tercourier->id);
+            }
+          
+
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
 
             $API = "cBQcckyrO0Sib5k7y9eUDw"; // GET Key from SMS Provider
@@ -1202,6 +1214,7 @@ class TercourierController extends Controller
             date_add($date, date_interval_create_from_date_string("-1 days"));
             $to = date_format($date, "Y-m-d");
 
+
             $check_received_email = Tercourier::where('status', 1)->whereDate('received_date','<',$to)->where('ter_type',2)->get();
             // echo "<pre>";
             $received_arr_2_size=sizeof($check_received_email);
@@ -1269,12 +1282,10 @@ class TercourierController extends Controller
 
                
 
+
                 for ($i = 0; $i < sizeof($check_handover_email); $i++) {
                     $handover_ids_arr_2[] = $check_handover_email[$i]->id;
                 }
-
-
-
 
                 $check_handover_email = "";
 
@@ -1452,6 +1463,7 @@ class TercourierController extends Controller
             for ($i = 0; $i < sizeof($check_reject_email); $i++) {
                 $rejected_ids_arr_3[] = $check_reject_email[$i]->id;
             }
+            
             $check_SD1_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','SD1')->count();
             $check_MA2_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','MA2')->count();
             $check_SD3_r3_count =  Tercourier::whereDate('handover_date','<',$to)->where('status', 8)->where('ter_type',2)->where('pfu','SD3')->count();
@@ -1492,6 +1504,7 @@ class TercourierController extends Controller
             for ($i = 0; $i < sizeof($check_paylater_email); $i++) {
                 $pay_later_ids_arr_2[] = $check_paylater_email[$i]->id;
             }
+
             $check_SD1_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD1')->count();
             $check_MA2_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','MA2')->count();
             $check_SD3_pl2_count =  Tercourier::where('status', 4)->where('payment_status', 2)->whereDate('verify_ter_date','<',$to)->where('ter_type',2)->where('pfu','SD3')->count();
