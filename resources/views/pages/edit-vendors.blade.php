@@ -212,7 +212,9 @@
 
                     <div class="form-group col-md-12">
                         <label><strong> Cheque File Upload</strong></label>
+                        @if(!empty($vendor_data->url))
                         <a href="<?php echo $vendor_data->url ?>" target="_blank"/>Prev Upload</a>
+                        @endif
                         <input type="file" name="url" id="url" class="form-control file-upload-default">
                     </div>
                 </div>
@@ -269,17 +271,23 @@
 
                     <div class="form-group col-md-4">
                         <label><strong> Certificate Upload</strong></label>
+                        @if(!empty($vendor_data->gst_url))
                         <a href="<?php echo $vendor_data->gst_url ?>" target="_blank"/>Prev Upload</a>
+                        @endif
                         <input type="file" name="gst_url" id="gst_url" class="form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong>MSME Registration Number Upload</strong></label>
+                        @if(!empty($vendor_data->mmse_url))
                         <a href="<?php echo $vendor_data->mmse_url ?>" target="_blank"/>Prev Upload</a>
+                        @endif
                         <input type="file" name="mmse_url" id="mmse_url" class="form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong> File Upload</strong></label>
+                        @if(!empty($vendor_data->others_url))
                         <a href="<?php echo $vendor_data->others_url ?>" target="_blank"/>Prev Upload</a>
+                        @endif
                         <input type="file" name="others_url" id="others_url" class="form-control file-upload-default">
                     </div>
                 </div>
