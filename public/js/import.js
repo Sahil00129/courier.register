@@ -73,7 +73,16 @@ $(document).ready(function (e) {
                         "success"
                     );
                     window.location.href = "sender-table";
-                } else {
+                }else if (data.import_type == 14) {
+                    // alert('5');
+                    swal(
+                        "Success!",
+                        "File has been imported successfully",
+                        "success"
+                    );
+                    window.location.href = "vendor-table";
+                }
+                 else {
                     swal("Error", data.messages, "error");
                 }
             },

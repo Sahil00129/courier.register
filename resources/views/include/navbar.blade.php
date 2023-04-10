@@ -37,6 +37,10 @@
     } */
 </style>
 
+<?php $user = Auth::user();
+             $data = json_decode(json_encode($user));
+               $name=$data->role ?>
+
 <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
@@ -88,6 +92,23 @@ $currentURL = url()->current();
                     </a>
                 </li>
 
+                @can('sourcing-user')
+                    <li class="menu single-menu @if(Str::contains($currentURL, 'admin_update_ter')) active @endif">
+                        <a href="{{url('vendor-table')}}">
+                            <div class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-layers">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                                <span>Vendors</span>
+                            </div>
+                        </a>
+                    </li>
+                    @endcan
+
                 @can('sender-table-show')
                     <li class="menu single-menu">
                         <a href="#employee_doc" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -111,6 +132,7 @@ $currentURL = url()->current();
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="employee_doc"
                             data-parent="#topAccordion">
                             <li><a href="{{url('sender-table')}}">Employees </a></li>
+                            <li><a href="{{url('vendor-table')}}">Vendors </a></li>
                             <!-- <li><a href="{{url('sender-table')}}">Vendors </a></li> -->
                         </ul>
                     </li>
@@ -130,7 +152,34 @@ $currentURL = url()->current();
                                     <line x1="16" y1="17" x2="8" y2="17"></line>
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
+                                @if($name == "sourcing")
+                                <span>Handover Receivable</span>
+                                @else
                                 <span>Handover Table</span>
+                                @endif
+                            </div>
+                        </a>
+                    </li>
+                    @endcan
+
+                    @can('invoice_handover')
+                <li class="menu single-menu @if(Str::contains($currentURL, 'invoice_handover')) active @endif">
+                        <a href="{{url('invoice_handover')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                @if($name == "sourcing")
+                                <span>Handover Forwarded</span>
+                                @else
+                                <span>Handover Table</span>
+                                @endif
                             </div>
                         </a>
                     </li>
@@ -247,7 +296,8 @@ $currentURL = url()->current();
                 {{--                    </li>--}}
                 {{--                @endcan--}}
 
-                <!-- <li class="menu single-menu @if($currentURL == url('pos')) active @endif">
+                @can('po-list')
+                <li class="menu single-menu @if($currentURL == url('pos')) active @endif">
                         <a href="{{url('pos')}}">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -262,8 +312,11 @@ $currentURL = url()->current();
                                 <span>PO List</span>
                             </div>
                         </a>
-                    </li> -->
+                    </li>
+                    @endcan
 
+
+                    @if(false)
                     @can('tercouriers/create')
                        <!-- receive documents -->
                        <li class="menu single-menu">
@@ -287,12 +340,49 @@ $currentURL = url()->current();
                         </a>
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
                             data-parent="#topAccordion">
-                            <!-- <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li> -->
+                            <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
                             <li><a href=" {{url('tercouriers/create')}}"> Add TER </a></li>
                            
                         </ul>
                     </li>
                     @endcan
+                    @endif
+
+                    @can('tercouriers/create')
+                    <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
+                        <a href="{{url('invoices/create')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Add Invoice</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
+                        <a href="{{url('tercouriers/create')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Add TER</span>
+                            </div>
+                        </a>
+                    </li>
+                @endcan
+
 
                 @can('tercouriers')
                     <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
@@ -308,6 +398,25 @@ $currentURL = url()->current();
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                                 <span>TER List</span>
+                            </div>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('invoices')
+                    <li class="menu single-menu @if($currentURL == url('invoices')) active @endif">
+                        <a href="{{url('invoices')}}">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="feather feather-file-text">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                <span>Invoice List</span>
                             </div>
                         </a>
                     </li>
@@ -370,6 +479,7 @@ $currentURL = url()->current();
                 @endcan -->
 
 
+                @if(false)
                 @can('edit-new-ter')
                     <li class="menu single-menu @if($currentURL == url('edit_ter_reception')) active @endif">
                         <a href="{{url('edit_ter_reception')}}">
@@ -386,6 +496,7 @@ $currentURL = url()->current();
                         </a>
                     </li>
                 @endcan
+                @endif  
 
                 @can('users')
                     <li class="menu single-menu @if($currentURL == url('tercouriers/create')) active @endif">

@@ -13,7 +13,7 @@ class ExportTerTimeline implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = Tercourier::select('*')->get();
+        $data = Tercourier::select('*')->where('ter_type',2)->get();
     
             $size = sizeof($data);
             $arr_instrulist_excel[] =array();

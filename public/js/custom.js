@@ -225,12 +225,76 @@ $("#select_po").change(function (e) {
         },
         success: function (res) {
             if(res.data){
+                console.log(res.data)
                 $("#po_value").val(res.data.po_value);
                 $("#po_unit").val(res.data.unit);
+                $("#vendor_code").val(res.data.vendor_code);
+                $("#vendor_name").val(res.data.vendor_name);
+
             }
         },
     });
 });
+
+/*======get consigner on regional client =====*/
+$("#select_unit").change(function (e) {
+    $('#select_pos').empty();
+    $('.poInputToggle').hide();
+    $("#vendor_code").val("");
+    $("#vendor_name").val("");
+    var unit = $(this).val();
+  
+    // $("#items_table").find("tr:gt(1)").remove();
+   
+    $.ajax({
+        url: "/get_vendors/"+unit,
+        // url: "https://beta.finfect.biz/api/getVendorList/"+unit,
+        type: "get",
+        // cache: false,
+        // data: { po_id: po_id },
+        // dataType: "json",
+        beforeSend: function () {
+            $("#select_consigner").empty();
+        },
+        success: function (res) {
+            if(res){
+               
+                //  console.log(res.data);return 1;
+                $("#select_pos").append('<option selected disabled>search..</option>');
+                $.each(res.data, function (index, value) {
+                
+                    $("#select_pos").append(
+                        '<option value="'+value.id+":" +
+                        value.vname +":"+value.vcode+
+                        '">' + ""+
+                        value.vname + " : " + value.vcode + " : " + unit + 
+                        "</option>"
+                    );
+              
+                
+                });
+                $('.poInputToggle').show();
+
+                // $("#select_pos").val(res.data);
+                // $("#po_unit").val(unit);
+                // $("#vendor_code").val(res.data.vendor_code);
+                // $("#vendor_name").val(res.data.vendor_name);
+
+            }
+        },
+    });
+});
+
+$("#select_pos").change(function (e) {
+    console.log($("#select_pos").val());
+    const vendor_data_split = $("#select_pos").val().split(":");
+    // console.log(vendor_data_split);
+    // return 1;
+    $("#vendor_unique_id").val(vendor_data_split[0]);
+    $("#vendor_code").val(vendor_data_split[2]);
+    $("#vendor_name").val(vendor_data_split[1]);
+});
+
 
 
 });

@@ -7,6 +7,7 @@ use App\Models\Sender;
 use App\Models\CourierCompany;
 use App\Models\Category;
 use App\Models\ForCompany;
+use App\Models\VendorDetails;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -278,6 +279,10 @@ class BulkImport implements ToModel, WithHeadingRow
                 }
             }
 
+            // print_r(($row['beneficiary_name']));
+            // print_r($sender_table->beneficiary_name);
+            // exit;
+
             if ($sender_table->beneficiary_name != $row['beneficiary_name']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
@@ -378,7 +383,10 @@ class BulkImport implements ToModel, WithHeadingRow
                 
             }
             else{
+        
+
             if (!empty($lastworkingdate) || $row['date_of_leaving']!=$sender_table->last_working_date) {
+       
                 $month_number = explode("-", $lastworkingdate);
 
                 switch ($month_number[1]) {
@@ -475,6 +483,7 @@ class BulkImport implements ToModel, WithHeadingRow
                         }
                     } 
                     else {
+                      
                         $updated_details['updated_id'] = $sender_table->id;
                         $table_date = strtotime($sender_table->last_working_date);
                         if ($exit_date != $table_date) {
@@ -704,6 +713,29 @@ class BulkImport implements ToModel, WithHeadingRow
             //         'for_company'  => $row['for_company']
             //     ]);
             // }
+        }
+
+        if ($_POST['import_type'] == 14) {
+            // echo "<pre>"; print_r($row['employee_code']);exit;
+            $get_employee_data=DB::table('vendor_details')->where('erp_code',$row['erp_code'])->get()->toArray();
+            if(empty($get_employee_data)){
+         
+                return new VendorDetails([
+                    'name' => $row['name'],
+                    'unit' => $row['unit'],
+                    'erp_code' => $row['erp_code'],
+
+                ]);
+            // $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+            }else{
+                if($row['unit'] != $get_employee_data[0]->unit)
+                {
+    
+                    $updated_data=DB::table('vendor_details')->where('erp_code',$row['erp_code'])->update(['name'=>$row['name'],'unit'=>$row['unit']]);
+                  
+                }
+            }
+         
         }
     }
 }

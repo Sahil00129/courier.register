@@ -13,7 +13,7 @@ class ExportTerUserWise implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = Tercourier::select('*')->get();
+        $data = Tercourier::select('*')->where('ter_type',2)->get();
         $arr_instrulist_excel[] =array();
             $size = sizeof($data);
          

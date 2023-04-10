@@ -84,7 +84,7 @@
     }
 
     .senderBlock {
-        max-width: 300px;
+        max-width: 190px;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -98,6 +98,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .senderName {
+        width: 100% !important;
     }
 
     .senderBlock .senderId,
@@ -120,7 +124,7 @@
         border-radius: 4px;
         background: #83838320;
         position: relative;
-        width: 170px;
+        width: 130px;
         padding: 2px 8px;
     }
 
@@ -133,7 +137,7 @@
     }
 
     .terBlock {
-        padding: 13px 8px 2px;
+        padding: 13px 4px 2px;
     }
 
     .terBlock .terDates,
@@ -159,7 +163,7 @@
     }
 
     .amount .heading {
-        width: 60px !important;
+        width: 46px !important;
         margin-right: 4px;
     }
 
@@ -334,6 +338,31 @@
         opacity: 1;
         display: block;
     }
+
+    .paymentStatus {
+        font-size: 12px;
+        text-align: center;
+        color: red;
+    }
+
+    .invImg {
+        max-width: 140px;
+        max-height: 100px;
+        border-radius: 12px;
+        object-fit: contain;
+    }
+
+    .invA {
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: aliceblue;
+        box-shadow: 0 0 12px;
+    }
 </style>
 
 
@@ -364,7 +393,20 @@
                         </button>
                         @endif
 
-                        <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
+                        @if ($role == 'sourcing')
+                        <button class="actionButtons btn btn-success" v-on:click="handover_invoices_document('sourcing')">
+                            Handover to Accounts
+                        </button>
+                        @endif
+
+                        @if ($role == 'accounts')
+                        <button class="actionButtons btn btn-success" v-on:click="handover_invoices_document('accounts')">
+                            Handover to Scanning
+                        </button>
+                        @endif
+
+
+                        <button class="actionButtons btn btn-success" @click="download_invoice_list()">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -372,6 +414,9 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
+
+
+                        @if(false)
                         <button class="actionButtons btn btn-success" @click="download_ter_status_list()" v-if="!ter_full_excel">
                             Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
@@ -380,22 +425,23 @@
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
+                        @endif
                     </div>
                     <div class="d-flex align-items-center" style="gap: 6px;">
                         <div class="form-group form-group-sm mb-0">
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
-                                @if($role =="reception")<option value="1">Received</option>@endif
-                                <option value="2">Handover</option>
-                                <option value="11">Handover Created</option>
-                                <option value="3">Finfect</option>
-                                <option value="4">Pay</option>
-                                <option value="5">Paid</option>
-                                <option value="6">Cancel</option>
-                                <option value="7">Partially Paid</option>
-                                <option value="8">Rejected</option>
-                                <option value="9">Unknown</option>
-                                <option value="fail">Failed</option>
+                                @if($role =="reception")<option value="1"> Received at Reception</option>@endif
+                                <option value="11">Handover to Sourcing</option>
+                                <option value="2">Received at Sourcing</option>
+                                <option value="3">Verified at Sourcing</option>
+                                <option value="4">Handover to Accounts</option>
+                                <option value="5">Unpaid</option>
+                                <option value="6">Paid</option>
+                                <option value="7">Handover to Scanning</option>
+                                <option value="8">Received at Scanning</option>
+                                <option value="9">Invoice Scanned</option>
+                                <!-- <option value="fail">Failed</option> -->
                             </select>
                         </div>
                         <div class="searchField" style="width: 200px; position: relative;">
@@ -404,7 +450,7 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                             <input type="hidden" id="ter_role" value="<?php echo $role ?>" />
-                            <input class="form-control form-control-sm form-control-sm-30px" id="searchedInput" placeholder="Search..." v-model="search_data" style="padding-left: 30px" v-on:keyup.enter="get_searched_ter()" v-on:keyup="clear_search()">
+                            <input class="form-control form-control-sm form-control-sm-30px" id="searchedInput" placeholder="Search..." v-model="search_data" style="padding-left: 30px" v-on:keyup.enter="get_searched_invoice()" v-on:keyup="clear_search()">
                         </div>
                     </div>
                 </div>
@@ -413,16 +459,20 @@
                 </div>
 
 
-          
+
                 <table id="html5-extensio" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
+                            @if($role== "reception" || $role== "sourcing" || $role== "accounts" )
                             <th><input type="checkbox" id="select_all" v-on:click="select_all_trx()" /></th>
+                            @endif
                             <th>UN ID</th>
                             <th>Status</th>
                             <th>Dates</th>
                             <th>Sender</th>
-                            <th>TER</th>
+                            <th>Doc Details</th>
+                            <th>PO Details</th>
+                            <th>Payments</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -432,13 +482,36 @@
                             // dd($tercourier)
                         ?>
                             <tr>
+                                @if($role== "reception")
                                 <td style="padding: 10px 21px;">
+                                    @if($tercourier->status == 1)
                                     <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
+                                    @else <input type="checkbox" disabled>
+                                    @endif
                                 </td>
-                                <td width="100px">
+                                @endif
+
+                                @if($role == "sourcing")
+                                <td style="padding: 10px 21px;">
+                                    @if($tercourier->status == 3)
+                                    <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
+                                    @else <input type="checkbox" disabled>
+                                    @endif
+                                </td>
+                                @endif
+                                @if($role == "accounts")
+                                <td style="padding: 10px 21px;">
+                                    @if($tercourier->status == 6)
+                                    <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" value="<?php echo $tercourier->id; ?>">
+                                    @else <input type="checkbox" disabled>
+                                    @endif
+                                </td>
+                                @endif
+                                <td width="100px" style="cursor:pointer">
                                     <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
-                                        <div class="uid">
+
+                                        <!-- <div class="uid">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
                                                 <circle cx="12" cy="12" r="10"></circle>
                                                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -459,57 +532,47 @@
                                                             Date:</strong> {{ Helper::ShowFormatDate($tercourier->docket_date) }}
                                                     </p>
                                                 </div>
-                                                <p><strong>Remarks:</strong> {{ ucfirst($tercourier->remarks) ?? '-' }}
+                                                <p><strong>Remarks:</strong> {{ ucfirst($tercourier->sourcing_remarks) ?? '-' }}
                                                 </p>
                                                 <p><strong>Time taken:</strong> {{ $tercourier->recp_entry_time ?? '-' }} hrs
                                                 </p>
                                             </div>
-                                        </div>
+                                        </div> -->
+
                                     </div>
                                 </td>
                                 <?php
-                                if (!empty($tercourier->HandoverDetail) && $tercourier->status == 1) {
-                                    if ($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks != "") {
-                                        $status = 'Received';
-                                        $class = 'btn-danger';
-                                    }
-                                    elseif ($tercourier->status == 11) {
-                                        $status = 'Created Handover';
-                                        $class = 'btn-warning';
-                                    }
-                                } else if ($tercourier->status == 1) {
-                                    $status = 'Received';
+
+                                if ($tercourier->status == 1) {
+                                    $status = 'Received at Recption';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
-                                    $status = 'Created Handover';
+                                    $status = 'Handover to Sourcing';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
-                                    $status = 'Handover';
+                                    $status = 'Received at Sourcing';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 3) {
-                                    $status = 'Sent to Finfect';
+                                    $status = 'Verified at Sourcing';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 3) {
-                                    $status = 'F&F Pay';
-                                    $class = 'btn-success';
-                                } elseif ($tercourier->status == 4 && $tercourier->payment_status == 2) {
-                                    $status = 'Pay';
+                                } elseif ($tercourier->status == 4) {
+                                    $status = 'Handover to Accounts';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 5) {
-                                    $status = 'Paid';
+                                    $status = 'Unpaid';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 6) {
-                                    $status = 'Cancel';
-                                    $class = 'btn-danger';
+                                    $status = 'Paid';
+                                    $class = 'btn-success';
                                 } elseif ($tercourier->status == 7) {
-                                    $status = 'Partially Paid';
+                                    $status = 'Handover to Scanning';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 8) {
-                                    $status = 'Rejected';
-                                    $class = 'btn-danger';
+                                    $status = 'Received at Scanning';
+                                    $class = 'btn-success';
                                 } elseif ($tercourier->status == 9) {
-                                    $status = 'Unknown';
-                                    $class = 'btn-secondary';
+                                    $status = 'Invoice Scanned';
+                                    $class = 'btn-success';
                                 } else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
@@ -517,103 +580,172 @@
                                 ?>
 
                                 <td>
+                                    @if($tercourier->not_eligible)<div class="paymentStatus">Not Eligible</div>@endif
                                     @if(!empty($tercourier->HandoverDetail) && $tercourier->status == 1 )
                                     @if($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks!="")
                                     <div style="position: relative;">
-                                        <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                        <button class="btn {{ $class }} btn-sm btn-rounded statusButton" style="cursor: pointer">
                                             {{ $status }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                                 <polyline points="6 9 12 15 18 9"></polyline>
                                             </svg>
                                         </button>
-                                        <div class="finfectResponseDetail">
-                                            <p>
-                                                <strong>Cancel Remark:</strong> {{ ucfirst($tercourier->HandoverDetail->handover_remarks) ?? '-' }}
-
-                                            </p>
-                                        </div>
                                     </div>
                                     @elseif($tercourier->status == 11 )
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+
                                     @endif
                                     @elseif($tercourier->status == 0 || $tercourier->status == 1)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+
                                     @else
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton" style="cursor: default">
                                         {{ $status }}
                                     </button>
                                     @endif
                                 </td>
                                 <td>
                                     <ul class="dates d-flex flex-column justify-content-center">
-                                        @if($tercourier->date_of_receipt)
-                                        <li>
-                                            Recieved: {{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
-
                                         @if($tercourier->received_date)
                                         <li>
-                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+                                            Recieved: {{ Helper::ShowFormatDate($tercourier->received_date) }}</li>@endif
+
+                                        @if($tercourier->date_of_receipt)
+                                        <li>
+                                            Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ Helper::ShowFormatDate($tercourier->date_of_receipt) }}</li>@endif
 
                                         @if($tercourier->handover_date)
                                         <li>
                                             Handover: {{ Helper::ShowFormatDate($tercourier->handover_date) }}</li>@endif
                                     </ul>
                                 </td>
+
+                                <!-- sender details -->
                                 <td>
-                                    <div class="senderBlock">
-                                        <div class="senderId">
-                                            <span>Emp ID: {{ $tercourier->employee_id ?? '-' }}</span>
-                                            <span class="senderName">{{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
+                                    <div class="senderBlock flex-wrap" style="gap: 0">
+                                        <div class="senderId" style="width: 100%">
+                                            <span class="senderName">Name- {{ ucwords(@$tercourier->sender_name) ?? '-' }}</span>
                                         </div>
-                                        <div class="senderLocation">
-                                            <span>AX ID - {{ $tercourier->ax_id ?? '-' }}</span>
-                                            <span>{{ ucwords($tercourier->location) ?? '-' }}</span>
+                                        <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
+                                            <span>{{ $tercourier->employee_id ?? '-' }}</span>
+                                            <span>Unit- {{ ucwords($tercourier->pfu) ?? '-' }}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <!--ter-->
+
+                                <!--doc-->
                                 <td>
                                     <div class="terBlock">
                                         <div class="terDates flex-grow-1">
-                                            <span class="terDate"><strong>{{ Helper::ShowFormatDate($tercourier->terfrom_date) }} - {{ Helper::ShowFormatDate($tercourier->terto_date) }}</strong></span>
+                                            <span class="terDate"><strong>Inv No- {{ $tercourier->invoice_no }}</strong></span>
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
-                                                    <div class="heading">Claimed:</div>
-                                                    ₹{{ $tercourier->amount ?? '-' }}
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->invoice_date ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Amount:</div>
+                                                    ₹{{ $tercourier->total_amount ?? '-' }}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                @if ($role == 'reception' && $tercourier->status== 1)
+
+                                <!--po-->
                                 <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
+                                    <div class="terBlock">
+                                        <div class="terDates flex-grow-1">
+                                            <span class="terDate"><strong>PO No- {{ $tercourier->PoDetail->po_number }}</strong></span>
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ DateTime::createFromFormat("Y-m-d H:i:s",$tercourier->PoDetail->created_at)->format("d/m/Y") ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Amount:</div>
+                                                    ₹{{ $tercourier->PoDetail->po_value ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
-                                @else
+
+                                <!--payment details-->
                                 <td>
-                                    <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor: not-allowed !important;">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
+                                    <div class="terBlock" style="padding: 4px 8px;">
+                                        <div class="terDates flex-grow-1">
+                                            <div class="dates d-flex flex-column justify-content-center">
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Paid:</div>
+                                                    ₹{{ $tercourier->total_amount ?? '-' }}
+                                                </div>
+                                                <div class="amount d-flex align-items-center justify-content-between ">
+                                                    <div class="heading">Date:</div>
+                                                    {{ $tercourier->paid_date ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
-                                @endif
+
+
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center" style="gap: 8px">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)" style="height: 16px; width: 16px">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+
+                                        @if ($role == 'reception' && $tercourier->status== 1 && false)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($role == 'sourcing' && $tercourier->status== 2)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_verify_invoice(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($role == 'scanning' && $tercourier->status== 8)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#partialpaidModal" v-on:click="open_scanning_modal(<?php echo $tercourier->id ?>)">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @elseif ($tercourier->status== 9)
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </div>
+                                        @else
+                                        <div class="action d-flex justify-content-center align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380;cursor: not-allowed !important;">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
 
                         <?php } ?>
@@ -621,69 +753,46 @@
                     <tbody id="tb1" v-else>
 
                         <tr v-for="tercourier in ter_all_data">
+                            @if($role== "reception" || $role== "sourcing" || $role== "accounts" )
                             <td style="padding: 10px 21px;">
-                                <input type="checkbox" id="selectboxid" name="select_box[]" class="selected_box" :value="tercourier.id">
+                                <input type="checkbox" id="selectboxid8" name="select_boxd[]" class="selected_boxd" disabled>
                             </td>
+                            @endif
                             <td width="100px">
-                                <div class="d-flex align-items-center" style="gap: 4px;">
+                                <div class="d-flex align-items-center" style="gap: 4px; cursor: pointer">
                                     @{{ tercourier.id }}
-                                    <div class="uid">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                        </svg>
-                                        <div class="terDetails">
-                                            <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
-                                                <strong>@{{ tercourier.delivery_date }}</strong>
-                                            </p>
-                                            <div class="courier d-flex align-items-center" style="gap: 1rem">
-                                                <p><strong>Courier
-                                                        Name:</strong> @{{ (tercourier.courier_company.courier_name != null) ? tercourier.courier_company.courier_name : '-' }}
-                                                </p> |
-                                                <p><strong>Docket No.:</strong> @{{ (tercourier.docket_no != null) ? tercourier.docket_no : '-' }}
-                                                </p>
-                                                |
-                                                <p><strong>Docket Date:</strong> @{{ tercourier.docket_date }}
-                                                </p>
-                                            </div>
-                                            <p><strong>Remarks:</strong> @{{ (tercourier.remarks!=null) ? tercourier.remarks : '-' }}
-                                            </p>
-                                            <p><strong>Time taken:</strong> @{{ tercourier.recp_entry_time ? tercourier.recp_entry_time : '-' }} hrs
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </td>
 
 
                             <td>
+                                <div v-if="tercourier.not_eligible == 1" class="paymentStatus">Not Eligible</div>
                                 <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'"> -->
-                                <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'">
+                                <!-- <div v-if="tercourier.status == 1 && tercourier.handover_detail.handover_remarks != 'null'">
                                     <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
                                         Received
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
-                                </div>
-                                <div v-else>
-                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
-                                        Received
+                                </div> -->
+                                <div v-if="tercourier.status == 1">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1">
+                                        Received at Reception
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
                                 </div>
                                 <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
-                                        Failed
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </button>
+                                    Failed
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
                                 <div v-if="tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
-                                        Handover
+                                        Received at Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -694,7 +803,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 11">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
-                                        Handover Created
+                                        Handover to Sourcing
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -705,45 +814,38 @@
                                 </div>
                                 <div v-if="tercourier.status == 3">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Sent to Finfect
+                                        Verified at Sourcing
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4 && tercourier.payment_status==3">
+                                <div v-if="tercourier.status == 4">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        F&F Pay
+                                        Handover to Accounts
                                     </button>
                                 </div>
-                                <div v-if="tercourier.status == 4 && tercourier.payment_status==2">
-                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Pay
-                                    </button>
-                                </div>
+
                                 <div v-if="tercourier.status == 5">
-                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton">
-                                        Paid
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Unpaid
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 6">
-                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Cancel
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Paid
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 7">
-                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Partially Paid
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Handover for Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 8">
-                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Rejected
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Received at Scanning
                                     </button>
                                 </div>
                                 <div v-if="tercourier.status == 9">
-                                    <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Unknown
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Invoice Scanned
                                     </button>
                                 </div>
                                 <!-- </div> -->
@@ -752,46 +854,89 @@
 
                             <td>
                                 <ul class="dates d-flex flex-column justify-content-center">
-                                    <li v-if="tercourier.date_of_receipt">
-                                        Received: @{{ tercourier.date_of_receipt }}</li>
                                     <li v-if="tercourier.received_date">
-                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @{{ tercourier.received_date }}</li>
+                                        Received: @{{ tercourier.received_date }}</li>
+                                    <li v-if="tercourier.date_of_receipt">
+                                        Entry: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @{{ tercourier.date_of_receipt }}</li>
                                     <li v-if="tercourier.handover_date">
                                         Handover: @{{ tercourier.handover_date }}</li>
                                 </ul>
                             </td>
 
 
+                            <!-- sender details -->
                             <td>
-                                <div class="senderBlock">
-                                    <div class="senderId">
-                                        <span>Emp ID: @{{ (tercourier.employee_id != null) ? tercourier.employee_id : '-' }}</span>
-                                        <span class="senderName">@{{ (tercourier.sender_name != null) ? tercourier.sender_name : '-' }}</span>
+                                <div class="senderBlock flex-wrap" style="gap: 0">
+                                    <div class="senderId" style="width: 100%">
+                                        <span class="senderName">Name- @{{ tercourier.sender_name  }}</span>
                                     </div>
-                                    <div class="senderLocation">
-                                        <span>AX ID - @{{ (tercourier.ax_id != null) ? tercourier.ax_id : '-' }}</span>
-                                        <span>@{{ (tercourier.location != null) ? tercourier.location : '-' }}</span>
+                                    <div class="senderLocation flex-row justify-content-between" style="gap: 8px; width: 100%">
+                                        <span>@{{ tercourier.employee_id  }}</span>
+                                        <span>Unit- @{{ tercourier.pfu }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <!--ter-->
 
+                            <!--doc-->
                             <td>
                                 <div class="terBlock">
                                     <div class="terDates flex-grow-1">
-                                        <span class="terDate"><strong>@{{ tercourier.terfrom_date }} - @{{ tercourier.terto_date }}</strong></span>
+                                        <span class="terDate"><strong>Inv No- @{{ tercourier.invoice_no }} </strong></span>
                                         <div class="dates d-flex flex-column justify-content-center">
                                             <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Date:</div>
+                                                @{{ tercourier.invoice_date  }}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
                                                 <div class="heading">Claimed:</div>
-                                                ₹@{{ (tercourier.amount != null) ? tercourier.amount : '-' }}
+                                                ₹@{{ tercourier.total_amount  }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </td>
 
-                            <td v-if="tercourier.status== 1">
+                            <!--po-->
+                            <td>
+                                <div class="terBlock">
+                                    <div class="terDates flex-grow-1">
+                                        <span class="terDate"><strong>PO No- @{{ tercourier.po_detail.po_number }}</strong></span>
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Date:</div>
+                                                @{{ trim_date(tercourier.po_detail.created_at) }}
+
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Amount:</div>
+                                                ₹@{{ tercourier.po_detail.po_value  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!--payment details-->
+                            <td>
+                                <div class="terBlock" style="padding: 4px 8px;">
+                                    <div class="terDates flex-grow-1">
+                                        <div class="dates d-flex flex-column justify-content-center">
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Paid:</div>
+                                                ₹@{{ tercourier.total_amount }}
+                                            </div>
+                                            <div class="amount d-flex align-items-center justify-content-between ">
+                                                <div class="heading">Date:</div>
+                                                @{{ tercourier.paid_date}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td v-if="tercourier.status== 1 && false">
                                 <div class="action d-flex justify-content-center align-items-center">
+
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(tercourier.id)">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -799,7 +944,11 @@
                                 </div>
                             </td>
                             <td v-else>
-                                <div class="action d-flex justify-content-center align-items-center">
+                                <div class="action d-flex justify-content-center align-items-center" style="gap: 8px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(tercourier.id)" style="height: 16px; width: 16px">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380; cursor: not-allowed !important;">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -811,22 +960,22 @@
                         </tr>
                     </tbody>
                 </table>
-         
-                <a href="{{url('tercouriers/create')}}" class="floatingButton btn btn-lg btn-primary">
+
+                <a href="{{url('invoices/create')}}" class="floatingButton btn btn-lg btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span class="text">TER Courier</span>
+                    <span class="text">Invoice Courier</span>
                 </a>
-           
+
 
                 <!-- Modal -->
                 <div class="modal fade show" id="exampleModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Cancel TER</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Verify Document</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -835,16 +984,16 @@
                                 <form>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
-                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="ter_id" disabled>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="unid" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
-                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="cancel_remarks">
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="sourcing_remarks">
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="cancel_ter()" data-dismiss="modal">Save changes
+                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="submit_sourcing_remarks()" data-dismiss="modal">Submit
                                 </button>
                                 <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
                                 <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
@@ -853,32 +1002,24 @@
                         </div>
                     </div>
                 </div>
-                <!-- Partial Paid Modal -->
-                <div class="modal fade show" id="partialpaidModal" v-if="partial_paid_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                <!-- Scanning Paid Modal -->
+                <div class="modal fade show" id="partialpaidModal" v-if="scanning_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="partialpaidModalLabel">Partial Paid - TER ID:
-                                    @{{ter_id}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="partial_paid_modal=false;">
+                                <h5 class="modal-title" id="partialpaidModalLabel">UNID:
+                                    @{{scanning_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="scanning_modal=false;">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <form>
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
-                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="partial_remarks">
+                                        <label for="recipient-name" class="col-form-label pb-0">Scanning Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="scanning_remarks">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label pb-0">Payable
-                                            Amount</label>
-                                        <input type="number" class="form-control form-control-sm" id="recipient-name" v-model="payable_amount">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label pb-0">Voucher Code</label>
-                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="voucher_code">
-                                    </div>
+
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label pb-0">Upload File</label>
                                         <input type="file" accept=".jpg,.pdf" class="form-control-file  form-control-file-sm" id="fileupload" v-on:change="upload_file($event)">
@@ -886,12 +1027,42 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" @click="update_payment()" data-dismiss="modal" style="border-radius: 8px;">Save changes
+                                <button type="button" class="btn btn-primary" @click="update_scanning_data()" data-dismiss="modal" style="border-radius: 8px;">Save changes
                                 </button>
                                 <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
                                 <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade show" id="viewFileModal" v-if="file_view_modal && !image_flag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Uploaded File for @{{file_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="file_view_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-md-12 bg-black" style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+
+
+                                    <div v-for="invImg in invImages" style="position: relative;">
+                                        <img class="invImg" :src="invImg" alt="sample image" />
+                                        <a class="btn btn-outline-primary invA" :href="invImg" target="_blank" style="border-radius: 8px; display: flex;align-items: center;gap: 6px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link" style="height: 14px; width: 14px">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -902,149 +1073,85 @@
                         <div class="modal-content" style="position: relative;">
                             <div class="editTer modal-body editTer" v-if="data_loaded">
 
-                                <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Update TER</h3>
+                                <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Update Documnet @{{unique_id}}</h3>
 
                                 <div class="form-row mb-4">
-                                    <h6><b>Sender Details</b></h6>
+                                    <h6><b>AX Code</b></h6>
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">From *</label>
 
-                                        <div>Actual Entry - @{{this.all_data.sender_detail.name}}
-                                            @{{this.all_data.sender_detail.ax_id}}
-                                            @{{this.all_data.sender_detail.employee_id}}
-                                            @{{this.all_data.sender_detail.status}}
+                                        <div>Actual Entry - @{{this.all_data.sender_name}}
+                                            @{{this.all_data.ax_id}}
+                                            @{{this.all_data.pfu}}
                                         </div>
                                         <input type="text" class="form-control form-control-sm" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
                                         <datalist class="select2-selection__rendered" id="sender_data">
-                                            <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
-                                                @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} :
-                                                @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
+                                            <option v-for="sender_all_info in senders_data" :key="sender_all_info.id">
+                                                @{{sender_all_info.id}} :
+                                                @{{sender_all_info.ax_code}} : @{{sender_all_info.vendor_name}} : @{{po_unit(sender_all_info.unit)}}
                                             </option>
                                         </datalist>
                                     </div>
 
-                                    <!--------------- Date of Receipt ---------->
+                                    <!--------------- PO Value ---------->
                                     <div class="form-group col-md-6">
-                                        <label for="inputPassword4">Date of Receipt *</label>
+                                        <label for="inputPassword4">PO Value *</label>
+                                        <div style="height: 20px;"></div>
+                                        <input type="number" class="form-control form-control-sm" name="po_val" v-model="po_value">
+                                    </div>
+                                    <!--------------- end ------------------>
+
+                                    <!--------------- Courier Received Date ---------->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Courier Received Date</label>
                                         <div style="height: 20px;"></div>
                                         <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
                                     </div>
                                     <!--------------- end ------------------>
-
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Location</label>
-                                        <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="sender_location" readonly="readonly">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Telephone No.</label>
-                                        <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="sender_telephone" readonly="readonly" name="telephone_no" autocomplete="off" maxlength="10" type="tel">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Status</label>
-                                        <input type="text" class="form-control form-control-sm" id="emp_status" v-model="sender_status" name="emp_status" autocomplete="off" readonly="readonly" />
-                                    </div>
                                 </div>
 
-                                <div class="form-row mb-4">
-                                    <h6><b>Document Details</b></h6>
-                                    <div class="form-group col-md-6">
-                                        <label for="inputState">TER Amount *</label>
-                                        <input type="text" class="form-control form-control-sm" id="amount" name="amount" v-model="amount" @keyup="amount_in_words(amount)" required>
-                                        <span id="amountInwords" style="font-size: 12px;text-transform:capitalize;">@{{word_amount}}</span>
-                                    </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label for="inputState">Location</label>
-                                        <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
-                                    </div>
 
-                                    <div class="form-group col-md-3 n-chk align-self-center">
-                                        <label class="new-control new-radio radio-classic-primary">
-                                            <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
-                                            <span class="new-control-indicator"></span>For Month
-                                        </label>
-                                        <label class="new-control new-radio radio-classic-primary">
-                                            <input checked="checked" v-on:change="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
-                                            <span class="new-control-indicator"></span>For Period
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-md-3 n-chk align-self-center">
-                                        <label class="new-control new-radio radio-classic-primary">
-                                            <input checked="checked" id="current_year" type="radio" class="new-control-input" name="selected_year">
-                                            <span class="new-control-indicator"></span>Current Year
-                                        </label>
-                                        <label class="new-control new-radio radio-classic-primary">
-                                            <input id="last_year" type="radio" class="new-control-input" name="selected_year">
-                                            <span class="new-control-indicator"></span>Last Year
-                                        </label>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="month">Select Month</label>
-                                        <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
-                                            <option disabled>--Select Month--</option>
-                                            <option value="01">January</option>
-                                            <option value="02">February</option>
-                                            <option value="03">March</option>
-                                            <option value="04">April</option>
-                                            <option value="05">May</option>
-                                            <option value="06">June</option>
-                                            <option value="07">July</option>
-                                            <option value="08">August</option>
-                                            <option value="09">September</option>
-                                            <option value="10">October</option>
-                                            <option value="11">November</option>
-                                            <option value="12">December</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="inputPassword4">TER Period From *</label>
-                                        <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="terfrom_date">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="inputPassword4">TER Period To *</label>
-                                        <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="terto_date">
-                                    </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Other Details</label>
-                                        <input type="text" class="form-control form-control-sm" id="details" name="details" v-model="details">
-                                    </div>
-                                    <div class="form-group col-md-8">
-                                        <label for="remarks">Remarks</label>
-                                        <textarea name="remarks" class="form-control form-control-sm form-control-sm-30" rows="1" cols="70" v-model="remarks"></textarea>
-                                    </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Basic Amount</label>
+                                    <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="basic_amount">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Total Amount</label>
+                                    <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="total_amount">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputPassword4">Unit</label>
+                                    <input type="text" class="form-control form-control-sm" id="emp_status" v-model="unit" name="emp_status" autocomplete="off" readonly="readonly" />
                                 </div>
 
-                                <div class="form-row mb-4">
-                                    <h6><b>Courier Details</b></h6>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">Courier Name</label>
-                                        <select id="slct" name="courier_id" class="form-control form-control-sm">
-                                            <option selected disabled :value="this.all_data.courier_id">
-                                                @{{this.all_data.courier_company.courier_name}}
-                                            </option>
-                                            @foreach($couriers as $courier)
-                                            <option value="{{$courier->id}}" id="courier_id">{{$courier->courier_name}}</option>
-                                            @endforeach
-                                            <option>Other</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Docket No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="docket_no" v-model="docket_no" name="docket_no" autocomplete="off">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Docket Date</label>
-                                        <input type="date" class="form-control form-control-sm" id="docket_date" name="docket_date" v-model="docket_date">
-                                    </div>
+
+
+
+                                <div class="form-group col-md-6">
+                                    <label for="inputState">Invoice Number</label>
+                                    <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="invoice_number">
+                                </div>
+
+
+
+
+
+                                <div class="form-group col-md-2">
+                                    <label for="inputPassword4">Invoice Date*</label>
+                                    <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="invoice_date">
                                 </div>
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
+                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_invoice()">
                                         <span class="indicator-label">Save</span>
                                         </span>
                                     </button>
                                 </div>
+
+
+
 
                             </div>
                             <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
@@ -1058,16 +1165,21 @@
                         </div>
                     </div>
                 </div>
-              
+
+                <div class="d-flex justify-content-center" id="cover-spin" v-if="loader">
+                </div>
+
+
                 <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
                     {{ $tercouriers->links() }}
                 </div>
-                
+
 
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     new Vue({
@@ -1079,11 +1191,11 @@
             unique_amount_id: "",
             unique_coupon_id: "",
             ter_modal: false,
-            partial_paid_modal: false,
+            scanning_modal: false,
             ter_id: "",
-            cancel_remarks: "",
+            sourcing_remarks: "",
             diff_amount: "",
-            partial_remarks: "",
+            scanning_remarks: "",
             payable_amount: "",
             voucher_code: "",
             file: "",
@@ -1101,15 +1213,16 @@
             amount: "",
             senders_data: "",
             sender_telephone: "",
-            sender_location: "",
-            sender_status: "",
+            basic_amount: "",
+            total_amount: "",
+            unit: "",
             company_name: "",
             date_of_receipt: "",
             docket_date: "",
             docket_no: "",
-            location: "",
+            invoice_number: "",
             terfrom_date: "",
-            terto_date: "",
+            invoice_date: "",
             details: "",
             remarks: "",
             given_to: "",
@@ -1134,6 +1247,16 @@
             lastYear: "",
             forMonth: "",
             forPeiod: "",
+            po_value: "",
+            unid: "",
+            scanning_id: "",
+            file_id: "",
+            file_view_modal: false,
+            view_file_name: [],
+            invoice_id: "",
+            invImages: [],
+            image_flag: false,
+
 
 
         },
@@ -1142,8 +1265,85 @@
             // var table=$('#html5-extension');
             // table.dataTable({dom : 'lrt'});
             // $('table').dataTable({bFilter: false, bInfo: false});
+            // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
+            trim_date(date) {
+                const changed_date = date.split("T");
+                return changed_date[0];
+            },
+            open_invoice_remark: function(id) {
+                this.unid = id;
+                this.ter_modal = true;
+                // alert(this.unid)
+            },
+            update_data_invoice: function() {
+                var po_id;
+                if (this.sender_all_info != "") {
+                    const sender_data_split = this.sender_all_info.split(" : ");
+                    po_id = sender_data_split[0];
+                } else {
+                    po_id = this.all_data.po_id;
+                }
+
+                axios.post('/edit_invoice_details', {
+                        'unid': this.unique_id,
+                        'po_id': po_id,
+                        'po_value': this.po_value,
+                        'received_date': this.date_of_receipt,
+                        'basic_amount': this.basic_amount,
+                        'total_amount': this.total_amount,
+                        'invoice_no': this.invoice_number,
+                        'invoice_date': this.invoice_date
+                    })
+                    .then(response => {
+                        // console.log(response.data);
+                        if (response.data) {
+                            // alert(this.unique_id)
+                            // dt.row(0).cells().invalidate().render()
+                            this.update_ter_flag = true;
+                            swal('success', "Record has been updated Successfully!!!", 'success')
+                            this.got_data = false;
+                            // document.getElementById("search_item").value = "";
+
+                            this.sender_all_info = "";
+                            this.all_data = {};
+                            this.unique_id = "";
+                            // location.reload();
+                            // $('#html5-extension').DataTable().response.data.reload();
+                        } else if (response.data == 0) {
+                            this.button_text = "Search";
+                            swal('error', "Record has been Already changed to Handover", 'error')
+                            this.got_data = false;
+                            this.unique_id = "";
+                            this.sender_all_info = "";
+                            this.all_data = {};
+                            // document.getElementById("search_item").value = "";
+                        } else {
+                            this.button_text = "Search";
+                            this.got_data = false;
+                            this.unique_id = "";
+                            this.sender_all_info = "";
+                            this.all_data = {};
+                            // document.getElementById("search_item").value = "";
+                            swal('error', "Either Record is already updated or not selected", 'error')
+                        }
+
+                    }).catch(error => {
+
+                        // console.log(error)
+                        // return 1;
+                        this.button_text = "Search";
+                        this.got_data = false;
+                        // document.getElementById("search_item").value = "";
+                        this.unique_id = "";
+                        this.sender_all_info = "";
+
+
+                    })
+
+
+            },
             arraySum: function(ary) {
 
                 const obj = JSON.parse(ary);
@@ -1198,13 +1398,25 @@
 
                     })
             },
-            open_verify_ter(id) {
-                this.unique_id = id;
+            po_unit(unit) {
+                if (unit == 1) {
+                    unit = 'SD1';
+                } else if (unit == 2) {
+                    unit = 'SD3';
+                } else if (unit == 3) { //2
+                    unit = 'MA2';
+                } else if (unit == 4) { //3
+                    unit = 'MA4';
+                }
+                return unit;
+            },
+            open_verify_invoice(id) {
+                this.invoice_id = id;
                 this.loader = true;
                 // window.location="/pages/employee-passbook";
                 // setTimeout(() => {window.location.href = "/employee-passbook"},2000);
-                axios.post('/open_verify_ter', {
-                        'id': this.unique_id
+                axios.post('/open_verify_invoice', {
+                        'id': this.invoice_id
                     })
                     .then(response => {
                         if (response.data) {
@@ -1259,7 +1471,7 @@
                     document.getElementById('searchedInput').removeAttribute('disabled', true);
                 } else {
                     this.search_data = this.searched_status;
-                    this.get_searched_ter();
+                    this.get_searched_invoice();
                     this.ter_full_excel = false;
                     document.getElementById('searchedInput').setAttribute('disabled', true);
                 }
@@ -1272,7 +1484,7 @@
 
             },
 
-            get_searched_ter: function() {
+            get_searched_invoice: function() {
                 // var table = $('#html5-extension').DataTable();
                 // table.search(this.search_data).draw();
                 // alert(role);
@@ -1290,7 +1502,7 @@
                 }
 
 
-                axios.post('/get_searched_data', {
+                axios.post('/get_searched_invoice', {
                         'search_data': this.search_data,
                         'page_role': this.page_role
                     })
@@ -1298,10 +1510,10 @@
                         if (response.data) {
                             this.ter_all_data = response.data[0];
                             // console.log(this.ter_all_data.courier_company.courier_name)
-                            if (this.page_role == "reception") {
-                                this.search_flag = true;
+                            // if (this.page_role == "reception") {
+                            this.search_flag = true;
 
-                            }
+                            // }
                             if (this.page_role == "Tr Admin") {
                                 // alert('dd')
                                 this.ter_data_block_flag = true;
@@ -1455,9 +1667,9 @@
 
             },
             get_sender_data: function(data) {
-                const emp_id = data.split(" : ");
-                axios.post('/get_employees', {
-                        'emp_id': emp_id[0]
+                const id = data.split(" : ");
+                axios.post('/get_po_list', {
+                        'id': id[0]
                     })
                     .then(response => {
                         if (response.data) {
@@ -1477,74 +1689,99 @@
 
                     })
             },
-            update_payment: function() {
-                if (this.partial_remarks != "" && this.voucher_code != "" && this.payable_amount != "" && this.file != null) {
-                    if (parseInt(this.diff_amount) >= this.payable_amount) {
-                        const config = {
-                            headers: {
-                                'content-type': 'multipart/form-data',
-                            }
+
+            open_file_view_modal: function(id) {
+                this.image_flag = false;
+                this.file_id = id;
+                this.file_view_modal = true;
+                axios.post('/get_file_name', {
+                        'id': this.file_id,
+                    })
+                    .then(response => {
+                        // this.view_file_name = 'uploads/scan_doc/' + response.data;
+                        if (response.data == '') {
+                            this.image_flag = true;
+                            swal('error', 'No Images has been uploaded..')
+                            $('#viewFileModal').modal('hide');
+                            $('.modal-backdrop').removeClass("show");
+                        } else {
+                            this.image_flag = false;
                         }
-                        let formData = new FormData();
-                        formData.append('file', this.file);
-                        formData.append('ter_id', this.ter_id);
-                        formData.append('remarks', this.partial_remarks);
-                        formData.append('voucher_code', this.voucher_code);
-                        formData.append('payable_amount', this.payable_amount);
-                        formData.append('actual_amount', this.actual_amount);
-                        formData.append('prev_payable_sum', this.prev_payable_sum);
-                        formData.append('left_amount', this.diff_amount);
-                        formData.append('actual_partial_id', this.actual_partial_id);
+
+                        const split_file_names = response.data.split(",");
 
 
-                        axios.post('/update_ter_deduction', formData, config)
-                            .then(response => {
-                                if (response.data[0] === "duplicate_voucher") {
-                                    swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
-                                } else if (response.data) {
-                                    swal('success', "Ter Id :" + this.ter_id + " has been sent to HR for payment", 'success')
-                                    location.reload();
-                                } else {
-                                    swal('error', "System Error", 'error')
-                                    this.partial_paid_modal = false;
-                                    this.ter_id = "";
-                                    location.reload();
-                                }
 
-                            }).catch(error => {
+                        this.invImages = split_file_names.map((filename, index) => (`https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/${filename}`));
 
-                                swal('error', error, 'error')
-                                this.partial_paid_modal = false;
-                                this.ter_id = "";
-                            })
-                    } else {
-                        swal('error', "Payable Amount = " + this.payable_amount + " can't be greater than Total Amount = " + this.diff_amount, 'error')
+                        // this.view_file_name = 'https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/' + response.data;
+                        this.file_view_modal = true;
+                    }).catch(error => {
+
+                        swal('error', error, 'error')
+                        this.file_view_modal = false;
+                        this.file_id = "";
+                    })
+            },
+            update_scanning_data: function() {
+                if (this.scanning_remarks != "" && this.file != null) {
+                    const config = {
+                        headers: {
+                            'content-type': 'multipart/form-data',
+                        }
                     }
+                    let formData = new FormData();
+                    formData.append('file', this.file);
+                    formData.append('unid', this.scanning_id);
+                    formData.append('remarks', this.scanning_remarks);
+
+
+                    axios.post('/update_scanning_data', formData, config)
+                        .then(response => {
+                            if (response.data[0] === "duplicate_voucher") {
+                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
+                            } else if (response.data) {
+                                swal('success', "UNID :" + this.ter_id + " has been submitted", 'success')
+                                location.reload();
+                            } else {
+                                swal('error', "System Error", 'error')
+                                this.scanning_modal = false;
+                                this.ter_id = "";
+                                location.reload();
+                            }
+
+                        }).catch(error => {
+
+                            swal('error', error, 'error')
+                            this.scanning_modal = false;
+                            this.ter_id = "";
+                        })
+
                 } else {
                     swal('error', "Fields are Empty", 'error')
                 }
             },
-            cancel_ter: function() {
-                if (this.cancel_remarks != "") {
-                    axios.post('/cancel_ter', {
-                            'ter_id': this.ter_id,
-                            'remarks': this.cancel_remarks
+            submit_sourcing_remarks: function() {
+                if (this.sourcing_remarks != "") {
+                    axios.post('/submit_sourcing_remarks', {
+                            'unid': this.unid,
+                            'remarks': this.sourcing_remarks
                         })
                         .then(response => {
                             if (response.data) {
-                                swal('success', "Ter Id :" + this.ter_id + " has been cancelled", 'success')
+                                swal('success', "Remarks for UNID :" + this.unid + " has been successfully submitted", 'success')
                                 location.reload();
                             } else {
                                 swal('error', "System Error", 'error')
                                 this.ter_modal = false;
-                                this.ter_id = "";
+                                this.unid = "";
                             }
 
                         }).catch(error => {
 
                             swal('error', error, 'error')
                             this.ter_modal = false;
-                            this.ter_id = "";
+                            this.unid = "";
                         })
                 } else {
                     swal('error', "Remarks needs to be added", 'error')
@@ -1557,8 +1794,12 @@
                 this.ter_id = ter_id;
                 this.ter_modal = true;
             },
+            open_scanning_modal: function(id) {
+                this.scanning_modal = true;
+                this.scanning_id = id;
+            },
             open_partial_paid_modal: function(ter_id) {
-                this.partial_paid_modal = true;
+                this.scanning_modal = true;
                 this.ter_id = ter_id;
                 axios.post('/check_deduction', {
                         'ter_id': this.ter_id,
@@ -1570,7 +1811,7 @@
                             this.prev_payable_sum = response.data[3];
                         } else {
                             swal('error', "All dues are paid", 'error')
-                            this.partial_paid_modal = false;
+                            this.scanning_modal = false;
                             $('#partialpaidModal').modal('hide');
                         }
                         this.partial_remarks = "";
@@ -1601,7 +1842,7 @@
                     this.voucher_code = "",
                     //  alert(this.unique_id);
 
-                    axios.post('/get_all_data', {
+                    axios.post('/get_all_invoice_data', {
                         'unique_id': this.unique_id,
                         'role': ""
                     })
@@ -1614,23 +1855,14 @@
                             this.button_text = "Search";
                             this.sender_all_info = "";
                             this.all_data = response.data[0];
-                            this.amount = this.all_data.amount;
-                            this.senders_data = response.data.all_senders_data;
-                            this.sender_telephone = this.all_data.sender_detail.telephone_no;
-                            this.sender_location = this.all_data.sender_detail.location;
-                            this.sender_status = this.all_data.sender_detail.status;
-                            this.company_name = this.all_data.company_name;
-                            this.date_of_receipt = this.all_data.date_of_receipt;
-                            this.docket_date = this.all_data.docket_date;
-                            this.docket_no = this.all_data.docket_no;
-                            this.location = this.all_data.location;
-                            this.terfrom_date = this.all_data.terfrom_date,
-                                this.terto_date = this.all_data.terto_date;
-                            this.details = this.all_data.details;
-                            this.remarks = this.all_data.remarks;
-                            this.given_to = this.all_data.given_to;
-                            this.delivery_date = this.all_data.delivery_date;
-                            this.word_amount = this.inWords(this.amount);
+                            this.senders_data = response.data.all_pos_data;
+                            this.po_value = this.all_data.po_value;
+                            this.basic_amount = this.all_data.basic_amount;
+                            this.total_amount = this.all_data.total_amount;
+                            this.unit = this.all_data.pfu;
+                            this.date_of_receipt = this.all_data.received_date;
+                            this.invoice_number = this.all_data.invoice_no;
+                            this.invoice_date = this.all_data.invoice_date;
                             // document.getElementById('amountInwords').style.textTransform = "capitalize";
                             // this.amount_in_words();
 
@@ -1751,19 +1983,49 @@
 
             },
 
-            download_ter_list: function() {
+            download_invoice_list: function() {
 
-                axios.get('/download_ter_list', {
+                this.url = '/download_invoice_list';
+                window.location.href = this.url;
+            },
+            redirect_to_ter: function() {
+                // this.url = '/download_handshake_report';
+                window.location.href = '/tercouriers';
 
+            },
+
+            handover_invoices_document: function($type) {
+                var x = this.$el.querySelector("#tb");
+                if (x == null) {
+                    x = "";
+                    x = this.$el.querySelector("#tb1");
+                }
+
+                var y = x.querySelectorAll(".selected_box");
+                var trx_str = "";
+
+                for (var i = 0; i < y.length; i++) {
+                    // console.log(y[i].value);
+                    if (y[i].checked) {
+                        if (trx_str == "") {
+                            trx_str += y[i].value;
+                        } else {
+                            trx_str += "|" + y[i].value;
+                        }
+                    }
+                }
+                // alert(trx_str)
+
+                axios.post('/handover_invoices_document', {
+                        'selected_value': trx_str,
+                        'user_type': $type
                     })
                     .then(response => {
                         console.log(response.data);
-                        if (response.data == 1) {
-                            this.url = '/download_ter_full_list';
-                            window.location.href = this.url;
+                        if (response.data >= 1) {
+                            location.reload();
                         } else {
-                            this.url = '/download_reception_list';
-                            window.location.href = this.url;
+                            swal('error', "Either Record is already updated or not selected", 'error')
                         }
 
                     }).catch(error => {
@@ -1772,11 +2034,6 @@
                         this.apply_offer_btn = 'Apply';
 
                     })
-            },
-            redirect_to_ter:function(){
-                // this.url = '/download_handshake_report';
-                            window.location.href = '/tercouriers';
-
             },
 
             change_to_handover: function() {
@@ -1999,41 +2256,6 @@
     });
 </script>
 
-<script>
-    function onChangePeriodType() {
-        var forMonth = document.getElementById('for_month')
-        var forPeiod = document.getElementById('for_period')
-        if (forMonth.checked) {
-            document.getElementById('terfrom_date').disabled = true;
-            document.getElementById('terto_date').disabled = true;
-            document.getElementById('month').disabled = false;
-        }
-        if (forPeiod.checked) {
-            document.getElementById('terfrom_date').disabled = false;
-            document.getElementById('terto_date').disabled = false;
-            document.getElementById('month').disabled = true;
-        }
-    }
 
-    function onSelectMonth() {
-        alert("D");
-        const selectedMonth = document.getElementById('month').value
-        const currentYear = new Date().getFullYear()
-        if (selectedMonth == 1 || selectedMonth == 3 || selectedMonth == 5 || selectedMonth == 7 || selectedMonth == 8 || selectedMonth == 10 || selectedMonth == 12) {
-            document.getElementById('terfrom_date').value = `${currentYear}-${selectedMonth}-01`;
-            document.getElementById('terto_date').value = `${currentYear}-${selectedMonth}-31`;
-        } else if (selectedMonth == 2) {
-            document.getElementById('terfrom_date').value = `${currentYear}-${selectedMonth}-01`;
-            document.getElementById('terto_date').value = `${currentYear}-${selectedMonth}-28`;
-        } else {
-            document.getElementById('terfrom_date').value = `${currentYear}-${selectedMonth}-01`;
-            document.getElementById('terto_date').value = `${currentYear}-${selectedMonth}-30`;
-        }
-    }
-
-    function setRowsOnPage(rows) {
-        alert(rows)
-    }
-</script>
 
 @endsection

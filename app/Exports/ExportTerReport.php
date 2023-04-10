@@ -13,7 +13,7 @@ class ExportTerReport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data=Tercourier::select('id','created_at','saved_by_name','updated_by_name','updated_at')->get();
+        $data=Tercourier::select('id','created_at','saved_by_name','updated_by_name','updated_at')->where('ter_type',2)->get();
         $size=sizeof($data);
         // $val="";
         $arr_instrulist_excel[] =array();

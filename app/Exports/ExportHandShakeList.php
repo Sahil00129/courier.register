@@ -14,7 +14,7 @@ class ExportHandShakeList implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('status',3)->get();
+        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('status',3)->where('ter_type',2)->get();
 
         $size = sizeof($data);
 

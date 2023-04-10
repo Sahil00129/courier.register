@@ -333,46 +333,31 @@
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Handover ID</th>
-                            <th>Handover Department</th>
+                            <th>Invoice Handover ID</th>
+                            <th>Handover By Department</th>
+                            <th>Handover To Department</th>
                             <th>UNID's</th>
                             <th>Count</th>
                             <th>Handover Date</th>
                             <th>Handover Remarks</th>
                             <th>Handover Status</th>
-                            @if($name == 'tr admin' || $name == 'Hr Admin' || $name == "sourcing")
+                            @if($name == 'accounts' || $name == "sourcing" || $name == "scanning")
                             <th class="text-center">Action</th>
                             @endif
                         </tr>
                     </thead>
                     <tbody id="tb">
+                        <input type="hidden" value="<?php echo $name ?>"  id="getname">
                         @foreach ($handovers as $key => $handover)
 
-                        @if($name == 'reception')
-                        <tr>
-                            <td><strong>{{ $handover->handover_id }}</strong></td>
-                            <td>{{$handover->department}}</td>
-                            <td>{{$handover->ter_ids}}</td>
-                            <td>{{$handover->ter_id_count}}</td>
-                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
-                            @if($handover->handover_remarks!="" && $handover->reception_action == 0)
-                            <td>{{$handover->handover_remarks}}</td>
-                            @else
-                            <td>-</td>
-                            @endif
-                            @if($handover->is_received == 1)
-                            <td>Received</td>
-                            @else
-                            <td>Not Received</td>
-                            @endif
-                        </tr>
 
-                        @elseif($name == 'tr admin' && $handover->department == 'ter-team')
+                        @if($name == 'sourcing')
                         <tr>
-                            <td><strong>{{ $handover->handover_id }}</strong></td>
-                            <td>{{$handover->department}}</td>
-                            <td>{{$handover->ter_ids}}</td>
-                            <td>{{$handover->ter_id_count}}</td>
+                            <td><strong>{{ $handover->invoice_handover_id }}</strong></td>
+                            <td>{{$handover->handover_by_department}}</td>
+                            <td>{{$handover->handover_to_department}}</td>
+                            <td>{{$handover->unids}}</td>
+                            <td>{{$handover->invoice_id_count}}</td>
                             <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
                             @if($handover->handover_remarks!="")
                             <td>{{$handover->handover_remarks}}</td>
@@ -384,24 +369,47 @@
                             @else
                             <td>Not Received</td>
                             @endif
-                            @if($handover->reception_action == '1' && $handover->is_received == 0)
+                           <td>-</td>
+                        </tr>
+
+                        @elseif($name == 'accounts')
+                        <tr>
+                        <td><strong>{{ $handover->invoice_handover_id }}</strong></td>
+                            <td>{{$handover->handover_by_department}}</td>
+                            <td>{{$handover->handover_to_department}}</td>
+                            <td>{{$handover->unids}}</td>
+                            <td>{{$handover->invoice_id_count}}</td>
+                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
+                            @if($handover->handover_remarks!="")
+                            <td>{{$handover->handover_remarks}}</td>
+                            @else
+                            <td>-</td>
+                            @endif
+                            @if($handover->is_received == 1)
+                            <td>Received</td>
+                            @else
+                            <td>Not Received</td>
+                            @endif
+                            @if($handover->user_action == '1' && $handover->is_received == 0 && $handover->handover_by_department == 'sourcing-team')
                             <td>
                                 <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
-                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
+                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->invoice_handover_id ?>)">Accept</div>
+                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->invoice_handover_id ?>)">Decline</div>
                                 </div>
                             </td>
                             @else
                             <td>-</td>
                             @endif
+
                         </tr>
 
-                        @elseif($name == 'sourcing' && $handover->department == 'sourcing-team')
+                        @elseif($name == 'scanning' && $handover->handover_by_department == 'accounts')
                         <tr>
-                            <td><strong>{{ $handover->handover_id }}</strong></td>
-                            <td>{{$handover->department}}</td>
-                            <td>{{$handover->ter_ids}}</td>
-                            <td>{{$handover->ter_id_count}}</td>
+                        <td><strong>{{ $handover->invoice_handover_id }}</strong></td>
+                            <td>{{$handover->handover_by_department}}</td>
+                            <td>{{$handover->handover_to_department}}</td>
+                            <td>{{$handover->unids}}</td>
+                            <td>{{$handover->invoice_id_count}}</td>
                             <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
                             @if($handover->handover_remarks!="")
                             <td>{{$handover->handover_remarks}}</td>
@@ -413,40 +421,11 @@
                             @else
                             <td>Not Received</td>
                             @endif
-                            @if($handover->reception_action == '1' && $handover->is_received == 0)
+                            @if($handover->user_action == '1' && $handover->is_received == 0 && $handover->handover_by_department == 'accounts')
                             <td>
                                 <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
-                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
-                                </div>
-                            </td>
-                            @else
-                            <td>-</td>
-                            @endif
-                        </tr>
-
-                        @elseif($name == 'Hr Admin' && $handover->department=='hr-admin')
-                        <tr>
-                            <td><strong>{{ $handover->handover_id }}</strong></td>
-                            <td>{{$handover->department}}</td>
-                            <td>{{$handover->ter_ids}}</td>
-                            <td>{{$handover->ter_id_count}}</td>
-                            <td>{{ DateTime::createFromFormat("Y-m-d H:i:s",$handover->created_at)->format("d/m/Y");}}</td>
-                            @if($handover->handover_remarks!="")
-                            <td>{{$handover->handover_remarks}}</td>
-                            @else
-                            <td>-</td>
-                            @endif
-                            @if($handover->is_received == 1 && $handover->handover_remarks == "")
-                            <td>Received</td>
-                            @else
-                            <td>Not Received</td>
-                            @endif
-                            @if($handover->reception_action == '1' && $handover->is_received == 0)
-                            <td>
-                                <div class="action d-flex justify-content-center align-items-center" style="gap: 1rem">
-                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->handover_id ?>)">Accept</div>
-                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->handover_id ?>)">Decline</div>
+                                    <div class="btn btn-sm btn-success" style="padding: 0.4375rem 1.25rem" v-on:click="accept_handover(<?php echo $handover->invoice_handover_id ?>)">Accept</div>
+                                    <div class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editTerModal" style="padding: 0.4375rem 1.25rem" v-on:click="decline_handover(<?php echo $handover->invoice_handover_id ?>)">Decline</div>
                                 </div>
                             </td>
                             @else
@@ -466,7 +445,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content" style="position: relative;">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="rejectedRemarksModalLabel"> Handover ID: @{{handover_id}}</h5>
+                                <h5 class="modal-title" id="rejectedRemarksModalLabel"> Handover ID: @{{invoice_handover_id}}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -501,15 +480,19 @@
         //   ValidationProvider
         // },
         data: {
-            handover_id: "",
+            invoice_handover_id: "",
             handover_remarks: "",
+            login_name:"",
         },
-        created: function() {},
+        created: function() {
+            this.login_name=$("#getname").val();
+        },
         methods: {
             accept_handover: function(id) {
-                this.handover_id = id;
-                axios.post('/accept_handover', {
-                        'handover_id': this.handover_id
+                this.invoice_handover_id = id;
+                axios.post('/accept_invoice_handover', {
+                        'invoice_handover_id': this.invoice_handover_id,
+                        'user_type':this.login_name
                     })
                     .then(response => {
                         if (response.data) {
@@ -527,9 +510,11 @@
                     })
             },
             confirm_decline: function() {
-                axios.post('/reject_handover', {
-                        'handover_id': this.handover_id,
-                        'handover_remarks': this.handover_remarks
+                axios.post('/reject_invoice_handover', {
+                        'invoice_handover_id': this.invoice_handover_id,
+                        'handover_remarks': this.handover_remarks,
+                        'user_type':this.login_name
+
                     })
                     .then(response => {
                         if (response.data) {
@@ -548,7 +533,7 @@
                     })
             },
             decline_handover: function(id) {
-                this.handover_id = id;
+                this.invoice_handover_id = id;
             },
 
 
