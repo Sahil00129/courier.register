@@ -15,6 +15,8 @@ use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\TercourierController;
 use App\Http\Controllers\PoController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\VendorController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -188,6 +190,40 @@ Route::get('/get_departments', [UserController::class, 'getDepartment']);
 Route::resource('pos', PoController::class);
 Route::resource('invoices', InvoiceController::class);
 Route::get('/get-po', [InvoiceController::class, 'getPo']);
+Route::get('/check_invoice_paid_status/{id}', [InvoiceController::class, 'check_invoice_paid_status']);
+Route::post('get_all_invoice_data', [InvoiceController::class, 'get_all_invoice_data']);
+Route::post('get_po_list', [InvoiceController::class, 'get_po_list']);
+Route::post('submit_sourcing_remarks', [InvoiceController::class, 'submit_sourcing_remarks']);
+Route::post('handover_invoices_document', [InvoiceController::class, 'handover_invoices_document']);
+Route::get('/invoice_handover', [InvoiceController::class,'invoice_handover']);
+Route::post('/accept_invoice_handover', [InvoiceController::class,'accept_invoice_handover']);
+Route::post('/reject_invoice_handover', [InvoiceController::class,'reject_invoice_handover']);
+Route::post('/update_scanning_data', [InvoiceController::class,'update_scanning_data']);
+Route::post('/get_searched_invoice', [InvoiceController::class,'get_searched_data']);
+Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
+Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoice']);
+Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
+Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
+Route::get('download_vendor_list', [InvoiceController::class, 'download_vendor_list']);
+Route::get('download_po_list', [InvoiceController::class, 'download_po_list']);
+
+
+
+
+
+
+Route::get('/vendor-table', [VendorController::class,'vendorTable']);
+Route::get('/get_vendors/{type}', [VendorController::class,'get_vendors']);
+Route::post('add_vendor_details', [VendorController::class, 'add_vendor_details']);
+Route::post('edit_vendor_details', [VendorController::class, 'edit_vendor_details']);
+Route::get('/show_vendors_form', [VendorController::class,'show_vendors_form']);
+Route::post('/open_edit_vendor', [VendorController::class,'open_edit_vendor']);
+Route::get('/get_vendors_form/{id}', [VendorController::class,'get_vendors_form']);
+
+
+
+
+
 
 });
 

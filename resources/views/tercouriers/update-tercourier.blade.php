@@ -903,7 +903,7 @@
                             } else {
                                 this.button_text = "Search";
                                 this.allow_flag = false;
-                                swal('error',response.data, 'error')
+                                swal('error', response.data, 'error')
                             }
 
                         }).catch(error => {

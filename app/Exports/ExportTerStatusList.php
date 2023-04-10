@@ -20,7 +20,7 @@ class ExportTerStatusList implements FromCollection, WithHeadings
     }
     public function collection()
     {
-        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('status',$this->status)->get();
+        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('ter_type',2)->where('status',$this->status)->get();
     
             $size = sizeof($data);
             $arr_instrulist_excel[] =array();

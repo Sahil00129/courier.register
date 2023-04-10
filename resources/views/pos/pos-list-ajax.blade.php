@@ -2,11 +2,13 @@
     <table class="table mb-3" style="width:100%">
         <thead>
             <tr>
-                <th>Ax Code</th>
+                <th>ID</th>
                 <th>PO Number</th>
                 <th>Vendor Name</th>
+                <th>Vendor Code</th>
                 <th>PO Value</th>
                 <th>Unit</th>
+                <th>Activity</th>
                 <!-- <th>Action </th> -->
             </tr>
         </thead>
@@ -15,12 +17,13 @@
             @foreach($posdata as $value)
             
             <tr>
-                <td>{{$value->ax_code ?? '-'}} </td>
+                <td>{{$value->id ?? '-'}} </td>
                 <td>{{$value->po_number ?? '-'}} </td>
                 <td>{{$value->vendor_name ?? '-'}} </td>
+                <td>{{$value->vendor_code ?? '-'}} </td>
                 <td>{{$value->po_value ?? '-'}} </td>
-                <td>{{Helper::PoUnit($value->unit)}} </td>
-                <!-- <td> </td> -->
+                <td>{{$value->unit}} </td>
+                <td>{{$value->activity}} </td>
             </tr>
             @endforeach
             @else

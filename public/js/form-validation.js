@@ -89,18 +89,30 @@ jQuery(document).ready(function () {
                 //lettersonly:true
             },
             vendor_name: {
-                // required: true,
+                required: true,
+            },
+            vendor_code: {
+                required: true,
             },
             po_value: {
-                // required: true,
+                required: true,
+            },
+            activity: {
+                required: true,
             },
             unit: {
                 // required: true,
             },
         },
         messages: {
+            activity: {
+                required: "Activity is required",
+            },
             po_number: {
                 required: "PO number is required",
+            },
+            vendor_code: {
+                required: "Vendor Code is required",
             },
             vendor_name: {
                 required: "Vendor name is required",
@@ -126,39 +138,122 @@ jQuery(document).ready(function () {
                 //lettersonly:true
             },
             basic_amount: {
-                // required: true,
+                required: true,
             },
             total_amount: {
-                // required: true,
+                required: true,
             },
             invoice_no: {
-                // required: true,
+                required: true,
             },
             invoice_date: {
-                // required: true,
+                required: true,
             },
+            received_date: {
+                required: true,
+
+            },
+            courier_name: {
+                required: true
+            },
+            docket_no: {
+                required: true
+            }
         },
         messages: {
             po_id: {
                 required: "PO number is required",
             },
             basic_amount: {
-                required: "Vendor name is required",
+                required: "Basic Amount is required",
             },
             total_amount: {
-                required: "Po value is required",
+                required: "Total Amount is required",
             },
             invoice_no: {
-                required: "Unit is required",
+                required: "Invoice Number is required",
             },
             invoice_date: {
-                required: "Unit is required",
+                required: "Invoice Date is required",
+            },
+            received_date: {
+                required: "Received Date is required",
+            },
+            courier_name: {
+                required: "Courier Name is required",
+            },
+            docket_no: {
+                required: "Docket Number is required",
             },
         },
         submitHandler: function (form) {
+            document.getElementById('loadingBlock').style.display="flex";
             formSubmitRedirect(form);
         },
     });
+
+        //create invoice
+        jQuery("#vForm").validate({
+            rules: {
+                // po_id: {
+                //     required: true,
+                //     //maxlength:25,
+                //     //lettersonly:true
+                // },
+                // basic_amount: {
+                //     required: true,
+                // },
+                // total_amount: {
+                //     required: true,
+                // },
+                // invoice_no: {
+                //     required: true,
+                // },
+                // invoice_date: {
+                //     required: true,
+                // },
+                // received_date: {
+                //     required: true,
+    
+                // },
+                // courier_name: {
+                //     required: true
+                // },
+                // docket_no: {
+                //     required: true
+                // }
+            },
+            messages: {
+                // po_id: {
+                //     required: "PO number is required",
+                // },
+                // basic_amount: {
+                //     required: "Basic Amount is required",
+                // },
+                // total_amount: {
+                //     required: "Total Amount is required",
+                // },
+                // invoice_no: {
+                //     required: "Invoice Number is required",
+                // },
+                // invoice_date: {
+                //     required: "Invoice Date is required",
+                // },
+                // received_date: {
+                //     required: "Received Date is required",
+                // },
+                // courier_name: {
+                //     required: "Courier Name is required",
+                // },
+                // docket_no: {
+                //     required: "Docket Number is required",
+                // },
+            },
+            submitHandler: function (form) {
+                document.getElementById('loadingBlock').style.display="flex";
+                formSubmitRedirect(form);
+            },
+        });
 
 });
 //end ready function//
@@ -201,6 +296,19 @@ function formSubmitRedirect(form)
 		          hideAfter           : delayTime,
 		          position            : 'top-right'
 		    	});
+                
+                if (response.page == "add-vendors-form") {
+                    document.getElementById('loadingBlock').style.display="none";
+                    swal(
+                        "Success!",
+                        "Data has been Submitted successfully",
+                        "success"
+                    );
+                    setTimeout(() => {
+                        window.location.href = response.redirect_url;
+                    }, 1500);
+                }
+
 	        }
 	        if(response.resetform)
             {
@@ -298,6 +406,9 @@ function formSubmitRedirect(form)
                 hideAfter           : 4000,
                 position            : 'top-right'
             });
+            if (response.page == "add-vendors-form") {
+                document.getElementById('loadingBlock').style.display="none";
+            }
         }
     });
 }

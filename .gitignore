@@ -17,3 +17,5 @@ yarn-error.log
 /public/uploads
 /public/rejected_ter_uploads
 /public/paylater_ter_uploads
+/public/finfect_vendor_uploads
+
