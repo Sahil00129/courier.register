@@ -204,7 +204,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
-                        <select name="bname" id="bname" class="approvalReq form-control" style="width:99%;">
+                        <select name="bname" id="bname" class="form-control @if($vendor_data->bname) approvalReq @endif" style="width:99%;">
                             <option selected disabled>{{$vendor_data->bname}}</option>
                             <option value="">--Select--</option>
                             @foreach($bank_json_data as $bank_names)
@@ -235,7 +235,7 @@
                     <h6><b>Other Details Info</b></h6>
                     <div class="form-group col-md-4">
                         <label for="">Nature of ASSESSEe</label>
-                        <select class="approvalReq form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
+                        <select class="form-control form-control-sm @if($vendor_data->nature_of_assessee) approvalReq @endif" name="nature_of_assessee" id="nature_of_assessee">
                             <option selected disabled>{{$vendor_data->nature_of_assessee}}</option>
                             <option value="">--Select--</option>
                             <option value="Proprietorship">Proprietorship</option>
