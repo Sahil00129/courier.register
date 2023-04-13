@@ -69,8 +69,11 @@
     }
 
     .imageBlock {
-        width: 150px;
-        height: 150px;
+        /* width: 150px; */
+        /* height: 150px; */
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
     }
 
     .imageBlock img {
@@ -79,6 +82,8 @@
         height: 140px;
         border-radius: 8px;
         object-fit: contain;
+        background: #83838330;
+        padding: 6px;
     }
 
     #imageUploadSection {
@@ -228,9 +233,9 @@
                             </div>
 
                             <div id="imageUploadSection" class="row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-12">
                                     <label class="col-form-label pb-0">Upload File</label>
-                                    <input type="file" accept="image/png, image/jpg, image/jpeg" name="scanning_file[0]" class="amit form-control-file  form-control-file-sm" id="fileupload-0" required />
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" class="amit form-control-file  form-control-file-sm" id="fileupload-0" required />
                                     <div class="imageBlock"></div>
                                 </div>
                             </div>
@@ -281,7 +286,7 @@
             let sectionToAppend = ``;
             sectionToAppend += `<div class="form-group col-md-3 appendedSection">
                                     <label class="col-form-label pb-0">Upload File</label>
-                                    <input type="file" accept="image/png, image/jpg, image/jpeg" name="scanning_file[${i}]" class="amit form-control-file  form-control-file-sm" id="fileupload-${i}" required/>
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[${i}]" class="amit form-control-file  form-control-file-sm" id="fileupload-${i}" required/>
                                     <div class="imageBlock"></div>
                                     <span class="closeIconX">x</span>
                                 </div>`;
@@ -303,10 +308,13 @@
         let image = ``;
         let imageBlock = $(this).next('.imageBlock')[0];
         let imgSrc = URL.createObjectURL($(this)[0].files[0]);
-        image += `<img src="${imgSrc}" alt="your image">`;
-        console.log(image);
+
+        for (let i = 0; i < $(this)[0].files.length; i++) {
+            let imgSrcw = URL.createObjectURL($(this)[0].files[i]);
+            image += `<img src="` + imgSrcw + `" alt="your image">`;
+        }
         imageBlock.innerHTML = image;
-        $('#appendButtons').show();
+        // $('#appendButtons').show();
     });
 </script>
 

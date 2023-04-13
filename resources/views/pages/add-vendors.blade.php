@@ -89,7 +89,7 @@
                     <h6><b>PO mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Select PFU</label>
-                        <select name="pfu" id="pfu" class="form-control" required style="width:99%;">
+                        <select name="pfu" id="pfu" class="approvalReq form-control" required style="width:99%;">
                             <option value="">--Select--</option>
                             <option value="SD1">SD1</option>
                             <option value="MA2">MA2</option>
@@ -99,18 +99,18 @@
                     </div>
                     <div class="form-group col-md-12 n-chk align-self-center">
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="registered" type="radio" checked="checked" class="new-control-input" name="gstStatus">
+                            <input onchange="onChnageGstStatus()" id="registered" type="radio" value="1" checked="checked" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Registered
                         </label>
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="unRegistered" type="radio" class="new-control-input" name="gstStatus">
+                            <input onchange="onChnageGstStatus()" id="unRegistered" type="radio" value="0" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Un-registered
                         </label>
                     </div>
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="form-control"  id="gst" name="gst" placeholder="GSTIN" required>
+                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
@@ -122,44 +122,44 @@
 
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Company Name</label>
-                        <input type="text" class="form-control form-control-sm" name="vname" required id="vname" placeholder="Company Name">
+                        <input type="text" class="approvalReq form-control form-control-sm" name="vname" required id="vname" placeholder="Company Name">
                     </div>
 
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Name</label>
-                        <input type="text" class="form-control" name="contact_name" id="contact_name" placeholder="Contact Name" required>
+                        <input type="text" class="approvalReq form-control" name="contact_name" id="contact_name" placeholder="Contact Name" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone" required>
+                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="form-control"  name="pincode" id="pincode" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" placeholder="Pincode">
                     </div>
 
                     <!-- <div class="form-group col-md-3">
                         <label for="">State</label>
-                        <input type="text" class="form-control" name="state" id="state" disabled>
+                        <input type="text" class="approvalReq form-control" name="state" id="state" disabled>
                     </div> -->
                     <!-- <div class="form-group col-md-3">
                         <label for="">District</label>
-                        <input type="text" class="form-control" name="district" id="district" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="district" id="district" placeholder="Pincode">
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">City</label>
-                        <input type="text" class="form-control" name="city" id="city" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="city" id="city" placeholder="Pincode">
                     </div> -->
 
 
                     <div class="form-group col-md-3">
                         <label for="">State</label>
-                        <select name="state" id="state" class="form-control" required style="width:99%;">
+                        <select name="state" id="state" class="approvalReq form-control" required style="width:99%;">
                             <option value="">--Select--</option>
                             @foreach($state_json_data as $state_names)
                             <option value="{{$state_names['state']}}">{{$state_names['state']}}</option>
@@ -169,7 +169,7 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Address</label>
-                        <textarea class="form-control" name="vaddress" id="vaddress" rows="1"></textarea>
+                        <textarea class="approvalReq form-control" name="vaddress" id="vaddress" rows="1"></textarea>
                     </div>
 
 
@@ -179,19 +179,19 @@
                     <h6><b>Invoice booking Mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Account Holder Name</label>
-                        <input type="text" class="form-control" name="ahn" id="ahn" placeholder="Acc Holder Name">
+                        <input type="text" class="approvalReq form-control" name="ahn" id="ahn" placeholder="Acc Holder Name">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Account No</label>
-                        <input type="number" class="form-control" name="ano" id="ano" placeholder="Acc No">
+                        <input type="number" class="approvalReq form-control" name="ano" id="ano" placeholder="Acc No">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">IFSC Code</label>
-                        <input type="text" class="form-control" name="ifsc" id="ifsc" placeholder="IFSC Code">
+                        <input type="text" class="approvalReq form-control" name="ifsc" id="ifsc" placeholder="IFSC Code">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
-                        <select name="bname" id="bname" class="form-control" style="width:99%;">
+                        <select name="bname" id="bname" class="approvalReq form-control" style="width:99%;">
                             <option value="">--Select--</option>
                             @foreach($bank_json_data as $bank_names)
                             <option value="{{$bank_names['BankName']}}">{{$bank_names['BankName']}}</option>
@@ -202,12 +202,12 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Bank Address</label>
-                        <textarea class="form-control" name="baddress" id="baddress" rows="1"></textarea>
+                        <textarea class="approvalReq form-control" name="baddress" id="baddress" rows="1"></textarea>
                     </div>
 
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-3">
                         <label><strong> Cheque File Upload</strong></label>
-                        <input type="file" name="url" id="url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="url" id="url" class="approvalReq form-control file-upload-default">
                     </div>
                 </div>
 
@@ -218,7 +218,7 @@
                     <h6><b>Other Details Info</b></h6>
                     <div class="form-group col-md-4">
                         <label for="">Nature of ASSESSEe</label>
-                        <select class="form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
+                        <select class="approvalReq form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
                             <option value="">--Select--</option>
                             <option value="Proprietorship">Proprietorship</option>
                             <option value="Partnership">Partnership</option>
@@ -237,40 +237,40 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Nature of Service or Goods</label>
-                        <input type="text" name="nosorg" class="form-control" id="nosorg" placeholder="Nature of Service or Goods">
+                        <input type="text" name="nosorg" class="approvalReq form-control" id="nosorg" placeholder="Nature of Service or Goods">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">MSME Number</label>
-                        <input type="text" name="msme_reg_no" class="form-control" id="msme_reg_no" placeholder="MSME Number">
+                        <input type="text" name="msme_reg_no" class="approvalReq form-control" id="msme_reg_no" placeholder="MSME Number">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Email</label>
                         <small id="ce" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                        <input type="email" class="approvalReq form-control" name="email" id="email" placeholder="Email" required>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Designation</label>
-                        <input type="text" class="form-control" name="cdesignation" id="cdesignation" placeholder="Designation">
+                        <input type="text" class="approvalReq form-control" name="cdesignation" id="cdesignation" placeholder="Designation">
                     </div>
 
 
                     <div class="form-group col-md-4">
                         <label for="">Owner Name</label>
-                        <input type="text" name="owner_name" class="form-control" id="owner_name" placeholder="Owner Name">
+                        <input type="text" name="owner_name" class="approvalReq form-control" id="owner_name" placeholder="Owner Name">
                     </div>
 
 
                     <div class="form-group col-md-4">
                         <label><strong> Certificate Upload</strong></label>
-                        <input type="file" name="gst_url" id="gst_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="gst_url" id="gst_url" class="approvalReq form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong>MSME Registration Number Upload</strong></label>
-                        <input type="file" name="mmse_url" id="mmse_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="mmse_url" id="mmse_url" class="approvalReq form-control file-upload-default">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong> File Upload</strong></label>
-                        <input type="file" name="others_url" id="others_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="others_url" id="others_url" class="approvalReq form-control file-upload-default">
                     </div>
                 </div>
 
@@ -278,8 +278,9 @@
 
 
                 <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
-                    <button class="btn btn-light v-reset-btn" type="reset">Cancel</button>
-                    <button type="submit" class="btn btn-primary mr-2 v-save-btn">Submit</button>
+                    <button type="submit" id="sendForApproval" class="btn btn-primary mr-2 v-save-btn1" disabled="disabled" value="1" name="sent_mode">Send for Approval</button>
+                    <button type="submit" class="btn btn-primary mr-2 v-save-btn"  name="sent_mode" value="0">Save as Draft</button>
+                    <!-- <button class="btn btn-light v-reset-btn" type="reset">Cancel</button> -->
                 </div>
             </form>
         </div>
@@ -288,23 +289,73 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 
 <script>
-    const registered = document.getElementById('registered')
-    const unRegistered = document.getElementById('unRegistered')
+    const registeredGst = document.getElementById('registered')
+    const unRegisteredGst = document.getElementById('unRegistered')
+
+    const gstInput = document.getElementById('gst');
+    const panInput = document.getElementById('pan_no');
 
     function onChnageGstStatus() {
         if (registered.checked) {
-            // document.getElementById('panNo').style.display = "none";
             document.getElementById('gst').setAttribute("required", "true");
+            document.getElementById('gst').classList.add('approvalReq');
             document.getElementById('pan_no').removeAttribute("required")
-            // document.getElementById('gstNo').style.display = "block";
-        } else if (unRegistered.checked) {
-            // document.getElementById('gstNo').style.display = "none";
-            document.getElementById('pan_no').setAttribute("required", "true");
-            document.getElementById('gst').removeAttribute("required")
-            // document.getElementById('panNo').style.display = "block";
-        }
+            document.getElementById('pan_no').classList.remove('approvalReq');
 
+        } else if (unRegistered.checked) {
+            document.getElementById('pan_no').setAttribute("required", "true");
+            document.getElementById('pan_no').classList.add('approvalReq');
+            document.getElementById('gst').removeAttribute("required");
+            document.getElementById('gst').classList.remove('approvalReq');
+        }
     }
+
+
+    // $('.form-control').on('change', function() {
+    //     console.log('fggd');
+    //     $('form > input').blur(function() {
+    //         var empty = false;
+    //         $('form > input').each(function() {
+    //             if ($(this).val() == '') {
+    //                 empty = true;
+    //             }
+    //         });
+
+    //         if (empty) {
+    //             console.log('false');
+    //             $('#sendForApproval').attr('disabled', 'disabled');
+    //         } else {
+    //             console.log('true');
+    //             $('#sendForApproval').removeAttr('disabled');
+    //         }
+    //     });
+    // })
+
+
+
+    (function() {
+        console.log('fggd');
+        $('form input').change(function() {
+            var empty = false;
+            $('form .approvalReq').each(function() {
+                if ($(this).val() == '') empty = true;
+            });
+
+            if (empty) {
+                $('#sendForApproval').attr('disabled', 'disabled');
+            console.log('page true');
+        }
+            else {
+                $('#sendForApproval').removeAttr('disabled');
+                document.getElementById('sendForApproval').classList.remove('disabled');
+                        document.getElementById('sendForApproval').style.pointerEvents = "all";
+            }
+        })
+    })();
+
+
+
+
     // $("#pincode").blur(function() {
     //    var pincode;
     //       pincode =  $("#pincode").val();
@@ -317,13 +368,13 @@
     //     // dataType: "json",
     //     beforeSend: function () {
     //         $("#state").empty();
-          
+
     //     },
     //     success: function (res) {
     //         if(res){
-               
+
     //              console.log(res.data[0].PostOffice[0].State);return 1;
-            
+
 
     //             $("#state").val(res.data[0].PostOffice[0].state);
     //             // $("#po_unit").val(unit);
@@ -333,7 +384,7 @@
     //         }
     //     },
     // });
-       
+
 
     // });
 </script>

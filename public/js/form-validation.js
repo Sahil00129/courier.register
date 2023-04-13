@@ -187,6 +187,7 @@ jQuery(document).ready(function () {
             },
         },
         submitHandler: function (form) {
+
             document.getElementById('loadingBlock').style.display="flex";
             formSubmitRedirect(form);
         },
@@ -310,6 +311,42 @@ function formSubmitRedirect(form)
                 }
 
 	        }
+
+            if(response.error){
+               
+                if (response.page == "add-vendors-form") {
+                
+                    document.getElementById('loadingBlock').style.display="none";
+                    // document.getElementById('sendForApproval').setAttribute('disabled', 'disabled');
+
+                    var empty = false;
+                    $('form .approvalReq').each(function() {
+                        console.log('amit');
+                        if ($(this).val() == '') empty = true;
+                    });
+                    console.log('amit1', empty);
+        
+                    if (empty) {
+                        document.getElementById('sendForApproval').setAttribute('disabled', 'true');
+                        document.getElementById('sendForApproval').classList.add('disabled');
+                        document.getElementById('sendForApproval').style.pointerEvents = "none";
+                        console.log('dsghdsfjhxcjfh adjfdus');
+                    } else {
+                        document.getElementById('sendForApproval').removeAttribute('disabled');
+                        console.log('342343');
+
+                    }
+
+                        swal("error",
+                            response.message,
+                            "error"
+                        );
+                      
+                    
+                }
+
+            }
+          
 	        if(response.resetform)
             {
                 $('#'+form.id).trigger('reset');
@@ -321,6 +358,7 @@ function formSubmitRedirect(form)
             
             if(response.formErrors)
             {
+              
                 var i = 0;
               $('.error').remove();
               
@@ -396,6 +434,8 @@ function formSubmitRedirect(form)
             $("button[type=submit]").removeAttr("disabled");
 		},
         error:function(response){
+            alert("DS");
+
             $.toast({
                 heading             : 'Error',
                 text                : "Server Error",

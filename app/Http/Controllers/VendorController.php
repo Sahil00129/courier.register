@@ -42,6 +42,7 @@ class VendorController extends Controller
 
         curl_close($curl);
         $res = json_decode($response);
+        // return $res->data;
         $vendors = $res->data;
         // echo "<pre>";
         // print_r($res->data);
@@ -293,6 +294,9 @@ class VendorController extends Controller
 
         $vendor_data = array();
 
+        // dd($data);
+    
+
 
         if (!empty($data['gst_url'])) {
 
@@ -323,10 +327,15 @@ class VendorController extends Controller
             $vendor_data['url'] = Storage::disk('s3')->url($path);
         }
 
-
-
         if (!empty($data['vname'])) {
             $vendor_data['vname'] = $data['vname'];
+        }
+        if (!empty($data['sent_mode'])) {
+            $vendor_data['mode'] = $data['sent_mode'];
+        }
+
+        if (!empty($data['gstStatus'])) {
+            $vendor_data['vtype'] = $data['gstStatus'];
         }
         if (!empty($data['nature_of_assessee'])) {
             $vendor_data['nature_of_assessee'] = $data['nature_of_assessee'];
@@ -367,6 +376,9 @@ class VendorController extends Controller
         if (!empty($data['baddress'])) {
             $vendor_data['baddress'] = $data['baddress'];
         }
+        if (!empty($data['pan_no'])) {
+            $vendor_data['pan'] = $data['pan_no'];
+        }
 
         if (!empty($data['msme_reg_no'])) {
             $vendor_data['msme_reg_no'] = $data['msme_reg_no'];
@@ -389,9 +401,9 @@ class VendorController extends Controller
         if (!empty($data['pfu'])) {
             $vendor_data['pfu'] = $data['pfu'];
         }
-        if (!empty($data['mode'])) {
-            $vendor_data['mode'] = 'api';
-        }
+        // if (!empty($data['mode'])) {
+        //     $vendor_data['mode'] = 'api';
+        // }
 
 
         // print_r(gettype($gst_url_type));
@@ -419,6 +431,14 @@ class VendorController extends Controller
         curl_close($curl);
         $res = json_decode($response);
         // return $res;
+        if(!$res->status)
+        {
+            $res_status['success'] = false;
+            $res_status['error'] = true;
+            $res_status['message'] = $res->message;
+            $res_status['page'] = "add-vendors-form";
+            return Response::json($res_status);
+        }
         $save_vendor_data = array();
         $save_vendor_data['name'] = $data['vname'];
         $save_vendor_data['unit'] = $data['pfu'];

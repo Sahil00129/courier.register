@@ -133,7 +133,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $pos =  Po::where('status', 1)->orderby('id', 'ASC')->get();
+        $pos =  Po::whereIn('status', [1,2])->orderby('id', 'ASC')->get();
         $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
 
 
@@ -175,6 +175,7 @@ class InvoiceController extends Controller
         $size = sizeof($data['scanning_file']);
         $save_file_names = array();
 
+
         for ($i = 0; $i < $size; $i++) {
             $image = $data['scanning_file'][$i];
             // $fileName = $image->getClientOriginalName();
@@ -202,6 +203,30 @@ class InvoiceController extends Controller
         $saveinvoice['sender_name'] = $get_all_po[0]->vendor_name;
         $saveinvoice['pfu'] = $get_all_po[0]->unit;
         $saveinvoice['po_value'] = $get_all_po[0]->po_value;
+
+        $po_data=array();
+
+        $po_value = (int)$saveinvoice['po_value'];
+        $total_amt =(int)$request->total_amount;
+
+        if($po_value >  $total_amt)
+        {
+            $po_data['po_value'] = $po_value - $total_amt;
+            $po_data['status']=2;
+        }
+
+ 
+
+        if($total_amt >= $po_value)
+        {
+            $po_data['po_value'] = $total_amt - $po_value;
+            $po_data['status']=3;
+           
+        }
+
+        
+
+        $update_po = DB::table('pos')->where('id', $request->po_id)->update(['status'=>$po_data['status'],'po_value'=>$po_data['po_value']]);
 
 
 
@@ -235,6 +260,10 @@ class InvoiceController extends Controller
         $saveinvoice['status'] = 1;
 
         $savepo = Tercourier::create($saveinvoice);
+        if($savepo)
+        {
+
+        }
         // return $s3_path;
         $response['page'] = 'create-invoice';
         if ($savepo) {

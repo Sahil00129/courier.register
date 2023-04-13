@@ -98,7 +98,7 @@
                     <h6><b>PO mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Select PFU</label>
-                        <select name="pfu" id="pfu" class="form-control" style="width:99%;">
+                        <select name="pfu" id="pfu" class="form-control @if($pfu) approvalReq @endif" style="width:99%;">
                             <option selected disabled>{{$pfu}}
                             </option>
                             <option value="">--Select--</option>
@@ -110,11 +110,11 @@
                     </div>
                     <div class="form-group col-md-12 n-chk align-self-center">
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="registered" name="registered" type="radio" checked="checked" class="new-control-input" name="gstStatus">
+                            <input onchange="onChangeGstStatus()" id="registered" name="registered" type="radio" checked="checked" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Registered
                         </label>
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChnageGstStatus()" id="unRegistered" name="unRegistered" type="radio" class="new-control-input" name="gstStatus">
+                            <input onchange="onChangeGstStatus()" id="unRegistered" name="registered" type="radio" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Un-registered
                         </label>
                     </div>
@@ -122,56 +122,56 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="form-control" id="gst" name="gst" value="<?php echo $vendor_data->gst ?>" placeholder="GSTIN">
+                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" id="gst" name="gst" value="<?php echo $vendor_data->gst ?>" placeholder="GSTIN" >
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" value="<?php echo $vendor_data->gst ?>" placeholder="PAN">
+                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" name="pan_no" id="pan_no" value="<?php echo $vendor_data->gst ?>" placeholder="PAN">
                     </div>
 
 
 
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Company Name</label>
-                        <input type="text" class="form-control form-control-sm" name="vname" value="<?php echo $vendor_data->vname ?>" required id="vname" placeholder="Company Name">
+                        <input type="text" class="approvalReq form-control form-control-sm" name="vname" value="<?php echo $vendor_data->vname ?>" required id="vname" placeholder="Company Name">
                     </div>
 
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Name</label>
-                        <input type="text" class="form-control" name="contact_name" id="contact_name" value="<?php echo $vendor_data->contact_name ?>" placeholder="Contact Name" required>
+                        <input type="text" class="approvalReq form-control" name="contact_name" id="contact_name" value="<?php echo $vendor_data->contact_name ?>" placeholder="Contact Name" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required>
+                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="form-control" name="pincode" id="pincode" value="<?php echo $vendor_data->pincode ?>" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" value="<?php echo $vendor_data->pincode ?>" placeholder="Pincode">
                     </div>
 
                     <!-- <div class="form-group col-md-3">
                         <label for="">State</label>
-                        <input type="text" class="form-control" name="state" id="state" disabled>
+                        <input type="text" class="approvalReq form-control" name="state" id="state" disabled>
                     </div> -->
                     <!-- <div class="form-group col-md-3">
                         <label for="">District</label>
-                        <input type="text" class="form-control" name="district" id="district" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="district" id="district" placeholder="Pincode">
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">City</label>
-                        <input type="text" class="form-control" name="city" id="city" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="city" id="city" placeholder="Pincode">
                     </div> -->
 
 
                     <div class="form-group col-md-3">
                         <label for="">State</label>
-                        <select name="state" id="state" class="form-control" style="width:99%;">
+                        <select name="state" id="state" class="approvalReq form-control" style="width:99%;">
                             <option selected disabled>{{$vendor_data->state}}</option>
                             <option value="">--Select--</option>
                             @foreach($state_json_data as $state_names)
@@ -182,7 +182,7 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Address</label>
-                        <textarea class="form-control" name="vaddress" id="vaddress" rows="1">{{$vendor_data->vaddress}}</textarea>
+                        <textarea class="approvalReq form-control" name="vaddress" id="vaddress" rows="1">{{$vendor_data->vaddress}}</textarea>
                     </div>
 
 
@@ -192,19 +192,19 @@
                     <h6><b>Invoice booking Mandatory Fields</b></h6>
                     <div class="form-group col-md-3">
                         <label for="">Account Holder Name</label>
-                        <input type="text" class="form-control" name="ahn" id="ahn" value="<?php echo $vendor_data->ahn ?>" placeholder="Acc Holder Name">
+                        <input type="text" class="approvalReq form-control" name="ahn" id="ahn" value="<?php echo $vendor_data->ahn ?>" placeholder="Acc Holder Name">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Account No</label>
-                        <input type="number" class="form-control" name="ano" id="ano" value="<?php echo $vendor_data->ano ?>" placeholder="Acc No">
+                        <input type="number" class="approvalReq form-control" name="ano" id="ano" value="<?php echo $vendor_data->ano ?>" placeholder="Acc No">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">IFSC Code</label>
-                        <input type="text" class="form-control" name="ifsc" id="ifsc" value="<?php echo $vendor_data->ifsc ?>" placeholder="IFSC Code">
+                        <input type="text" class="approvalReq form-control" name="ifsc" id="ifsc" value="<?php echo $vendor_data->ifsc ?>" placeholder="IFSC Code">
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
-                        <select name="bname" id="bname" class="form-control" style="width:99%;">
+                        <select name="bname" id="bname" class="approvalReq form-control" style="width:99%;">
                             <option selected disabled>{{$vendor_data->bname}}</option>
                             <option value="">--Select--</option>
                             @foreach($bank_json_data as $bank_names)
@@ -216,15 +216,15 @@
 
                     <div class="form-group col-md-12">
                         <label for="">Bank Address</label>
-                        <textarea class="form-control" name="baddress" id="baddress" rows="1">{{$vendor_data->baddress}}</textarea>
+                        <textarea class="approvalReq form-control" name="baddress" id="baddress" rows="1">{{$vendor_data->baddress}}</textarea>
                     </div>
 
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-3">
                         <label><strong> Cheque File Upload</strong></label>
                         @if(!empty($vendor_data->url))
                         <a class="viewUploaded" href="<?php echo $vendor_data->url ?>" target="_blank">Prev Upload</a>
                         @endif
-                        <input type="file" name="url" id="url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="url" id="url" class="form-control file-upload-default @if($vendor_data->url) hasPrevFile @else approvalReq @endif">
                     </div>
                 </div>
 
@@ -235,7 +235,7 @@
                     <h6><b>Other Details Info</b></h6>
                     <div class="form-group col-md-4">
                         <label for="">Nature of ASSESSEe</label>
-                        <select class="form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
+                        <select class="approvalReq form-control form-control-sm" name="nature_of_assessee" id="nature_of_assessee">
                             <option selected disabled>{{$vendor_data->nature_of_assessee}}</option>
                             <option value="">--Select--</option>
                             <option value="Proprietorship">Proprietorship</option>
@@ -255,26 +255,26 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Nature of Service or Goods</label>
-                        <input type="text" name="nosorg" class="form-control" id="nosorg" value="<?php echo $vendor_data->nosorg ?>" placeholder="Nature of Service or Goods">
+                        <input type="text" name="nosorg" class="approvalReq form-control" id="nosorg" value="<?php echo $vendor_data->nosorg ?>" placeholder="Nature of Service or Goods">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">MSME Number</label>
-                        <input type="text" name="msme_reg_no" class="form-control" value="<?php echo $vendor_data->msme_reg_no ?>" id="msme_reg_no" placeholder="MSME Number">
+                        <input type="text" name="msme_reg_no" class="approvalReq form-control" value="<?php echo $vendor_data->msme_reg_no ?>" id="msme_reg_no" placeholder="MSME Number">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Email</label>
                         <small id="ce" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $vendor_data->email ?>" placeholder="Email">
+                        <input type="email" class="approvalReq form-control" name="email" id="email" value="<?php echo $vendor_data->email ?>" placeholder="Email">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Contact Designation</label>
-                        <input type="text" class="form-control" name="cdesignation" id="cdesignation" value="<?php echo $vendor_data->cdesignation ?>" placeholder="Designation">
+                        <input type="text" class="approvalReq form-control" name="cdesignation" id="cdesignation" value="<?php echo $vendor_data->cdesignation ?>" placeholder="Designation">
                     </div>
 
 
                     <div class="form-group col-md-4">
                         <label for="">Owner Name</label>
-                        <input type="text" name="owner_name" class="form-control" id="owner_name" value="<?php echo $vendor_data->owner_name ?>" placeholder="Owner Name">
+                        <input type="text" name="owner_name" class="approvalReq form-control" id="owner_name" value="<?php echo $vendor_data->owner_name ?>" placeholder="Owner Name">
                     </div>
 
 
@@ -283,21 +283,21 @@
                         @if(!empty($vendor_data->gst_url))
                         <a class="viewUploaded" href="<?php echo $vendor_data->gst_url ?>" target="_blank">Prev Upload</a>
                         @endif
-                        <input type="file" name="gst_url" id="gst_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="gst_url" id="gst_url" class="form-control file-upload-default @if($vendor_data->gst_url) hasPrevFile @else approvalReq @endif">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong>MSME Registration Number Upload</strong></label>
                         @if(!empty($vendor_data->mmse_url))
                         <a class="viewUploaded" href="<?php echo $vendor_data->mmse_url ?>" target="_blank">Prev Upload</a>
                         @endif
-                        <input type="file" name="mmse_url" id="mmse_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="mmse_url" id="mmse_url" class="form-control file-upload-default @if($vendor_data->mmse_url) hasPrevFile @else approvalReq @endif">
                     </div>
                     <div class="form-group col-md-4">
                         <label><strong> File Upload</strong></label>
                         @if(!empty($vendor_data->others_url))
                         <a class="viewUploaded" href="<?php echo $vendor_data->others_url ?>" target="_blank">Prev Upload</a>
                         @endif
-                        <input type="file" name="others_url" id="others_url" class="form-control file-upload-default">
+                        <input type="file" accept="image/png, image/jpg, image/jpeg" name="others_url" id="others_url" class="form-control file-upload-default @if($vendor_data->others_url) hasPrevFile @else approvalReq @endif">
                     </div>
                 </div>
 
@@ -306,6 +306,7 @@
 
                 <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
                     <button class="btn btn-light v-reset-btn" type="reset">Cancel</button>
+                    <button type="submit" id="sendForApproval" class="btn btn-primary mr-2 v-save-btn" disabled="disabled">Send for Approval</button>
                     <button type="submit" class="btn btn-primary mr-2 v-save-btn">Submit</button>
                 </div>
             </form>
@@ -318,20 +319,40 @@
     const registered = document.getElementById('registered')
     const unRegistered = document.getElementById('unRegistered')
 
-    function onChnageGstStatus() {
+    function onChangeGstStatus() {
         if (registered.checked) {
-            // document.getElementById('panNo').style.display = "none";
             document.getElementById('gst').setAttribute("required", "true");
+            document.getElementById('gst').classList.add('approvalReq');
             document.getElementById('pan_no').removeAttribute("required")
-            // document.getElementById('gstNo').style.display = "block";
+            document.getElementById('pan_no').classList.remove('approvalReq');
         } else if (unRegistered.checked) {
-            // document.getElementById('gstNo').style.display = "none";
             document.getElementById('pan_no').setAttribute("required", "true");
-            document.getElementById('gst').removeAttribute("required")
-            // document.getElementById('panNo').style.display = "block";
+            document.getElementById('pan_no').classList.add('approvalReq');
+            document.getElementById('gst').removeAttribute("required");
+            document.getElementById('gst').classList.remove('approvalReq');
         }
-
     }
+
+    (function() {
+        console.log('fggd');
+        $('form .approvalReq').change(function() {
+            var empty = false;
+            $('form .approvalReq').each(function() {
+                if ($(this).val() == '') empty = true;
+            });
+
+            if (empty) {
+                $('#sendForApproval').attr('disabled', 'disabled');
+            console.log('page true');
+        }
+            else {
+                $('#sendForApproval').removeAttr('disabled');
+                document.getElementById('sendForApproval').classList.remove('disabled');
+                        document.getElementById('sendForApproval').style.pointerEvents = "all";
+            }
+        })
+    })();
+
     // $("#pincode").blur(function() {
     //    var pincode;
     //       pincode =  $("#pincode").val();

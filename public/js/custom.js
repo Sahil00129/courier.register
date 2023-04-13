@@ -285,6 +285,66 @@ $("#select_unit").change(function (e) {
     });
 });
 
+$(document).on("keyup",".quantity", function(){
+    var qty =$(this).val();
+    // var qty = $(this).parent().siblings().eq(1).children('.quantity').val();
+    var unit_price = $(this).parent().siblings().eq(2).children('.unitPrice').val();
+    if(unit_price !="")
+    {
+        var total_amount = qty * unit_price;
+        $(this).parent().siblings().eq(3).children('.totalAmount').val(total_amount);
+
+    }
+
+});
+$(document).on("keyup",".unitPrice", function(){
+    var unit_price =$(this).val();
+    var qty = $(this).parent().siblings().eq(2).children('.quantity').val();
+    if(qty != "")
+    {
+        var total_amount = qty * unit_price;
+        $(this).parent().siblings().eq(3).children('.totalAmount').val(total_amount);
+        calculate_totals();
+    }
+
+});
+
+$(document).on("keyup","#gst_rate", function(){
+    calculate_totals();
+
+});
+
+function calculate_totals() {
+    var rowCount = $("#appendTable tr").length;
+ 
+    var total_tax_amount = 0;
+    for(var i=1;i<rowCount;i++)
+    {
+        var tax_amt= !$('[name="data[' + i + '][total_amount]"]').val()
+        ? 0
+        : parseInt($('[name="data[' + i + '][total_amount]"]').val());
+    
+        total_tax_amount += tax_amt;
+        // total_tax_amount = total_tax_amount +   $('.totalAmount').val();
+
+    }
+  
+    var gst_rate =   $('#gst_rate').val()/100;
+   
+    var gstamount = gst_rate *total_tax_amount;
+    $('#gstAmount').html(gstamount);
+    $('#gst_amount').val(gstamount);
+    $("#totalTaxAmount").html(total_tax_amount);
+    $("#total_tax_amount").val(total_tax_amount);
+
+    $("#po_value").val(total_tax_amount+gstamount);
+    $("#poAmount").html(total_tax_amount+gstamount);
+
+
+}
+
+
+
 $("#select_pos").change(function (e) {
     console.log($("#select_pos").val());
     const vendor_data_split = $("#select_pos").val().split(":");
@@ -292,7 +352,11 @@ $("#select_pos").change(function (e) {
     // return 1;
     $("#vendor_unique_id").val(vendor_data_split[0]);
     $("#vendor_code").val(vendor_data_split[2]);
-    $("#vendor_name").val(vendor_data_split[1]);
+    $("#vendor_name").val(vendor_data_split[1]); 
+
+    $("#vendorunique_id").html(vendor_data_split[0]);
+    $("#vendor_code").html(vendor_data_split[2]);
+    $("#vendorname").html(vendor_data_split[1]);
 });
 
 

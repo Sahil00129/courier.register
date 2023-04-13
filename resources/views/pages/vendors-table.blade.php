@@ -154,7 +154,7 @@
         transition: all 200ms ease-in-out;
         text-align: center;
     }
-    
+
     .action svg {
         height: 16px;
         width: 16px;
@@ -220,17 +220,34 @@
                         <tr>
                             <th>Vendor Unique ID</th>
                             <th>Vendor Name</th>
+                            <th>Vendor Code</th>
+                            <th>Vendor Status</th>
                             <th>Unit</th>
                             <th style="text-align: center;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($vendors as $vendor)
-                        <?php //echo '<pre>'; print_r($vendor['id']); die;
+                        <?php // echo '<pre>'; print_r($vendor); die;
                         ?>
                         <tr>
                             <td>{{$vendor->id}}</td>
                             <td>{{$vendor->vname}}</td>
+                            <td>{{@$vendor->vcode}}</td>
+                            <?php
+                            if ($vendor->mode == "0") {
+                                $mode = "Draft";
+                            } elseif ($vendor->mode == "1") {
+                                $mode = "Sent for Accounts";
+                            } elseif ($vendor->mode == "2") {
+                                $mode = "Active for PO";
+                            } elseif ($vendor->mode == "3") {
+                                $mode = "Reject from Accounts";
+                            } elseif ($vendor->mode == "4") {
+                                $mode = "Active for Payments";
+                            }
+                            ?>
+                            <td>{{$mode}}</td>
                             <?php
                             if ($vendor->pfu == "1") {
                                 $pfu = "SD1";
@@ -243,7 +260,7 @@
                             }
                             ?>
                             <td>{{$pfu}}</td>
-                            @if(!$vendor->invdue_applicable)
+                            @if($vendor->mode == 0 || $vendor->mode == 3 )
                             <td class="action"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_edit_vendor(<?php echo $vendor->id ?>)">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>

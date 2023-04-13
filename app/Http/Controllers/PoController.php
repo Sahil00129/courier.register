@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Po;
+use App\Models\PoItem;
 use DB;
 use URL;
 use Helper;
@@ -54,7 +55,7 @@ class PoController extends Controller
                 $peritem = Config::get('variable.PER_PAGE');
             }
 
-            $posdata = $query->orderBy('id', 'DESC')->paginate($peritem);
+            $posdata = $query->with('PoTercouriers')->orderBy('id', 'DESC')->paginate($peritem);
             $posdata = $posdata->appends($request->query());
 
             $html =  view('pos.pos-list-ajax',['posdata' => $posdata,'peritem'=>$peritem])->render();
@@ -62,7 +63,8 @@ class PoController extends Controller
             return response()->json(['html' => $html]);
         }
 
-        $posdata = $query->orderBy('id','DESC')->paginate($peritem);
+        $posdata = $query->with('PoTercouriers')->orderBy('id','DESC')->paginate($peritem);
+        // dd($posdata);
         $posdata = $posdata->appends($request->query());
         
         return view('pos.pos-list', ['posdata' => $posdata, 'peritem'=>$peritem]);
@@ -75,7 +77,9 @@ class PoController extends Controller
      */
     public function create()
     {
-        return view('pos.create-po',[]);
+        $state_json = file_get_contents('assets/json/states-and-districts.json');
+        $state_json_data = json_decode($state_json, true);
+        return view('pos.create-po',['state_json_data' => $state_json_data['states']]);
     }
 
     /**
@@ -103,6 +107,9 @@ class PoController extends Controller
             return response()->json($response);
         }
 
+        $data=$request->all();
+     
+        $item_size = sizeof($data['data']);
 
 
         $po_number = Po::select('po_number')->latest('po_number')->first();
@@ -112,7 +119,7 @@ class PoController extends Controller
             } else {
                 $addpo['po_number'] = $po_number['po_number'] + 1;
             }
-
+         
             
         if(!empty($request->vendor_unique_id)){
             $addpo['vendor_unique_id'] = $request->vendor_unique_id;
@@ -134,10 +141,73 @@ class PoController extends Controller
         if(!empty($request->activity)){
             $addpo['activity'] = $request->activity;
         }
+
+        if(!empty($request->total_tax_amount)){
+            $addpo['total_tax_amount'] = $request->total_tax_amount;
+        }
+        if(!empty($request->gst_rate)){
+            $addpo['gst_rate'] = $request->gst_rate;
+        }
+        if(!empty($request->gst_amount)){
+            $addpo['gst_amount'] = $request->gst_amount;
+        }
+        if(!empty($request->source_po_num)){
+            $addpo['source_po_num'] = $request->source_po_num;
+        }
+        if(!empty($request->erp_num)){
+            $addpo['erp_num'] = $request->erp_num;
+        }
+        if(!empty($request->state)){
+            $addpo['state'] = $request->state;
+        }
+        if(!empty($request->crop)){
+            $addpo['crop'] = $request->crop;
+        }
+        if(!empty($request->amm_agm)){
+            $addpo['amm_agm'] = $request->amm_agm;
+        }
+        if(!empty($request->product)){
+            $addpo['product'] = $request->product;
+        }
+      
+        $addpo['po_date'] = date('Y-m-d');
+
         $addpo['status'] = 1;
 
         $savepo = Po::create($addpo);
+
+    
+        $add_items['po_id'] = $savepo->id;
+        $save_items = "";
+
         if($savepo){
+
+        for($i=1;$i<=$item_size;$i++)
+        {
+
+            if(!empty($data['data'][$i]['item_type'])){
+                $add_items['item_type'] = $data['data'][$i]['item_type'];
+            }
+            if(!empty($data['data'][$i]['item_desc'])){
+                $add_items['item_desc'] = $data['data'][$i]['item_desc'];
+            }
+            if(!empty($data['data'][$i]['quantity'])){
+                $add_items['quantity'] = $data['data'][$i]['quantity'];
+            }
+            if(!empty($data['data'][$i]['unit_price'])){
+                $add_items['unit_price'] = $data['data'][$i]['unit_price'];
+            }
+            if(!empty($data['data'][$i]['total_amount'])){
+                $add_items['total_amount'] = $data['data'][$i]['total_amount'];
+            }
+         
+            $save_items = PoItem::create($add_items);
+        }
+    }
+
+       
+
+        if($save_items){
             $response['success']    = true;
             $response['page']       = 'create-pos';
             $response['error']      = false;

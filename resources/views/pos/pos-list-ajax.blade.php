@@ -2,11 +2,12 @@
     <table class="table mb-3" style="width:100%">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>PO Number</th>
+                <th>Status</th>
                 <th>Vendor Name</th>
-                <th>Vendor Code</th>
+                <th>Po Date</th>
                 <th>PO Value</th>
+                <!-- <th>Invoice Value</th> -->
                 <th>Unit</th>
                 <th>Activity</th>
                 <!-- <th>Action </th> -->
@@ -15,13 +16,26 @@
         <tbody id="accordion" class="accordion">
             @if(count($posdata)>0)
             @foreach($posdata as $value)
-            
+            <?php //dd($value->PoTercouriers) ?>
             <tr>
-                <td>{{$value->id ?? '-'}} </td>
                 <td>{{$value->po_number ?? '-'}} </td>
+                <?php
+                            if ($value->status == "1") {
+                                $status = "Open";
+                            } elseif ($value->status == "2") {
+                                $status = "Semi-closed";
+                            } elseif ($value->status == "3") {
+                                $status = "Closed";
+                            }
+                            ?>
+                <td>{{$status ?? '-'}} </td>
+
                 <td>{{$value->vendor_name ?? '-'}} </td>
-                <td>{{$value->vendor_code ?? '-'}} </td>
+                <td>{{Helper::ShowFormatDate($value->po_date) ?? '-'}} </td>
                 <td>{{$value->po_value ?? '-'}} </td>
+                <!-- @foreach($value->PoTercouriers as $po_data)
+                <td> {{$po_data->total_amount}}</td>
+                @endforeach -->
                 <td>{{$value->unit}} </td>
                 <td>{{$value->activity}} </td>
             </tr>
