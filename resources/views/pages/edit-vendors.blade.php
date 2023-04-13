@@ -305,7 +305,7 @@
 
 
                 <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
-                    <button class="btn btn-light v-reset-btn" type="reset">Cancel</button>
+                    <!-- <button class="btn btn-light v-reset-btn" type="reset">Cancel</button> -->
                     <button type="submit" id="sendForApproval" class="btn btn-primary mr-2 v-save-btn" disabled="disabled">Send for Approval</button>
                     <button type="submit" class="btn btn-primary mr-2 v-save-btn">Submit</button>
                 </div>
