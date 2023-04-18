@@ -403,7 +403,7 @@ class InvoiceController extends Controller
        
        $t= DB::table('tercouriers')->where('id',$id)->update(['vapi_res' => $response]);
         // return $t;
-       if($res->status == 1)
+       if($res->status == 4)
        {
         DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '0']);
          return 1;
@@ -426,7 +426,7 @@ class InvoiceController extends Controller
         if ($user_type == "sourcing") {
 
             for ($i = 0; $i < sizeof($new_data); $i++) {
-                echo "<pre>";
+                // echo "<pre>";
                 $id = $new_data[$i];
                $res= self::check_eligible_for_payment($id);
             //    return $res;

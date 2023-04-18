@@ -278,8 +278,8 @@
 
 
                 <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
-                    <button type="submit" id="sendForApproval" class="btn btn-primary mr-2 v-save-btn1" disabled="disabled" value="1" name="sent_mode">Send for Approval</button>
-                    <button type="submit" class="btn btn-primary mr-2 v-save-btn"  name="sent_mode" value="0">Save as Draft</button>
+                    <button type="submit" id="sendForApproval" class="btn btn-primary mr-2 v-save-btn1" disabled="disabled" value="2" name="sent_mode">Send for Approval</button>
+                    <button type="submit" class="btn btn-primary mr-2 v-save-btn" id="draftmode" name="sent_mode" value="1">Save as Draft</button>
                     <!-- <button class="btn btn-light v-reset-btn" type="reset">Cancel</button> -->
                 </div>
             </form>
@@ -343,12 +343,19 @@
 
             if (empty) {
                 $('#sendForApproval').attr('disabled', 'disabled');
+                // document.getElementById('draftmode').classList.remove('disabled');
+                $('#draftmode').removeAttr('disabled');
+
+
             console.log('page true');
         }
             else {
                 $('#sendForApproval').removeAttr('disabled');
                 document.getElementById('sendForApproval').classList.remove('disabled');
-                        document.getElementById('sendForApproval').style.pointerEvents = "all";
+                $('#draftmode').attr('disabled', 'disabled');
+                // document.getElementById('draftmode').classList.add('disabled');
+                document.getElementById('sendForApproval').style.pointerEvents = "all";
+
             }
         })
     })();
