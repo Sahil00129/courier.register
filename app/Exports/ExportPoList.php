@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\PO;
+use App\Models\Po;
 use App\Models\Sender;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -14,7 +14,7 @@ class ExportPoList implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = PO::with('PoTercouriers')->get();
+        $data = Po::with('PoTercouriers')->get();
       
         $size=sizeof($data);
         // $val="";
