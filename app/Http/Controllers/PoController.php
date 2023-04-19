@@ -11,6 +11,9 @@ use Helper;
 use Validator;
 use Config;
 use Session;
+use App\Exports\ExportPoList;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class PoController extends Controller
 {
@@ -65,6 +68,16 @@ class PoController extends Controller
 
         $posdata = $query->with('PoTercouriers')->orderBy('id','DESC')->paginate($peritem);
         // dd($posdata);
+        // echo "<pre>";
+        // print_r($posdata[3]['PoTercouriers']);
+        // exit;
+        // $sum=0;
+        // for($i=0;$i<sizeof($posdata);$i++)
+        // {
+        //     $sum=
+        //     $posdata['total_invoice']=$
+
+        // }
         $posdata = $posdata->appends($request->query());
         
         return view('pos.pos-list', ['posdata' => $posdata, 'peritem'=>$peritem]);
@@ -134,6 +147,7 @@ class PoController extends Controller
         }
         if(!empty($request->po_value)){
             $addpo['po_value'] = $request->po_value;
+            $addpo['initial_po_value'] = $request->po_value;
         }
         if(!empty($request->unit)){
             $addpo['unit'] = $request->unit;
@@ -265,5 +279,21 @@ class PoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function submit_cancel_remarks(Request $request)
+    {
+        $data=$request->all();
+        $remarks=$data['cancel_remarks'];
+        $po_number= $data['po_number'];
+        $db= Po::where('po_number',$po_number)->where('status',1)->update(['cancel_po_remarks'=>$remarks,'status'=>4]);
+        return $db;
+        
+    }
+
+    public function download_po_list()
+    {
+        return Excel::download(new ExportPoList, 'po_list.xlsx');
+        // return (new ExportPoList);
     }
 }

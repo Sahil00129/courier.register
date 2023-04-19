@@ -10,10 +10,10 @@ class Po extends Model
     use HasFactory;
     protected $fillable = [
         'po_number', 'vendor_code', 'vendor_name', 'po_value', 'unit','activity', 'status', 'created_at', 'updated_at','vendor_unique_id',
-        'total_tax_amount','gst_rate','gst_amount','source_po_num','erp_num','state','crop','amm_agm','po_date','product'
+        'total_tax_amount','gst_rate','gst_amount','source_po_num','erp_num','state','crop','amm_agm','po_date','product','initial_po_value'
     ];
 
-    // status 1 is open, status 2 is semiclosed, status 3 is closed
+    // status 1 is open, status 2 is semiclosed, status 3 is closed, status 4 is cancelled
 
     public function PoItems()
     {

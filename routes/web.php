@@ -188,6 +188,8 @@ Route::get('/get-locations', [UserController::class, 'getLocation']);
 Route::get('/get_departments', [UserController::class, 'getDepartment']);
 
 Route::resource('pos', PoController::class);
+Route::get('download_po_list', [PoController::class, 'download_po_list']);
+Route::post('submit_cancel_remarks', [PoController::class, 'submit_cancel_remarks']);
 Route::resource('invoices', InvoiceController::class);
 Route::get('/get-po', [InvoiceController::class, 'getPo']);
 Route::get('/check_invoice_paid_status/{id}', [InvoiceController::class, 'check_invoice_paid_status']);
@@ -205,7 +207,6 @@ Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoi
 Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
 Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
 Route::get('download_vendor_list', [InvoiceController::class, 'download_vendor_list']);
-Route::get('download_po_list', [InvoiceController::class, 'download_po_list']);
 
 
 

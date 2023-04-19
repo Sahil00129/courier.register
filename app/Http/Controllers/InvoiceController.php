@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\ExportInvoiceFullList;
 use App\Exports\ExportVendorList;
-use App\Exports\ExportPoList;
 use ReflectionFunctionAbstract;
 use App\Models\InvoiceHandoverDetail;
 
@@ -691,10 +690,7 @@ class InvoiceController extends Controller
         return Excel::download(new ExportInvoiceFullList, 'invoices_list.xlsx');
     }
 
-    public function download_po_list()
-    {
-        return Excel::download(new ExportPoList, 'po_list.xlsx');
-    }
+
 
     public function download_vendor_list()
     {
