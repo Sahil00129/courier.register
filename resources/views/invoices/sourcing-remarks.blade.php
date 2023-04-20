@@ -303,7 +303,7 @@
                         .then(response => {
                             if (response.data) {
                                 swal('success', "Remarks for UNID :" + this.unique_id + " has been successfully submitted", 'success')
-                                // window.location.href = '/invoices';
+                                window.location.href = '/invoices';
 
                             } else {
                                 swal('error', "System Error", 'error')
