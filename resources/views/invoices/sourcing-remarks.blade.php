@@ -67,6 +67,24 @@
         border-radius: 7px;
         box-shadow: 0 2px 2px #83838350;
     }
+
+    .imageBlock {
+        /* width: 150px; */
+        /* height: 150px; */
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .imageBlock img {
+        margin: 10px;
+        width: 140px;
+        height: 140px;
+        border-radius: 8px;
+        object-fit: contain;
+        background: #83838330;
+        padding: 6px;
+    }
 </style>
 
 <div class="layout-px-spacing" id="divbox">
@@ -186,7 +204,15 @@
                             </div>
                             @endif
 
-                
+                            <div id="imageUploadSection" class="row">
+                                <div class="form-group col-md-12">
+                                    <label class="col-form-label pb-0">Upload File</label>
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" v-on:change="upload_file($event)" class="amit form-control-file  form-control-file-sm" id="fileupload-0" required />
+                                    <div class="imageBlock"></div>
+                                </div>
+                            </div>
+
+
                             @if(empty($invoices_data->sourcing_remarks))
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
                                 <a class="btn btn-outline-primary" href="{{url('/invoices') }}"> Back</a>
@@ -203,6 +229,22 @@
     </div>
 </div>
 
+<script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
+
+<script>
+    $(document).on("change", '.amit', function(e) {
+        let image = ``;
+        let imageBlock = $(this).next('.imageBlock')[0];
+        let imgSrc = URL.createObjectURL($(this)[0].files[0]);
+
+        for (let i = 0; i < $(this)[0].files.length; i++) {
+            let imgSrcw = URL.createObjectURL($(this)[0].files[i]);
+            image += `<img src="` + imgSrcw + `" alt="your image">`;
+        }
+        imageBlock.innerHTML = image;
+        // $('#appendButtons').show();
+    });
+</script>
 
 
 <script>
@@ -216,6 +258,8 @@
             unique_id: "",
             loader: false,
             sourcing_remarks: "",
+            file: "",
+
 
 
         },
@@ -226,17 +270,40 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            upload_file(e) {
+                this.file = e.target.files;
+            },
             submit_sourcing_remarks: function() {
+
                 this.unique_id = $("#unid").val();
                 if (this.sourcing_remarks != "") {
-                    axios.post('/submit_sourcing_remarks', {
-                            'unid': this.unique_id,
-                            'remarks': this.sourcing_remarks
-                        })
+
+                    const config = {
+                        headers: {
+                            'content-type': 'multipart/form-data',
+                        }
+                    }
+                    let formData = new FormData();
+
+               
+                    for (var i = 0; i < this.file.length; i++) {
+                    let file_names = this.file[i];
+                    formData.append('scanning_file[' + i + ']',file_names);
+                }
+                 
+                // alert(this.file.length);
+                // return 1;
+
+                    // formData.append('scanning_file', this.file);
+                    formData.append('unid', this.unique_id);
+                    formData.append('remarks', this.sourcing_remarks);
+
+
+                    axios.post('/submit_sourcing_remarks', formData, config)
                         .then(response => {
                             if (response.data) {
                                 swal('success', "Remarks for UNID :" + this.unique_id + " has been successfully submitted", 'success')
-                                window.location.href = '/invoices';
+                                // window.location.href = '/invoices';
 
                             } else {
                                 swal('error', "System Error", 'error')

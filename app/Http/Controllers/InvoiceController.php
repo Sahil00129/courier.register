@@ -367,9 +367,61 @@ class InvoiceController extends Controller
     public function submit_sourcing_remarks(Request $request)
     {
         $data = $request->all();
-        $submit_sourcing_remarks = $data['remarks'];
         $id = $data['unid'];
-        $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3']);
+        $get_data=DB::table('tercouriers')->where('id',$id)->get();
+        $get_file_names=$get_data[0]->file_name;
+        // return $get_file_names;
+            
+        $size = sizeof($data['scanning_file']);
+        $save_file_names = array();
+        
+        // return sizeof($save_file_names);
+        if(!empty($get_file_names))
+        {
+        $get_old_uploaded = explode(',', $get_file_names);
+        $old_size=sizeof($get_old_uploaded);
+        for($j=0;$j<$old_size;$j++)
+        {
+            // return sizeof($get_old_uploaded);
+            $save_file_names[$j] = $get_old_uploaded[$j];
+
+        }
+
+        }
+      
+
+        // return $save_file_names;
+      
+        // $file_real_names = implode(',', $save_file_names);
+    
+
+// print_r("FDs");
+// print_r($save_file_names);
+
+$save_new_file_names = array();
+
+        for ($i = 0; $i < $size; $i++) {
+            $image = $data['scanning_file'][$i];
+            // $fileName = $image->getClientOriginalName();
+            // $save_file_names[$i] = $fileName;
+            // $destinationPath = 'uploads/scan_doc';
+            // $image->move($destinationPath, $fileName);
+            $path = Storage::disk('s3')->put('invoice_images', $image);
+            $get_real_names = explode('/', $path);
+            $save_new_file_names[$i] = $get_real_names[1];
+            $s3_path = Storage::disk('s3')->url($path);
+        }
+        // return [$save_file_names,$save_new_file_names];
+       $updated_file_names = array_merge($save_file_names,$save_new_file_names);
+    //    return $updated_file_names;
+      
+    $file_real_names = implode(',', $updated_file_names);
+    // return $file_real_names;
+        $submit_sourcing_remarks = $data['remarks'];
+        // $saveinvoice['file_name'] = $file_real_names;
+
+    
+        $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3','file_name' => $file_real_names]);
         return $update_table;
     }
 

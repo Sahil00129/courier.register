@@ -2723,6 +2723,7 @@ class TercourierController extends Controller
             $settlement_deduction = 1;
             $ax_code = $check_deduction_table->ax_code;
         } else {
+            // return "DS";
             $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
             $emp_id = $data_ter[0]->employee_id;
             $payable_amount = $data_ter[0]->payable_amount;
@@ -2904,6 +2905,7 @@ class TercourierController extends Controller
             $final_payable = $total_payable_sum;
             $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
             $payment_status = $data['payment_status'];
+
             if ($ax_code != 0) {
                 $p_status = 1;
                 if ($settlement_deduction) {
