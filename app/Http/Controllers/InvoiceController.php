@@ -451,10 +451,10 @@ $save_new_file_names = array();
         curl_close($curl);
         $res=json_decode($response);
        
-       
+    //    dd($response);
        $t= DB::table('tercouriers')->where('id',$id)->update(['vapi_res' => $response]);
         // return $t;
-       if($res->mode == 4)
+       if($res->status == 1)
        {
         DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '0']);
          return 1;
