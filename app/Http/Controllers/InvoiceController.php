@@ -454,7 +454,7 @@ $save_new_file_names = array();
        
        $t= DB::table('tercouriers')->where('id',$id)->update(['vapi_res' => $response]);
         // return $t;
-       if($res->status == 4)
+       if($res->mode == 4)
        {
         DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '0']);
          return 1;
