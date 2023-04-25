@@ -66,6 +66,17 @@ class InvoiceController extends Controller
 
 
             // echo'<pre>'; print_r($tercouriers); die;
+
+            $check_eligible_for_payments = $query->where('status',3)->where('ter_type', 1)->get();
+          
+            for($i=0;$i<sizeof($check_eligible_for_payments);$i++)
+            {
+                
+               $id = $check_eligible_for_payments[$i]->id;
+               self::check_eligible_for_payment($id);
+
+            }
+            
         }
 
         //  echo'<pre>'; print_r($role); die;
@@ -454,6 +465,7 @@ $save_new_file_names = array();
     //    dd($response);
        $t= DB::table('tercouriers')->where('id',$id)->update(['vapi_res' => $response]);
         // return $t;
+        // $res->status=1;
        if($res->status == 1)
        {
         DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '0']);

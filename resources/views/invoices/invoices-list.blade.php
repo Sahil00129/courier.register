@@ -347,7 +347,7 @@
 
     .invImg {
         max-width: 140px;
-        max-height: 100px;
+        max-height: 150px;
         border-radius: 12px;
         object-fit: contain;
     }
@@ -1048,7 +1048,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <div class="col-md-12 bg-black" style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+                                <div class="col-md-12 bg-black" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;">
 
 
                                     <div v-for="invImg in invImages" style="position: relative;">
