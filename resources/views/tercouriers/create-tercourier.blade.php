@@ -95,7 +95,7 @@
                                         <option selected disabled>search..</option>
                                         @foreach($senders as $sender)
                                         <option value="{{$sender->employee_id}}">{{$sender->name}}
-                                            : {{$sender->ax_id}} : {{$sender->employee_id}}
+                                            : {{$sender->ax_id}} : {{$sender->iag_code}} : {{$sender->employee_id}}
                                             : {{$sender->status}} </option>
                                         @endforeach
                                     </select>
