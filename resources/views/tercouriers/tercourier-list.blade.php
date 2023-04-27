@@ -395,7 +395,8 @@
                         <div class="form-group form-group-sm mb-0">
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
-                                @if($role =="reception")<option value="1">Received at Reception</option>@endif
+                                @if($role =="reception")<option value="1">Received at Reception</option>
+                                <option value="14">Unid Generated</option>@endif
                                 <option value="2">Handover</option>
                                 <option value="11">Handover Created</option>
                                 <option value="3">Finfect</option>
@@ -746,7 +747,7 @@
                                             <line x1="12" y1="16" x2="12" y2="12"></line>
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
-                                        <div class="terDetails">
+                                        <div class="terDetails" v-if="tercourier.status != 14">
                                             <p>Given to <strong>@{{ (tercourier.given_to != null) ? tercourier.given_to : '-' }}</strong>
                                                 on
                                                 <strong>@{{ tercourier.delivery_date }}</strong>
@@ -1047,7 +1048,10 @@
                                 } else if ($tercourier->status == 1) {
                                     $status = ' Received at Reception';
                                     $class = 'btn-success';
-                                } elseif ($tercourier->status == 11) {
+                                } elseif ($tercourier->status == 14) {
+                                    $status = 'UNID Generated';
+                                    $class = 'btn-success';
+                                }   elseif ($tercourier->status == 11) {
                                     $status = 'Created Handover';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
@@ -1122,6 +1126,13 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
+                                    @elseif($tercourier->status == 14)
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(<?php echo $tercourier->id ?>)">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
                                     @elseif($tercourier->status == 12)
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
                                         {{ $status }}
@@ -1186,7 +1197,28 @@
                                 @if ($role == 'reception' && $tercourier->status== 1)
                                 <td>
                                     <div class="action d-flex justify-content-center align-items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>,'edit_ter')">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </div>
+                                </td>
+                                @elseif($tercourier->status == 14)
+                                <td>
+                                    <?php 
+                                     if($tercourier->Tercourier->uploaded_file_name){
+                                        $name=$tercourier->Tercourier->uploaded_file_name;
+                                        $file= "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/".$name;
+                                    }else{
+                                        $file = '';
+                                    } ?>
+                                <div class="action d-flex justify-content-center align-items-center">
+                                        <a href="{{$file}}" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path> <circle cx="12" cy="12" r="3"></circle></svg>
+                                        </a>
+                                </div>
+                                <div class="action d-flex justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModalForUnid" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>,'unid')">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>
@@ -1221,7 +1253,7 @@
                                             <line x1="12" y1="16" x2="12" y2="12"></line>
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
-                                        <div class="terDetails">
+                                        <div class="terDetails" v-if="tercourier.status !=14">
                                             <p>Given to <strong>@{{ (tercourier.given_to!= null) ? tercourier.given_to :  '-' }}</strong> on
                                                 <strong>@{{ tercourier.delivery_date }}</strong>
                                             </p>
@@ -1256,6 +1288,13 @@
                                         </svg>
                                     </button>
                                 </div>
+                                <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==14">
+                                        UNID Generated
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+
                                 <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
                                         Failed
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -1397,6 +1436,14 @@
                                     </svg>
                                 </div>
                             </td>
+                            <td v-if="tercourier.status== 14">
+                                <div class="action d-flex justify-content-center align-items-center">
+                                <a  :href="unid_file" @click="get_unid_file(tercourier.tercourier.uploaded_file_name)" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path> <circle cx="12" cy="12" r="3"></circle></svg>
+                                        </a>
+                                </div>
+                            </td>
+                       
                             <td v-else>
                                 <div class="action d-flex justify-content-center align-items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380; cursor: not-allowed !important;">
@@ -1502,6 +1549,166 @@
                                 <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Edit Reception TER Modal -->
+                    <div class="modal fade show" id="editTerModalForUnid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+                    <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
+                        <div class="modal-content" style="position: relative;">
+                            <div class="editTer modal-body editTer" v-if="unid_loaded">
+
+                                <h3 style="text-align: center; font-size: 18px; font-weight: 700;">Update TER</h3>
+
+                                <div class="form-row mb-4">
+                                    <h6><b>Sender Details</b></h6>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">From *</label>
+
+                                        <div>Actual Entry - @{{this.all_data.sender_detail.name}}
+                                            @{{this.all_data.sender_detail.ax_id}}
+                                            @{{this.all_data.sender_detail.employee_id}}
+                                            @{{this.all_data.sender_detail.status}}
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm" v-on:change="get_sender_data(sender_all_info)" v-model="sender_all_info" list="sender_data" />
+                                        <datalist class="select2-selection__rendered" id="sender_data">
+                                            <option v-for="sender_all_info in senders_data" :key="sender_all_info.employee_id">
+                                                @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} :
+                                                @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
+                                            </option>
+                                        </datalist>
+                                    </div>
+
+                                    <!--------------- Date of Receipt ---------->
+                                    <div class="form-group col-md-6">
+                                        <label for="inputPassword4">Date of Receipt *</label>
+                                        <div style="height: 20px;"></div>
+                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
+                                    </div>
+                                    <!--------------- end ------------------>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Location</label>
+                                        <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="sender_location" readonly="readonly">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Telephone No.</label>
+                                        <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="sender_telephone" readonly="readonly" name="telephone_no" autocomplete="off" maxlength="10" type="tel">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Status</label>
+                                        <input type="text" class="form-control form-control-sm" id="emp_status" v-model="sender_status" name="emp_status" autocomplete="off" readonly="readonly" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row mb-4">
+                                    <h6><b>Document Details</b></h6>
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">TER Amount *</label>
+                                        <input type="text" class="form-control form-control-sm" id="amount" name="amount" v-model="amount" @keyup="amount_in_words(amount)" required>
+                                        <span id="amountInwords" style="font-size: 12px;text-transform:capitalize;">@{{word_amount}}</span>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">Location</label>
+                                        <input type="text" class="form-control form-control-sm location1" id="location" name="location" v-model="location">
+                                    </div>
+
+                                    <div class="form-group col-md-3 n-chk align-self-center">
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input v-on:change="onChangePeriodType()" id="for_month" type="radio" class="new-control-input" name="period_type">
+                                            <span class="new-control-indicator"></span>For Month
+                                        </label>
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input checked="checked" v-on:change="onChangePeriodType()" id="for_period" type="radio" class="new-control-input" name="period_type">
+                                            <span class="new-control-indicator"></span>For Period
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-3 n-chk align-self-center">
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input checked="checked" id="current_year" type="radio" class="new-control-input" name="selected_year">
+                                            <span class="new-control-indicator"></span>Current Year
+                                        </label>
+                                        <label class="new-control new-radio radio-classic-primary">
+                                            <input id="last_year" type="radio" class="new-control-input" name="selected_year">
+                                            <span class="new-control-indicator"></span>Last Year
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="month">Select Month</label>
+                                        <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
+                                            <option disabled>--Select Month--</option>
+                                            <option value="01">January</option>
+                                            <option value="02">February</option>
+                                            <option value="03">March</option>
+                                            <option value="04">April</option>
+                                            <option value="05">May</option>
+                                            <option value="06">June</option>
+                                            <option value="07">July</option>
+                                            <option value="08">August</option>
+                                            <option value="09">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="inputPassword4">TER Period From *</label>
+                                        <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="terfrom_date">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="inputPassword4">TER Period To *</label>
+                                        <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="terto_date">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Other Details</label>
+                                        <input type="text" class="form-control form-control-sm" id="details" name="details" v-model="details">
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea name="remarks" class="form-control form-control-sm form-control-sm-30" rows="1" cols="70" v-model="remarks"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mb-4">
+                                    <h6><b>Courier Details</b></h6>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputState">Courier Name</label>
+                                        <select id="slct" name="courier_id" class="form-control form-control-sm">
+                                        <option>------Select------</option>
+                                            @foreach($couriers as $courier)
+                                            <option  id="courier_id">{{$courier->courier_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket No.</label>
+                                        <input type="text" class="form-control form-control-sm" id="docket_no" v-model="docket_no" name="docket_no" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="inputPassword4">Docket Date</label>
+                                        <input type="date" class="form-control form-control-sm" id="docket_date" name="docket_date" v-model="docket_date">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
+                                        <span class="indicator-label">Save</span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div style="min-height: 90vh;" v-else class="d-flex justify-content-center align-items-center">
+                                Loading...
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="closeButton feather feather-x-circle" data-dismiss="modal" aria-label="Close">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -1723,6 +1930,7 @@
             given_to: "",
             delivery_date: "",
             data_loaded: false,
+            unid_loaded:false,
             url: "",
             search_data: "",
             ter_all_data: {},
@@ -1742,6 +1950,7 @@
             lastYear: "",
             forMonth: "",
             forPeiod: "",
+            unid_file:"",
 
 
         },
@@ -1752,6 +1961,14 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
+            get_unid_file:function(file)
+            {
+                this.unid_file = "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/"+file;
+                // document.getElementById("myAnchor").href = "http://www.cnn.com/";
+                // alert(file)
+                // // href="https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/"
+                // // tercourier.tercourier.uploaded_file_name
+            },
             arraySum: function(ary) {
 
                 const obj = JSON.parse(ary);
@@ -2199,8 +2416,11 @@
                     })
                 // this.partial_paid_modal = true;
             },
-            get_data_by_id: function(id) {
+            get_data_by_id: function(id,type) {
+          
                 this.unique_id = id;
+                // alert(this.unique_id)
+                // retu
                 if (this.unique_id == "not_allowed") {
                     swal('error', "This is not allowed", 'error')
                     return 1;
@@ -2221,7 +2441,13 @@
                     .then(response => {
                         console.log(response.data);
                         if (response.data[0]) {
-                            this.data_loaded = true;
+                            if(type == "edit_ter")
+                            {
+                                this.data_loaded = true;
+                            }else{
+                                this.unid_loaded = true;
+                            }
+        
                             this.got_data = true;
                             this.flag = true;
                             this.button_text = "Search";
@@ -2254,7 +2480,12 @@
                             this.button_text = "Search";
                             this.flag = false;
                             this.update_ter_flag = false;
-                            this.data_loaded = false;
+                            if(type == "edit_ter")
+                            {
+                                this.data_loaded = false;
+                            }else{
+                                this.unid_loaded = false;
+                            }
                             swal('error', "Either Details already updated or No record Found", 'error')
                         }
                         // this.amount_in_words();
@@ -2264,7 +2495,12 @@
                         this.flag = false;
                         this.update_ter_flag = false;
                         this.button_text = "Search";
-                        this.data_loaded = false;
+                        if(type == "edit_ter")
+                            {
+                                this.data_loaded = false;
+                            }else{
+                                this.unid_loaded = false;
+                            }
 
 
                     })

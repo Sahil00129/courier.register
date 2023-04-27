@@ -245,3 +245,8 @@ Route::get('/check_email_trigger', [TercourierController::class,'check_email_tri
 
 Route::get('/generate_unid', [MobileController::class,'generate_unid']);
 Route::post('/check_registered_mobile', [MobileController::class,'check_registered_mobile']);
+Route::post('/send_otp', [MobileController::class,'send_otp']);
+Route::post('/submit_otp', [MobileController::class,'verify_user_otp']);
+Route::post('/create_unid', [MobileController::class,'generate_unid_for_employee']);
+
+

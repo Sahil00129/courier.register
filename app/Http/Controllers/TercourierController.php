@@ -74,7 +74,7 @@ class TercourierController extends Controller
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name === "tr admin" || $name === "Hr Admin") {
 
-                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])->where('ter_type',2)->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])->where('ter_type',2)->with('CourierCompany', 'SenderDetail', 'HandoverDetail','Tercourier')->orderby('id', 'DESC')->paginate(20);
                 $role = "Tr Admin";
                 // echo'<pre>'; print_r($tercouriers); die;
                 // exit;
@@ -82,7 +82,7 @@ class TercourierController extends Controller
                 return view('tercouriers.tercourier-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers, 'name' => $name]);
             } else {
 
-                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])->where('ter_type',2)->with('CourierCompany', 'SenderDetail', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13','14'])->where('ter_type',2)->with('CourierCompany', 'SenderDetail', 'HandoverDetail','Tercourier')->orderby('id', 'DESC')->paginate(20);
                 $role = "reception";
             }
             //    echo'<pre>'; print_r($tercouriers); die;
@@ -412,16 +412,20 @@ class TercourierController extends Controller
                 $status = 0;
                 $flag = 1;
             }
+            else if ($check_status == '14') {
+                $status = 14;
+                $flag = 1;
+            }
             $query = Tercourier::query();
             // return $flag;
             if ($flag) {
 
-                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail')
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail','Tercourier')
                 ->where('ter_type',2)
                     ->where('status', $status)->orderby('id', 'DESC')->get();
                 return [$tercouriers];
             } else {
-                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail')
+                $tercouriers = $query->with('CourierCompany', 'SenderDetail', 'HandoverDetail','Tercourier')
                 ->where('ter_type',2)
                     ->where('id', 'like', '%' . $searched_item . '%')->orWhere('employee_id', 'like', '%' . $searched_item . '%')->orWhere('ax_id', 'like', '%' . $searched_item . '%')->orWhere('sender_name', 'like', '%' . $searched_item . '%')->orderby('id', 'DESC')->get();
                 // dd($tercouriers);
@@ -4663,7 +4667,7 @@ class TercourierController extends Controller
         $senders =  DB::table('sender_details')->where('employee_id', $data['employee_id'])->get()->toArray();
         $data['sender_id'] = $senders[0]->id;
         $get_db_data = DB::table('tercouriers')->select('status')->where('id', $id)->get();
-        if ($get_db_data[0]->status == 1) {
+        if ($get_db_data[0]->status == 1 || $get_db_data[0]->status == 14) {
             $new = DB::table('tercouriers')->where('id', $id)->update($data);
             return $new;
         } else {
