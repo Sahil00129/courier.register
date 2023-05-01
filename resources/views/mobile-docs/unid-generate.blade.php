@@ -553,7 +553,7 @@
 
 
                     <div class="mobileInput unidGenrationSection animate__animated animate__fadeIn inActiveItem" style="flex-flow: column; align-items: flex-start">
-                        <input class="form-control form-control-sm mobileNumber" type="number" id="amount" type="number" name="amount" v-model="amount" required placeholder="TER Amount">
+                        <input class="form-control form-control-sm mobileNumber" type="number" id="amount" type="number" name="amount" v-model="amount" required placeholder="TER Amount" @change="check_amount()">
                         <svg>
                             rs
                         </svg>
@@ -871,6 +871,14 @@
             // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
+            check_amount: function() {
+                if (this.amount > 100000) {
+                    swal('error', "Amount Can't be Greater than 1 Lakh", 'error')
+                    this.amount="";
+                    document.getElementById('amountInwords').innerHTML = "";
+
+                }
+            },
             onSelectMonth: function() {
                 this.selectedMonth = document.getElementById('month').value
                 this.currentYear = new Date().getFullYear();
@@ -897,6 +905,9 @@
             },
             generate_unid: function() {
                 if (this.amount != "" && this.from_date != "" && this.to_date != "" && this.file != "") {
+
+                    if(this.amount <= 100000)
+                    {
 
                     const config = {
                         headers: {
@@ -947,6 +958,12 @@
 
 
                         })
+                    }else{
+                    swal('error', "Amount Can't be greater than 1 Lakh", 'error')
+                    document.getElementById('amountInwords').innerHTML = "";
+                    this.amount="";
+
+                    }
 
                 } else {
                     swal('error', "Fields are Empty", 'error')

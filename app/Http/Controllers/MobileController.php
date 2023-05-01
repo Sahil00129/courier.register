@@ -10,6 +10,7 @@ use DB;
 use Helper;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use AshAllenDesign\ShortURL\Facades\ShortURL;
 
 
 
@@ -204,11 +205,11 @@ class MobileController extends Controller
         $data=$request->all();
         $emp_id = $data['emp_id'];
         // $data['file']="ds";
-      
+    //   $data['amount']='100001';
 
         $validator = Validator::make($data, [
             'emp_id' => 'required|numeric',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|max:100000',
             'from_date' => 'required|date',
             'to_date' => 'required|date',
             'file' => 'required|mimes:jpeg,png,jpg,pdf|max:5000',
@@ -303,10 +304,40 @@ class MobileController extends Controller
 
 
            $saved= ChildTercouriers::create($childata);
+           
            if($saved)
            {
-            return["100",$tercourier_save->id];
+           $API="cBQcckyrO0Sib5k7y9eUDw";
+
+           $mob = $senders[0]->telephone_no; // Get Mobile Number from Sender
+
+           // $mob="abc";
+           $name = $senders[0]->name;
+        
+
+           $otp = $senders[0]->otp;
+          $send_url="https://test-courier.easemyorder.com/generate_unid";
+          $shortUrl = ShortURL::destinationUrl($send_url)->make();
+           // print_r($getsender);
+           // exit;
+
+           // $text = 'Dear User, Your OTP is ' . $otp . ' for AgriWings registration . Thanks, Agriwings Team';
+ 
+        //    $text = 'Dear ' . $name . ' , Your UNID ' . $check_ter_table->terto_date . ' has been generated successfully. Please save & use ' . $check_ter_table->terto_date . ' to track your document. Thanks Frontiers.';
+
+        $text='Dear ' . $name . ' , Your UNID ' . $check_ter_table->id . ' has been generated successfully. Please save & use ' . $shortUrl . ' to track your document. Thanks Frontiers.';
+           $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey=' . $API . '&senderid=FAPLHR&channel=Trans&DCS=0&flashsms=0&number=' . urlencode($mob) . '&text=' . urlencode($text) . '&route=2&peid=1201159713185947382';
+
+           $res = $this->SendTSMS($url);
+           $data_res = json_decode($res);
+           if ($data_res->ErrorCode == "000") {
+                 return["100",$tercourier_save->id];
+           } else {
+               return "msg_not_sent";
            }
+
+        }
+
         }
 
 
