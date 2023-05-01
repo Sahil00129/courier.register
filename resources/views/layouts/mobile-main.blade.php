@@ -7,6 +7,14 @@
 
     @include('include.head')
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        #beforeLoginContent {
+            min-height: 100vh;
+        }
+    </style>
+
 </head>
 
 <body class="alt-menu sidebar-noneoverflow">
@@ -17,10 +25,11 @@
         <div class="search-overlay"></div>
 
         <!--  BEGIN CONTENT PART  -->
-        <div id="content" class="main-content" style="margin-top: 44px;">
+        <div id="beforeLoginContent">
             @yield('content')
             @include('include.before-login.footer')
         </div>
+    </div>
 </body>
 
 </html>
