@@ -60,11 +60,12 @@ class MobileController extends Controller
         // $get_sender =  DB::table('sender_details')->where('telephone_no',$mobile_num)->get();
         $get_sender =  Sender::where('telephone_no', $mobile_num)->get();
 
-        // echo "<pre>"; print_r();
+            
 
         if (count($get_sender) == 0) {
             return "empty_array";
         } else {
+            // echo "<pre>"; print_r($get_sender);exit;
             $res = DB::table('sender_details')->where('employee_id', $get_sender[0]->employee_id)->update(['otp' => $otp]);
             if ($res) {
                 return ['available', $get_sender];
@@ -241,6 +242,64 @@ class MobileController extends Controller
             }
         }
 
+        $get_sender = DB::table('sender_details')->where('employee_id', $emp_id)->get();
+
+        if($get_sender[0]->status == "Blocked")
+        {
+            if(!empty($get_sender[0]->last_working_date))
+            {
+                $month_number = explode("-", $get_sender[0]->last_working_date);
+
+                switch ($month_number[1]) {
+                    case "Jan":
+                        $month_number[1] = '01';
+                        break;
+                    case "Feb":
+                        $month_number[1] = '02';
+                        break;
+                    case "Mar":
+                        $month_number[1] = '03';
+                        break;
+                    case "Apr":
+                        $month_number[1] = '04';
+                        break;
+                    case "May":
+                        $month_number[1] = '05';
+                        break;
+                    case "Jun":
+                        $month_number[1] = '06';
+                    case "Jul":
+                        $month_number[1] = '07';
+                        break;
+                    case "Aug":
+                        $month_number[1] = '08';
+                        break;
+                    case "Sep":
+                        $month_number[1] = '09';
+                        break;
+                    case "Oct":
+                        $month_number[1] = '10';
+                        break;
+                    case "Nov":
+                        $month_number[1] = '11';
+                        break;
+                    case "Dec":
+                        $month_number[1] = '12';
+                        break;
+                }
+                $final_exit_date = $month_number[2] . '-' . $month_number[1] . '-' . $month_number[0];
+                // $data['to_date'] ="2022-10-02";
+                $terDate = $data['to_date'];
+                $exit_date = strtotime($final_exit_date);
+                $ter_date = strtotime($terDate);
+                // return [$ter_date,$exit_date];
+    
+                // print_r($sender_table->last_working_date);
+                if ($final_exit_date < $terDate) {
+                  return ['last_working_date',$get_sender[0]->last_working_date];
+                }
+            }
+        }
 
 
        $terdata=array();
@@ -314,10 +373,10 @@ class MobileController extends Controller
            // $mob="abc";
            $name = $senders[0]->name;
         
-
+        //    https://free-url-shortener.rb.gy/
            $otp = $senders[0]->otp;
-          $send_url="https://test-courier.easemyorder.com/generate_unid";
-          $shortUrl = ShortURL::destinationUrl($send_url)->make();
+          $send_url="https://rb.gy/p47is";
+         
            // print_r($getsender);
            // exit;
 
@@ -325,7 +384,7 @@ class MobileController extends Controller
  
         //    $text = 'Dear ' . $name . ' , Your UNID ' . $check_ter_table->terto_date . ' has been generated successfully. Please save & use ' . $check_ter_table->terto_date . ' to track your document. Thanks Frontiers.';
 
-        $text='Dear ' . $name . ' , Your UNID ' . $check_ter_table->id . ' has been generated successfully. Please save & use ' . $shortUrl . ' to track your document. Thanks Frontiers.';
+        $text='Dear ' . $name . ' , Your UNID ' . $check_ter_table->id . ' has been generated successfully. Please save & use ' . $send_url . ' to track your document. Thanks Frontiers.';
            $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey=' . $API . '&senderid=FAPLHR&channel=Trans&DCS=0&flashsms=0&number=' . urlencode($mob) . '&text=' . urlencode($text) . '&route=2&peid=1201159713185947382';
 
            $res = $this->SendTSMS($url);

@@ -779,7 +779,7 @@
     }
 
     function runTmer() {
-        var timeleft = 10;
+        var timeleft = 60;
         var downloadTimer = setInterval(function() {
             timeleft--;
             document.getElementById("timer").textContent = `in ${timeleft} seconds`;
@@ -932,6 +932,10 @@
                             if (response.data[0] == "100") {
                                 swal('success', "UNID generated Successfully UNID: " + " " + response.data[1], 'success')
                                 onClickGenerate();
+                            }
+                            if (response.data[0] == "last_working_date") {
+                                swal('error', "UNID can't be generated because your Last Working Date " + " " + response.data[1]+" "+" Exceeding the Ter Period Please Contact HR Suopport", 'error')
+                            
                             }
                             if (response.data[0] == "unid_already_generated") {
 
