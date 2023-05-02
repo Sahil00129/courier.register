@@ -450,8 +450,7 @@
     <img alt="logo" class="logoImg" src="{{asset('assets/img/f15.png')}}" />
 
     <div class="d-flex flex-column align-items-center justify-content-center" style="gap: 1rem; flex: 1;">
-        <h2>Some heading here</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p>Welcome to Finfectdox!! Here, you can easily generate and track your TER with a few clicks.</p>
         <div class="d-flex align-items-center mt-5" style="gap: 1rem;">
             <button class="btn btn-primary styledButton" onclick="showGenerateUnid()">Generate</button>
             <button class="btn btn-primary styledButton">Track</button>
