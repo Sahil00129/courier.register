@@ -264,6 +264,10 @@ jQuery(document).ready(function () {
 /*======= submit redirect fuction =======*/
 function formSubmitRedirect(form)
 {
+    $('.submit_po').prop('disabled',true);
+    $('.submit_po').css('pointer-events', 'none');
+
+
     jQuery.ajax({
         url         : form.action,
         type        : form.method,
@@ -279,10 +283,20 @@ function formSubmitRedirect(form)
             
         },
         complete: function (response) {
-            
+          
+         
         },
         success: function (response)
         {
+            if (response.page == "create-pos") {
+         
+                $('.submit_po').prop('disabled',true);
+                $('.submit_po').css('pointer-events', 'none');
+
+         }
+          
+    
+ ;         
           	$.toast().reset('all');
       		var delayTime = 3000;
 	        if(response.success){
@@ -297,7 +311,8 @@ function formSubmitRedirect(form)
 		          hideAfter           : delayTime,
 		          position            : 'top-right'
 		    	});
-                
+
+              
                 if (response.page == "add-vendors-form") {
                     document.getElementById('loadingBlock').style.display="none";
                     swal(

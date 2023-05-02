@@ -830,6 +830,7 @@
         document.querySelectorAll('.unidGenrationSection').forEach((elm) => elm.classList.remove('activeItem'));
         document.querySelectorAll('.unidGenrationSection').forEach((elm) => elm.classList.add('inActiveItem'));
     }
+
 </script>
 <!-- new script ends -->
 

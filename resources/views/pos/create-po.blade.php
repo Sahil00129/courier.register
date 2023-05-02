@@ -285,7 +285,7 @@
 
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
                                 <a class="btn btn-outline-primary" href="{{url('/pos') }}"> Back</a>
-                                <button type="submit" class="mt-4 mb-4 btn btn-primary">Submit</button>
+                                <button type="submit" class="mt-4 mb-4 btn btn-primary submit_po"  id="submit_po">Submit</button>
                             </div>
 
                         </form>
