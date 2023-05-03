@@ -32,6 +32,18 @@ class GlobalFunctions {
         return $changeformat;
     }
 
+    //api response
+    public static function apiResponseSend($message,$data,$status = true,$errorCode){
+        $errorCode = $status ? 200 : $errorCode;
+        $result = [
+            "status" => $status,
+            "message" => $message,
+            "data" => $data,
+            'statuscode' => $errorCode
+        ];
+        return response()->json($result);
+    }
+
     // function for show date and time in frontend ///
 
     public static function ShowFormat($date){
@@ -74,7 +86,7 @@ class GlobalFunctions {
         else if($unit == 4){       //3
             $unit = 'MA4';
         }
-    
+
         return $unit;
     }
 
