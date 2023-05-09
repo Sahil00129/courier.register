@@ -239,6 +239,8 @@ Route::get('/check_paid_status', [TercourierController::class,'check_paid_status
 Route::get('/check_deduction_paid_status', [TercourierController::class,'check_deduction_paid_status']);
 Route::get('/check_finfect_status', [TercourierController::class,'check_finfect_status']);
 Route::get('/check_email_trigger', [TercourierController::class,'check_email_trigger']);
+Route::get('/get_spine_data', [TercourierController::class,'get_employee_spine_data']);
+
 
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');
 

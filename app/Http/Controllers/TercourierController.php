@@ -4696,4 +4696,14 @@ class TercourierController extends Controller
         $res = URL::to('/admin_update_ter/' . $id);
         return $res;
     }
+
+    public function get_employee_spine_data()
+    {
+        $data=DB::connection('sqlsrv')->table('dbo.EmployeeDetails')->get();
+        // $data = DB::connection('sqlsrv')->statement("SELECT * FROM EmpDataService.dbo.EmployeeDetails");
+
+        echo "<pre>";
+        print_r($data);
+        exit;
+    }
 }
