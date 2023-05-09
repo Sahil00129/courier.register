@@ -124,9 +124,10 @@ $(document).ready(function() {
                url: "daily-work-performance",
                success: function(response){
              
+                var nitin = response.user1.split(',');
                 var veena = response.user2.split(',');
-                var harpreet = response.user3.split(',');
-                var rameshwer = response.user4.split(',');
+                var rameshwer = response.user3.split(',');
+                var harpreet = response.user4.split(',');
 
                 var month = response.countloop.split(',');
 
@@ -272,17 +273,22 @@ $(document).ready(function() {
                       lineCap: 'square'
                   },
                   series: [
+                    {
+                      name: 'Nitin',
+                      data: nitin
+                  },
                   {
                       name: 'Veena',
                       data: veena
                   },
                   {
+                    name: 'Rameshwer',
+                    data: rameshwer
+                 },
+                  {
                     name: 'Harpreet',
                     data: harpreet
-                 },{
-                  name: 'Rameshwer',
-                  data: rameshwer
-               }
+                 }
                 ],
               
                   labels: month,

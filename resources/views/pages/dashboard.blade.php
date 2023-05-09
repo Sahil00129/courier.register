@@ -110,14 +110,11 @@
 
     </style>
 
-    <?php $authUser = Auth::user();
-    $authUser->roles[0]->name;
-    $role = $authUser->roles[0]->name;
-    ?>
+
 
     <div class="layout-px-spacing">
 
-        @if ($role === 'admin' || $role === 'reception')
+        @if ($role == 'admin' || $role == 'reception')
 
             {{-- ---for reception--- --}}
             @if(false)
@@ -158,10 +155,10 @@
                 </div>
             @endif
 
-        @else
+        @elseif($role=="ter user" || $role=="admin user" || $role=="hr admin")
             {{-- ----for HR & TER user---- --}}
 
-            @if(false)
+            @if(true)
             <div class="row layout-top-spacing">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
                     <div class="widget widget-four">
@@ -374,8 +371,8 @@
                     </div>
                 </div>
 
-
-                <!-- <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                
+                <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-chart-one">
                         <div class="widget-heading">
                             <h5 class="">Current Month Work Performance: </h5>
@@ -388,9 +385,9 @@
                             <div id="revenueMonthly"></div>
                         </div>
                     </div>
-                </div> -->
-
-                <!-- <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                </div>
+            
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                     <div class="widget-four">
                         <div class="widget-heading">
                             <h5 class="">User Wise TER Processed (Current Month)</h5>
@@ -439,10 +436,12 @@
                         </div>
 
                     </div>
-                </div> -->
-            </div>
-            @endif
-            <!-- <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                </div>
+
+         
+
+<!-- 
+                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                 <div class="widget widget-chart-two">
                     <div class="widget-heading">
                         <h5 class="">Unprocessed TERs</h5>
@@ -452,6 +451,66 @@
                     </div>
                 </div>
             </div> -->
+
+            <!-- <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+                        <div class="widget widget-table-three">
+
+                            <div class="widget-heading">
+                                <h5 class="">TER Processed by Users (Current Month):</h5>
+                            </div>
+
+                            <div class="widget-content">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><div class="th-content">Users </div></th>
+                                                <th><div class="th-content th-heading">Count of Today processed TER </div></th>
+                                                <th><div class="th-content th-heading">Value of Today processed TER </div></th>
+                                                <th><div class="th-content">Count of current month processed TER </div></th>
+                                                <th><div class="th-content">Monthly Target achieved line </div></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="td-content"><span class="pricing">Nitin</span></div></td>
+                                                <td><div class="td-content"><span class="discount-pricing">{{$user_today_processed_count['Nitin'][0]}}</span></div></td>
+                                                <td><div class="td-content">{{$user_wise_processed_amount['Nitin'][0]}}</div></td>
+                                                <td>{{$user_month_wise_processed_count['Nitin'][0]}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                            <td><div class="td-content"><span class="pricing">Veena</span></div></td>
+                                                <td><div class="td-content"><span class="discount-pricing">{{$user_today_processed_count['Veena'][0]}}</span></div></td>
+                                                <td><div class="td-content">{{$user_wise_processed_amount['Veena'][0]}}</div></td>
+                                                <td>{{$user_month_wise_processed_count['Veena'][0]}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                            <td><div class="td-content"><span class="pricing">Rameshwar</span></div></td>
+                                                <td><div class="td-content"><span class="discount-pricing">{{$user_today_processed_count['Rameshwar'][0]}}</span></div></td>
+                                                <td><div class="td-content">{{$user_wise_processed_amount['Rameshwar'][0]}}</div></td>
+                                                <td>{{$user_month_wise_processed_count['Rameshwar'][0]}}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                            <td><div class="td-content"><span class="pricing">Harpreet</span></div></td>
+                                                <td><div class="td-content"><span class="discount-pricing">{{$user_today_processed_count['Harpreet'][0]}}</span></div></td>
+                                                <td><div class="td-content">{{$user_wise_processed_amount['Harpreet'][0]}}</div></td>
+                                                <td>{{$user_month_wise_processed_count['Harpreet'][0]}}</td>
+                                                <td></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+              
+            </div>
+            @endif
+       
         @endif
     </div>
 @endsection
