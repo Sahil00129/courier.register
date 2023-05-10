@@ -2603,7 +2603,6 @@
             download_ter_list: function() {
 
                 axios.get('/download_ter_list', {
-                    'type':type
                     })
                     .then(response => {
                         console.log(response.data);
