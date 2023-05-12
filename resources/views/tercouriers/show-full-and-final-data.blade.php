@@ -437,11 +437,11 @@
                                 ?>
 
                                 <td>
-                                    @if($tercourier->status == 3 || $role == "tr admin")
+                                    @if($tercourier->status == 3 && $role == "tr admin")
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         {{ $status }}
                                     </button>
-                                    @elseif($tercourier->status == 0 || $role == "tr admin")
+                                    @elseif($tercourier->status == 0 && $role == "tr admin")
                                     <div style="position: relative;">
                                         <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton finfectResponseStatus" style="cursor: pointer">
                                             {{ $status }}
