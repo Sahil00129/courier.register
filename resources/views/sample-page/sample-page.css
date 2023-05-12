@@ -1,0 +1,9 @@
+html  {
+    --primaryColor: #f16334;
+    --secondaryColor: #002930;
+}
+
+h1 {
+    --primaryColor: #f16334;
+    color: var(--primaryColor)
+}
