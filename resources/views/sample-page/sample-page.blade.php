@@ -522,40 +522,40 @@
 </main>
 
 <script>
-    const LoadingScreen = document.getElementById('loading_screen');
-    const LandingScreen = document.getElementById('landing_screen');
-    const generateUnId = document.getElementById('generate_unId');
-    const trackUnId = document.getElementById('track_unId');
+    const LoadingScreen = $('#loading_screen');
+    const LandingScreen = $('#landing_screen');
+    const generateUnId = $('#generate_unId');
+    const trackUnId = $('#track_unId');
 
     window.onload = (event) => {
-        LoadingScreen.classList.add('active');
+        LoadingScreen.addClass('active');
     };
 
     setTimeout(() => {
-        LandingScreen.classList.add('active');
-        LoadingScreen.classList.remove('active');
+        LandingScreen.addClass('active');
+        LoadingScreen.removeClass('active');
     }, 1500);
 
     const reloadPage = () => location.reload();
 
     const onClickGenerate = () => {
-        generateUnId.classList.add('active');
-        LandingScreen.classList.remove('active');
+        generateUnId.addClass('active');
+        LandingScreen.removeClass('active');
     }
 
     const onClickGenerateNew = () => {
-        trackUnId.classList.remove('active');
-        generateUnId.classList.add('active');
+        trackUnId.removeClass('active');
+        generateUnId.addClass('active');
     }
 
     const onClickTrack = () => {
-        trackUnId.classList.add('active');
-        LandingScreen.classList.remove('active');
+        trackUnId.addClass('active');
+        LandingScreen.removeClass('active');
     }
 
     const onClickTrackOldOne = () => {
-        trackUnId.classList.add('active');
-        generateUnId.classList.remove('active');
+        trackUnId.addClass('active');
+        generateUnId.removeClass('active');
     }
 
     // for enabling getInfoButton
@@ -573,19 +573,19 @@
         if (regx.test($('#mobile_number').val())) {
             $('#mobile_number').siblings('.errorLabel').html('')
             $(this).addClass('functioning');
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
             setTimeout(() => {
                 $(this).removeClass('functioning');
-                document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.classList.add('inActive'));
-                document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.remove('inActive'));
-                document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.add('active'));
-                document.querySelectorAll('.userCard').forEach((elm) => elm.classList.remove('inActive'));
-                document.querySelectorAll('.userCard').forEach((elm) => elm.classList.add('active'));
+                document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.addClass('inActive'));
+                document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.removeClass('inActive'));
+                document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.addClass('active'));
+                document.querySelectorAll('.userCard').forEach((elm) => elm.removeClass('inActive'));
+                document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('active'));
 
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
             }, 1500)
         } else {
             $('#mobile_number').siblings('.errorLabel').html('Enter a valid mobile number')
@@ -596,19 +596,19 @@
         event.stopPropagation();
         event.stopImmediatePropagation();
         $(this).addClass('functioning');
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
         setTimeout(() => {
             $(this).removeClass('functioning');
-            document.querySelectorAll('.userCard').forEach((elm) => elm.classList.add('compact'));
+            document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('compact'));
 
-            document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.add('inActive'));
-            document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.classList.remove('inActive'));
-            document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.classList.add('active'));
+            document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.addClass('inActive'));
+            document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.removeClass('inActive'));
+            document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.addClass('active'));
 
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
         }, 1500)
 
     });
@@ -616,12 +616,12 @@
     $("#changeNumber").on('click', function (event) {
         event.stopPropagation();
         event.stopImmediatePropagation();
-        document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.classList.add('active'));
-        document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.classList.remove('inActive'));
-        document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.add('inActive'));
-        document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.classList.remove('active'));
-        document.querySelectorAll('.userCard').forEach((elm) => elm.classList.add('inActive'));
-        document.querySelectorAll('.userCard').forEach((elm) => elm.classList.remove('active'));
+        document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.addClass('active'));
+        document.querySelectorAll('.mobileInputSection').forEach((elm) => elm.removeClass('inActive'));
+        document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.addClass('inActive'));
+        document.querySelectorAll('.sendOtpSection').forEach((elm) => elm.removeClass('active'));
+        document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('inActive'));
+        document.querySelectorAll('.userCard').forEach((elm) => elm.removeClass('active'));
     });
 
     // for enabling verifyOtpButton
@@ -637,16 +637,16 @@
         if ($('#otp').val().length == 6) {
             $('#otp').siblings('.errorLabel').html('')
             $(this).addClass('functioning');
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
             setTimeout(() => {
                 $(this).removeClass('functioning');
-                document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.classList.add('inActive'));
-                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.classList.remove('inActive'));
-                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.classList.add('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+                document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.verifyOtpSection').forEach((elm) => elm.addClass('inActive'));
+                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.removeClass('inActive'));
+                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.addClass('active'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
             }, 1500)
         } else {
             $('#otp').siblings('.errorLabel').html('Enter a valid mobile number')
@@ -660,18 +660,18 @@
         if ($('#otp').val().length == 6) {
             $('#otp').siblings('.errorLabel').html('')
             $(this).addClass('functioning');
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
             setTimeout(() => {
                 $(this).removeClass('functioning');
-                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.classList.add('inActive'));
-                document.querySelectorAll('.userCard').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.userCard').forEach((elm) => elm.classList.add('inActive'));
-                document.querySelectorAll('.thankYouSection').forEach((elm) => elm.classList.add('active'));
-                document.querySelectorAll('.thankYouSection').forEach((elm) => elm.classList.remove('inActive'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.addClass('inActive'));
+                document.querySelectorAll('.userCard').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('inActive'));
+                document.querySelectorAll('.thankYouSection').forEach((elm) => elm.addClass('active'));
+                document.querySelectorAll('.thankYouSection').forEach((elm) => elm.removeClass('inActive'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
             }, 1500)
         } else {
             $('#otp').siblings('.errorLabel').html('Enter a valid mobile number')
@@ -691,50 +691,50 @@
         event.stopPropagation();
         event.stopImmediatePropagation();
         $(this).addClass('functioning');
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
         setTimeout(() => {
             $(this).removeClass('functioning');
-            document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.classList.add('inActive'));
-            document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.classList.remove('inActive'));
-            document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.classList.add('active'));
+            document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.addClass('inActive'));
+            document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.removeClass('inActive'));
+            document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.addClass('active'));
 
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
         }, 1500)
     });
 
 
     // send Email
     const sendEmail = () => {
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
         setTimeout(() => {
-            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.addClass('inActive'));
 
-            document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.classList.remove('inActive'));
-            document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.classList.add('active'));
+            document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.removeClass('inActive'));
+            document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.addClass('active'));
 
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
         }, 1200)
 
     }
     // send Email
     const sendPaymentOtp = () => {
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('inActive'));
-        document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('active'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
+        document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
         setTimeout(() => {
-            document.querySelectorAll('.paymentReceiptSection').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.paymentReceiptSection').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.paymentReceiptSection').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.paymentReceiptSection').forEach((elm) => elm.addClass('inActive'));
 
-            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.classList.remove('inActive'));
-            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.classList.add('active'));
+            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.removeClass('inActive'));
+            document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.addClass('active'));
 
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.remove('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.classList.add('inActive'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
         }, 1200)
     }
 
