@@ -44,8 +44,7 @@
                         Finfect for TER
                     </h2>
                     <p class="mt-6 text-lg leading-8 text-center text-black-50 animate__animated animate__slideInUp">
-                        Ac euismod vel sit maecenas id pellentesque eu sed consectetur. Malesuada adipiscing sagittis
-                        vel nulla.
+                       Welcome to Finfectdox!! Here, you can easily generate and track your TER with a few clicks.
                     </p>
                     <div class="mt-10 flex items-center justify-center gap-x-6 animate__animated animate__slideInUp">
                         <button class="flex justify-center themeButton" onClick="onClickGenerate()" style="max-width: 170px">
