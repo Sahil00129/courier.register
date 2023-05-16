@@ -35,6 +35,22 @@ body {
 
 }
 
+#amountInwords {
+    font-size: 11px;
+    max-width: 300px;
+    padding-left: 10px;
+    text-align: left;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.changeNumber.disabled:hover {
+    pointer-events: none;
+    color: #83838380;
+}
+
 .active {
     display: flex;
     opacity: 1;
@@ -233,13 +249,18 @@ section {
 
 
 /*for Input*/
-input[type="file"]::file-selector-button {
+/* input[type="file"]::file-selector-button {
     display: none;
+} */
+input[type=file]::-webkit-file-upload-button {
+    visibility: hidden;
+    height: 0 !important;
+    width:  0 !important;
 }
 
 .myInputBox {
     position: relative;
-    width: 90vw;
+    width: 100%;
     max-width: 320px;
     display: flex;
     flex-flow: column;
@@ -255,14 +276,18 @@ input[type="file"]::file-selector-button {
     color: var(--primaryColor);
 }
 
+select.myInput {
+    padding: 8px 10px 8px 36px !important;
+}
+
 .myInput {
-    width: 100%;
+    width: -webkit-fill-available;
     border-radius: 50vh;
     border: 1px solid #bfc9d4;
     color: #3b3f5c;
     font-size: 14px;
     line-height: 24px;
-    padding: 8px 10px 8px 36px;
+    padding: 8px 10px 8px 36px !important;
     letter-spacing: 1px;
     height: 42px;
     /*height: calc(1.4em + 1.4rem + 2px);*/
@@ -527,6 +552,27 @@ p.empStatus {
     margin: 1.5rem auto 0.5rem;
     gap: 6px;
     cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+.mailButton:hover {
+    background: #186e93;
+    color: #fff;
+}
+
+.mailButton.disabled {
+    pointer-events:none;
+}
+
+.mailButton.disabled:before {
+    cursor: not-allowed;
+    content: "";
+    display: flex;
+    height: 103%;
+    width: 103%;
+    background: #e5e7eb6b;
+    position: absolute;
+    border-radius: inherit;
 }
 
 .mailButton svg {

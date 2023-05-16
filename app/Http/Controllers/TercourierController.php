@@ -1091,7 +1091,7 @@ class TercourierController extends Controller
 
     public static function send_payment_advice($id)
     {
-
+        
         $terdata = DB::table('tercouriers')->where('id', $id)->get();
         $sender_details = DB::table('sender_details')->where('employee_id', $terdata[0]->employee_id)->get();
         if (!empty($terdata[0]->deduction_options)) {
@@ -1141,6 +1141,7 @@ class TercourierController extends Controller
                 ->subject($data["title"])
                 ->attachData($pdf->output(), "payment_advice_" . $data['id'] . ".pdf");
         });
+        return "mail_sent";
     }
     else {
         // dd("f");

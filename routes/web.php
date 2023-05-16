@@ -238,6 +238,9 @@ Route::get('/generate_unid', [MobileController::class, 'generate_unid']);
 Route::post('/check_registered_mobile', [MobileController::class, 'check_registered_mobile']);
 Route::post('/send_otp', [MobileController::class, 'send_otp']);
 Route::post('/submit_otp', [MobileController::class, 'verify_user_otp']);
+Route::post('/verify_otp', [MobileController::class, 'verify_otp_for_PR']);
 Route::post('/create_unid', [MobileController::class, 'generate_unid_for_employee']);
+Route::post('/track_unid', [MobileController::class, 'track_unid_for_employee']);
+
 
 
