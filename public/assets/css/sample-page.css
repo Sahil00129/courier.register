@@ -615,6 +615,38 @@ p.empStatus {
     margin: 0 auto;
 }
 
+.unidText {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 12px;
+    margin: 0 auto 8px;
+    background: linear-gradient(45deg, #13c7a8, #186e93);
+    padding: 19px 8px 12px 20px;
+    border-radius: 10px;
+    margin-top: -12px;
+    z-index: -1;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.thankYouSection .up{
+    font-size: 12px;
+    background: white;
+    border-radius: 4px;
+    width: max-content;
+    padding: 0px 20px;
+    line-height: 16px;
+    font-weight: 600;
+    color: #13c7a8;
+    margin: auto;
+}
+.thankYouSection .last{
+    color: green;
+    font-size: 17px;
+    margin-bottom: 17px;
+}
 
 /*animations*/
 @keyframes sideIllustrationAnimation {

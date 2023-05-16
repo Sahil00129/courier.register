@@ -127,8 +127,9 @@
                                 </p>
 
                                 <p class="thankYouSection flex-col text-sm text-center animate__animated animate__bounceIn inActive">
-                                    <span style="color: green; font-size: 18px; max-width: 38ch; margin-bottom: 8px">Thank You</span>
-                                    Dear @{{employee_data.name}} Your UNID @{{unid}} has been generated successfully.<br />
+                                    <span class="up">UNID</span>
+                                    <span class="unidText">@{{unid}}</span>
+                                    <span class="last">generated successfully</span>
                                     <span style="margin-top: 10px;"><a style="cursor: pointer" onclick="reloadPage()">Home</a></span>
                                 </p>
                             </div>
@@ -193,7 +194,7 @@
 
                                 <!-- verify otp section -->
                                 <div class="verifyOtpSection myInputBox animate__animated animate__fadeIn inActive">
-                                    <input type="number" name="otp" id="otp" placeholder="******" v-model="otp" class="myInput" onkeyup="enableSubmitButton()" />
+                                    <input type="number" name="otp" id="otp" placeholder="******" v-model="otp" class="myInput" @change="enableSubmitButton()" />
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock">
                                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -229,18 +230,18 @@
                                 <div class="generateUnIdSection myInputBox animate__animated animate__fadeIn inActive">
                                     <select name="month" id="month" class="myInput unIdInput" required v-on:change="onSelectMonth()">
                                         <option selected disabled>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--select month--</option>
-                                        <option value="01">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;January</option>
-                                        <option value="02">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;February</option>
-                                        <option value="03">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;March</option>
-                                        <option value="04">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;April</option>
-                                        <option value="05">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May</option>
-                                        <option value="06">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June</option>
-                                        <option value="07">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;July</option>
-                                        <option value="08">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;August</option>
-                                        <option value="09">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;September</option>
-                                        <option value="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;October</option>
-                                        <option value="11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;November</option>
-                                        <option value="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;December</option>
+                                        <option value="01">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;January, @{{get_current_year}} </option>
+                                        <option value="02">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;February, @{{get_current_year}} </option>
+                                        <option value="03">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;March, @{{get_current_year}} </option>
+                                        <option value="04">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;April, @{{get_current_year}} </option>
+                                        <option value="05">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May, @{{get_current_year}} </option>
+                                        <option value="06">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June, @{{get_current_year}} </option>
+                                        <option value="07">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;July, @{{get_current_year}} </option>
+                                        <option value="08">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;August, @{{get_current_year}} </option>
+                                        <option value="09">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;September, @{{get_current_year}} </option>
+                                        <option value="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;October, @{{get_current_year}} </option>
+                                        <option value="11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;November, @{{get_current_year}} </option>
+                                        <option value="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;December, @{{get_current_year}} </option>
                                     </select>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -338,7 +339,7 @@
                                 <p class="item"><span>UNID </span> <span class="strong">: @{{tercourier_data.id}}</span></p>
                                 <p class="item"><span>Submitted On </span> <span class="strong" v-if="tercourier_data.tercourier">@{{ter_submit_date}}
                                     </span></p>
-                                <p class="item"><span>For Month </span> <span class="strong">: @{{ter_month}}</span></p>
+                                <p class="item"><span>For Month </span> <span class="strong">: @{{ter_month}}, @{{get_current_year}}</span></p>
                                 <p class="item">
                                     <span>TER Amount</span>
                                     <span class="strong" id="word_amt">: @{{amount_in_words}}</span>
@@ -469,12 +470,12 @@
                 $("#getInfoButton").attr('disabled', true);
         }
 
-        function enableSubmitButton() {
-            if ($('#otp').val().length == 6)
-                $("#verifyOtpButton").removeAttr('disabled');
-            else
-                $("#verifyOtpButton").attr('disabled', true);
-        }
+        // function enableSubmitButton() {
+        //     if ($('#otp').val().length == 6)
+        //         $("#verifyOtpButton").removeAttr('disabled');
+        //     else
+        //         $("#verifyOtpButton").attr('disabled', true);
+        // }
 
 
         function onClickGetInfo() {
@@ -583,29 +584,29 @@
         });
 
         // for enabling verifyOtpButton
-        $("#generateUnIdButton").on('click', function(event) {
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            if ($('#otp').val().length == 6) {
-                $('#otp').siblings('.errorLabel').html('')
-                $(this).addClass('functioning');
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
-                setTimeout(() => {
-                    $(this).removeClass('functioning');
-                    document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.removeClass('active'));
-                    document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.addClass('inActive'));
-                    document.querySelectorAll('.userCard').forEach((elm) => elm.removeClass('active'));
-                    document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('inActive'));
-                    document.querySelectorAll('.thankYouSection').forEach((elm) => elm.addClass('active'));
-                    document.querySelectorAll('.thankYouSection').forEach((elm) => elm.removeClass('inActive'));
-                    document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
-                    document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
-                }, 1500)
-            } else {
-                $('#otp').siblings('.errorLabel').html('Enter a valid mobile number')
-            }
-        });
+        // $("#generateUnIdButton").on('click', function(event) {
+        //     event.stopPropagation();
+        //     event.stopImmediatePropagation();
+        //     if ($('#otp').val().length == 6) {
+        //         $('#otp').siblings('.errorLabel').html('')
+        //         $(this).addClass('functioning');
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
+        //         setTimeout(() => {
+        //             $(this).removeClass('functioning');
+        //             document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.removeClass('active'));
+        //             document.querySelectorAll('.generateUnIdSection').forEach((elm) => elm.addClass('inActive'));
+        //             document.querySelectorAll('.userCard').forEach((elm) => elm.removeClass('active'));
+        //             document.querySelectorAll('.userCard').forEach((elm) => elm.addClass('inActive'));
+        //             document.querySelectorAll('.thankYouSection').forEach((elm) => elm.addClass('active'));
+        //             document.querySelectorAll('.thankYouSection').forEach((elm) => elm.removeClass('inActive'));
+        //             document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+        //             document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
+        //         }, 1500)
+        //     } else {
+        //         $('#otp').siblings('.errorLabel').html('Enter a valid mobile number')
+        //     }
+        // });
 
 
 
@@ -620,41 +621,41 @@
 
 
         // track unid
-        $("#trackUnIdButton").on('click', function(event) {
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            $(this).addClass('functioning');
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
-            setTimeout(() => {
-                $(this).removeClass('functioning');
-                document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.removeClass('active'));
-                document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.addClass('inActive'));
-                document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.removeClass('inActive'));
-                document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.addClass('active'));
+        // $("#trackUnIdButton").on('click', function(event) {
+        //     event.stopPropagation();
+        //     event.stopImmediatePropagation();
+        //     $(this).addClass('functioning');
+        //     document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+        //     document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
+        //     setTimeout(() => {
+        //         $(this).removeClass('functioning');
+        //         document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.removeClass('active'));
+        //         document.querySelectorAll('.trackUnIdSection').forEach((elm) => elm.addClass('inActive'));
+        //         document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.removeClass('inActive'));
+        //         document.querySelectorAll('.trackingResultSection').forEach((elm) => elm.addClass('active'));
 
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
-            }, 1500)
-        });
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
+        //     }, 1500)
+        // });
 
 
         // send Email
-        const sendEmail = () => {
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
-            document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
-            setTimeout(() => {
-                document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.removeClass('active'));
-                document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.addClass('inActive'));
+        // const sendEmail = () => {
+        //     document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('inActive'));
+        //     document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('active'));
+        //     setTimeout(() => {
+        //         document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.removeClass('active'));
+        //         document.querySelectorAll('.paymentOtpSection').forEach((elm) => elm.addClass('inActive'));
 
-                document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.removeClass('inActive'));
-                document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.addClass('active'));
+        //         document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.removeClass('inActive'));
+        //         document.querySelectorAll('.emailSentSuccess').forEach((elm) => elm.addClass('active'));
 
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
-                document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
-            }, 1200)
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.removeClass('active'));
+        //         document.querySelectorAll('.loadingBox').forEach((elm) => elm.addClass('inActive'));
+        //     }, 1200)
 
-        }
+        // }
         // send Email
         // const sendPaymentOtp = () => {
         //     $('.loadingBox').removeClass('inActive');
@@ -751,11 +752,13 @@
                 employee_id: "",
                 payment_otp: "",
                 ter_unid: "",
+                get_current_year: "",
 
 
             },
 
             created: function() {
+                this.get_current_year = new Date().getFullYear();
                 //   alert('hello');
                 // var table=$('#html5-extension');
                 // table.dataTable({dom : 'lrt'});
@@ -765,6 +768,12 @@
 
 
             methods: {
+                enableSubmitButton: function() {
+                    if ($('#otp').val().length == 6)
+                        $("#verifyOtpButton").removeAttr('disabled');
+                    else
+                        $("#verifyOtpButton").attr('disabled', true);
+                },
                 enableMailButton: function() {
                     if (this.payment_otp.length > 5) {
                         $('.mailButton').removeClass('disabled');
@@ -946,12 +955,12 @@
                                     // this.ter_submit_date = this.tercourier_data.tercourier.unid_generated_date;
                                     if (this.tercourier_data != "") {
                                         const date_split = this.tercourier_data.tercourier.unid_generated_date.split("-");
-                                        let day, month_num,ter_date,ter_month_name;
+                                        let day, month_num, ter_date, ter_month_name;
                                         month_num = date_split[1];
                                         day = this.get_month_name(month_num);
                                         ter_date = this.tercourier_data.terto_date.split("-");
 
-                                        ter_month_name=this.get_month_name(ter_date[1]);
+                                        ter_month_name = this.get_month_name(ter_date[1]);
 
 
                                         this.ter_submit_date = date_split[2] + '-' + day + '-' + date_split[0];
