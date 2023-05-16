@@ -526,6 +526,8 @@ p.empStatus {
     box-shadow: 0 0 12px inset #83838360;
     border-radius: 20px;
     position: relative;
+    width: 100%;
+    min-height: 350px;
 }
 
 .unIdStatus.active {
