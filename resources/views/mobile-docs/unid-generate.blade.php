@@ -194,7 +194,7 @@
 
                                 <!-- verify otp section -->
                                 <div class="verifyOtpSection myInputBox animate__animated animate__fadeIn inActive">
-                                    <input type="number" name="otp" id="otp" placeholder="******" v-model="otp" class="myInput" @change="enableSubmitButton()" />
+                                    <input type="number" name="otp" id="otp" placeholder="******" v-model="otp" class="myInput" @change="enableSubmitButton()" @keyup="enableSubmitButton()"/>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock">
                                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
