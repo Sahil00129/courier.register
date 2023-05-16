@@ -44,7 +44,7 @@
                         Finfect for TER
                     </h2>
                     <p class="mt-6 text-lg leading-8 text-center text-black-50 animate__animated animate__slideInUp">
-                       Welcome to Finfectdox!! Here, you can easily generate and track your TER with a few clicks.
+                        Welcome to Finfectdox!! Here, you can easily generate and track your TER with a few clicks.
                     </p>
                     <div class="mt-10 flex items-center justify-center gap-x-6 animate__animated animate__slideInUp">
                         <button class="flex justify-center themeButton" onClick="onClickGenerate()" style="max-width: 170px">
@@ -98,7 +98,7 @@
                             </h2>
 
                             <div class="midContent">
-                            <img src="{{asset('assets/img/ill-2.svg')}}" alt="demo Illustration" class="mobileInputSection animate__animated animate__bounceIn inlineIllustration active" />
+                                <img src="{{asset('assets/img/ill-2.svg')}}" alt="demo Illustration" class="mobileInputSection animate__animated animate__bounceIn inlineIllustration active" />
 
                                 <img src="{{asset('assets/img/done.svg')}}" alt="demo Illustration" class="thankYouSection animate__animated animate__bounceIn inlineIllustration inActive" />
 
@@ -873,6 +873,51 @@
 
 
                 },
+                get_month_name: function(month) {
+                    let day, month_num;
+                    month_num = month;
+                    //    alert(month_num);
+                    //    return 1;
+                    switch (month_num) {
+                        case "01":
+                            day = "January";
+                            break;
+                        case "02":
+                            day = "February";
+                            break;
+                        case "03":
+                            day = "March";
+                            break;
+                        case "04":
+                            day = "April";
+                            break;
+                        case "05":
+                            day = "May";
+                            break;
+                        case "06":
+                            day = "June";
+                            break;
+                        case "07":
+                            day = "July";
+                            break;
+                        case "08":
+                            day = "August";
+                            break;
+                        case "09":
+                            day = "September";
+                            break;
+                        case "10":
+                            day = "October";
+                            break;
+                        case "11":
+                            day = "November";
+                            break;
+                        case "12":
+                            day = "December";
+
+                    }
+                    return day;
+                },
                 trackunid: function() {
 
                     if (this.unid_no.length > 3) {
@@ -901,52 +946,16 @@
                                     // this.ter_submit_date = this.tercourier_data.tercourier.unid_generated_date;
                                     if (this.tercourier_data != "") {
                                         const date_split = this.tercourier_data.tercourier.unid_generated_date.split("-");
-                                        let day, month_num;
+                                        let day, month_num,ter_date,ter_month_name;
                                         month_num = date_split[1];
-                                        //    alert(month_num);
-                                        //    return 1;
-                                        switch (month_num) {
-                                            case "01":
-                                                day = "January";
-                                                break;
-                                            case "02":
-                                                day = "February";
-                                                break;
-                                            case "03":
-                                                day = "March";
-                                                break;
-                                            case "04":
-                                                day = "April";
-                                                break;
-                                            case "05":
-                                                day = "May";
-                                                break;
-                                            case "06":
-                                                day = "June";
-                                                break;
-                                            case "07":
-                                                day = "July";
-                                                break;
-                                            case "08":
-                                                day = "August";
-                                                break;
-                                            case "09":
-                                                day = "September";
-                                                break;
-                                            case "10":
-                                                day = "October";
-                                                break;
-                                            case "11":
-                                                day = "November";
-                                                break;
-                                            case "12":
-                                                day = "December";
+                                        day = this.get_month_name(month_num);
+                                        ter_date = this.tercourier_data.terto_date.split("-");
 
-                                        }
-                                        // alert(day);
+                                        ter_month_name=this.get_month_name(ter_date[1]);
+
 
                                         this.ter_submit_date = date_split[2] + '-' + day + '-' + date_split[0];
-                                        this.ter_month = day;
+                                        this.ter_month = ter_month_name;
                                         this.amount_in_words = inWords(this.tercourier_data.amount);
                                         document.getElementById('word_amt').style.textTransform = "capitalize";
                                         this.employee_id = this.tercourier_data.employee_id;
