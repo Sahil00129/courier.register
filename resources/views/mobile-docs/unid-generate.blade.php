@@ -673,7 +673,7 @@
 
 
         function runTmer() {
-            var timeleft = 10;
+            var timeleft = 60;
             var downloadTimer = setInterval(function() {
                 timeleft--;
                 document.getElementById("timer").textContent = `in ${timeleft} seconds`;
