@@ -525,7 +525,7 @@ class MobileController extends Controller
 
                 //    $text = 'Dear ' . $name . ' , Your UNID ' . $check_ter_table->terto_date . ' has been generated successfully. Please save & use ' . $check_ter_table->terto_date . ' to track your document. Thanks Frontiers.';
 
-                $text = 'Dear ' . $name . ' , Your UNID ' . $check_ter_table->id . ' has been generated successfully. Please save & use ' . $send_url . ' to track your document. Thanks Frontiers.';
+                $text = 'Dear ' . $name . ' , Your UNID ' . $tercourier_save->id . ' has been generated successfully. Please save & use ' . $send_url . ' to track your document. Thanks Frontiers.';
                 $url = 'http://sms.innuvissolutions.com/api/mt/SendSMS?APIkey=' . $API . '&senderid=FAPLHR&channel=Trans&DCS=0&flashsms=0&number=' . urlencode($mob) . '&text=' . urlencode($text) . '&route=2&peid=1201159713185947382';
 
                 $res = $this->SendTSMS($url);
