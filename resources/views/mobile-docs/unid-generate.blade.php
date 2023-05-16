@@ -98,6 +98,8 @@
                             </h2>
 
                             <div class="midContent">
+                            <img src="{{asset('assets/img/ill-2.svg')}}" alt="demo Illustration" class="mobileInputSection animate__animated animate__bounceIn inlineIllustration active" />
+
                                 <img src="{{asset('assets/img/done.svg')}}" alt="demo Illustration" class="thankYouSection animate__animated animate__bounceIn inlineIllustration inActive" />
 
                                 <div class="userCard compact animate__animated animate__fadeIn inActive">
