@@ -509,10 +509,10 @@ class MobileController extends Controller
 
                 if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
                     // test-courier url
-                    $send_url = "https://rb.gy/p47is";
+                    $send_url = "https://rb.gy/crei0";
                 } else {
                     // live-ter-url
-                    $send_url = "https://rb.gy/1oa2k";
+                    $send_url = "https://rb.gy/0q54w";
                 }
 
 

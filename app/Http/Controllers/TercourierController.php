@@ -4669,6 +4669,10 @@ class TercourierController extends Controller
         $data['sender_id'] = $senders[0]->id;
         $get_db_data = DB::table('tercouriers')->select('status')->where('id', $id)->get();
         if ($get_db_data[0]->status == 1 || $get_db_data[0]->status == 14) {
+            if($get_db_data[0]->status == 14)
+            {
+                $data['status']=1;
+            }
             $new = DB::table('tercouriers')->where('id', $id)->update($data);
             return $new;
         } else {

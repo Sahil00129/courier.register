@@ -31,10 +31,13 @@ use App\Http\Controllers\SamplePage;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
 
+Route::get('/', function () {
+    return view('mobile-docs.unid-generate');
+});
 
 Auth::routes();
 

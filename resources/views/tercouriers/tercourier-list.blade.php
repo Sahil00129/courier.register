@@ -1553,7 +1553,7 @@
                     </div>
                 </div>
 
-                    <!-- Edit Reception TER Modal -->
+                    <!-- Edit Reception TER Modal for unid generate -->
                     <div class="modal fade show" id="editTerModalForUnid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
                     <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
                         <div class="modal-content" style="position: relative;">
@@ -1675,16 +1675,18 @@
                                 <div class="form-row mb-4">
                                     <h6><b>Courier Details</b></h6>
                                     <div class="form-group col-md-4">
-                                        <label for="inputState">Courier Name</label>
+                                        <label for="inputState">Courier Name*</label>
                                         <select id="slct" name="courier_id" class="form-control form-control-sm">
-                                        <option>------Select------</option>
+                                        <option selected value="error" disabled>------Select------</option>
                                             @foreach($couriers as $courier)
-                                            <option  id="courier_id">{{$courier->courier_name}}</option>
+                                           
+                                            <option  value="{{$courier->id}}">{{$courier->courier_name}}</option>
+                                       
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="inputPassword4">Docket No.</label>
+                                        <label for="inputPassword4">Docket No.*</label>
                                         <input type="text" class="form-control form-control-sm" id="docket_no" v-model="docket_no" name="docket_no" autocomplete="off">
                                     </div>
                                     <div class="form-group col-md-4">
@@ -1694,7 +1696,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
+                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter('unid_generate')">
                                         <span class="indicator-label">Save</span>
                                         </span>
                                     </button>
@@ -1857,7 +1859,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter">
+                                    <button type=" submit" class="btn btn-primary" style="width: 100px" @click="update_data_ter('received')">
                                         <span class="indicator-label">Save</span>
                                         </span>
                                     </button>
@@ -2198,9 +2200,28 @@
                     // $("input[name='terto_date1']").val(`${this.currentYear}-${this.selectedMonth}-30`);
                 }
             },
-            update_data_ter: function() {
+            update_data_ter: function(type) {
                 var sender_emp_id, sender_name, ax_code, courier_id
                 courier_id = $("#slct option:selected").val();
+               
+                if(type == 'unid_generate')
+                {
+                    if(this.date_of_receipt == null || this.date_of_receipt == "" || this.amount == null || this.amount == "" 
+                    || this.docket_no == null   || this.docket_no == "" || courier_id == "error"   || courier_id == null)
+                    {   
+                        // alert(type);
+                        swal('error','Mandatory Fields are empty')
+                        // alert(this.date_of_receipt)
+                        // alert(this.amount)
+                        // alert(this.docket_no)
+                        // alert(courier_id)
+                        return 1;
+                    }
+                }
+               
+            //  alert(this.docket_no)
+            //  return 1;
+
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
                     sender_emp_id = sender_data_split[0];
@@ -2276,6 +2297,12 @@
 
 
                     })
+                    .finally(() => {
+                        this.date_of_receipt="";
+                        this.amount ="";
+                        this.docket_no="";
+                        courier_id="";
+                            })
 
 
             },

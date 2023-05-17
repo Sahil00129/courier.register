@@ -52,8 +52,9 @@ class VendorController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             $data = json_decode(json_encode($user));
-            $name = $data->name;
+            $name = $data->role;
         }
+        // return $data;
         return view('pages.vendors-table',  ['vendors' => $vendors, 'role' => $name])->with('i', ($request->input('page', 1) - 1) * 5);
     }
 

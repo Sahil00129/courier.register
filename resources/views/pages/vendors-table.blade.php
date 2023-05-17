@@ -223,7 +223,9 @@
                             <th>Vendor Code</th>
                             <th>Vendor Status</th>
                             <th>Unit</th>
+                            @if($role != 'reception user')
                             <th style="text-align: center;">Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -262,6 +264,7 @@
                             }
                             ?>
                             <td>{{$pfu}}</td>
+                            @if($role != 'reception user')
                             @if($vendor->mode == 0 || $vendor->mode == 1 )
                             <td class="action"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" v-on:click="open_edit_vendor(<?php echo $vendor->id ?>)">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -269,6 +272,7 @@
                                 </svg></td>
                             @else
                             <td></td>
+                            @endif
                             @endif
 
                         </tr>
