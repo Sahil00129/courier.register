@@ -52,6 +52,7 @@
 
 <?php $authuser = Auth::user();
 $currentURL = url()->current();
+$flag = 0;
 ?>
 
 <div class="nav-logo align-self-center">
@@ -132,7 +133,9 @@ $currentURL = url()->current();
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="employee_doc"
                             data-parent="#topAccordion">
                             <li><a href="{{url('sender-table')}}">Employees </a></li>
+                            @if($flag)
                             <li><a href="{{url('vendor-table')}}">Vendors </a></li>
+                            @endif
                             <!-- <li><a href="{{url('sender-table')}}">Vendors </a></li> -->
                         </ul>
                     </li>
@@ -340,7 +343,9 @@ $currentURL = url()->current();
                         </a>
                         <ul class="collapse submenu list-unstyled animated fadeInUp" id="receives_doc"
                             data-parent="#topAccordion">
+                            @if($flag)
                             <li><a href="{{url('invoices/create')}}"> Add Invoice </a></li>
+                            @endif
                             <li><a href=" {{url('tercouriers/create')}}"> Add TER </a></li>
                            
                         </ul>
@@ -349,6 +354,7 @@ $currentURL = url()->current();
                     @endif
 
                     @can('tercouriers/create')
+                    @if($flag)
                     <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
                         <a href="{{url('invoices/create')}}">
                             <div class="">
@@ -365,6 +371,7 @@ $currentURL = url()->current();
                             </div>
                         </a>
                     </li>
+                    @endif
                     <li class="menu single-menu @if($currentURL == url('tercouriers')) active @endif">
                         <a href="{{url('tercouriers/create')}}">
                             <div class="">
@@ -403,6 +410,7 @@ $currentURL = url()->current();
                     </li>
                 @endcan
 
+                @if($flag)
                 @can('invoices')
                     <li class="menu single-menu @if($currentURL == url('invoices')) active @endif">
                         <a href="{{url('invoices')}}">
@@ -421,6 +429,7 @@ $currentURL = url()->current();
                         </a>
                     </li>
                 @endcan
+                @endif
 
               
 

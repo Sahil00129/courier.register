@@ -359,9 +359,11 @@
                         <button class="actionButtons btn btn-success" v-on:click="change_to_handover()">
                             Handover
                         </button>
+                        @if(false)
                         <button class="actionButtons btn btn-success" v-on:click="redirect_to_invoice()">
                             Invoice List
                         </button>
+                        @endif
                         @endif
 
                         <button class="actionButtons btn btn-success" @click="download_ter_list()" v-if="ter_full_excel">
