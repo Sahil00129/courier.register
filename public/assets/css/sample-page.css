@@ -97,19 +97,6 @@ section {
     align-items: center;
 }
 
-@media (max-width: 600px) {
-    main {
-        min-height: calc(100vh - 50px);
-    }
-
-    section {
-        min-height: min(calc(100vh - 83px), 700px);
-    }
-
-    .illustrationContainer {
-        display: none !important;
-    }
-}
 
 .themeButton {
     display: flex;
@@ -133,8 +120,8 @@ section {
     user-select: none;
     flex: 1;
     height: 54px;
-    min-height: 54px;
-    max-height: 54px;
+    min-height: 44px;
+    max-height: 44px;
 }
 
 .themeButton.reverse {
@@ -232,6 +219,11 @@ section {
     /*margin: -7rem auto 5rem;*/
     margin: 0 auto;
     flex: 1;
+}
+
+.terLogo.loadingLogo {
+    max-height: 90px;
+    margin: 0 auto;
 }
 
 .terLogo.longLogo {
@@ -351,7 +343,7 @@ select.myInput {
 }
 
 .containerArea {
-    /*box-shadow: 0 0 2px #838383;*/
+    box-shadow: 0 0 0 6px #454545;
     border-radius: 20px;
     padding: 1rem;
     margin: 1rem auto;
@@ -365,6 +357,19 @@ select.myInput {
     height: 100%;
     width: 100%;
     position: relative;
+}
+.containerArea:before{
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: #454545;
+    width: 150px;
+    height: 12px;
+    content: '';
+    display: flex;
+    border-radius: 0 0 10px 10px;
+
 }
 
 .loadingBox {
@@ -390,6 +395,7 @@ select.myInput {
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
+    width: 100%;
 }
 
 .inlineIllustration {
@@ -413,6 +419,8 @@ select.myInput {
 .flexText {
     flex: 1;
     align-items: flex-end;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 
@@ -423,36 +431,36 @@ select.myInput {
 }
 
 .userCard.compact {
-    box-shadow: 0 0 10px #8383831c inset;
     flex-flow: row;
-    justify-content: center;
     gap: 1rem;
     width: 100%;
     margin: 1rem auto;
-    /*background: #13c7a817;*/
-    border-radius: 10px;
-    max-width: max-content;
-    padding: 0.5rem 2rem;
+    border-radius: 26px;
+    padding: 0.5rem 1rem;
+    max-width: 320px;
+    color: var(--secondaryColor);
+    box-shadow: 0 0 12px #83838370 inset;
 }
 
 .empUser {
     height: 90px;
     width: 90px;
-    background: var(--secondaryColorAlpha);
-    border-radius: 50vh;
+    border-radius: 12px;
     padding: 8px;
-    color: var(--primaryColor);
+    color: var(--primaryText);
     outline: 2px solid var(--primaryColor);
     outline-offset: 4px;
     transition: all 300ms ease-in-out;
 }
 
 .userCard.compact .empUser {
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primaryColor), var(--secondaryColor));
+    width: 70px;
 }
 
 .userCard .inner {
+    flex: 1;
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -464,13 +472,16 @@ select.myInput {
 
 p.empId {
     margin: 2rem 0 0;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
 }
 
 .userCard.compact p.empId {
     margin: 0;
-    font-size: 12px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 p.empName {
@@ -480,7 +491,10 @@ p.empName {
 }
 
 .userCard.compact p.empName {
-    font-size: 1.1rem;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 p.empDes {
@@ -490,7 +504,8 @@ p.empDes {
 }
 
 .userCard.compact p.empDes {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 400;
     margin-bottom: 0.5rem;
 }
 
@@ -506,27 +521,28 @@ p.empStatus {
 }
 
 .statusText {
-    color: green;
-    background: #0080001c;
-    padding: 0 8px;
+    color: #fff;
+    background: green;
+    font-size: 13px;
     border-radius: 50px;
+    line-height: 13px;
+    padding: 5px 10px 6px;
 }
 
 .userCard.compact p.empStatus {
     padding: 0 15px;
     color: green;
     margin: 0;
-    font-size: 12px;
+    font-size: 18px;
 }
 
 
 /*track*/
 .unIdStatus {
     padding: 2rem 1rem;
-    box-shadow: 0 0 12px inset #83838360;
     border-radius: 20px;
     position: relative;
-    width: 90vw;
+    width: 100%;
     max-width: 450px;
     min-height: 350px;
 }
@@ -588,10 +604,10 @@ p.empStatus {
     justify-content: flex-start;
     text-align: left;
     border-bottom: 1px solid #83838380;
-    margin-bottom: 8px;
-    font-size: 14px;
+    font-size: 15px;
     gap: 4px;
-
+    width: 80%;
+    margin: 11px auto;
 }
 
 .unIdStatus .item .strong {
@@ -616,14 +632,13 @@ p.empStatus {
 }
 
 .unidText {
-    font-size: 1.5rem;
+    font-size: 32px;
     font-weight: 600;
     letter-spacing: 12px;
-    margin: 0 auto 8px;
+    margin: -12px auto 8px;
     background: linear-gradient(45deg, #13c7a8, #186e93);
-    padding: 19px 8px 12px 20px;
+    padding: 24px 8px 16px 20px;
     border-radius: 10px;
-    margin-top: -12px;
     z-index: -1;
     color: #fff;
     text-align: center;
@@ -644,9 +659,39 @@ p.empStatus {
 }
 .thankYouSection .last{
     color: green;
-    font-size: 17px;
+    font-size: 20px;
     margin-bottom: 17px;
 }
+
+.thankYouIllustration{
+    max-height: 150px;
+}
+
+@media (max-width: 600px) {
+    main {
+        min-height: calc(100vh - 50px);
+    }
+
+    section {
+        min-height: min(calc(100vh - 83px), 700px);
+    }
+
+    .illustrationContainer {
+        display: none !important;
+    }
+    .containerArea {
+        box-shadow: none;
+    }
+    .containerArea:before{
+        display: none;
+    }
+    .unIdStatus {
+        box-shadow: 0 0 12px inset #83838360;
+    }
+}
+
+
+
 
 /*animations*/
 @keyframes sideIllustrationAnimation {

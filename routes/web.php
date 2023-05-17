@@ -237,7 +237,7 @@ Route::get('/get_spine_data', [TercourierController::class,'get_employee_spine_d
 // Route::post('/change_status','App\Http\Controllers\TercourierController@change_status_to_handover');
 
 
-Route::get('/generate_unid', [MobileController::class, 'generate_unid']);
+//Route::get('/generate_unid', [MobileController::class, 'generate_unid']);
 Route::post('/check_registered_mobile', [MobileController::class, 'check_registered_mobile']);
 Route::post('/send_otp', [MobileController::class, 'send_otp']);
 Route::post('/submit_otp', [MobileController::class, 'verify_user_otp']);
