@@ -4672,6 +4672,8 @@ class TercourierController extends Controller
             if($get_db_data[0]->status == 14)
             {
                 $data['status']=1;
+                $data['received_date'] = date('Y-m-d');
+
             }
             $new = DB::table('tercouriers')->where('id', $id)->update($data);
             return $new;

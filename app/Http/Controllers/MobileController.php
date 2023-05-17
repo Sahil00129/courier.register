@@ -472,7 +472,7 @@ class MobileController extends Controller
 
         $terdata['saved_by_name'] = $senders[0]->name;
         $terdata['employee_id']    = $senders[0]->employee_id;
-        $terdata['location']    = $request->location;
+        $terdata['location']    = $senders[0]->location;
         $terdata['amount'] = $data['amount'];
         $terdata['status'] = 14;
         $terdata['ter_type'] = 2;
