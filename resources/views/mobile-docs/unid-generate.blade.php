@@ -256,7 +256,7 @@
                                 <input type="date" class="form-control form-control-sm" id="terfrom_date" required name="terfrom_date" v-model="from_date" style="display: none">
 
                                 <div class="generateUnIdSection myInputBox animate__animated animate__fadeIn inActive">
-                                    <input type="number" name="amount" id="amount" placeholder="Enter TER Amount" @change="enableGenerateButton()" v-model="amount" class="myInput unIdInput" required />
+                                    <input type="number" name="amount" id="amount" placeholder="Enter TER Amount" @change="enableGenerateButton()" @keyup="check_amount();get_amount_in_words()" v-model="amount" class="myInput unIdInput" required />
                                     <span id="amountInwords" style="font-size: 12px;">Required</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" id="svg3611" viewBox="0 0 169.76 250.39" version="1.1">
                                         <g id="layer1" transform="translate(0 -801.97)">
@@ -1059,13 +1059,16 @@
                     this.file = e.target.files[0];
                     this.enableGenerateButton()
                 },
-                enableGenerateButton: function() {
+                get_amount_in_words:function(){
                     if (this.amount != "") {
                         document.getElementById('amountInwords').innerHTML = inWords(document.getElementById('amount').value);
                         document.getElementById('amountInwords').style.textTransform = "capitalize";
                     } else {
                         document.getElementById('amountInwords').innerHTML = "";
                     }
+                },
+                enableGenerateButton: function() {
+                  
                     if (this.amount != "" && this.from_date != "" && this.to_date != "" && this.file != "") {
                         $("#generateUnIdButton").removeAttr('disabled');
                     } else $("#generateUnIdButton").attr('disabled', true);
