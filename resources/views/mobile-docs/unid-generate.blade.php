@@ -298,37 +298,37 @@
                                     <option selected disabled>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--select
                                         month--
                                     </option>
-                                    <option value="01" :disabled="currentMonth < 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;January,
+                                    <option value="01" v-if="currentMonth >= 0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;January,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="02" :disabled="currentMonth < 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;February,
+                                    <option value="02" v-if="currentMonth >= 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;February,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="03" :disabled="currentMonth < 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;March,
+                                    <option value="03" v-if="currentMonth >= 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;March,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="04" :disabled="currentMonth < 3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;April,
+                                    <option value="04" v-if="currentMonth >= 3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;April,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="05" :disabled="currentMonth < 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May, @{{get_current_year}}
+                                    <option value="05" v-if="currentMonth >= 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May, @{{get_current_year}}
                                     </option>
-                                    <option value="06" :disabled="currentMonth < 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June, @{{get_current_year}}
+                                    <option value="06" v-if="currentMonth >= 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June, @{{get_current_year}}
                                     </option>
-                                    <option value="07" :disabled="currentMonth < 6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;July, @{{get_current_year}}
+                                    <option value="07" v-if="currentMonth >= 6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;July, @{{get_current_year}}
                                     </option>
-                                    <option value="08" :disabled="currentMonth < 7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;August,
+                                    <option value="08" v-if="currentMonth >= 7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;August,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="09" :disabled="currentMonth < 8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;September,
+                                    <option value="09" v-if="currentMonth >= 8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;September,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="10" :disabled="currentMonth < 9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;October,
+                                    <option value="10" v-if="currentMonth >= 9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;October,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="11" :disabled="currentMonth < 10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;November,
+                                    <option value="11" v-if="currentMonth >= 10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;November,
                                         @{{get_current_year}}
                                     </option>
-                                    <option value="12" :disabled="currentMonth < 11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;December,
+                                    <option value="12" v-if="currentMonth >= 11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;December,
                                         @{{get_current_year}}
                                     </option>
                                 </select>
@@ -452,17 +452,17 @@
                              class="trackUnIdSection inlineIllustration active"/>
 
                         <p class="trackUnIdSection flexText text-center text-black-50 animate__animated animate__slideInUp active">
-                            Please enter Un Id to track.
+                            Please enter your UNID
                         </p>
 
                         <div class="unIdStatus trackingResultSection animate__animated animate__fadeIn inActive">
                             <img :src="src_img" alt="demo Illustration"
-                                 class="trackingResultSection animate__animated animate__fadeIn thankYouIllustration inlineIllustration inActive"
+                                 class="trackingResultSection animate__animated animate__heartBeat thankYouIllustration inlineIllustration inActive"
                                  style="margin: 1rem auto"/>
 
                             <p class="item"><span>UNID </span> <span class="strong">: @{{tercourier_data.id}}</span></p>
                             <p class="item"><span>Submitted On </span> <span class="strong"
-                                                                             v-if="tercourier_data.tercourier">@{{ter_submit_date}}
+                                                                             v-if="tercourier_data.tercourier">: @{{ter_submit_date}}
                                     </span></p>
                             <p class="item"><span>For Month </span> <span class="strong">: @{{ter_month}}, @{{get_current_year}}</span>
                             </p>
@@ -520,7 +520,7 @@
                         <div class="formItems">
                             <!-- get info section -->
                             <div class="trackUnIdSection myInputBox animate__animated animate__fadeIn active">
-                                <input type="number" name="unId" id="unId" placeholder="Un Id" class="myInput"
+                                <input type="number" name="unId" id="unId" placeholder="Enter UNID" class="myInput"
                                        v-model="unid_no" @keyup="enableTrackButton()"/>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
