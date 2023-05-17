@@ -512,7 +512,7 @@ class MobileController extends Controller
                     $send_url = "https://rb.gy/crei0";
                 } else {
                     // live-ter-url
-                    $send_url = "https://rb.gy/0q54w";
+                    $send_url = "https://rb.gy/xsya0";
                 }
 
 
