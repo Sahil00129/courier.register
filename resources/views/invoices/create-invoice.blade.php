@@ -258,18 +258,31 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 <script>
     $("#basic_amount").blur(function() {
-        if ($("#basic_amount").val() > parseInt($("#po_value").val())) {
-            $("#basic_amount").val("");
-            swal('error', "Basic Amount Can't be Greater than PO Value")
+        let check_flag = true;
+        if (parseInt($("#po_value").val()) == 000) {
+            check_flag = false;
+        }
+        // alert(check_flag)
+        if (check_flag) {
+            if ($("#basic_amount").val() > parseInt($("#po_value").val())) {
+                $("#basic_amount").val("");
+                swal('error', "Basic Amount Can't be Greater than PO Value")
+            }
         }
 
     });
     $("#total_amount").blur(function() {
         // alert($("#po_value").val());
         // alert($("#total_amount").val());
-        if ($("#total_amount").val() > parseInt($("#po_value").val())) {
-            $("#total_amount").val("");
-            swal('error', "Total Amount Can't be Greater than PO Value")
+        let check_flag = true;
+        if (parseInt($("#po_value").val()) == 000) {
+            check_flag = false;
+        }
+        if (check_flag) {
+            if ($("#total_amount").val() > parseInt($("#po_value").val())) {
+                $("#total_amount").val("");
+                swal('error', "Total Amount Can't be Greater than PO Value")
+            }
         }
 
     });
