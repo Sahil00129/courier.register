@@ -24,7 +24,7 @@
     </style>
 </head>
 
-<body>
+<body style="font-family:Arial Helvetica,sans-serif;">
     <table style="width: 100%; margin-bottom: 1.3rem">
         <tr>
             <?php
@@ -53,7 +53,7 @@
         </tr>
     </table>
 
-    
+
 
     <table class="styled" style="width: 100%; margin-bottom: 1.3rem; background: beige">
         <tr>
