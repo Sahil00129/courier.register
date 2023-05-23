@@ -1954,21 +1954,41 @@ class TercourierController extends Controller
 
                             $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $get_data_db[$i]->id)->orderby("book_date", "DESC")->first();
 
+
+                            if($received_data->bank_refrence_no == "Value Date Expired")
+                            {
+                                $update_ter_data = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
+                                    'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                    'payment_type' => 'bank_failed_payment'
+                                ]);
+                            }
+                            else{
                             $update_ter_data = DB::table('ter_deduction_settlements')->where('id', $check_deduction_table->id)->update([
                                 'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
                                 'final_payable' => "", 'voucher_code' => "", 'payable_amount' => "", 'sent_to_finfect_date' => "",
                                 'updated_at' => date('Y-m-d H:i:s'), 'reference_transaction_id' => "",
                                 'payment_type' => 'bank_failed_payment'
                             ]);
+                        }
                         } else {
 
-
+                            if($received_data->bank_refrence_no == "Value Date Expired")
+                            {
+                                $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
+                                    'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                    'payment_type' => 'bank_failed_payment'
+                                ]);
+                            }
+                            else{
                             $update_ter_data = DB::table('tercouriers')->where('id', $get_data_db[$i]->id)->update([
                                 'status' => 0, 'finfect_response' => $received_data->bank_refrence_no,
                                 'final_payable' => "", 'voucher_code' => "", 'payable_amount' => "", 'sent_to_finfect_date' => "",
                                 'updated_at' => date('Y-m-d H:i:s'), 'refrence_transaction_id' => "",
                                 'payment_type' => 'bank_failed_payment'
                             ]);
+                        }
                         }
 
                         // if ($update_ter_data) {
