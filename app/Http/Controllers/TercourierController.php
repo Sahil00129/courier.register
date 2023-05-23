@@ -479,6 +479,7 @@ class TercourierController extends Controller
     public function download_ter_full_list()
     {
         return Excel::download(new ExportTerFullList, 'courier_ter_list.xlsx');
+        // Excel::store(new ExportTerFullList, 'courier_ter_list.xlsx');
     }
 
     public function download_status_wise_ter($status)
@@ -3691,6 +3692,7 @@ class TercourierController extends Controller
     {
         // unknown_function
         $data = $request->all();
+        // return $data;
         // $update_data['hr_admin_remark']=$data['remarks'];
         // $update_data['sender_name']=$data['emp_name'];
         // $update_data['employee_id']=$data['emp_id'];
@@ -3699,6 +3701,11 @@ class TercourierController extends Controller
         // return $data['emp_id'];
         $get_sender_data = DB::table('sender_details')->where('employee_id', $data['emp_id'])->get();
         $sender_id = $get_sender_data[0]->id;
+
+            if($get_sender_data[0]->ax_id == "" && $get_sender_data[0]->iag_code == "" || $get_sender_data[0]->ax_id == null && $get_sender_data[0]->iag_code == null)
+            {
+                return 0;
+            }
         $get_ter_data = DB::table('tercouriers')->where('id', $id)->get();
         $check_rejected = $get_ter_data[0]->is_rejected;
 
@@ -3706,14 +3713,14 @@ class TercourierController extends Controller
         if ($check_rejected == '1') {
             $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
                 'hr_admin_remark' => $data['remarks'],
-                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'],
+                'sender_name' => $get_sender_data[0]->name, 'employee_id' => $data['emp_id'], 'ax_id' => $get_sender_data[0]->ax_id,
                 'pfu' => $get_sender_data[0]->pfu,
                 'sender_id' => $sender_id, 'status' => 8, 'txn_type' => 'rejected_ter', 'given_to' => 'TER-Team'
             ]);
         } else {
             $tercourier_table = DB::table('tercouriers')->where('id', $id)->update([
                 'hr_admin_remark' => $data['remarks'],
-                'sender_name' => $data['emp_name'], 'employee_id' => $data['emp_id'], 'ax_id' => $data['ax_id'], 'iag_code' => $get_sender_data[0]->iag_code,
+                'sender_name' => $get_sender_data[0]->name, 'employee_id' => $data['emp_id'], 'ax_id' => $get_sender_data[0]->ax_id, 'iag_code' => $get_sender_data[0]->iag_code,
                 'pfu' => $get_sender_data[0]->pfu, 'sender_id' => $sender_id, 'status' => 2, 'given_to' => 'TER-Team'
             ]);
         }

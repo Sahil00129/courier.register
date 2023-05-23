@@ -542,7 +542,7 @@
                                                         :key="sender_all_info.employee_id">
 
                                                     @{{sender_all_info.employee_id}} : @{{sender_all_info.name}} :
-                                                    @{{sender_all_info.ax_id}} : @{{sender_all_info.status}}
+                                                    @{{sender_all_info.ax_id}} : @{{sender_all_info.iag_code}}  : @{{sender_all_info.status}} 
                                                 </option>
                                             </datalist>
                                             <!-- <select
@@ -731,20 +731,31 @@
                 },
                 update_emp_details: function () {
                     if (this.ter_remarks != "" && this.sender_all_info != "") {
+                        var sender_emp_id;
                         const sender_data_split = this.sender_all_info.split(" : ");
                         sender_emp_id = sender_data_split[0];
-                        sender_name = sender_data_split[1];
-                        ax_code = sender_data_split[2];
+                        // sender_name = sender_data_split[1];
+                        // ax_code = sender_data_split[2];
+                        // iag_code = sender_data_split[3];
+                        // if(ax_code == ": Active" || ax_code == ": Blocked"  )
+                        // {
+                        //     swal('error','Ax-id is missing')
+                        //     return 1;
+                        // }
 
                         axios.post('/update_emp_details', {
                             'remarks': this.ter_remarks,
                             'emp_id': sender_emp_id,
-                            'emp_name': sender_name,
-                            'ax_id': ax_code,
+                            // 'emp_name': sender_name,
+                            // 'ax_id': ax_code,
                             'id': this.ter_id
 
                         })
                             .then(response => {
+                                if (!response.data) {
+                                    swal('error', "Ax-id and IAG code missing", 'error')
+                                    // location.reload();
+                                }
                                 if (response.data) {
                                     swal('success', "Ter Id :" + this.ter_id + " has been successfully updated", 'success')
                                     location.reload();
