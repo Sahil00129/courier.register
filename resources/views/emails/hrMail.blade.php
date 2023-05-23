@@ -66,7 +66,7 @@
             </td>
         </tr>
         <tr>
-            <td class="innerCell" valign="top" style="text-align: center;">7-30 Days</td>
+            <td class="innerCell" valign="top" style="text-align: center;">8-30 Days</td>
             <!-- <td class="innerCell" valign="top" style=" text-align: center;">{{$terMailData['SD1_h3_count']}}</td>
             <td class="innerCell" valign="top" style=" text-align: center;">{{$terMailData['MA2_h3_count']}}</td>
             <td class="innerCell" valign="top" style=" text-align: center;">{{$terMailData['SD3_h3_count']}}</td>

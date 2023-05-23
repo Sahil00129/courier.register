@@ -1300,7 +1300,7 @@ class TercourierController extends Controller
                 $from = date_format($date, "Y-m-d");
 
                 $date = date_create($today_date);
-                date_add($date, date_interval_create_from_date_string("-7 days"));
+                date_add($date, date_interval_create_from_date_string("-8 days"));
                 $to = date_format($date, "Y-m-d");
 
             
