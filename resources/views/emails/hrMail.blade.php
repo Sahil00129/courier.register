@@ -261,6 +261,50 @@
         </tr>
 
         
+        <tr>
+            <td class="innerCell" valign="top" style=" text-align: center;" rowspan="2">Bank Failed Payments</td>
+            <td class="innerCell" valign="top" style=" text-align: center;">24 Hrs</td>
+            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD1_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA2_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD3_u1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA4_u1_count']}}
+            </td> -->
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['total_bf1_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['bank_failed_ids_1']}}</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="innerCell" valign="top" style=" text-align: center;">>24 Hrs</td>
+            <!-- <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD1_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA2_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['SD3_u2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['MA4_u2_count']}}
+            </td> -->
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                {{$terMailData['total_bf2_count']}}
+            </td>
+            <td class="innerCell" valign="top" style=" text-align: center;">
+                <p style="width: 100%; word-wrap: break-word;">{{$terMailData['bank_failed_ids_2']}}</p>
+            </td>
+        </tr>
         
 
 
