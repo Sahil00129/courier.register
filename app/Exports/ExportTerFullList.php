@@ -22,12 +22,15 @@ class ExportTerFullList implements FromCollection, WithHeadings
             $sum1 = 0;
             $pfu = "";
             $status = $data[$i]->status;
+            $payment_status = $data[$i]->payment_status;
             if ($status == 2) {
                 $actual_status = "Handover";
             } else if ($status == 3) {
                 $actual_status = "Sent to FinFect";
-            } else if ($status == 4) {
+            } else if ($status == 4 && $payment_status == 2) {
                 $actual_status = "Pay Later";
+            } else if ($status == 4 && $payment_status == 3) {
+                $actual_status = "F&F Pay";
             } else if ($status == 5) {
                 $actual_status = "Paid";
             } else if ($status == 6) {
@@ -38,8 +41,10 @@ class ExportTerFullList implements FromCollection, WithHeadings
                 $actual_status = "Rejected";
             } else if ($status == 9) {
                 $actual_status = "Unknown";
+            } else if ($status == 11) {
+                $actual_status = "Handover Created";
             } else if ($status == 12) {
-                $actual_status = "Unit Change";
+                $actual_status = "Unit Changed";
             } else if ($status == 13) {
                 $actual_status = "Payment Reject";
             } else if ($status == 0) {
@@ -117,7 +122,7 @@ class ExportTerFullList implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            "UN ID", "Status", "Date of Receipt", "Handover Date","Verify TER Date", "Sent to Finfect date", "Finfect Response",
+            "UN ID", "Status", "Date of Receipt", "Handover Date", "Verify TER Date", "Sent to Finfect date", "Finfect Response",
             "Paid from Finfect Date", "TER  Amount Received", "AX Payable Amount", "Amount Paid From Finfect", "Deductions", "Sender Name", "Ax ID", "Employee ID", "Location", "Company Name",
             "Ter Period From", "TER Period To", "Courier Name",
             "Docket No", "Docket Date", "AX Voucher Code"
