@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('terportal_update_status', [TercourierController::class, 'terportal_check']);
 
 Route::get('get-employee-list', [EmployeeController::class, 'getEmployee']);
-Route::get('get-employee-detail', [EmployeeController::class, 'getEmployeeDetail']);
+Route::get('get-employee-detail/{id}', [EmployeeController::class, 'getEmployeeDetail']);
 
