@@ -29,7 +29,7 @@ class EmployeeController extends Controller
 
     public function getEmployeeDetail($emp_id) {
         try{
-            $query = Sender::where('id',$emp_id)->select('id','name','employee_id','grade','status','personal_email_id')->get();
+            $query = Sender::where('id',$emp_id)->select('id','name','employee_id','grade','status','personal_email_id')->first();
             if($query){
                 $data = $query;
                 $message = "Employee fetched Successfully";
