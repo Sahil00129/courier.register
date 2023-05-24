@@ -11,7 +11,7 @@ class EmployeeController extends Controller
 {
     public function getEmployee(){
         try{
-            $query = Sender::select('id','name','employee_id','grade','status')->get();
+            $query = Sender::select('id','name','employee_id','grade','status','personal_email_id')->get();
             if($query){
                 $data = $query;
                 $message = "Employee fetched Successfully";
