@@ -112,6 +112,7 @@
 
 
 
+
     <div class="layout-px-spacing">
 
         @if ($role == 'admin' || $role == 'reception')
@@ -158,7 +159,7 @@
         @elseif($role=="ter user" || $role=="admin user" || $role=="hr admin")
             {{-- ----for HR & TER user---- --}}
 
-            @if(true)
+            @if(false)
             <div class="row layout-top-spacing">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
                     <div class="widget widget-four">

@@ -32,6 +32,7 @@ use App\Mail\SendMail;
 use App\Models\MailnotSent;
 use PDF;
 
+
 date_default_timezone_set('Asia/Kolkata');
 ini_set('max_execution_time', -1);
 
@@ -479,7 +480,48 @@ class TercourierController extends Controller
     public function download_ter_full_list()
     {
         return Excel::download(new ExportTerFullList, 'courier_ter_list.xlsx');
-        // Excel::store(new ExportTerFullList, 'courier_ter_list.xlsx');
+    }
+
+    public function email_ter_list()
+    {
+        Excel::store(new ExportTerFullList, 'courier_ter_list.xlsx');
+
+        $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        $data["title"] = "TER List File for ".date('d-m-Y');
+        $data["body"] = "Please Find the file attachment for ter List";
+ 
+        $files = [
+            public_path('storage') => storage_path('app/courier_ter_list.xlsx'),
+        ];
+  
+        Mail::send('emails.sendTerData', $data, function($message)use($data, $files) {
+            $message->to($data["email"], $data["email"])
+                    ->subject($data["title"])
+                    ->cc('sahildhruv1@gmail.com');
+ 
+            foreach ($files as $file){
+                $message->attach($file);
+            }
+            
+        });
+ 
+        dd('Mail sent successfully');
+    
+
+
+        // Mail::mailer('smtp2')->send('emails.payadvicemail', $data, function ($message) use ($data, $pdf) {
+        //     $message->to($data["email"], $data["email"])
+        //         ->from($address = 'do-not-reply@frontierag.com', $name = 'Frontiers No Reply')
+        //         ->subject($data["title"])
+        //         ->attachData($pdf->output(), "payment_advice_" . $data['id'] . ".pdf");
+        // });
+
+        // Mail::to(['dhroov.kanwar@eternitysolutions.net'])->send(new SendMail($terMailData));
+
+        // Mail::to(['dhroov.kanwar@eternitysolutions.net'])->cc(['sahildhruv1@gmail.com'])
+        // ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
+
+        return "mail_sent";
     }
 
     public function download_status_wise_ter($status)

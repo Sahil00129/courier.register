@@ -163,6 +163,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/get_searched_data', [TercourierController::class, 'get_searched_data']);
     Route::post('/get_file_name', [TercourierController::class, 'get_file_name']);
     Route::get('download_ter_full_list', [TercourierController::class, 'download_ter_full_list']);
+    Route::get('email_ter_list', [TercourierController::class, 'email_ter_list']);
     Route::get('download_handshake_report', [TercourierController::class, 'download_handshake_report']);
     Route::get('download_reception_list', [TercourierController::class, 'download_reception_list']);
     Route::post('/cancel_ter', [TercourierController::class, 'cancel_ter']);
