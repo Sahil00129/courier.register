@@ -478,7 +478,6 @@
         };
 
 
-
         const reloadPage = () => {
             exitFlag = false
             location.reload();
