@@ -1201,7 +1201,7 @@ class TercourierController extends Controller
         $live_host_name = request()->getHttpHost();
         // $live_host_name="ds";
 
-        if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+        if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
             return "not possible";
         } else {
             $today_date = date('Y-m-d');
@@ -1984,7 +1984,7 @@ class TercourierController extends Controller
             // $id="1088";
             $live_host_name = request()->getHttpHost();
 
-            if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+            if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
                 $url = 'https://stagging.finfect.biz/api/get_payment_response/' . $id . '/' . $type;
             } else {
                 $url = 'https://finfect.biz/api/get_payment_response/' . $id . '/' . $type;
@@ -2036,7 +2036,7 @@ class TercourierController extends Controller
                         ]);
                         if ($update_ter_data) {
 
-                            if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+                            if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
                             } else {
 
                                 self::send_payment_advice($get_data_db[$i]->id);
@@ -3845,7 +3845,7 @@ class TercourierController extends Controller
 
         $live_host_name = request()->getHttpHost();
 
-        if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+        if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
             return 1;
         } else {
 
@@ -4035,7 +4035,7 @@ class TercourierController extends Controller
         $live_host_name = request()->getHttpHost();
 
 
-        if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+        if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
             return "not possible";
         }
         //  2446,2437

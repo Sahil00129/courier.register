@@ -508,7 +508,7 @@ class MobileController extends Controller
                 $live_host_name = request()->getHttpHost();
 
                 // $live_host_name="Ds";
-                if ($live_host_name == 'localhost:8000' || $live_host_name == "test-courier.easemyorder.com") {
+                if ($live_host_name == 'localhost:8000' || $live_host_name == "testingter.easemyorder.com") {
                     // test-courier url
                     $send_url = "https://rb.gy/crei0";
                 } else {
