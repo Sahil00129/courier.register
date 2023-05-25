@@ -486,7 +486,7 @@ class TercourierController extends Controller
     {
         Excel::store(new ExportTerFullList, 'courier_ter_list.xlsx');
 
-        $data["email"] = "dhroov.kanwar@eternitysolutions.net";
+        $data["email"] = "executive.ma@frontierag.com";
         $data["title"] = "TER List File for ".date('d-m-Y');
         $data["body"] = "Please Find the file attachment for ter List";
  
@@ -497,7 +497,7 @@ class TercourierController extends Controller
         Mail::send('emails.sendTerData', $data, function($message)use($data, $files) {
             $message->to($data["email"], $data["email"])
                     ->subject($data["title"])
-                    ->cc('sahildhruv1@gmail.com');
+                    ->cc('itsupport@frontierag.com');
  
             foreach ($files as $file){
                 $message->attach($file);
@@ -1942,7 +1942,7 @@ class TercourierController extends Controller
 
 
             Mail::to(['ter@frontierag.com', 'hrd@frontierag.com','hrops@frontierag.com', 'sdaccounts@frontierag.com'])->cc(['shilpaca@frontierag.com', 'vidur@frontierag.com', 'shailendra@frontierag.com'])
-                ->bcc('itsupport@frontierag.com')->send(new SendMail($terMailData));
+                ->bcc(['itsupport@frontierag.com','executive.ma@frontierag.com'])->send(new SendMail($terMailData));
 
             // Mail::to('vineet.thakur@eternitysolutions.net')->cc(['sahil.thakur@eternitysolutions.net', 'dhroov.kanwar@eternitysolutions.net'])->send(new SendMail($terMailData));
 
