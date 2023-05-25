@@ -533,7 +533,7 @@
                             <button id="trackUnIdButton"
                                     class="trackUnIdSection themeButton animate__animated animate__slideInUp loadingButton active"
                                     @click="trackunid()" disabled>
-                                <span class="normalText">Track Un Id</span>
+                                <span class="normalText">Track UNID</span>
                                 <span class="loadingText">Fetching Info...</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -1120,10 +1120,16 @@
 
                                 if (this.tercourier_data.status == 5) {
                                     this.payment_receipt = true;
-                                    this.src_img = "{{asset('assets/img/paid-1.png')}} ";
-                                } else {
+                                    this.src_img = "{{asset('assets/img/paid.png')}} ";
+                                } else if (this.tercourier_data.status == 14) {
                                     this.payment_receipt = false;
-                                    this.src_img = "{{asset('assets/img/processing-1.png')}} ";
+                                    this.src_img = "{{asset('assets/img/applied.png')}} ";
+                                } else if (this.tercourier_data.status == 1) {
+                                    this.payment_receipt = false;
+                                    this.src_img = "{{asset('assets/img/received.png')}} ";
+                                }else {
+                                    this.payment_receipt = false;
+                                    this.src_img = "{{asset('assets/img/processing.png')}} ";
                                 }
                                 $('.trackUnIdSection').removeClass('active');
                                 $('.trackUnIdSection').addClass('inActive');
