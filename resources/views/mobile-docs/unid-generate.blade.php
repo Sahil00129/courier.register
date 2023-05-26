@@ -375,7 +375,7 @@
                                 <img :src="src_img" alt="demo Illustration" class="trackingResultSection animate__animated animate__heartBeat thankYouIllustration inlineIllustration inActive" style="margin: 1rem auto" />
 
                                 <p class="item"><span>UNID </span> <span class="strong">: @{{tercourier_data.id}}</span></p>
-                                <p class="item"><span>Submitted On </span> <span class="strong" v-if="tercourier_data.tercourier">: @{{ter_submit_date}}
+                                <p class="item"><span>Submitted On </span> <span class="strong">: @{{ter_submit_date}}
                                     </span></p>
                                 <p class="item"><span>For Month </span> <span class="strong">: @{{ter_month}}, @{{get_current_year}}</span>
                                 </p>
@@ -964,7 +964,7 @@
                 },
                 trackunid: function() {
 
-                    if (this.unid_no.length > 3) {
+                    if (this.unid_no.length > 0) {
                         $('#trackUnIdButton').addClass('functioning');
                         $('.loadingBox').addClass('active');
                         $('.loadingBox').removeClass('inActive');
@@ -987,17 +987,24 @@
                                 if (response.data[0] == "100") {
                                     // console.log(response.data[1][0]);
                                     this.tercourier_data = response.data[1][0];
+                                    // console.log(this.tercourier_data)
                                     // this.ter_submit_date = this.tercourier_data.tercourier.unid_generated_date;
-                                    if (this.tercourier_data != "") {
-                                        const date_split = this.tercourier_data.tercourier.unid_generated_date.split("-");
+
+                                    if (this.tercourier_data != "" || this.tercourier_data != null) {
+                                        var date_split;
+                                   
+                                        if(this.tercourier_data.tercourier != null)
+                                        {  
+                                         date_split = this.tercourier_data.tercourier.unid_generated_date.split("-");
+                                        }else{
+                                            date_split = this.tercourier_data.date_of_receipt.split("-");
+                                        }
+                  
                                         let day, month_num, ter_date, ter_month_name;
                                         month_num = date_split[1];
                                         day = this.get_month_name(month_num);
                                         ter_date = this.tercourier_data.terto_date.split("-");
-
                                         ter_month_name = this.get_month_name(ter_date[1]);
-
-
                                         this.ter_submit_date = date_split[2] + '-' + day + '-' + date_split[0];
                                         this.ter_month = ter_month_name;
                                         this.amount_in_words = inWords(this.tercourier_data.amount);
@@ -1050,7 +1057,7 @@
 
                 },
                 enableTrackButton: function() {
-                    if ($('#unId').val().length > 3)
+                    if ($('#unId').val().length > 0)
                         $("#trackUnIdButton").removeAttr('disabled');
                     else
                         $("#trackUnIdButton").attr('disabled', true);
