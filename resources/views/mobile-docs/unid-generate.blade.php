@@ -1026,6 +1026,9 @@
                                     } else if (this.tercourier_data.status == 1) {
                                         this.payment_receipt = false;
                                         this.src_img = "{{asset('assets/img/received.png')}} ";
+                                    } else if (this.tercourier_data.status == 8) {
+                                        this.payment_receipt = false;
+                                        this.src_img = "{{asset('assets/img/rejected.png')}} ";
                                     } else {
                                         this.payment_receipt = false;
                                         this.src_img = "{{asset('assets/img/processing.png')}} ";
