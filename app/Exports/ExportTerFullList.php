@@ -13,7 +13,7 @@ class ExportTerFullList implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('ter_type', 2)->get();
+        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('ter_type', 2)->whereIn('status', ['2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13','0'])->get();
 
         $size = sizeof($data);
         $arr_instrulist_excel[] = array();
