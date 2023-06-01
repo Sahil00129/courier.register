@@ -13,7 +13,7 @@ class Po extends Model
         'total_tax_amount','gst_rate','gst_amount','source_po_num','erp_num','state','crop','amm_agm','po_date','product','initial_po_value'
     ];
 
-    // status 1 is open, status 2 is semiclosed, status 3 is closed, status 4 is cancelled
+    // status 1 is open, status 2 is semiclosed, status 3 is closed, status 4 is cancelled,status =5 is unknown
 
     public function PoItems()
     {

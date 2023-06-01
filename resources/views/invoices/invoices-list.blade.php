@@ -432,6 +432,7 @@
                             <select id="itype" class="form-control form-control-sm form-control-sm-30px" style="width: 150px;" v-model="searched_status" @change="get_filter_status_data()">
                                 <option selected value="all">All</option>
                                 @if($role =="reception")<option value="1"> Received at Reception</option>@endif
+                                <option value="12">Unknown Invoice</option>
                                 <option value="11">Handover to Sourcing</option>
                                 <option value="2">Received at Sourcing</option>
                                 <option value="3">Verified at Sourcing</option>
@@ -507,8 +508,9 @@
                                     @endif
                                 </td>
                                 @endif
+                                @if($tercourier->status ==1 && $role== "reception" || $tercourier->status ==2 && $role== "sourcing" || $tercourier->status ==3 && $role== "sourcing")
                                 <td width="100px" style="cursor:pointer">
-                                    <div class="d-flex align-items-center" style="gap: 4px;">
+                                    <div class="d-flex align-items-center" style="gap: 4px;cursor:pointer" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(<?php echo $tercourier->id ?>)">
                                         {{ $tercourier->id }}
 
                                         <!-- <div class="uid">
@@ -541,6 +543,42 @@
 
                                     </div>
                                 </td>
+                                @else
+                                <td width="100px" style="cursor:pointer">
+                                    <div class="d-flex align-items-center" style="gap: 4px;cursor:default">
+                                        {{ $tercourier->id }}
+
+                                        <!-- <div class="uid">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                            <div class="terDetails">
+                                                <p>Given to <strong>{{ $tercourier->given_to ?? '-' }}</strong> on
+                                                    <strong>{{ Helper::ShowFormatDate($tercourier->delivery_date) }}</strong>
+                                                </p>
+                                                <div class="courier d-flex align-items-center" style="gap: 1rem">
+                                                    <p><strong>Courier
+                                                            Name:</strong> {{ ucwords(@$tercourier->CourierCompany->courier_name) ?? '-' }}
+                                                    </p> |
+                                                    <p><strong>Docket No.:</strong> {{ $tercourier->docket_no ?? '-' }}
+                                                    </p>
+                                                    |
+                                                    <p><strong>Docket
+                                                            Date:</strong> {{ Helper::ShowFormatDate($tercourier->docket_date) }}
+                                                    </p>
+                                                </div>
+                                                <p><strong>Remarks:</strong> {{ ucfirst($tercourier->sourcing_remarks) ?? '-' }}
+                                                </p>
+                                                <p><strong>Time taken:</strong> {{ $tercourier->recp_entry_time ?? '-' }} hrs
+                                                </p>
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+                                </td>
+                                @endif
                                 <?php
 
                                 if ($tercourier->status == 1) {
@@ -573,6 +611,12 @@
                                 } elseif ($tercourier->status == 9) {
                                     $status = 'Invoice Scanned';
                                     $class = 'btn-success';
+                                } elseif ($tercourier->status == 12) {
+                                    $status = 'Unknown';
+                                    $class = 'btn-secondary';
+                                } elseif ($tercourier->status == 13) {
+                                    $status = 'Cancel';
+                                    $class = 'btn-danger';
                                 } else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
@@ -703,7 +747,7 @@
                                 <td>
                                     <div class="d-flex align-items-center justify-content-center" style="gap: 8px">
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)" style="height: 16px; width: 16px">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(<?php echo $tercourier->id ?>)" style="height: 16px; width: 16px">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                             <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
@@ -945,10 +989,10 @@
                             </td>
                             <td v-else>
                                 <div class="action d-flex justify-content-center align-items-center" style="gap: 8px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(tercourier.id)" style="height: 16px; width: 16px">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye" data-toggle="modal" data-target="#viewFileModal" v-on:click="open_file_view_modal(tercourier.id)" style="height: 16px; width: 16px">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380; cursor: not-allowed !important;">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -968,6 +1012,40 @@
                     </svg>
                     <span class="text">Invoice Courier</span>
                 </a>
+
+                <!-- Cancel Invoice Modal -->
+                <div class="modal fade show" id="cancelModal" v-if="cancel_ter_modal" tabindex="-1" role="dialog" aria-labelledby="camncelModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="camncelModalLabel">Cancel UNID</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Ter ID:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="unid" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label pb-0">Remarks:</label>
+                                        <input type="text" class="form-control form-control-sm" id="recipient-name" v-model="cancel_remarks">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" style="border-radius: 8px;" @click="cancel_invoice()" data-dismiss="modal">Save changes
+                                </button>
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Cancel Invoice -->
 
 
                 <!-- Modal -->
@@ -1256,6 +1334,10 @@
             invoice_id: "",
             invImages: [],
             image_flag: false,
+            unid: "",
+            cancel_ter_modal: "",
+            cancel_remarks:"",
+
 
 
 
@@ -1268,6 +1350,32 @@
             // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
+            cancel_invoice: function() {
+                if (this.cancel_remarks != "") {
+                    axios.post('/cancel_invoice_with_po', {
+                            'unid': this.unid,
+                            'cancel_remarks': this.cancel_remarks
+                        })
+                        .then(response => {
+                            if (response.data) {
+                                swal('success', "UNID :" + this.unid + " has been cancelled", 'success')
+                                location.reload();
+                            } else {
+                                swal('error', "System Error", 'error')
+                                this.cancel_ter_modal = false;
+                                this.unid = "";
+                            }
+
+                        }).catch(error => {
+
+                            swal('error', error, 'error')
+                            this.cancel_ter_modal = false;
+                            this.ter_id = "";
+                        })
+                } else {
+                    swal('error', "Remarks needs to be added", 'error')
+                }
+            },
             trim_date(date) {
                 const changed_date = date.split("T");
                 return changed_date[0];
@@ -1276,6 +1384,10 @@
                 this.unid = id;
                 this.ter_modal = true;
                 // alert(this.unid)
+            },
+            open_cancel_ter_modal: function(unid) {
+                this.unid = unid;
+                this.cancel_ter_modal = true;
             },
             update_data_invoice: function() {
                 var po_id;

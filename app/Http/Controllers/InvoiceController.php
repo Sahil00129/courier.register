@@ -46,7 +46,7 @@ class InvoiceController extends Controller
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name == "sourcing") {
                 $role = "sourcing";
-                $tercouriers = $query->whereIn('status', ['2', '3', '4', '11'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['2', '3', '4', '11', '12', '13'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
             } else if ($name == "accounts") {
                 $role = "accounts";
                 $tercouriers = $query->whereIn('status', ['4', '5', '6', '7'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
@@ -55,7 +55,7 @@ class InvoiceController extends Controller
                 $tercouriers = $query->whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
             } else if ($name == "reception") {
                 $role = "reception";
-                $tercouriers = $query->whereIn('status', ['1', '11'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+                $tercouriers = $query->whereIn('status', ['1', '11', '13'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
             } else if ($name == "scanning") {
                 $role = "scanning";
                 $tercouriers = $query->whereIn('status', ['7', '8', '9'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
@@ -67,19 +67,16 @@ class InvoiceController extends Controller
 
             // echo'<pre>'; print_r($tercouriers); die;
 
-            $check_eligible_for_payments = $query->where('status',3)->where('ter_type', 1)->get();
-          
-            for($i=0;$i<sizeof($check_eligible_for_payments);$i++)
-            {
-                
-               $id = $check_eligible_for_payments[$i]->id;
-               self::check_eligible_for_payment($id);
+            $check_eligible_for_payments = $query->where('status', 3)->where('ter_type', 1)->get();
 
+            for ($i = 0; $i < sizeof($check_eligible_for_payments); $i++) {
+
+                $id = $check_eligible_for_payments[$i]->id;
+                self::check_eligible_for_payment($id);
             }
-            
         }
 
-        //  echo'<pre>'; print_r($role); die;
+        //  echo'<pre>'; print_r($tercouriers); die;
         return view('invoices.invoices-list', ['tercouriers' => $tercouriers, 'role' => $role, 'name' => $name, 'couriers' => $couriers]);
 
 
@@ -143,7 +140,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $pos =  Po::whereIn('status', [1,2])->orderby('id', 'ASC')->get();
+        $pos =  Po::whereIn('status', [1, 2, 5])->orderby('id', 'ASC')->get();
         $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
 
 
@@ -176,36 +173,39 @@ class InvoiceController extends Controller
             return response()->json($response);
         }
 
-        if (!empty($request->po_id)) {
-            $saveinvoice['po_id'] = $request->po_id;
-        }
+
 
         $data = $request->all();
 
-        $size = sizeof($data['scanning_file']);
-        $save_file_names = array();
+        if (!empty($request->scanning_file)) {
+            $size = sizeof($data['scanning_file']);
+            $save_file_names = array();
 
 
-        for ($i = 0; $i < $size; $i++) {
-            $image = $data['scanning_file'][$i];
-            // $fileName = $image->getClientOriginalName();
-            // $save_file_names[$i] = $fileName;
-            // $destinationPath = 'uploads/scan_doc';
-            // $image->move($destinationPath, $fileName);
+            for ($i = 0; $i < $size; $i++) {
+                $image = $data['scanning_file'][$i];
+                // $fileName = $image->getClientOriginalName();
+                // $save_file_names[$i] = $fileName;
+                // $destinationPath = 'uploads/scan_doc';
+                // $image->move($destinationPath, $fileName);
 
-           
-            $path = Storage::disk('s3')->put('invoice_images', $image);
-            $get_real_names = explode('/', $path);
-            $save_file_names[$i] = $get_real_names[1];
-            $s3_path = Storage::disk('s3')->url($path);
+
+                $path = Storage::disk('s3')->put('invoice_images', $image);
+                $get_real_names = explode('/', $path);
+                $save_file_names[$i] = $get_real_names[1];
+                $s3_path = Storage::disk('s3')->url($path);
+            }
+            $file_real_names = implode(',', $save_file_names);
+            // return $file_real_names;
+            $saveinvoice['file_name'] = $file_real_names;
         }
-        $file_real_names = implode(',', $save_file_names);
-// return $file_real_names;
 
 
-
+        if (!empty($request->po_id)) {
+            $saveinvoice['po_id'] = $request->po_id;
+        }
         $saveinvoice['sender_id'] = $request->po_id;
-        $saveinvoice['file_name'] = $file_real_names;
+
 
         $get_all_po = DB::table('pos')->where('id', $request->po_id)->get();
         $saveinvoice['employee_id'] = $get_all_po[0]->vendor_code;
@@ -214,29 +214,35 @@ class InvoiceController extends Controller
         $saveinvoice['pfu'] = $get_all_po[0]->unit;
         $saveinvoice['po_value'] = $get_all_po[0]->po_value;
 
-        $po_data=array();
+        $po_data = array();
+
 
         $po_value = (int)$saveinvoice['po_value'];
-        $total_amt =(int)$request->total_amount;
+        $total_amt = (int)$request->total_amount;
 
-        if($po_value >  $total_amt)
-        {
-            $po_data['po_value'] = $po_value - $total_amt;
-            $po_data['status']=2;
+        if ($get_all_po[0]->status != 5) {
+
+
+
+            if ($po_value >  $total_amt) {
+                $po_data['po_value'] = $po_value - $total_amt;
+                $po_data['status'] = 2;
+            }
+
+
+
+            if ($total_amt >= $po_value) {
+                $po_data['po_value'] = $total_amt - $po_value;
+                $po_data['status'] = 3;
+            }
+            $saveinvoice['copy_status'] = 2;
+        } else {
+            $po_data['po_value'] = "unknown";
+            $po_data['status'] = 5;
+            $saveinvoice['copy_status'] = 12;
         }
 
- 
-
-        if($total_amt >= $po_value)
-        {
-            $po_data['po_value'] = $total_amt - $po_value;
-            $po_data['status']=3;
-           
-        }
-
-        
-
-        $update_po = DB::table('pos')->where('id', $request->po_id)->update(['status'=>$po_data['status'],'po_value'=>$po_data['po_value']]);
+        $update_po = DB::table('pos')->where('id', $request->po_id)->update(['status' => $po_data['status'], 'po_value' => $po_data['po_value']]);
 
 
 
@@ -268,11 +274,10 @@ class InvoiceController extends Controller
 
         $saveinvoice['ter_type'] = 1;
         $saveinvoice['status'] = 1;
+        // return $saveinvoice;
 
         $savepo = Tercourier::create($saveinvoice);
-        if($savepo)
-        {
-
+        if ($savepo) {
         }
         // return $s3_path;
         $response['page'] = 'create-invoice';
@@ -379,37 +384,33 @@ class InvoiceController extends Controller
     {
         $data = $request->all();
         $id = $data['unid'];
-        $get_data=DB::table('tercouriers')->where('id',$id)->get();
-        $get_file_names=$get_data[0]->file_name;
+        $get_data = DB::table('tercouriers')->where('id', $id)->get();
+        $get_file_names = $get_data[0]->file_name;
         // return $get_file_names;
-            
+
         $size = sizeof($data['scanning_file']);
         $save_file_names = array();
-        
+
         // return sizeof($save_file_names);
-        if(!empty($get_file_names))
-        {
-        $get_old_uploaded = explode(',', $get_file_names);
-        $old_size=sizeof($get_old_uploaded);
-        for($j=0;$j<$old_size;$j++)
-        {
-            // return sizeof($get_old_uploaded);
-            $save_file_names[$j] = $get_old_uploaded[$j];
-
+        if (!empty($get_file_names)) {
+            $get_old_uploaded = explode(',', $get_file_names);
+            $old_size = sizeof($get_old_uploaded);
+            for ($j = 0; $j < $old_size; $j++) {
+                // return sizeof($get_old_uploaded);
+                $save_file_names[$j] = $get_old_uploaded[$j];
+            }
         }
 
-        }
-      
 
         // return $save_file_names;
-      
+
         // $file_real_names = implode(',', $save_file_names);
-    
 
-// print_r("FDs");
-// print_r($save_file_names);
 
-$save_new_file_names = array();
+        // print_r("FDs");
+        // print_r($save_file_names);
+
+        $save_new_file_names = array();
 
         for ($i = 0; $i < $size; $i++) {
             $image = $data['scanning_file'][$i];
@@ -423,31 +424,31 @@ $save_new_file_names = array();
             $s3_path = Storage::disk('s3')->url($path);
         }
         // return [$save_file_names,$save_new_file_names];
-       $updated_file_names = array_merge($save_file_names,$save_new_file_names);
-    //    return $updated_file_names;
-      
-    $file_real_names = implode(',', $updated_file_names);
-    // return $file_real_names;
+        $updated_file_names = array_merge($save_file_names, $save_new_file_names);
+        //    return $updated_file_names;
+
+        $file_real_names = implode(',', $updated_file_names);
+        // return $file_real_names;
         $submit_sourcing_remarks = $data['remarks'];
         // $saveinvoice['file_name'] = $file_real_names;
 
-    
-        $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3','file_name' => $file_real_names]);
+
+        $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
         return $update_table;
     }
 
     public static function check_eligible_for_payment($id)
     {
-        $get_po_id=DB::table('tercouriers')->where('id',$id)->get();
-        $po_id=$get_po_id[0]->po_id;
-        $get_vendor_po_data=DB::table('pos')->where('id',$po_id)->get();
+        $get_po_id = DB::table('tercouriers')->where('id', $id)->get();
+        $po_id = $get_po_id[0]->po_id;
+        $get_vendor_po_data = DB::table('pos')->where('id', $po_id)->get();
 
-       $vendor_unique_id = $get_vendor_po_data[0]->vendor_unique_id;
+        $vendor_unique_id = $get_vendor_po_data[0]->vendor_unique_id;
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/checkVendorStatus/'.$vendor_unique_id,
+            CURLOPT_URL => 'https://beta.finfect.biz/api/checkVendorStatus/' . $vendor_unique_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -460,22 +461,19 @@ $save_new_file_names = array();
         $response = curl_exec($curl);
 
         curl_close($curl);
-        $res=json_decode($response);
-       
-    //    dd($response);
-       $t= DB::table('tercouriers')->where('id',$id)->update(['vapi_res' => $response]);
+        $res = json_decode($response);
+
+        //    dd($response);
+        $t = DB::table('tercouriers')->where('id', $id)->update(['vapi_res' => $response]);
         // return $t;
         // $res->status=1;
-       if($res->status == 1)
-       {
-        DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '0']);
-         return 1;
-       }
-       else
-       {
-        DB::table('tercouriers')->where('id',$id)->update(['not_eligible' => '1']);
-        return 0;
-       }
+        if ($res->status == 1) {
+            DB::table('tercouriers')->where('id', $id)->update(['not_eligible' => '0']);
+            return 1;
+        } else {
+            DB::table('tercouriers')->where('id', $id)->update(['not_eligible' => '1']);
+            return 0;
+        }
     }
 
     public function handover_invoices_document(Request $request)
@@ -491,12 +489,11 @@ $save_new_file_names = array();
             for ($i = 0; $i < sizeof($new_data); $i++) {
                 // echo "<pre>";
                 $id = $new_data[$i];
-               $res= self::check_eligible_for_payment($id);
-            //    return $res;
-               if($res == 0)
-               {
-                unset($new_data[$i]);
-               }
+                $res = self::check_eligible_for_payment($id);
+                //    return $res;
+                if ($res == 0) {
+                    unset($new_data[$i]);
+                }
             }
         }
         $info = Tercourier::handover_invoice($new_data, $log_in_user_id, $log_in_user_name, $user_type);
@@ -585,6 +582,100 @@ $save_new_file_names = array();
     public function check_invoice_paid_status($id)
     {
         $check_invoice = DB::table('tercouriers')->where('id', $id)->update(['status' => '6']);
+    }
+
+    public function cancel_invoice(Request $request)
+    {
+
+        $req_param = $request->all();
+        $data['remarks'] = $req_param['cancel_remarks'];
+        $data['updated_id'] = $req_param['unid'];
+        $get_old_status = DB::table('tercouriers')->select('status')->where('id', $req_param['unid'])->get();
+        if ($get_old_status[0]->status == 1) {
+            $data['old_status'] = "Received at Reception";
+        } else if ($get_old_status[0]->status == 2) {
+            $data['old_status'] = "Handover";
+        } else if ($get_old_status[0]->status == 0) {
+            $data['old_status'] = "Failed";
+        } else if ($get_old_status[0]->status == 12) {
+            $data['old_status'] = "Unknown";
+        }
+        $data['updated_date'] = date('Y-m-d');
+        $details = Auth::user();
+        $data['updated_by_user_id'] = $details->id;
+        $data['updated_by_user_name'] = $details->name;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        if ($data['remarks'] != "") {
+            $response = DB::table('tercouriers')->where('id', $req_param['unid'])->update([
+                "status" => "13", "updated_by_id" => $data['updated_by_user_id'],
+                "updated_by_name" => $data['updated_by_user_name'], 'updated_at' => $data['updated_at']
+            ]);
+            if ($response) {
+                $res = DB::table('ter_data_cancel')->insert($data);
+                return $res;
+            }
+        } else {
+            $res = 0;
+            return $res;
+        }
+    }
+
+    public function cancel_invoice_with_po(Request $request)
+    {
+
+        $req_param = $request->all();
+        $data['remarks'] = $req_param['cancel_remarks'];
+        $data['updated_id'] = $req_param['unid'];
+        $get_old_status = DB::table('tercouriers')->select('*')->where('id', $req_param['unid'])->get();
+        // return $get_old_status[0];
+        if ($get_old_status[0]->status == 1) {
+            $data['old_status'] = "Received at Reception";
+        } else if ($get_old_status[0]->status == 2) {
+            $data['old_status'] = "Received at Sourcing";
+        } else if ($get_old_status[0]->status == 3) {
+            $data['old_status'] = "Verified at Sourcing";
+        } else if ($get_old_status[0]->status == 12) {
+            $data['old_status'] = "Unknown";
+        }
+        $data['updated_date'] = date('Y-m-d');
+        $details = Auth::user();
+        $data['updated_by_user_id'] = $details->id;
+        $data['updated_by_user_name'] = $details->name;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        if ($get_old_status[0]->employee_id != "unknown_code") {
+            $get_po_details = DB::table('pos')->where('id', $get_old_status[0]->po_id)->get();
+            $updated_po_value = $get_po_details[0]->po_value + $get_old_status[0]->total_amount;
+            $data['po_id'] = $get_po_details[0]->id;
+            $data['amount_adjusted'] = $get_old_status[0]->total_amount;
+            $data['updated_po_amount'] = $updated_po_value;
+        }
+
+
+        if ($data['remarks'] != "") {
+            $response = DB::table('tercouriers')->where('id', $req_param['unid'])->update([
+                "status" => "13", "updated_by_id" => $data['updated_by_user_id'],
+                "updated_by_name" => $data['updated_by_user_name'], 'updated_at' => $data['updated_at']
+            ]);
+            if ($response) {
+                if ($get_old_status[0]->employee_id != "unknown_code") {
+                $po_table = DB::table('pos')->where('id', $data['po_id'])->update([
+                    "po_value" => $updated_po_value
+                ]);
+            }else{
+                $po_table = 1;
+            }
+                if ($po_table) {
+                    $res = DB::table('ter_data_cancel')->insert($data);
+                    return $res;
+                }
+            }
+        } else {
+            $res = 0;
+            return $res;
+        }
     }
 
 
@@ -759,5 +850,24 @@ $save_new_file_names = array();
     public function download_vendor_list()
     {
         return Excel::download(new ExportVendorList, 'vendor_list.xlsx');
+    }
+
+    public function show_unknown_invoice(Request $request)
+    {
+
+        if (Auth::check()) {
+            $query = Tercourier::query();
+            $user = Auth::user();
+            $data = json_decode(json_encode($user));
+            $name = $data->name;
+            // return $name;
+
+            $tercouriers = $query->where('ter_type', 1)->where('status', 12)->where('txn_type', "unknown_invoice")->orderby('id', 'ASC')->get();
+
+            // echo'<pre>'; print_r($tercouriers->status); die;
+            // return view('invoices.invoices-list.blade', ['tercouriers' => $tercouriers, 'role' => $name]);
+            return view('invoices.unknown-invoice', ['tercouriers' => $tercouriers, 'role' => $name]);
+        }
+        //    echo'<pre>'; print_r($name); die;
     }
 }

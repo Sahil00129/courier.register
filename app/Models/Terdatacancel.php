@@ -10,7 +10,8 @@ class Terdatacancel extends Model
     use HasFactory;
     protected $table = 'ter_data_cancel';
     protected $fillable = [
-      'updated_id','old_status','remarks','updated_date','updated_by_user_id','updated_by_user_name','created_at','updated_at'
+      'updated_id','old_status','remarks','updated_date','updated_by_user_id','updated_by_user_name','created_at','updated_at',
+      'po_id','amount_adjusted','updated_po_amount'
     ];
 }
 
