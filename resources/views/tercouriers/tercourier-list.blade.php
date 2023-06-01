@@ -359,7 +359,7 @@
                         <button class="actionButtons btn btn-success" v-on:click="change_to_handover()">
                             Handover
                         </button>
-                        @if(false)
+                        @if(true)
                         <button class="actionButtons btn btn-success" v-on:click="redirect_to_invoice()">
                             Invoice List
                         </button>

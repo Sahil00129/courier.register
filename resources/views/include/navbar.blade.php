@@ -52,7 +52,7 @@
 
 <?php $authuser = Auth::user();
 $currentURL = url()->current();
-$flag = 0;
+$flag = 1;
 ?>
 
 <div class="nav-logo align-self-center">
