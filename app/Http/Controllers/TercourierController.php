@@ -264,6 +264,7 @@ class TercourierController extends Controller
                 $get_ter_data = Tercourier::where('id', $id)->first();
                 $status = $get_ter_data->copy_status;
                 $update_data = Tercourier::where('id', $id)->update(array('status' => $status, 'copy_status' => ""));
+                $status="";
             }
         }
         return $update_data;
@@ -622,6 +623,20 @@ class TercourierController extends Controller
             $terdata['terfrom_date'] = $request->terfrom_date1;
             $terdata['terto_date'] = $request->terto_date1;
         }
+
+        $ter_month = Helper::ShowFormatDate($terdata['terto_date']);
+        $get_ter_month = explode("-", $ter_month);
+
+        $check_ter_table = Tercourier::where('employee_id',   $terdata['employee_id'] )->orderby('id', 'desc')->first();
+
+        if (!empty($check_ter_table)) {
+            $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
+            $month = explode("-", $check_ter_month);
+            if ($month[1] == $get_ter_month[1]) {
+                return "UNID Already Generated";
+            }
+        }
+
 
 
 
