@@ -629,6 +629,8 @@ class TercourierController extends Controller
 
         $check_ter_table = Tercourier::where('employee_id',   $terdata['employee_id'] )->orderby('id', 'desc')->first();
 
+        if($check_ter_table->employee_id !=0)
+        {
         if (!empty($check_ter_table)) {
             $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
             $month = explode("-", $check_ter_month);
@@ -636,9 +638,7 @@ class TercourierController extends Controller
                 return "UNID Already Generated";
             }
         }
-
-
-
+    }
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
 
