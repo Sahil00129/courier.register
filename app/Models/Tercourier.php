@@ -23,7 +23,7 @@ class Tercourier extends Model
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
         'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type', 'handover_id', 'verify_ter_date', 'is_rejected',
         'pfu', 'old_unit', 'unit_change_remarks', 'is_unit_changed', 'iag_code', 'shifting_date', 'super_admin_remarks', 'cancel_reject', 'dedcution_paid', 'advance_used', 'deduction_options', 'paylater_uploads', 'paylater_remarks', 'po_value', 'sourcing_remarks',
-        'scanning_remarks', 'not_eligible', 'vapi_res'
+        'scanning_remarks', 'not_eligible', 'vapi_res','copy_status'
 
 
     ];
@@ -73,8 +73,15 @@ class Tercourier extends Model
 
             if ($res[$i]->ter_type == 1) {
                 $change['status'] = 11;
-                $change['copy_status'] = 2;
-                $change['txn_type'] = "sourcing_regular_invoice";
+                
+                if ($res[$i]->copy_status == 12) {
+                    $change['txn_type'] = 'unknown_invoice';
+                    $change['copy_status'] = 12;
+                }else{
+                    $change['copy_status'] = 2;
+                    $change['txn_type'] = "sourcing_regular_invoice";
+                }
+               
                 $sourcing_ids[] = $res[$i]->id;
                 $change['saved_by_id'] = $user_id;
                 $change['saved_by_name'] = $user_name;

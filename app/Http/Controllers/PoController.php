@@ -25,7 +25,7 @@ class PoController extends Controller
     public function index(Request $request)
     {
         $peritem = Config::get('variable.PER_PAGE');
-        $query = Po::query();
+        $query = Po::query()->where('status','!=',5);
         
         if ($request->ajax()) {
             if(isset($request->resetfilter)){
@@ -295,5 +295,81 @@ class PoController extends Controller
     {
         return Excel::download(new ExportPoList, 'po_list.xlsx');
         // return (new ExportPoList);
+    }
+
+    public function fetch_po_list(Request $request)
+    {
+            $data = $request->all();
+            $id = $data['id'];
+            $tercourier_table = DB::table('tercouriers')->where('id', $id)->get();
+            if ($tercourier_table[0]->employee_id == "unknown_code") {
+                $senders =  DB::table('sender_details')->get();
+                 $pos =  Po::whereIn('status', [1, 2])->orderby('id', 'ASC')->get();
+                $tercourier_table['all_po_data'] = $pos;
+                return $tercourier_table;
+            } else {
+                return 0;
+            }
+    }
+
+    public function update_po_details(Request $request)
+    {
+            $data = $request->all();
+            $id = $data['id'];
+            $get_all_po = DB::table('pos')->where('po_number', $data['po_number'])->get();
+
+                $saveinvoice['po_id'] = $get_all_po[0]->id;
+                $saveinvoice['sender_id'] = $get_all_po[0]->id;
+                $saveinvoice['employee_id'] = $get_all_po[0]->vendor_code;
+                $saveinvoice['sender_name'] = $get_all_po[0]->vendor_name;
+                $saveinvoice['pfu'] = $get_all_po[0]->unit;
+                $saveinvoice['po_value'] = $get_all_po[0]->po_value;
+                $saveinvoice['unit_change_remarks'] = $data['remarks'];
+
+        
+                $po_data = array();
+        
+        
+                $po_value = (int)$saveinvoice['po_value'];
+                $get_invoice_data=DB::table('tercouriers')->where('id',$id)->get();
+
+                $total_amt = (int)$get_invoice_data[0]->total_amount;
+
+
+                
+                if ($total_amt > $po_value) {
+
+                    return ['po_value_error',$total_amt,$po_value];
+                }
+             
+        
+                if ($get_all_po[0]->status != 5) {
+        
+        
+        
+                    if ($po_value >  $total_amt) {
+                        $po_data['po_value'] = $po_value - $total_amt;
+                        $po_data['status'] = 2;
+                    }
+        
+        
+        
+                    if ($total_amt >= $po_value) {
+                        $po_data['po_value'] = $total_amt - $po_value;
+                        $po_data['status'] = 3;
+                    }
+                    $saveinvoice['status']=2; 
+                }
+        
+                $update_po = DB::table('pos')->where('id', $get_all_po[0]->id)->update(['status' => $po_data['status'], 'po_value' => $po_data['po_value']]);
+        
+        
+                // return $saveinvoice;
+        
+                $savepo = DB::table('tercouriers')->where('id',$id)->update($saveinvoice);
+                if ($savepo) {
+                    return 1;
+                }
+             
     }
 }

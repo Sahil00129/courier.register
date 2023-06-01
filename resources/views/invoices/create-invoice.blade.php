@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="form-group mb-4 col-md-6">
                                     <label for="exampleFormControlInput2">PO Value</label>
-                                    <input type="number" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
+                                    <input type="text" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
                                 </div>
                             </div>
 
@@ -232,13 +232,15 @@
 
                             </div>
 
+                            <!-- Image Required removed -->
                             <div id="imageUploadSection" class="row">
                                 <div class="form-group col-md-12">
                                     <label class="col-form-label pb-0">Upload File</label>
-                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" class="amit form-control-file  form-control-file-sm" id="fileupload-0" required />
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" class="amit form-control-file  form-control-file-sm" id="fileupload-0"  />
                                     <div class="imageBlock"></div>
                                 </div>
                             </div>
+
                             <button id="appendButtons" class="btn btn-outline-secondary" style="display: none;" onclick="appendImageSection()" type="button">Add More Image</button>
 
 
@@ -259,14 +261,20 @@
 <script>
     $("#basic_amount").blur(function() {
         let check_flag = true;
-        if (parseInt($("#po_value").val()) == 000) {
+        if ($("#po_value").val() == "unknown") {
             check_flag = false;
         }
-        // alert(check_flag)
+
+        // alert($("#po_value").val())
         if (check_flag) {
             if ($("#basic_amount").val() > parseInt($("#po_value").val())) {
                 $("#basic_amount").val("");
                 swal('error', "Basic Amount Can't be Greater than PO Value")
+            }
+        }else{
+            if ($("#basic_amount").val() > parseInt($("#total_amount").val())) {
+                $("#basic_amount").val("");
+                swal('error', "Basic Amount Can't be Greater than Total Amount")
             }
         }
 
@@ -275,7 +283,7 @@
         // alert($("#po_value").val());
         // alert($("#total_amount").val());
         let check_flag = true;
-        if (parseInt($("#po_value").val()) == 000) {
+        if ($("#po_value").val() == "unknown") {
             check_flag = false;
         }
         if (check_flag) {
@@ -283,7 +291,13 @@
                 $("#total_amount").val("");
                 swal('error', "Total Amount Can't be Greater than PO Value")
             }
+        }else{
+            if ($("#basic_amount").val() > parseInt($("#total_amount").val())) {
+                $("#basic_amount").val("");
+                swal('error', "Basic Amount Can't be Greater than Total Amount")
+            }
         }
+       
 
     });
 

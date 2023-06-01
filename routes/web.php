@@ -191,6 +191,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('pos', PoController::class);
     Route::get('download_po_list', [PoController::class, 'download_po_list']);
+    Route::post('fetch_po_list', [PoController::class, 'fetch_po_list']);
+    Route::post('update_po_details', [PoController::class, 'update_po_details']);
+
     Route::post('submit_cancel_remarks', [PoController::class, 'submit_cancel_remarks']);
     Route::resource('invoices', InvoiceController::class);
     Route::get('/get-po', [InvoiceController::class, 'getPo']);
@@ -209,6 +212,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
     Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
     Route::get('download_vendor_list', [InvoiceController::class, 'download_vendor_list']);
+    Route::get('show_unknown_invoice', [InvoiceController::class, 'show_unknown_invoice']);
+    Route::post('/cancel_invoice', [InvoiceController::class, 'cancel_invoice']);
+    Route::post('/cancel_invoice_with_po', [InvoiceController::class, 'cancel_invoice_with_po']);
+
+
 
 
     Route::get('/vendor-table', [VendorController::class, 'vendorTable']);
