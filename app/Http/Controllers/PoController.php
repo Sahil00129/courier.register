@@ -122,7 +122,7 @@ class PoController extends Controller
 
         $data=$request->all();
      
-        $item_size = sizeof($data['data']);
+        // $item_size = sizeof($data['data']);
 
 
         $po_number = Po::select('po_number')->latest('po_number')->first();
@@ -171,8 +171,10 @@ class PoController extends Controller
         if(!empty($request->erp_num)){
             $addpo['erp_num'] = $request->erp_num;
         }
+       
         if(!empty($request->state)){
-            $addpo['state'] = $request->state;
+            $state = $request->state;
+            $addpo['state']  = implode(',',$state);
         }
         if(!empty($request->crop)){
             $addpo['crop'] = $request->crop;
@@ -194,34 +196,34 @@ class PoController extends Controller
         $add_items['po_id'] = $savepo->id;
         $save_items = "";
 
-        if($savepo){
+        // if($savepo){
 
-        for($i=1;$i<=$item_size;$i++)
-        {
+        // for($i=1;$i<=$item_size;$i++)
+        // {
 
-            if(!empty($data['data'][$i]['item_type'])){
-                $add_items['item_type'] = $data['data'][$i]['item_type'];
-            }
-            if(!empty($data['data'][$i]['item_desc'])){
-                $add_items['item_desc'] = $data['data'][$i]['item_desc'];
-            }
-            if(!empty($data['data'][$i]['quantity'])){
-                $add_items['quantity'] = $data['data'][$i]['quantity'];
-            }
-            if(!empty($data['data'][$i]['unit_price'])){
-                $add_items['unit_price'] = $data['data'][$i]['unit_price'];
-            }
-            if(!empty($data['data'][$i]['total_amount'])){
-                $add_items['total_amount'] = $data['data'][$i]['total_amount'];
-            }
+        //     if(!empty($data['data'][$i]['item_type'])){
+        //         $add_items['item_type'] = $data['data'][$i]['item_type'];
+        //     }
+        //     if(!empty($data['data'][$i]['item_desc'])){
+        //         $add_items['item_desc'] = $data['data'][$i]['item_desc'];
+        //     }
+        //     if(!empty($data['data'][$i]['quantity'])){
+        //         $add_items['quantity'] = $data['data'][$i]['quantity'];
+        //     }
+        //     if(!empty($data['data'][$i]['unit_price'])){
+        //         $add_items['unit_price'] = $data['data'][$i]['unit_price'];
+        //     }
+        //     if(!empty($data['data'][$i]['total_amount'])){
+        //         $add_items['total_amount'] = $data['data'][$i]['total_amount'];
+        //     }
          
-            $save_items = PoItem::create($add_items);
-        }
-    }
+        //     $save_items = PoItem::create($add_items);
+        // }
+    // }
 
        
 
-        if($save_items){
+        if($savepo){
             $response['success']    = true;
             $response['page']       = 'create-pos';
             $response['error']      = false;
