@@ -131,6 +131,9 @@
         font-size: 13px;
         margin-right: 8px;
     }
+    .select2-container--default .select2-selection--multiple{
+        padding: 5px 16px;
+    }
 </style>
 
 <div class="layout-px-spacing" id="add_po">
@@ -170,20 +173,24 @@
                                     <select class="form-control form-control-sm my-select2" name="vendor_details" id="select_pos" required>
                                         <option selected disabled>search..</option>
                                     </select>
-                                    <label id="vendorDetailss" class=""><span id="vendorname" ></span> || Id: <span id="vendorunique_id"></span></label>
+                                    <label id="vendorDetailss" class=""><span id="vendorname"></span> || Id: <span id="vendorunique_id"></span></label>
                                 </div>
                             </div>
                             <input type="hidden" name="vendor_code" id="vendor_code" />
                             <input type="hidden" name="vendor_name" id="vendor_name" />
 
                             <input type="hidden" name="vendor_unique_id" id="vendor_unique_id" />
-                        
+
 
 
                             <div class="form-row mb-4 pt-4" style="width: 100%">
-                                <h6><b>PO Items</b></h6>
+                                <h6><b>PO Value</b></h6>
+                                <div class="form-group mb-4 col-md-4">
+                                    <label for="exampleFormControlInput2">Total Amount </label>
+                                    <input type="number" class="form-control" name="po_value" id="po_value" placeholder="">
+                                </div>
 
-                                <div class="appendTable">
+                                <!-- div class="appendTable">
 
                                     <table id="appendTable">
                                         <thead id="itemTable">
@@ -237,7 +244,7 @@
                                         <input type="hidden" name="po_value" id="po_value" />
 
                                     </div>
-                                </div>
+                                </div -->
 
 
                             </div>
@@ -257,11 +264,12 @@
 
                                 <div class="form-group col-md-4">
                                     <label for="">Po State</label>
-                                    <select name="state" id="state" class="approvalReq form-control" style="width:99%;" >
-                                        <option value="">--Select--</option>
+                                    <select class="form-control tagging approvalReq" multiple="multiple" name="state[]">
+                                        <option value="" disabled>--Select--</option>
                                         @foreach($state_json_data as $state_names)
                                         <option value="{{$state_names['state']}}">{{$state_names['state']}}</option>
                                         @endforeach
+
                                     </select>
                                 </div>
 
@@ -285,7 +293,7 @@
 
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
                                 <a class="btn btn-outline-primary" href="{{url('/pos') }}"> Back</a>
-                                <button type="submit" class="mt-4 mb-4 btn btn-primary submit_po"  id="submit_po">Submit</button>
+                                <button type="submit" class="mt-4 mb-4 btn btn-primary submit_po" id="submit_po">Submit</button>
                             </div>
 
                         </form>
