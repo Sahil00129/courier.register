@@ -673,7 +673,6 @@ $flag = 1;
                     <li class="menu single-menu @if($currentURL == url('payment_sheet')) active @endif">
                         <a href="{{url('payment_sheet')}}">
                             <div class="">
-                                <?xml version = "1.0" ?>
                                 <svg width="64px" height="64px" viewBox="0 0 64 64" stroke="currentColor"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <g data-name="27 receipt" id="_27_receipt">

@@ -627,11 +627,13 @@ class TercourierController extends Controller
         $ter_month = Helper::ShowFormatDate($terdata['terto_date']);
         $get_ter_month = explode("-", $ter_month);
 
-        $check_ter_table = Tercourier::where('employee_id',   $terdata['employee_id'] )->orderby('id', 'desc')->first();
+        $check_ter_table = DB::table('tercouriers')->where('employee_id',$terdata['employee_id'] )->orderby('id', 'desc')->first();
+   
 
+        if (!empty($check_ter_table)) {
         if($check_ter_table->employee_id !=0)
         {
-        if (!empty($check_ter_table)) {
+     
             $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
             $month = explode("-", $check_ter_month);
             if ($month[1] == $get_ter_month[1]) {
