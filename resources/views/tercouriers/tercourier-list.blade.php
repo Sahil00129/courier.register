@@ -488,7 +488,7 @@
                                                 @endif
                                                 @if($tercourier->status == 13 || $tercourier->status == 0)
                                                 <p>
-                                                    <strong>Finfect Response:</strong> {{$tercourier->finfect_response}} 
+                                                    <strong>Finfect Response:</strong> {{$tercourier->finfect_response}}
                                                 </p>
                                                 @endif
                                             </div>
@@ -497,7 +497,7 @@
                                 </td>
 
                                 <?php
-                              if ($tercourier->status == 1) {
+                                if ($tercourier->status == 1) {
                                     $status = 'Received at Reception';
                                     $class = 'btn-success';
                                 } elseif ($tercourier->status == 11) {
@@ -530,15 +530,13 @@
                                 } elseif ($tercourier->status == 9) {
                                     $status = 'Unknown';
                                     $class = 'btn-secondary';
-                                }elseif ($tercourier->status == 12) {
+                                } elseif ($tercourier->status == 12) {
                                     $status = 'Unit Change';
                                     $class = 'btn-secondary';
-                                }
-                                elseif ($tercourier->status == 13) {
+                                } elseif ($tercourier->status == 13) {
                                     $status = 'Payment Reject';
                                     $class = 'btn-warning';
-                                }
-                                 else {
+                                } else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
                                 }
@@ -546,7 +544,7 @@
 
 
                                 <td>
-                                   
+
                                     @if($tercourier->status == 11 )
                                     <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
@@ -576,20 +574,20 @@
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 12)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 13)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 5 && $name=="Hr Admin")
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                     </button>
                                     @else
@@ -773,9 +771,9 @@
                                                 <strong>Finfect Acknowledgement:</strong> Amount of Rs.@{{tercourier.final_payable}} received to process for UNID - @{{tercourier.id}}
                                             </p>
                                             <p v-if="tercourier.status == 13 || tercourier.status == 0">
-                                                    <strong>Finfect Response:</strong> @{{tercourier.finfect_response}} 
-                                                </p>
-                                             
+                                                <strong>Finfect Response:</strong> @{{tercourier.finfect_response}}
+                                            </p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -823,9 +821,9 @@
                                         </svg>
 
                                     </button>
-                                    </div>
+                                </div>
 
-                                    <div v-if="tercourier.status == 13">
+                                <div v-if="tercourier.status == 13">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==13">
                                         Payment Reject
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -922,11 +920,11 @@
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between " id="pay_sum" v-if="tercourier.status!=2">
                                                 <div class="heading">Paid:</div>
-                                              <div v-if="tercourier.payable_amount">  @{{arraySum(tercourier.payable_amount)}}</div>
+                                                <div v-if="tercourier.payable_amount"> @{{arraySum(tercourier.payable_amount)}}</div>
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between " v-if="tercourier.status!=2">
                                                 <div class="heading">Deduction:</div>
-                                                <div v-if="tercourier.payable_amount">  @{{arraySum(tercourier.payable_amount) - tercourier.amount}}</div>
+                                                <div v-if="tercourier.payable_amount"> @{{arraySum(tercourier.payable_amount) - tercourier.amount}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -944,17 +942,17 @@
                                             <div class="heading" style="min-height: 30px;">
                                                 <div>
                                                     <div v-if="tercourier.voucher_code">
-                                                    <span v-for="vc in JSON.parse(tercourier.voucher_code)">
-                                                        @{{ vc }}<br />
-                                                    </span>
+                                                        <span v-for="vc in JSON.parse(tercourier.voucher_code)">
+                                                            @{{ vc }}<br />
+                                                        </span>
                                                     </div>
                                                 </div>
                                                 <div>
-                                                <div v-if="tercourier.payable_amount">
-                                                    <span class="d-flex flex-column align-items-end" v-for="pa in JSON.parse(tercourier.payable_amount)">
-                                                        ₹@{{ pa }}<br />
-                                                    </span>
-                                                </div>
+                                                    <div v-if="tercourier.payable_amount">
+                                                        <span class="d-flex flex-column align-items-end" v-for="pa in JSON.parse(tercourier.payable_amount)">
+                                                            ₹@{{ pa }}<br />
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1042,8 +1040,7 @@
                                     if ($tercourier->status == 1 && $tercourier->HandoverDetail->handover_remarks != "") {
                                         $status = ' Received at Reception';
                                         $class = 'btn-danger';
-                                    }
-                                    elseif ($tercourier->status == 11) {
+                                    } elseif ($tercourier->status == 11) {
                                         $status = 'Created Handover';
                                         $class = 'btn-warning';
                                     }
@@ -1053,7 +1050,7 @@
                                 } elseif ($tercourier->status == 14) {
                                     $status = 'UNID Generated';
                                     $class = 'btn-success';
-                                }   elseif ($tercourier->status == 11) {
+                                } elseif ($tercourier->status == 11) {
                                     $status = 'Created Handover';
                                     $class = 'btn-warning';
                                 } elseif ($tercourier->status == 2) {
@@ -1086,11 +1083,10 @@
                                 } elseif ($tercourier->status == 12) {
                                     $status = 'Unit Change';
                                     $class = 'btn-secondary';
-                                }
-                                elseif ($tercourier->status == 13) {
+                                } elseif ($tercourier->status == 13) {
                                     $status = 'Payment Reject';
                                     $class = 'btn-warning';
-                                }else {
+                                } else {
                                     $status = 'Failed';
                                     $class = 'btn-danger';
                                 }
@@ -1136,14 +1132,14 @@
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 12)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
                                     @elseif($tercourier->status == 13)
-                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton" >
+                                    <button class="btn {{ $class }} btn-sm btn-rounded mb-2 statusButton">
                                         {{ $status }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -1207,19 +1203,22 @@
                                 </td>
                                 @elseif($tercourier->status == 14)
                                 <td>
-                                    <?php 
-                                     if($tercourier->Tercourier->uploaded_file_name){
-                                        $name=$tercourier->Tercourier->uploaded_file_name;
-                                        $file= "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/".$name;
-                                    }else{
+                                    <?php
+                                    if ($tercourier->Tercourier->uploaded_file_name) {
+                                        $name = $tercourier->Tercourier->uploaded_file_name;
+                                        $file = "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/" . $name;
+                                    } else {
                                         $file = '';
                                     } ?>
-                                <div class="action d-flex justify-content-center align-items-center">
+                                    <div class="action d-flex justify-content-center align-items-center">
                                         <a href="{{$file}}" target="_blank">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path> <circle cx="12" cy="12" r="3"></circle></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
                                         </a>
-                                </div>
-                                <div class="action d-flex justify-content-center align-items-center">
+                                    </div>
+                                    <div class="action d-flex justify-content-center align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModalForUnid" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>,'unid')">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1284,25 +1283,25 @@
 
                                 <div v-if="tercourier.status == 1">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#exampleModal" v-on:click="open_ter_modal(tercourier.id)">
-                                    Received at Reception
+                                        Received at Reception
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </button>
                                 </div>
                                 <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==14">
-                                        UNID Generated
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </button>
+                                    UNID Generated
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
 
                                 <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==0">
-                                        Failed
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </button>
+                                    Failed
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
                                 <div v-if="tercourier.status == 2">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2">
                                         Handover
@@ -1324,7 +1323,7 @@
                                     </button>
                                 </div>
 
-                                    <div v-if="tercourier.status == 12">
+                                <div v-if="tercourier.status == 12">
                                     <button class="btn btn-secondary btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==12">
                                         Unit Changed
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -1332,9 +1331,9 @@
                                         </svg>
 
                                     </button>
-                                    </div>
+                                </div>
 
-                                    <div v-if="tercourier.status == 13">
+                                <div v-if="tercourier.status == 13">
                                     <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==13">
                                         Payment Reject
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
@@ -1440,12 +1439,21 @@
                             </td>
                             <td v-if="tercourier.status== 14">
                                 <div class="action d-flex justify-content-center align-items-center">
-                                <a  :href="unid_file" @click="get_unid_file(tercourier.tercourier.uploaded_file_name)" target="_blank">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path> <circle cx="12" cy="12" r="3"></circle></svg>
-                                        </a>
+                                    <a :href="unid_file" @click="get_unid_file(tercourier.tercourier.uploaded_file_name)" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-toggle="modal" data-target="#viewFileModal" class="feather feather-eye" style="height: 16px; width: 16px;">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="action d-flex justify-content-center align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModalForUnid" v-on:click="get_data_by_id(tercourier.id,'unid')">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
                                 </div>
                             </td>
-                       
+
                             <td v-else>
                                 <div class="action d-flex justify-content-center align-items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" style="color: #83838380; cursor: not-allowed !important;">
@@ -1555,8 +1563,8 @@
                     </div>
                 </div>
 
-                    <!-- Edit Reception TER Modal for unid generate -->
-                    <div class="modal fade show" id="editTerModalForUnid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+                <!-- Edit Reception TER Modal for unid generate -->
+                <div class="modal fade show" id="editTerModalForUnid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
                     <div class="modal-dialog" role="document" style="min-width: min(90%, 1100px)">
                         <div class="modal-content" style="position: relative;">
                             <div class="editTer modal-body editTer" v-if="unid_loaded">
@@ -1679,11 +1687,11 @@
                                     <div class="form-group col-md-4">
                                         <label for="inputState">Courier Name*</label>
                                         <select id="slct" name="courier_id" class="form-control form-control-sm">
-                                        <option selected value="error" disabled>------Select------</option>
+                                            <option selected value="error" disabled>------Select------</option>
                                             @foreach($couriers as $courier)
-                                           
-                                            <option  value="{{$courier->id}}">{{$courier->courier_name}}</option>
-                                       
+
+                                            <option value="{{$courier->id}}">{{$courier->courier_name}}</option>
+
                                             @endforeach
                                         </select>
                                     </div>
@@ -1934,7 +1942,7 @@
             given_to: "",
             delivery_date: "",
             data_loaded: false,
-            unid_loaded:false,
+            unid_loaded: false,
             url: "",
             search_data: "",
             ter_all_data: {},
@@ -1954,7 +1962,7 @@
             lastYear: "",
             forMonth: "",
             forPeiod: "",
-            unid_file:"",
+            unid_file: "",
 
 
         },
@@ -1965,9 +1973,8 @@
             // $('table').dataTable({bFilter: false, bInfo: false});
         },
         methods: {
-            get_unid_file:function(file)
-            {
-                this.unid_file = "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/"+file;
+            get_unid_file: function(file) {
+                this.unid_file = "https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/" + file;
                 // document.getElementById("myAnchor").href = "http://www.cnn.com/";
                 // alert(file)
                 // // href="https://dpportal.s3.us-east-2.amazonaws.com/employee_scan_docs/"
@@ -2205,14 +2212,12 @@
             update_data_ter: function(type) {
                 var sender_emp_id, sender_name, ax_code, courier_id
                 courier_id = $("#slct option:selected").val();
-               
-                if(type == 'unid_generate')
-                {
-                    if(this.date_of_receipt == null || this.date_of_receipt == "" || this.amount == null || this.amount == "" 
-                    || this.docket_no == null   || this.docket_no == "" || courier_id == "error"   || courier_id == null)
-                    {   
+
+                if (type == 'unid_generate') {
+                    if (this.date_of_receipt == null || this.date_of_receipt == "" || this.amount == null || this.amount == "" ||
+                        this.docket_no == null || this.docket_no == "" || courier_id == "error" || courier_id == null) {
                         // alert(type);
-                        swal('error','Mandatory Fields are empty')
+                        swal('error', 'Mandatory Fields are empty')
                         // alert(this.date_of_receipt)
                         // alert(this.amount)
                         // alert(this.docket_no)
@@ -2220,9 +2225,9 @@
                         return 1;
                     }
                 }
-               
-            //  alert(this.docket_no)
-            //  return 1;
+
+                //  alert(this.docket_no)
+                //  return 1;
 
                 if (this.sender_all_info != "") {
                     const sender_data_split = this.sender_all_info.split(" : ");
@@ -2300,17 +2305,17 @@
 
                     })
                     .finally(() => {
-                        this.date_of_receipt="";
-                        this.amount ="";
-                        this.docket_no="";
-                        courier_id="";
-                            })
+                        this.date_of_receipt = "";
+                        this.amount = "";
+                        this.docket_no = "";
+                        courier_id = "";
+                    })
 
 
             },
-            redirect_to_invoice:function(){
+            redirect_to_invoice: function() {
                 // this.url = '/download_handshake_report';
-                            window.location.href = '/invoices';
+                window.location.href = '/invoices';
 
             },
             get_sender_data: function(data) {
@@ -2445,8 +2450,8 @@
                     })
                 // this.partial_paid_modal = true;
             },
-            get_data_by_id: function(id,type) {
-          
+            get_data_by_id: function(id, type) {
+
                 this.unique_id = id;
                 // alert(this.unique_id)
                 // retu
@@ -2470,13 +2475,12 @@
                     .then(response => {
                         console.log(response.data);
                         if (response.data[0]) {
-                            if(type == "edit_ter")
-                            {
+                            if (type == "edit_ter") {
                                 this.data_loaded = true;
-                            }else{
+                            } else {
                                 this.unid_loaded = true;
                             }
-        
+
                             this.got_data = true;
                             this.flag = true;
                             this.button_text = "Search";
@@ -2509,10 +2513,9 @@
                             this.button_text = "Search";
                             this.flag = false;
                             this.update_ter_flag = false;
-                            if(type == "edit_ter")
-                            {
+                            if (type == "edit_ter") {
                                 this.data_loaded = false;
-                            }else{
+                            } else {
                                 this.unid_loaded = false;
                             }
                             swal('error', "Either Details already updated or No record Found", 'error')
@@ -2524,12 +2527,11 @@
                         this.flag = false;
                         this.update_ter_flag = false;
                         this.button_text = "Search";
-                        if(type == "edit_ter")
-                            {
-                                this.data_loaded = false;
-                            }else{
-                                this.unid_loaded = false;
-                            }
+                        if (type == "edit_ter") {
+                            this.data_loaded = false;
+                        } else {
+                            this.unid_loaded = false;
+                        }
 
 
                     })
@@ -2631,8 +2633,7 @@
 
             download_ter_list: function() {
 
-                axios.get('/download_ter_list', {
-                    })
+                axios.get('/download_ter_list', {})
                     .then(response => {
                         console.log(response.data);
                         if (response.data == 1) {
@@ -2672,26 +2673,25 @@
                     }
                 }
                 const myArray = trx_str.split("|");
-                if(myArray.length < 11)
-                  {
-                axios.post('/change_status', {
-                        'selected_value': trx_str
-                    })
-                    .then(response => {
-                        console.log(response.data);
-                        if (response.data >= 1) {
-                            location.reload();
-                        } else {
-                            swal('error', "Either Record is already updated or not selected", 'error')
-                        }
+                if (myArray.length < 11) {
+                    axios.post('/change_status', {
+                            'selected_value': trx_str
+                        })
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data >= 1) {
+                                location.reload();
+                            } else {
+                                swal('error', "Either Record is already updated or not selected", 'error')
+                            }
 
-                    }).catch(error => {
+                        }).catch(error => {
 
-                        console.log(response)
-                        this.apply_offer_btn = 'Apply';
+                            console.log(response)
+                            this.apply_offer_btn = 'Apply';
 
-                    })
-                }else{
+                        })
+                } else {
                     swal('error', "Maximum 10 TER can be pushed at one time", 'error')
                 }
             },
