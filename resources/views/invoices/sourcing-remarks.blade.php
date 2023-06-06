@@ -276,6 +276,11 @@
             submit_sourcing_remarks: function() {
 
                 this.unique_id = $("#unid").val();
+                if(this.file.length == 0)
+                {
+                    swal('error', "Sourcing File Needs to be added", 'error')
+                    return 1;
+                }
                 if (this.sourcing_remarks != "") {
 
                     const config = {
@@ -301,6 +306,11 @@
 
                     axios.post('/submit_sourcing_remarks', formData, config)
                         .then(response => {
+                            if (response.data == 100) {
+                                swal('error', "File not Found", 'error')
+                                return 1;
+
+                            }
                             if (response.data) {
                                 swal('success', "Remarks for UNID :" + this.unique_id + " has been successfully submitted", 'success')
                                 window.location.href = '/invoices';

@@ -28,8 +28,8 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
- 
-       
+
+
     public function __construct()
     {
         // $this->middleware('auth');
@@ -388,52 +388,57 @@ class InvoiceController extends Controller
         $id = $data['unid'];
         $get_data = DB::table('tercouriers')->where('id', $id)->get();
         $get_file_names = $get_data[0]->file_name;
-        // return $get_file_names;
 
-        $size = sizeof($data['scanning_file']);
-        $save_file_names = array();
+        if (empty($data['scanning_file'])) {
+            return "100";
+        } else {
 
-        // return sizeof($save_file_names);
-        if (!empty($get_file_names)) {
-            $get_old_uploaded = explode(',', $get_file_names);
-            $old_size = sizeof($get_old_uploaded);
-            for ($j = 0; $j < $old_size; $j++) {
-                // return sizeof($get_old_uploaded);
-                $save_file_names[$j] = $get_old_uploaded[$j];
+            $size = sizeof($data['scanning_file']);
+
+            $save_file_names = array();
+
+            // return sizeof($save_file_names);
+            if (!empty($get_file_names)) {
+                $get_old_uploaded = explode(',', $get_file_names);
+                $old_size = sizeof($get_old_uploaded);
+                for ($j = 0; $j < $old_size; $j++) {
+                    // return sizeof($get_old_uploaded);
+                    $save_file_names[$j] = $get_old_uploaded[$j];
+                }
             }
+
+
+            // return $save_file_names;
+
+            // $file_real_names = implode(',', $save_file_names);
+
+
+            // print_r("FDs");
+            // print_r($save_file_names);
+
+            $save_new_file_names = array();
+
+            for ($i = 0; $i < $size; $i++) {
+                $image = $data['scanning_file'][$i];
+                // $fileName = $image->getClientOriginalName();
+                // $save_file_names[$i] = $fileName;
+                // $destinationPath = 'uploads/scan_doc';
+                // $image->move($destinationPath, $fileName);
+                $path = Storage::disk('s3')->put('invoice_images', $image);
+                $get_real_names = explode('/', $path);
+                $save_new_file_names[$i] = $get_real_names[1];
+                $s3_path = Storage::disk('s3')->url($path);
+            }
+            // return [$save_file_names,$save_new_file_names];
+            $updated_file_names = array_merge($save_file_names, $save_new_file_names);
+            //    return $updated_file_names;
+
+            $file_real_names = implode(',', $updated_file_names);
+            // return $file_real_names;
+
+            // $saveinvoice['file_name'] = $file_real_names;
         }
-
-
-        // return $save_file_names;
-
-        // $file_real_names = implode(',', $save_file_names);
-
-
-        // print_r("FDs");
-        // print_r($save_file_names);
-
-        $save_new_file_names = array();
-
-        for ($i = 0; $i < $size; $i++) {
-            $image = $data['scanning_file'][$i];
-            // $fileName = $image->getClientOriginalName();
-            // $save_file_names[$i] = $fileName;
-            // $destinationPath = 'uploads/scan_doc';
-            // $image->move($destinationPath, $fileName);
-            $path = Storage::disk('s3')->put('invoice_images', $image);
-            $get_real_names = explode('/', $path);
-            $save_new_file_names[$i] = $get_real_names[1];
-            $s3_path = Storage::disk('s3')->url($path);
-        }
-        // return [$save_file_names,$save_new_file_names];
-        $updated_file_names = array_merge($save_file_names, $save_new_file_names);
-        //    return $updated_file_names;
-
-        $file_real_names = implode(',', $updated_file_names);
-        // return $file_real_names;
         $submit_sourcing_remarks = $data['remarks'];
-        // $saveinvoice['file_name'] = $file_real_names;
-
 
         $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
         return $update_table;
@@ -663,12 +668,12 @@ class InvoiceController extends Controller
             ]);
             if ($response) {
                 if ($get_old_status[0]->employee_id != "unknown_code") {
-                $po_table = DB::table('pos')->where('id', $data['po_id'])->update([
-                    "po_value" => $updated_po_value
-                ]);
-            }else{
-                $po_table = 1;
-            }
+                    $po_table = DB::table('pos')->where('id', $data['po_id'])->update([
+                        "po_value" => $updated_po_value
+                    ]);
+                } else {
+                    $po_table = 1;
+                }
                 if ($po_table) {
                     $res = DB::table('ter_data_cancel')->insert($data);
                     return $res;
