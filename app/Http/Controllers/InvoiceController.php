@@ -28,10 +28,12 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
+ 
+       
     public function __construct()
     {
         // $this->middleware('auth');
+        $this->middleware('permission:tercouriers/create', ['only' => ['create']]);
         $this->middleware('permission:invoices', ['only' => ['index']]);
         $this->middleware('permission:invoice_handover', ['only' => ['invoice_handover']]);
     }
