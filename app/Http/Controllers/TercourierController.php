@@ -3372,7 +3372,7 @@ class TercourierController extends Controller
             }
         }
 
-        if (empty($sender_data->account_number) || empty($sender_data->beneficiary_name) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
+        if (empty($sender_data->account_number) || empty($sender_data->beneficiary_name) || empty($sender_data->bank_name) || empty($sender_data->ifsc) ||  empty($sender_data->branch_name)) {
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'Bank Details are missing', 'updated_at' => date('Y-m-d H:i:s')]);
 
             return "bank_details_missing";
