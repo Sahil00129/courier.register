@@ -276,11 +276,11 @@
             submit_sourcing_remarks: function() {
 
                 this.unique_id = $("#unid").val();
-                if(this.file.length == 0)
-                {
-                    swal('error', "Sourcing File Needs to be added", 'error')
-                    return 1;
-                }
+                // if(this.file.length == 0)
+                // {
+                //     swal('error', "Sourcing File Needs to be added", 'error')
+                //     return 1;
+                // }
                 if (this.sourcing_remarks != "") {
 
                     const config = {

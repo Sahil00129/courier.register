@@ -123,6 +123,10 @@
         font-size: 14px;
         line-height: 14px;
     }
+    input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        display: none;
+      }
 </style>
 
 <div class="layout-px-spacing">
@@ -215,7 +219,7 @@
 
                                 <div class="form-group mb-4 col-md-3">
                                     <label for="exampleFormControlInput2">Courier Received Date</label>
-                                    <input type="date" class="form-control form-control-sm" name="received_date" id="received_date" placeholder="">
+                                    <input type="date" class="form-control form-control-sm" name="received_date"  id="received_date" placeholder="">
                                 </div>
 
 
@@ -236,7 +240,7 @@
                             <div id="imageUploadSection" class="row">
                                 <div class="form-group col-md-12">
                                     <label class="col-form-label pb-0">Upload File</label>
-                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" class="amit form-control-file  form-control-file-sm" id="fileupload-0"  />
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[]" class="amit form-control-file  form-control-file-sm" id="fileupload-0" />
                                     <div class="imageBlock"></div>
                                 </div>
                             </div>
@@ -259,6 +263,30 @@
 
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 <script>
+  
+    $('#received_date').val(new Date().toJSON().slice(0, 10));
+    $('#invoice_date').val(new Date().toJSON().slice(0, 10));
+
+    $("#invoice_date").blur(function() {
+      var today_date=new Date().toJSON().slice(0, 10);
+      if( $('#invoice_date').val() > today_date)
+      {
+        $('#invoice_date').val(new Date().toJSON().slice(0, 10));
+        swal('error',"Invoice Date can't be Future Date",'error')
+
+      }
+
+    });
+    $("#received_date").blur(function() {
+      var today_date=new Date().toJSON().slice(0, 10);
+      if( $('#received_date').val() > today_date)
+      {
+        $('#received_date').val(new Date().toJSON().slice(0, 10));
+        swal('error',"Received Date can't be Future Date",'error')
+
+      }
+
+    });
     $("#basic_amount").blur(function() {
         let check_flag = true;
         if ($("#po_value").val() == "unknown") {
@@ -271,7 +299,7 @@
                 $("#basic_amount").val("");
                 swal('error', "Basic Amount Can't be Greater than PO Value")
             }
-        }else{
+        } else {
             if ($("#basic_amount").val() > parseInt($("#total_amount").val())) {
                 $("#basic_amount").val("");
                 swal('error', "Basic Amount Can't be Greater than Total Amount")
@@ -291,13 +319,13 @@
                 $("#total_amount").val("");
                 swal('error', "Total Amount Can't be Greater than PO Value")
             }
-        }else{
+        } else {
             if ($("#basic_amount").val() > parseInt($("#total_amount").val())) {
                 $("#basic_amount").val("");
                 swal('error', "Basic Amount Can't be Greater than Total Amount")
             }
         }
-       
+
 
     });
 

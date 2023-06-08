@@ -369,7 +369,7 @@ class InvoiceController extends Controller
 
     public function get_all_invoice_data(Request $request)
     {
-        $pos =  Po::where('status', 1)->orderby('id', 'ASC')->get();
+        $pos =  Po::whereIn('status', ['1','2','5'])->orderby('id', 'ASC')->get();
 
         $data = $request->all();
 
@@ -389,9 +389,8 @@ class InvoiceController extends Controller
         $get_data = DB::table('tercouriers')->where('id', $id)->get();
         $get_file_names = $get_data[0]->file_name;
 
-        if (empty($data['scanning_file'])) {
-            return "100";
-        } else {
+        if (!empty($data['scanning_file'])) {
+     
 
             $size = sizeof($data['scanning_file']);
 
@@ -437,10 +436,16 @@ class InvoiceController extends Controller
             // return $file_real_names;
 
             // $saveinvoice['file_name'] = $file_real_names;
-        }
-        $submit_sourcing_remarks = $data['remarks'];
-
+            $submit_sourcing_remarks = $data['remarks'];
         $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
+
+        }else{
+            $submit_sourcing_remarks = $data['remarks'];
+            $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3']);
+
+        }
+       
+
         return $update_table;
     }
 
@@ -787,12 +792,52 @@ class InvoiceController extends Controller
         $data = $request->all();
         $get_ter_details = DB::table('tercouriers')->where('id', $data['unid'])->where('ter_type', 1)->get();
         if ($get_ter_details[0]->po_id != $data['po_id']) {
-            $get_po_details = DB::table('pos')->where('id', $data['po_id'])->get();
-            $data['ax_id'] = $get_po_details[0]->ax_code;
+            $get_current_po_details = DB::table('pos')->where('id', $data['po_id'])->get();
+
+            if ($get_ter_details[0]->employee_id != "unknown_code") {
+                $get_prev_po_data = DB::table('pos')->where('id', $get_ter_details[0]->po_id)->get();
+                $prev_updated_po_value = $get_prev_po_data[0]->po_value + $get_ter_details[0]->total_amount;
+                 DB::table('pos')->where('id', $get_ter_details[0]->po_id)->update([
+                    "po_value" => $prev_updated_po_value
+                ]);
+            }
+
+
+            $po_data = array();
+
+            $po_value = (int) $get_current_po_details[0]->po_value;
+            $total_amt = (int)$data['total_amount'];
+    
+            if ($get_current_po_details[0]->status != 5) {
+    
+    
+    
+                if ($po_value >  $total_amt) {
+                    $po_data['po_value'] = $po_value - $total_amt;
+                    $po_data['status'] = 2;
+                }
+    
+    
+    
+                if ($total_amt >= $po_value) {
+                    $po_data['po_value'] = $total_amt - $po_value;
+                    $po_data['status'] = 3;
+                }
+            } else {
+                $po_data['po_value'] = "unknown";
+                $po_data['status'] = 5;
+            }
+
+            DB::table('pos')->where('id', $data['po_id'])->update([
+                "po_value" =>   $po_data['po_value'],"status"=> $po_data['status']
+            ]);
+
+
+            $data['ax_id'] = $get_current_po_details[0]->vendor_code;
             $data['sender_id'] = $data['po_id'];
-            $data['sender_name'] = $get_po_details[0]->vendor_name;
-            $data['pfu'] = Helper::PoUnit($get_po_details[0]->unit);
-            $data['po_value'] = $get_po_details[0]->po_value;
+            $data['sender_name'] = $get_current_po_details[0]->vendor_name;
+            $data['pfu'] = Helper::PoUnit($get_current_po_details[0]->unit);
+            $data['po_value'] = $get_current_po_details[0]->po_value;
         }
 
         $id = $data['unid'];
