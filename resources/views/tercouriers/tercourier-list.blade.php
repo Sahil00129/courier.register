@@ -1649,7 +1649,7 @@
                                     <div class="form-group col-md-2">
                                         <label for="month">Select Month</label>
                                         <select disabled="true" id="month" class=" form-control form-control-sm" v-on:change="onSelectMonth()">
-                                            <option disabled>--Select Month--</option>
+                                            <option disabled selected>--Select Month--</option>
                                             <option value="01">January</option>
                                             <option value="02">February</option>
                                             <option value="03">March</option>

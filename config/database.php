@@ -81,8 +81,8 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST_sqlsrv', '192.168.5.129'),
-            'port' => env('DB_PORT_sqlsrv', '3350'),
+            'host' => env('DB_HOST_sqlsrv', '122.161.194.206'),
+            'port' => env('DB_PORT_sqlsrv', '30032'),
             'database' => env('DB_DATABASE_sqlsrv', 'forge'),
             'username' => env('DB_USERNAME_sqlsrv', 'forge'),
             'password' => env('DB_PASSWORD_sqlsrv', 'Demo@1234$'),

@@ -134,6 +134,10 @@
     .select2-container--default .select2-selection--multiple{
         padding: 5px 16px;
     }
+    input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        display: none;
+      }
 </style>
 
 <div class="layout-px-spacing" id="add_po">

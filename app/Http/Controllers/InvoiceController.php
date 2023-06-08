@@ -29,9 +29,11 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
     public function __construct()
     {
         // $this->middleware('auth');
+        $this->middleware('permission:tercouriers/create', ['only' => ['create']]);
         $this->middleware('permission:invoices', ['only' => ['index']]);
         $this->middleware('permission:invoice_handover', ['only' => ['invoice_handover']]);
     }
@@ -367,7 +369,7 @@ class InvoiceController extends Controller
 
     public function get_all_invoice_data(Request $request)
     {
-        $pos =  Po::where('status', 1)->orderby('id', 'ASC')->get();
+        $pos =  Po::whereIn('status', ['1','2','5'])->orderby('id', 'ASC')->get();
 
         $data = $request->all();
 
@@ -386,54 +388,64 @@ class InvoiceController extends Controller
         $id = $data['unid'];
         $get_data = DB::table('tercouriers')->where('id', $id)->get();
         $get_file_names = $get_data[0]->file_name;
-        // return $get_file_names;
 
-        $size = sizeof($data['scanning_file']);
-        $save_file_names = array();
+        if (!empty($data['scanning_file'])) {
+     
 
-        // return sizeof($save_file_names);
-        if (!empty($get_file_names)) {
-            $get_old_uploaded = explode(',', $get_file_names);
-            $old_size = sizeof($get_old_uploaded);
-            for ($j = 0; $j < $old_size; $j++) {
-                // return sizeof($get_old_uploaded);
-                $save_file_names[$j] = $get_old_uploaded[$j];
+            $size = sizeof($data['scanning_file']);
+
+            $save_file_names = array();
+
+            // return sizeof($save_file_names);
+            if (!empty($get_file_names)) {
+                $get_old_uploaded = explode(',', $get_file_names);
+                $old_size = sizeof($get_old_uploaded);
+                for ($j = 0; $j < $old_size; $j++) {
+                    // return sizeof($get_old_uploaded);
+                    $save_file_names[$j] = $get_old_uploaded[$j];
+                }
             }
-        }
 
 
-        // return $save_file_names;
+            // return $save_file_names;
 
-        // $file_real_names = implode(',', $save_file_names);
-
-
-        // print_r("FDs");
-        // print_r($save_file_names);
-
-        $save_new_file_names = array();
-
-        for ($i = 0; $i < $size; $i++) {
-            $image = $data['scanning_file'][$i];
-            // $fileName = $image->getClientOriginalName();
-            // $save_file_names[$i] = $fileName;
-            // $destinationPath = 'uploads/scan_doc';
-            // $image->move($destinationPath, $fileName);
-            $path = Storage::disk('s3')->put('invoice_images', $image);
-            $get_real_names = explode('/', $path);
-            $save_new_file_names[$i] = $get_real_names[1];
-            $s3_path = Storage::disk('s3')->url($path);
-        }
-        // return [$save_file_names,$save_new_file_names];
-        $updated_file_names = array_merge($save_file_names, $save_new_file_names);
-        //    return $updated_file_names;
-
-        $file_real_names = implode(',', $updated_file_names);
-        // return $file_real_names;
-        $submit_sourcing_remarks = $data['remarks'];
-        // $saveinvoice['file_name'] = $file_real_names;
+            // $file_real_names = implode(',', $save_file_names);
 
 
+            // print_r("FDs");
+            // print_r($save_file_names);
+
+            $save_new_file_names = array();
+
+            for ($i = 0; $i < $size; $i++) {
+                $image = $data['scanning_file'][$i];
+                // $fileName = $image->getClientOriginalName();
+                // $save_file_names[$i] = $fileName;
+                // $destinationPath = 'uploads/scan_doc';
+                // $image->move($destinationPath, $fileName);
+                $path = Storage::disk('s3')->put('invoice_images', $image);
+                $get_real_names = explode('/', $path);
+                $save_new_file_names[$i] = $get_real_names[1];
+                $s3_path = Storage::disk('s3')->url($path);
+            }
+            // return [$save_file_names,$save_new_file_names];
+            $updated_file_names = array_merge($save_file_names, $save_new_file_names);
+            //    return $updated_file_names;
+
+            $file_real_names = implode(',', $updated_file_names);
+            // return $file_real_names;
+
+            // $saveinvoice['file_name'] = $file_real_names;
+            $submit_sourcing_remarks = $data['remarks'];
         $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
+
+        }else{
+            $submit_sourcing_remarks = $data['remarks'];
+            $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3']);
+
+        }
+       
+
         return $update_table;
     }
 
@@ -661,12 +673,12 @@ class InvoiceController extends Controller
             ]);
             if ($response) {
                 if ($get_old_status[0]->employee_id != "unknown_code") {
-                $po_table = DB::table('pos')->where('id', $data['po_id'])->update([
-                    "po_value" => $updated_po_value
-                ]);
-            }else{
-                $po_table = 1;
-            }
+                    $po_table = DB::table('pos')->where('id', $data['po_id'])->update([
+                        "po_value" => $updated_po_value
+                    ]);
+                } else {
+                    $po_table = 1;
+                }
                 if ($po_table) {
                     $res = DB::table('ter_data_cancel')->insert($data);
                     return $res;
@@ -780,12 +792,52 @@ class InvoiceController extends Controller
         $data = $request->all();
         $get_ter_details = DB::table('tercouriers')->where('id', $data['unid'])->where('ter_type', 1)->get();
         if ($get_ter_details[0]->po_id != $data['po_id']) {
-            $get_po_details = DB::table('pos')->where('id', $data['po_id'])->get();
-            $data['ax_id'] = $get_po_details[0]->ax_code;
+            $get_current_po_details = DB::table('pos')->where('id', $data['po_id'])->get();
+
+            if ($get_ter_details[0]->employee_id != "unknown_code") {
+                $get_prev_po_data = DB::table('pos')->where('id', $get_ter_details[0]->po_id)->get();
+                $prev_updated_po_value = $get_prev_po_data[0]->po_value + $get_ter_details[0]->total_amount;
+                 DB::table('pos')->where('id', $get_ter_details[0]->po_id)->update([
+                    "po_value" => $prev_updated_po_value
+                ]);
+            }
+
+
+            $po_data = array();
+
+            $po_value = (int) $get_current_po_details[0]->po_value;
+            $total_amt = (int)$data['total_amount'];
+    
+            if ($get_current_po_details[0]->status != 5) {
+    
+    
+    
+                if ($po_value >  $total_amt) {
+                    $po_data['po_value'] = $po_value - $total_amt;
+                    $po_data['status'] = 2;
+                }
+    
+    
+    
+                if ($total_amt >= $po_value) {
+                    $po_data['po_value'] = $total_amt - $po_value;
+                    $po_data['status'] = 3;
+                }
+            } else {
+                $po_data['po_value'] = "unknown";
+                $po_data['status'] = 5;
+            }
+
+            DB::table('pos')->where('id', $data['po_id'])->update([
+                "po_value" =>   $po_data['po_value'],"status"=> $po_data['status']
+            ]);
+
+
+            $data['ax_id'] = $get_current_po_details[0]->vendor_code;
             $data['sender_id'] = $data['po_id'];
-            $data['sender_name'] = $get_po_details[0]->vendor_name;
-            $data['pfu'] = Helper::PoUnit($get_po_details[0]->unit);
-            $data['po_value'] = $get_po_details[0]->po_value;
+            $data['sender_name'] = $get_current_po_details[0]->vendor_name;
+            $data['pfu'] = Helper::PoUnit($get_current_po_details[0]->unit);
+            $data['po_value'] = $get_current_po_details[0]->po_value;
         }
 
         $id = $data['unid'];

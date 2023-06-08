@@ -3372,7 +3372,7 @@ class TercourierController extends Controller
             }
         }
 
-        if (empty($sender_data->account_number) || empty($sender_data->beneficiary_name) || empty($sender_data->bank_name) || empty($sender_data->ifsc)) {
+        if (empty($sender_data->account_number) || empty($sender_data->beneficiary_name) || empty($sender_data->bank_name) || empty($sender_data->ifsc) ||  empty($sender_data->branch_name)) {
             DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'Bank Details are missing', 'updated_at' => date('Y-m-d H:i:s')]);
 
             return "bank_details_missing";
@@ -4869,6 +4869,15 @@ class TercourierController extends Controller
 
     public function get_employee_spine_data()
     {
+        // try {
+        //     $dbconnect = DB::connection('sqlsrv')->getPDO();
+        //     $dbname = DB::connection('sqlsrv')->getDatabaseName();
+        //     echo "Connected successfully to the database. Database name is :".$dbname;
+        //  } catch(\Exception $e) {
+        //     echo $e;
+        //  }
+        //  exit;
+
         $data = DB::connection('sqlsrv')->table('dbo.EmployeeDetails')->get();
         // $data = DB::connection('sqlsrv')->statement("SELECT * FROM EmpDataService.dbo.EmployeeDetails");
 

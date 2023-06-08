@@ -363,6 +363,10 @@
         background: aliceblue;
         box-shadow: 0 0 12px;
     }
+    input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        display: none;
+      }
 </style>
 
 
@@ -509,8 +513,8 @@
                                 </td>
                                 @endif
                                 @if($tercourier->status ==1 && $role== "reception" || $tercourier->status ==2 && $role== "sourcing" || $tercourier->status ==3 && $role== "sourcing")
-                                <td width="100px" style="cursor:pointer">
-                                    <div class="d-flex align-items-center" style="gap: 4px;cursor:pointer" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(<?php echo $tercourier->id ?>)">
+                                <td width="100px">
+                                    <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
 
                                         <!-- <div class="uid">
@@ -544,8 +548,8 @@
                                     </div>
                                 </td>
                                 @else
-                                <td width="100px" style="cursor:pointer">
-                                    <div class="d-flex align-items-center" style="gap: 4px;cursor:default">
+                                <td width="100px">
+                                    <div class="d-flex align-items-center" style="gap: 4px;">
                                         {{ $tercourier->id }}
 
                                         <!-- <div class="uid">
@@ -644,6 +648,13 @@
                                     </button>
 
                                     @endif
+                                    @elseif($tercourier->status ==1 && $role== "reception" || $tercourier->status ==2 && $role== "sourcing" || $tercourier->status ==3 && $role== "sourcing")
+                                    <button class="btn {{ $class }} btn-sm btn-rounded statusButton" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(<?php echo $tercourier->id ?>)">
+                                        {{ $status }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
                                     @elseif($tercourier->status == 0 || $tercourier->status == 1)
                                     <button class="btn {{ $class }} btn-sm btn-rounded statusButton">
                                         {{ $status }}
@@ -803,7 +814,7 @@
                             </td>
                             @endif
                             <td width="100px">
-                                <div class="d-flex align-items-center" style="gap: 4px; cursor: pointer">
+                                <div class="d-flex align-items-center" style="gap: 4px;">
                                     @{{ tercourier.id }}
                                 </div>
                             </td>
@@ -820,6 +831,32 @@
                                         </svg>
                                     </button>
                                 </div> -->
+                                @if($role== "reception" || $role== "sourcing" || $role== "sourcing")
+                                <div v-if="tercourier.status == 1" style="cursor: pointer">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(tercourier.id)">
+                                        Received at Reception
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 3" style="cursor: pointer">
+                                    <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(tercourier.id)">
+                                        Verified at Sourcing
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 2" style="cursor: pointer">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==2" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(tercourier.id)">
+                                        Received at Sourcing
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+
+
+                                </div>
+                                @else
                                 <div v-if="tercourier.status == 1">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1">
                                         Received at Reception
@@ -892,6 +929,7 @@
                                         Invoice Scanned
                                     </button>
                                 </div>
+                                @endif
                                 <!-- </div> -->
                             </td>
 
@@ -1004,14 +1042,15 @@
                         </tr>
                     </tbody>
                 </table>
-
+                @if ($role == 'reception')
                 <a href="{{url('invoices/create')}}" class="floatingButton btn btn-lg btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span class="text">Invoice Courier</span>
+                    <span class="text">Invoices</span>
                 </a>
+                @endif
 
                 <!-- Cancel Invoice Modal -->
                 <div class="modal fade show" id="cancelModal" v-if="cancel_ter_modal" tabindex="-1" role="dialog" aria-labelledby="camncelModalLabel" aria-hidden="true">
@@ -1166,7 +1205,7 @@
                                         <datalist class="select2-selection__rendered" id="sender_data">
                                             <option v-for="sender_all_info in senders_data" :key="sender_all_info.id">
                                                 @{{sender_all_info.id}} :
-                                                @{{sender_all_info.ax_code}} : @{{sender_all_info.vendor_name}} : @{{po_unit(sender_all_info.unit)}}
+                                                @{{sender_all_info.vendor_code}} : @{{sender_all_info.vendor_name}} : @{{po_unit(sender_all_info.unit)}}
                                             </option>
                                         </datalist>
                                     </div>
@@ -1175,7 +1214,7 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">PO Value *</label>
                                         <div style="height: 20px;"></div>
-                                        <input type="number" class="form-control form-control-sm" name="po_val" v-model="po_value">
+                                        <input type="number" class="form-control form-control-sm" name="po_val" v-model="po_value" readonly>
                                     </div>
                                     <!--------------- end ------------------>
 
@@ -1183,7 +1222,7 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">Courier Received Date</label>
                                         <div style="height: 20px;"></div>
-                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
+                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" id="rcvdate" @change="check_dates('rcv')" v-model="date_of_receipt">
                                     </div>
                                     <!--------------- end ------------------>
                                 </div>
@@ -1218,7 +1257,7 @@
 
                                 <div class="form-group col-md-2">
                                     <label for="inputPassword4">Invoice Date*</label>
-                                    <input type="date" class="form-control form-control-sm" id="terto_date" required name="terto_date" v-model="invoice_date">
+                                    <input type="date" class="form-control form-control-sm" id="invdate" required name="terto_date" @change="check_dates('inv')" v-model="invoice_date">
                                 </div>
 
                                 <div class="d-flex justify-content-end align-items-center">
@@ -1251,8 +1290,6 @@
                 <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
                     {{ $tercouriers->links() }}
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -1336,7 +1373,10 @@
             image_flag: false,
             unid: "",
             cancel_ter_modal: "",
-            cancel_remarks:"",
+            cancel_remarks: "",
+            previous_selected_rcv: "",
+            previous_selected_inv: "",
+
 
 
 
@@ -1350,6 +1390,27 @@
             // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
+            check_dates: function(type) {
+             
+                var today_date = new Date().toJSON().slice(0, 10);
+              
+                if (type == "rcv") {
+                    if (this.date_of_receipt > today_date) {
+                        this.date_of_receipt = this.previous_selected_rcv;
+                        swal('error', "Received Date can't be Future Date", 'error')
+
+                    } 
+                }
+                     if (type == "inv") {
+                        if (this.invoice_date > today_date) {
+                            this.invoice_date = this.previous_selected_inv;
+                            swal('error', "Invoice Date can't be Future Date", 'error')
+
+                        }
+                    }
+                
+
+            },
             cancel_invoice: function() {
                 if (this.cancel_remarks != "") {
                     axios.post('/cancel_invoice_with_po', {
@@ -1358,7 +1419,7 @@
                         })
                         .then(response => {
                             if (response.data) {
-                                swal('success', "UNID :" + this.unid + " has been cancelled", 'success')
+                                swal('success', "UNID :" + this.unid + " has been Cancelled", 'success')
                                 location.reload();
                             } else {
                                 swal('error', "System Error", 'error')
@@ -1785,10 +1846,8 @@
                     })
                     .then(response => {
                         if (response.data) {
-                            this.sender_location = response.data.data.location;
-                            this.sender_telephone = response.data.data.telephone_no;
-                            this.sender_status = response.data.data.status;
-                            // alert(this.sender_telephone);
+                          
+                            this.po_value=response.data[0].po_value;
                         } else {
                             swal('error', "Not able to fetch employee details", 'error')
                         }
@@ -1973,6 +2032,8 @@
                             this.total_amount = this.all_data.total_amount;
                             this.unit = this.all_data.pfu;
                             this.date_of_receipt = this.all_data.received_date;
+                            this.previous_selected_inv = this.all_data.invoice_date;
+                            this.previous_selected_rcv = this.all_data.received_date;
                             this.invoice_number = this.all_data.invoice_no;
                             this.invoice_date = this.all_data.invoice_date;
                             // document.getElementById('amountInwords').style.textTransform = "capitalize";
@@ -2259,6 +2320,24 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 
 <script>
+    $("#invdate").blur(function() {
+        var today_date = new Date().toJSON().slice(0, 10);
+        if ($('#invdate').val() > today_date) {
+            $('#invdate').val(new Date().toJSON().slice(0, 10));
+            swal('error', "Invoice Date can't be Future Date", 'error')
+
+        }
+
+    });
+    $("#rcvdate").blur(function() {
+        var today_date = new Date().toJSON().slice(0, 10);
+        if ($('#rcvdate').val() > today_date) {
+            $('#rcvdate').val(new Date().toJSON().slice(0, 10));
+            swal('error', "Received Date can't be Future Date", 'error')
+
+        }
+
+    });
     $(document).ready(function() {
         $('#delivery_date').val(new Date().toJSON().slice(0, 10));
         //////////

@@ -124,8 +124,16 @@ jQuery(document).ready(function () {
                 required: "Unit is required",
             },
         },
+    
         submitHandler: function (form) {
-            formSubmitRedirect(form);
+            if(document.getElementById("po_value").value < 0)
+            {
+                swal("error", "PO Value should be positive", "error");
+            
+            }
+            else{
+                formSubmitRedirect(form);
+            }
         },
     });
 
