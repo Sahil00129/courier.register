@@ -1004,8 +1004,15 @@
                         </tr>
                     </tbody>
                 </table>
-
-         
+                @if ($role == 'reception')
+                <a href="{{url('invoices/create')}}" class="floatingButton btn btn-lg btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span class="text">Invoices</span>
+                </a>
+                @endif
 
                 <!-- Cancel Invoice Modal -->
                 <div class="modal fade show" id="cancelModal" v-if="cancel_ter_modal" tabindex="-1" role="dialog" aria-labelledby="camncelModalLabel" aria-hidden="true">
@@ -1245,8 +1252,6 @@
                 <div v-if="!search_flag && !ter_data_block_flag" class="d-flex align-items-center justify-content-center">
                     {{ $tercouriers->links() }}
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -1352,7 +1357,7 @@
                         })
                         .then(response => {
                             if (response.data) {
-                                swal('success', "UNID :" + this.unid + " has been cancelled", 'success')
+                                swal('success', "UNID :" + this.unid + " has been Cancelled", 'success')
                                 location.reload();
                             } else {
                                 swal('error', "System Error", 'error')
