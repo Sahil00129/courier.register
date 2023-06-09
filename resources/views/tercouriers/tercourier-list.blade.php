@@ -2217,6 +2217,8 @@
                 courier_id = $("#slct option:selected").val();
 
                 if (type == 'unid_generate') {
+                    this.date_of_receipt=this.today_date;
+
                     if (this.date_of_receipt == null || this.date_of_receipt == "" || this.amount == null || this.amount == "" ||
                         this.docket_no == null || this.docket_no == "" || courier_id == "error" || courier_id == null) {
                         // alert(type);
@@ -2227,7 +2229,6 @@
                         // alert(courier_id)
                         return 1;
                     }
-                    this.date_of_receipt=this.today_date;
                 }
 
                 //  alert(this.docket_no)
