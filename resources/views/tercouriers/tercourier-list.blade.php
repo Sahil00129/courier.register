@@ -1595,7 +1595,7 @@
                                     <div class="form-group col-md-6">
                                         <label for="inputPassword4">Date of Receipt *</label>
                                         <div style="height: 20px;"></div>
-                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="date_of_receipt">
+                                        <input type="date" class="form-control form-control-sm" name="date_of_receipt" v-model="today_date">
                                     </div>
                                     <!--------------- end ------------------>
 
@@ -1964,6 +1964,7 @@
             forMonth: "",
             forPeiod: "",
             unid_file: "",
+            today_date:"",
 
 
         },
@@ -1972,6 +1973,7 @@
             // var table=$('#html5-extension');
             // table.dataTable({dom : 'lrt'});
             // $('table').dataTable({bFilter: false, bInfo: false});
+            this.today_date= new Date().toJSON().slice(0, 10);
         },
         methods: {
             get_unid_file: function(file) {
@@ -2225,6 +2227,7 @@
                         // alert(courier_id)
                         return 1;
                     }
+                    this.date_of_receipt=this.today_date;
                 }
 
                 //  alert(this.docket_no)
@@ -2452,7 +2455,7 @@
                 // this.partial_paid_modal = true;
             },
             get_data_by_id: function(id, type) {
-
+                this.today_date= new Date().toJSON().slice(0, 10);
                 this.unique_id = id;
                 // alert(this.unique_id)
                 // retu
