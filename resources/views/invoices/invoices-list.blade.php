@@ -363,10 +363,11 @@
         background: aliceblue;
         box-shadow: 0 0 12px;
     }
+
     input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
+    input::-webkit-inner-spin-button {
         display: none;
-      }
+    }
 </style>
 
 
@@ -763,7 +764,7 @@
                                             <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
 
-                                        @if ($role == 'reception' && $tercourier->status== 1 && false)
+                                        @if ($role == 'reception' && $tercourier->status== 1)
                                         <div class="action d-flex justify-content-center align-items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit" data-toggle="modal" data-target="#editTerModal" v-on:click="get_data_by_id(<?php echo $tercourier->id ?>)">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1232,11 +1233,11 @@
 
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Basic Amount</label>
-                                    <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="basic_amount">
+                                    <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="basic_amount" @change="check_basic_amount('basic')">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Total Amount</label>
-                                    <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="total_amount">
+                                    <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="total_amount" @change="check_total_amount('total')">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Unit</label>
@@ -1376,6 +1377,8 @@
             cancel_remarks: "",
             previous_selected_rcv: "",
             previous_selected_inv: "",
+            old_basic_amount: "",
+            old_total_amount: "",
 
 
 
@@ -1390,25 +1393,45 @@
             // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
+            check_total_amount: function(type) {
+
+                if (type == "total") {
+                    if (this.basic_amount != "") {
+                        if (this.total_amount < this.basic_amount) {
+                            this.basic_amount = this.old_basic_amount;;
+                            this.total_amount = this.old_total_amount;;
+                            swal('error', "Basic Amount Can't be Greater than Total Amount")
+                        }
+                    }
+                }
+            },
+            check_basic_amount: function(type) {
+                if (type == "basic") {
+                    if (this.basic_amount > this.total_amount) {
+                        this.basic_amount = this.old_basic_amount;
+                        swal('error', "Basic Amount Can't be Greater than Total Amount")
+                    }
+                }
+            },
             check_dates: function(type) {
-             
+
                 var today_date = new Date().toJSON().slice(0, 10);
-              
+
                 if (type == "rcv") {
                     if (this.date_of_receipt > today_date) {
                         this.date_of_receipt = this.previous_selected_rcv;
                         swal('error', "Received Date can't be Future Date", 'error')
 
-                    } 
-                }
-                     if (type == "inv") {
-                        if (this.invoice_date > today_date) {
-                            this.invoice_date = this.previous_selected_inv;
-                            swal('error', "Invoice Date can't be Future Date", 'error')
-
-                        }
                     }
-                
+                }
+                if (type == "inv") {
+                    if (this.invoice_date > today_date) {
+                        this.invoice_date = this.previous_selected_inv;
+                        swal('error', "Invoice Date can't be Future Date", 'error')
+
+                    }
+                }
+
 
             },
             cancel_invoice: function() {
@@ -1458,6 +1481,33 @@
                 } else {
                     po_id = this.all_data.po_id;
                 }
+             
+
+                let check_flag = true;
+                let check_total=true;
+                if (this.po_value == "unknown") {
+                    check_flag = false;
+                    check_total = false;
+
+                }
+
+                // alert($("#po_value").val())
+                if (check_flag) {
+                    if (this.basic_amount > parseInt(this.po_value)) {
+                        this.basic_amount=this.old_basic_amount;
+                    swal('error', "Basic Amount Can't be Greater than PO Amount", 'error')
+                    return 1;
+
+                }
+                } 
+                if (check_total) {
+                    if (this.total_amount > parseInt(this.po_value)) {
+                        this.total_amount=this.old_total_amount;
+                    swal('error', "Total Amount Can't be Greater than PO Amount", 'error')
+                    return 1;
+
+                }
+                }
 
                 axios.post('/edit_invoice_details', {
                         'unid': this.unique_id,
@@ -1482,7 +1532,7 @@
                             this.sender_all_info = "";
                             this.all_data = {};
                             this.unique_id = "";
-                            // location.reload();
+                            location.reload();
                             // $('#html5-extension').DataTable().response.data.reload();
                         } else if (response.data == 0) {
                             this.button_text = "Search";
@@ -1846,8 +1896,8 @@
                     })
                     .then(response => {
                         if (response.data) {
-                          
-                            this.po_value=response.data[0].po_value;
+
+                            this.po_value = response.data[0].po_value;
                         } else {
                             swal('error', "Not able to fetch employee details", 'error')
                         }
@@ -2029,7 +2079,9 @@
                             this.senders_data = response.data.all_pos_data;
                             this.po_value = this.all_data.po_value;
                             this.basic_amount = this.all_data.basic_amount;
+                            this.old_basic_amount = this.basic_amount;
                             this.total_amount = this.all_data.total_amount;
+                            this.old_total_amount = this.total_amount
                             this.unit = this.all_data.pfu;
                             this.date_of_receipt = this.all_data.received_date;
                             this.previous_selected_inv = this.all_data.invoice_date;
