@@ -277,10 +277,18 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group mb-4 col-md-4">
-                                    <label for="exampleFormControlInput2">Crop </label>
-                                    <input type="text" class="form-control" name="crop" id="crop" placeholder="">
+                                <div class="form-group col-md-4">
+                                    <label for="">Crops</label>
+                                    <select class="form-control tagging approvalReq" multiple="multiple" name="crop[]">
+                                        <option value="" disabled>--Select--</option>
+                                        @foreach($crop_json_data as $crop_data)
+                                        <option value="{{$crop_data['crop_names']}}">{{$crop_data['crop_names']}}</option>
+                                        @endforeach
+
+                                    </select>
                                 </div>
+
+
 
                                 <div class="form-group mb-4 col-md-4">
                                     <label for="exampleFormControlInput2">AMM/AGM </label>

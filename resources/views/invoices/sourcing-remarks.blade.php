@@ -211,12 +211,15 @@
                                     <div class="imageBlock"></div>
                                 </div>
                             </div>
+                            <button id="appendButtons" class="btn btn-outline-secondary" style="display: none;" onclick="appendImageSection()" type="button">Add More Image</button>
+
 
 
                             @if(empty($invoices_data->sourcing_remarks))
                             <div class="col-12 d-flex align-items-center justify-content-end" style="gap:1rem;">
-                                <a class="btn btn-outline-primary" href="{{url('/invoices') }}"> Back</a>
-                                <button class="mt-4 mb-4 btn btn-primary" @click="submit_sourcing_remarks()">Submit</button>
+                                <!-- <a class="btn btn-outline-primary" href="{{url('/invoices') }}"> Back</a> -->
+                                <button class="mt-4 mb-4 btn btn-primary" @click="cancel_invoice()">Cancel Invoice</button>
+                                <button class="mt-4 mb-4 btn btn-primary" @click="submit_sourcing_remarks()">Verify Invoice</button>
                             </div>
                             @endif
 
@@ -243,6 +246,46 @@
         }
         imageBlock.innerHTML = image;
         // $('#appendButtons').show();
+    });
+
+    const imageUploadSection = $('#imageUploadSection')
+    let i = 1;
+
+    const appendImageSection = () => {
+        if (i < 5) {
+            console.log('sss ', i);
+            let sectionToAppend = ``;
+            sectionToAppend += `<div class="form-group col-md-3 appendedSection">
+                                    <label class="col-form-label pb-0">Upload File</label>
+                                    <input type="file" accept="image/png, image/jpg, image/jpeg" multiple name="scanning_file[${i}]" class="amit form-control-file  form-control-file-sm" id="fileupload-${i}" required/>
+                                    <div class="imageBlock"></div>
+                                    <span class="closeIconX">x</span>
+                                </div>`;
+            imageUploadSection.append(sectionToAppend);
+            i++;
+        } else {
+            swal('error', 'Maximum upload limit is 5', 'error');
+        }
+    }
+
+    $(document).on("click", '.closeIconX', function(e) {
+        let currentSection = $(this).closest('.appendedSection');
+        console.log(currentSection);
+        currentSection.remove();
+    });
+
+
+    $(document).on("change", '.amit', function(e) {
+        let image = ``;
+        let imageBlock = $(this).next('.imageBlock')[0];
+        let imgSrc = URL.createObjectURL($(this)[0].files[0]);
+
+        for (let i = 0; i < $(this)[0].files.length; i++) {
+            let imgSrcw = URL.createObjectURL($(this)[0].files[i]);
+            image += `<img src="` + imgSrcw + `" alt="your image">`;
+        }
+        imageBlock.innerHTML = image;
+        $('#appendButtons').show();
     });
 </script>
 
@@ -272,6 +315,33 @@
         methods: {
             upload_file(e) {
                 this.file = e.target.files;
+            },
+            cancel_invoice: function() {
+                this.unique_id = $("#unid").val();
+                if (this.sourcing_remarks != "") {
+                    axios.post('/cancel_invoice_with_po', {
+                            'unid': this.unique_id,
+                            'cancel_remarks': this.sourcing_remarks
+                        })
+                        .then(response => {
+                            if (response.data) {
+                                swal('success', "UNID :" + this.unique_id + " has been Cancelled", 'success')
+                                window.location.href = '/invoices';
+                            } else {
+                                swal('error', "System Error", 'error')
+                                this.cancel_ter_modal = false;
+                                this.unid = "";
+                            }
+
+                        }).catch(error => {
+
+                            swal('error', error, 'error')
+                            this.cancel_ter_modal = false;
+                            this.ter_id = "";
+                        })
+                } else {
+                    swal('error', "Remarks needs to be added", 'error')
+                }
             },
             submit_sourcing_remarks: function() {
 

@@ -706,7 +706,7 @@ class InvoiceController extends Controller
         return $res;
     }
 
-    public function get_searched_data(Request $request)
+    public function get_searched_invoice(Request $request)
     {
         // ini_set('max_execution_time', -1);
         $data = $request->all();
@@ -746,7 +746,11 @@ class InvoiceController extends Controller
             } else if ($check_status == '11') {
                 $status = 11;
                 $flag = 1;
-            } else if ($check_status == 'fail') {
+            } else if ($check_status == '12') {
+                $status = 12;
+                $flag = 1;
+            }
+             else if ($check_status == 'fail') {
                 $status = 0;
                 $flag = 1;
             }
@@ -832,7 +836,15 @@ class InvoiceController extends Controller
                 "po_value" =>   $po_data['po_value'],"status"=> $po_data['status']
             ]);
 
+            if ($get_ter_details[0]->employee_id == "unknown_code") {
+                $data['copy_status']=2;
+            }
+            if($data['po_value']== "unknown")
+            {
+                $data['copy_status']=12;
+            }
 
+            $data['employee_id'] = $get_current_po_details[0]->vendor_code;
             $data['ax_id'] = $get_current_po_details[0]->vendor_code;
             $data['sender_id'] = $data['po_id'];
             $data['sender_name'] = $get_current_po_details[0]->vendor_name;

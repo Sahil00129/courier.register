@@ -149,62 +149,7 @@
                     <div class="statbox widget box box-shadow">
                         <form class="general_form row mx-0" method="POST" enctype="multipart/form-data" action="{{url('/invoices')}}" id="createinvoice">
 
-                            <div class="form-row mb-4">
-                                <h6><b>PO Details</b></h6>
-                                <div class="form-group mb-4 col-md-6">
-                                    <label for="exampleFormControlInput2">PO Number</label>
-                                    <select class="form-control form-control-sm basic" name="po_id" id="select_po" required>
-                                        <option selected disabled>search..</option>
-                                        @foreach($pos as $po)
-                                        <option value="{{$po->id}}">{{$po->po_number}}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group mb-4 col-md-6">
-                                    <label for="exampleFormControlInput2">PO Value</label>
-                                    <input type="text" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
-                                </div>
-                            </div>
-
-                            <div class="form-row mb-4">
-                                <h6><b>Sender Details</b></h6>
-                                <div class="form-group mb-4 col-md-4">
-                                    <label for="exampleFormControlInput2">Vendor Code</label>
-                                    <input type="text" class="form-control form-control-sm" name="vendor_code" id="vendor_code" placeholder="" readonly>
-                                </div>
-                                <div class="form-group mb-4 col-md-4">
-                                    <label for="exampleFormControlInput2">Vendor Name</label>
-                                    <input type="text" class="form-control form-control-sm" name="vendor_name" id="vendor_name" placeholder="" readonly>
-                                </div>
-                                <div class="form-group mb-4 col-md-4">
-                                    <label for="exampleFormControlInput2">Unit</label>
-                                    <input type="text" class="form-control form-control-sm" name="po_unit" id="po_unit" placeholder="" readonly>
-                                </div>
-                            </div>
-
-                            <div class="form-row mb-4">
-                                <h6><b>Invoice Details</b></h6>
-
-                                <div class="form-group mb-4 col-md-3">
-                                    <label for="exampleFormControlInput2">Invoice Number</label>
-                                    <input type="text" class="form-control form-control-sm" name="invoice_no" id="invoice_no" placeholder="">
-                                </div>
-                                <div class="form-group mb-4 col-md-3">
-                                    <label for="exampleFormControlInput2">Invoice Date</label>
-                                    <input type="date" class="form-control form-control-sm" name="invoice_date" id="invoice_date" placeholder="">
-                                </div>
-                                <div class="form-group mb-4 col-md-3">
-                                    <label for="exampleFormControlInput2">Basic Amount(Before Tax)</label>
-                                    <input type="number" class="form-control form-control-sm" name="basic_amount" id="basic_amount" placeholder="">
-                                </div>
-                                <div class="form-group mb-4 col-md-3">
-                                    <label for="exampleFormControlInput2">Total Amount</label>
-                                    <input type="number" class="form-control form-control-sm" name="total_amount" id="total_amount" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="form-row mb-4">
+                        <div class="form-row mb-4">
                                 <h6><b>Courier Details</b></h6>
 
                                 <div class="form-group col-md-3">
@@ -218,7 +163,7 @@
                                 </div>
 
                                 <div class="form-group mb-4 col-md-3">
-                                    <label for="exampleFormControlInput2">Courier Received Date</label>
+                                    <label for="exampleFormControlInput2">Courier Received Date*</label>
                                     <input type="date" class="form-control form-control-sm" name="received_date"  id="received_date" placeholder="">
                                 </div>
 
@@ -235,7 +180,62 @@
 
 
                             </div>
+                            <div class="form-row mb-4">
+                                <h6><b>PO Details</b></h6>
+                                <div class="form-group mb-4 col-md-6">
+                                    <label for="exampleFormControlInput2">PO Number*</label>
+                                    <select class="form-control form-control-sm basic" name="po_id" id="select_po" required>
+                                        <option selected disabled>search..</option>
+                                        @foreach($pos as $po)
+                                        <option value="{{$po->id}}">{{$po->po_number}}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mb-4 col-md-6">
+                                    <label for="exampleFormControlInput2">PO Value*</label>
+                                    <input type="text" class="form-control form-control-sm" name="po_value" id="po_value" placeholder="" readonly>
+                                </div>
+                            </div>
 
+                            <div class="form-row mb-4">
+                                <h6><b>Sender Details</b></h6>
+                                <div class="form-group mb-4 col-md-4">
+                                    <label for="exampleFormControlInput2">Vendor Code*</label>
+                                    <input type="text" class="form-control form-control-sm" name="vendor_code" id="vendor_code" placeholder="" readonly>
+                                </div>
+                                <div class="form-group mb-4 col-md-4">
+                                    <label for="exampleFormControlInput2">Vendor Name*</label>
+                                    <input type="text" class="form-control form-control-sm" name="vendor_name" id="vendor_name" placeholder="" readonly>
+                                </div>
+                                <div class="form-group mb-4 col-md-4">
+                                    <label for="exampleFormControlInput2">Unit*</label>
+                                    <input type="text" class="form-control form-control-sm" name="po_unit" id="po_unit" placeholder="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-row mb-4">
+                                <h6><b>Invoice Details</b></h6>
+
+                                <div class="form-group mb-4 col-md-3">
+                                    <label for="exampleFormControlInput2">Invoice Number*</label>
+                                    <input type="text" class="form-control form-control-sm" name="invoice_no" id="invoice_no" placeholder="">
+                                </div>
+                                <div class="form-group mb-4 col-md-3">
+                                    <label for="exampleFormControlInput2">Invoice Date*</label>
+                                    <input type="date" class="form-control form-control-sm" name="invoice_date" id="invoice_date" placeholder="">
+                                </div>
+                                <div class="form-group mb-4 col-md-3">
+                                    <label for="exampleFormControlInput2">Basic Amount(Before Tax)*</label>
+                                    <input type="number" class="form-control form-control-sm" name="basic_amount" id="basic_amount" placeholder="">
+                                </div>
+                                <div class="form-group mb-4 col-md-3">
+                                    <label for="exampleFormControlInput2">Total Amount*</label>
+                                    <input type="number" class="form-control form-control-sm" name="total_amount" id="total_amount" placeholder="">
+                                </div>
+                            </div>
+
+                     
                             <!-- Image Required removed -->
                             <div id="imageUploadSection" class="row">
                                 <div class="form-group col-md-12">

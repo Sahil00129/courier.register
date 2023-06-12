@@ -1,0 +1,123 @@
+{
+    "crops":[  
+        {  
+        "crop_names":"Apple"
+        },     {  
+        "crop_names":"Bengal Gram"
+        },
+        {  
+        "crop_names":"Bitter Gourd"
+        },     {  
+        "crop_names":"Black Gram"
+        },     {  
+        "crop_names":"Brinjal"
+        },     {  
+        "crop_names":"Cabbage"
+        },     {  
+        "crop_names":"Chili"
+        },     {  
+        "crop_names":"Citrus"
+        },     {  
+        "crop_names":"Cotton"
+        },     { 
+        "crop_names":"Cucumber/Gherkins"
+        },     {  
+        "crop_names":"Cumin"
+        },     { 
+        "crop_names":"Groundnut"
+        },
+        { 
+        "crop_names":"Maize"
+        },
+        { 
+        "crop_names":"Mango"
+        },
+        { 
+        "crop_names":"Okra"
+        },
+        { 
+        "crop_names":"Groundnut"
+        },
+        { 
+        "crop_names":"Groundnut"
+        },
+        { 
+        "crop_names":"Onion"
+        },
+        { 
+        "crop_names":"Paddy"
+        },
+        { 
+        "crop_names":"Paddy- Non Basmati"
+        },
+        { 
+        "crop_names":"Paddy-Basmati"
+        },
+        { 
+        "crop_names":"Pomegranate"
+        },
+        { 
+        "crop_names":"Potato"
+        },
+        { 
+        "crop_names":"Tomato"
+        },
+        { 
+        "crop_names":"Red Gram"
+        },
+        { 
+        "crop_names":"Rice"
+        },
+        { 
+        "crop_names":"Ridge Guard"
+        },
+        { 
+        "crop_names":"Soybean"
+        },
+        { 
+        "crop_names":"Sugarcane"
+        },
+        { 
+        "crop_names":"Vegetable"
+        },
+        { 
+        "crop_names":"Watermelon"
+        },
+        { 
+        "crop_names":"Wheat"
+        }
+    ]
+
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

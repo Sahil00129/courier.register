@@ -744,7 +744,7 @@
                                             <div class="dates d-flex flex-column justify-content-center">
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Paid:</div>
-                                                    ₹{{ $tercourier->total_amount ?? '-' }}
+                                                  @if($tercourier->status == 6)  ₹{{ $tercourier->total_amount ?? '-' }}@else {{'-'}} @endif
                                                 </div>
                                                 <div class="amount d-flex align-items-center justify-content-between ">
                                                     <div class="heading">Date:</div>
@@ -832,7 +832,7 @@
                                         </svg>
                                     </button>
                                 </div> -->
-                                @if($role== "reception" || $role== "sourcing" || $role== "sourcing")
+                                @if($role== "reception" || $role== "sourcing")
                                 <div v-if="tercourier.status == 1" style="cursor: pointer">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1" data-toggle="modal" data-target="#cancelModal" v-on:click="open_cancel_ter_modal(tercourier.id)">
                                         Received at Reception
@@ -857,6 +857,24 @@
 
 
                                 </div>
+                                
+                                <div v-if="tercourier.status == 11">
+                                    <button class="btn btn-warning btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==11">
+                                        Handover to Sourcing
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </button>
+
+
+                                </div>
+                                <div v-if="tercourier.status == 13">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Cancel
+                                    </button>
+                                </div>
+                                
                                 @else
                                 <div v-if="tercourier.status == 1">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" v-if="tercourier.status==1">
@@ -928,6 +946,11 @@
                                 <div v-if="tercourier.status == 9">
                                     <button class="btn btn-success btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
                                         Invoice Scanned
+                                    </button>
+                                </div>
+                                <div v-if="tercourier.status == 13">
+                                    <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
+                                        Cancel
                                     </button>
                                 </div>
                                 @endif
@@ -1006,7 +1029,7 @@
                                         <div class="dates d-flex flex-column justify-content-center">
                                             <div class="amount d-flex align-items-center justify-content-between ">
                                                 <div class="heading">Paid:</div>
-                                                ₹@{{ tercourier.total_amount }}
+                                               <span v-if="tercourier.status ==6"> ₹@{{ tercourier.total_amount }}</span><span v-else>-</span>
                                             </div>
                                             <div class="amount d-flex align-items-center justify-content-between ">
                                                 <div class="heading">Date:</div>
@@ -1896,6 +1919,7 @@
                         if (response.data) {
 
                             this.po_value = response.data[0].po_value;
+                            this.unit = response.data[0].unit;
                         } else {
                             swal('error', "Not able to fetch employee details", 'error')
                         }

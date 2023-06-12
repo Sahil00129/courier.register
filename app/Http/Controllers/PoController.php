@@ -92,7 +92,9 @@ class PoController extends Controller
     {
         $state_json = file_get_contents('assets/json/states-and-districts.json');
         $state_json_data = json_decode($state_json, true);
-        return view('pos.create-po',['state_json_data' => $state_json_data['states']]);
+        $crop_json = file_get_contents('assets/json/crops.json');
+        $crop_json_data = json_decode($crop_json, true);
+        return view('pos.create-po',['state_json_data' => $state_json_data['states'],'crop_json_data' =>$crop_json_data['crops']]);
     }
 
     /**
@@ -177,7 +179,8 @@ class PoController extends Controller
             $addpo['state']  = implode(',',$state);
         }
         if(!empty($request->crop)){
-            $addpo['crop'] = $request->crop;
+            $crop = $request->crop;
+            $addpo['crop']  = implode(',',$crop);
         }
         if(!empty($request->amm_agm)){
             $addpo['amm_agm'] = $request->amm_agm;

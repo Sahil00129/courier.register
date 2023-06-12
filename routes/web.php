@@ -206,7 +206,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/accept_invoice_handover', [InvoiceController::class, 'accept_invoice_handover']);
     Route::post('/reject_invoice_handover', [InvoiceController::class, 'reject_invoice_handover']);
     Route::post('/update_scanning_data', [InvoiceController::class, 'update_scanning_data']);
-    Route::post('/get_searched_invoice', [InvoiceController::class, 'get_searched_data']);
+    Route::post('/get_searched_invoice', [InvoiceController::class, 'get_searched_invoice']);
     Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
     Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoice']);
     Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
