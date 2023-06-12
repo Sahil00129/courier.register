@@ -1233,11 +1233,11 @@
 
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Basic Amount</label>
-                                    <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="basic_amount" @change="check_basic_amount('basic')">
+                                    <input type="text" class="form-control form-control-sm" id="location" name="location" v-model="basic_amount" @keyup="check_basic_amount()">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Total Amount</label>
-                                    <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="total_amount" @change="check_total_amount('total')">
+                                    <input type="text" class="form-control mbCheckNm form-control-sm" id="telephone_no" v-model="total_amount" @keyup="check_total_amount()">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="inputPassword4">Unit</label>
@@ -1393,25 +1393,23 @@
             // https://dpportal.s3.us-east-2.amazonaws.com/invoice_images/AUVuGTgPlYBC8LhDUUVr5LxfPdwmOib6JE5Kmmvk.jpg
         },
         methods: {
-            check_total_amount: function(type) {
+            check_total_amount: function() {
 
-                if (type == "total") {
                     if (this.basic_amount != "") {
-                        if (this.total_amount < this.basic_amount) {
+                        if (this.basic_amount > this.total_amount) {
                             this.basic_amount = this.old_basic_amount;;
                             this.total_amount = this.old_total_amount;;
                             swal('error', "Basic Amount Can't be Greater than Total Amount")
                         }
                     }
-                }
+                
             },
-            check_basic_amount: function(type) {
-                if (type == "basic") {
+            check_basic_amount: function() {
                     if (this.basic_amount > this.total_amount) {
                         this.basic_amount = this.old_basic_amount;
                         swal('error', "Basic Amount Can't be Greater than Total Amount")
                     }
-                }
+          
             },
             check_dates: function(type) {
 
