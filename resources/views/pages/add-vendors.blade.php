@@ -67,6 +67,17 @@
         z-index: 999999;
         font-size: 1.1rem;
     }
+
+    #gst,
+    #pan_no,
+    #ifsc {
+        text-transform: uppercase;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        display: none;
+    }
 </style>
 
 <section class="container" style="position: relative">
@@ -111,6 +122,7 @@
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
                         <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
+                        <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
@@ -135,11 +147,13 @@
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
                         <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" required>
+                        <label class="error phoneError" style="display: none">Invalid phone</label>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" placeholder="Pincode" required>
+                        <label class="error pinError" style="display: none">Invalid pincode</label>
                     </div>
 
                     <!-- <div class="form-group col-md-3">
@@ -292,46 +306,22 @@
     const registeredGst = document.getElementById('registered')
     const unRegisteredGst = document.getElementById('unRegistered')
 
-    const gstInput = document.getElementById('gst');
-    const panInput = document.getElementById('pan_no');
 
     function onChnageGstStatus() {
+        $('#gst-error').hide();
         if (registered.checked) {
             document.getElementById('gst').setAttribute("required", "true");
             document.getElementById('gst').classList.add('approvalReq');
-            document.getElementById('pan_no').removeAttribute("required")
-            document.getElementById('pan_no').classList.remove('approvalReq');
-
+            document.getElementById('phone').removeAttribute("required")
+            document.getElementById('phone').classList.remove('approvalReq');
+            $('#phone-error').hide();
         } else if (unRegistered.checked) {
-            document.getElementById('pan_no').setAttribute("required", "true");
-            document.getElementById('pan_no').classList.add('approvalReq');
+            document.getElementById('phone').setAttribute("required", "true");
+            document.getElementById('phone').classList.add('approvalReq');
             document.getElementById('gst').removeAttribute("required");
             document.getElementById('gst').classList.remove('approvalReq');
         }
     }
-
-
-    // $('.form-control').on('change', function() {
-    //     console.log('fggd');
-    //     $('form > input').blur(function() {
-    //         var empty = false;
-    //         $('form > input').each(function() {
-    //             if ($(this).val() == '') {
-    //                 empty = true;
-    //             }
-    //         });
-
-    //         if (empty) {
-    //             console.log('false');
-    //             $('#sendForApproval').attr('disabled', 'disabled');
-    //         } else {
-    //             console.log('true');
-    //             $('#sendForApproval').removeAttr('disabled');
-    //         }
-    //     });
-    // })
-
-
 
     (function() {
         console.log('fggd');
@@ -347,9 +337,8 @@
                 $('#draftmode').removeAttr('disabled');
 
 
-            console.log('page true');
-        }
-            else {
+                console.log('page true');
+            } else {
                 $('#sendForApproval').removeAttr('disabled');
                 document.getElementById('sendForApproval').classList.remove('disabled');
                 $('#draftmode').attr('disabled', 'disabled');
@@ -360,6 +349,65 @@
         })
     })();
 
+    function validateGst() {
+        if ($('#gst').val().length != 0) {
+            if ($('#gst').val().length <= 15) {
+                let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
+                if (regex.test($('#gst').val()) == true) {
+                    $('#gst').removeAttr('required');
+                    $('#pan_no').val($('#gst').val().substring(2, 12));
+                }
+            } else {
+                $('#gst').attr('required', true);
+                $('#gst').val($('#gst').val().substring(0, 15))
+            }
+        } else {
+            $('.gstError').hide();
+        }
+    }
+
+
+    function validatePhone() {
+        if ($('#phone').val().length != 0) {
+            if ($('#phone').val().length <= 10) {
+                let regex = new RegExp(/^[6-9][0-9]{9}$/)
+                if (regex.test($('#phone').val()) == true) {
+                    $('.phoneError').hide();
+                } 
+            } else {
+                $('#phone').val($('#phone').val().substring(0, 10))
+            }
+        } else {
+            $('.phoneError').hide();
+        }
+    }
+
+    function validatePin() {
+        if ($('#pincode').val().length != 0) {
+            if ($('#pincode').val().length <= 6) {
+                let regex = new RegExp(/^[1-9][0-9]{5}$/)
+                if (regex.test($('#pincode').val()) == true) {
+                    $('.pinError').hide();
+                }
+            } else {
+                $('#pincode').val($('#pincode').val().substring(0, 6))
+            }
+        } else {
+            $('.pinError').hide();
+        }
+    }
+
+    $("#gst").keyup(function() {
+        validateGst()
+    });
+
+    $("#pincode").keyup(function() {
+        validatePin()
+    });
+
+    $("#phone").keyup(function() {
+        validatePhone()
+    });
 
 
 

@@ -527,6 +527,7 @@
                     })
             },
             confirm_decline: function() {
+                if(this.handover_remarks!=""){
                 axios.post('/reject_handover', {
                         'handover_id': this.handover_id,
                         'handover_remarks': this.handover_remarks
@@ -546,6 +547,11 @@
 
 
                     })
+                }
+                else{
+                    swal('error', "Remarks are Mandatory", 'error')
+                }
+
             },
             decline_handover: function(id) {
                 this.handover_id = id;

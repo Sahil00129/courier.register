@@ -620,7 +620,7 @@
                                     $status = 'Unknown';
                                     $class = 'btn-secondary';
                                 } elseif ($tercourier->status == 13) {
-                                    $status = 'Cancel';
+                                    $status = 'Cancelled';
                                     $class = 'btn-danger';
                                 } else {
                                     $status = 'Failed';
@@ -871,7 +871,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 13">
                                     <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Cancel
+                                    Cancelled
                                     </button>
                                 </div>
                                 
@@ -950,7 +950,7 @@
                                 </div>
                                 <div v-if="tercourier.status == 13">
                                     <button class="btn btn-danger btn-sm btn-rounded mb-2 statusButton" style="cursor: default">
-                                        Cancel
+                                    Cancelled
                                     </button>
                                 </div>
                                 @endif
@@ -1943,14 +1943,15 @@
                     .then(response => {
                         // this.view_file_name = 'uploads/scan_doc/' + response.data;
                         if (response.data == '') {
+                            $('.modal-backdrop').removeClass("show");
+                            $('#viewFileModal').modal('hide');
+                            this.file_view_modal = false;
                             this.image_flag = true;
                             swal('error', 'No Images has been uploaded..')
-                            $('#viewFileModal').modal('hide');
-                            $('.modal-backdrop').removeClass("show");
+                            return 1;
                         } else {
                             this.image_flag = false;
                         }
-
                         const split_file_names = response.data.split(",");
 
 

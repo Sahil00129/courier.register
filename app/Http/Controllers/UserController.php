@@ -123,6 +123,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
@@ -152,6 +153,7 @@ class UserController extends Controller
         $input['company_id'] = $input['company_id'];
         $input['location_id'] = $input['location_id'];
         $input['department_id'] = $input['department_id'];
+        $input['role'] = $input['roles'][0];
 
         // User::where('id', $id)->update($input);    
         $user = User::find($id);
