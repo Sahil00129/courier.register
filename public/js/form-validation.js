@@ -213,11 +213,11 @@ jQuery(document).ready(function () {
                     // required: true
                 },
                 phone:{
-                    pattern: new RegExp("^[6-9][0-9]{9}$"),
+                    pattern: new RegExp(/^[6-9][0-9]{9}$/),
                     required: true
                 },
                 pincode:{
-                    pattern: new RegExp("^[1-9][0-9]{5}$"),
+                    pattern: new RegExp(/^[1-9][0-9]{5}$/),
                     required: true
                 }
             },
