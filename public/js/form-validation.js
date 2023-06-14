@@ -213,14 +213,19 @@ jQuery(document).ready(function () {
                 // GstCheck:"Invalid GST"
             },
             submitHandler: function (form) {
-                if(document.getElementById("gst").value !="")
-                {
-                    $.validator.addMethod("GstCheck", function(value, element) {
-                    return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
-                    }, "Invalid GST Format.");
-                    // swal("error", "PO Value should be positive", "error");
-                
-                }
+                if ($('#gst').val().length != 0) {
+                    if ($('#gst').val().length <= 15) {
+                        let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
+                        if (regex.test($('#gst').val()) == true) {
+                            $('.gstError').hide();
+                            $('#gst').removeAttr('required');
+                            $('#pan_no').val($('#gst').val().substring(2, 12));
+                        } else $('.gstError').show();
+                    } else {
+                        $('#gst').attr('required', true);
+                        $('#gst').val($('#gst').val().substring(0, 15))
+                    }
+                } 
                 else{
                 document.getElementById('loadingBlock').style.display="flex";
                     formSubmitRedirect(form);
