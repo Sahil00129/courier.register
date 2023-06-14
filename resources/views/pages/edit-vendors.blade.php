@@ -76,6 +76,11 @@
         color: #000;
         font-weight: 600;
     }
+    
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        display: none;
+    }
 </style>
 
 <section class="container" style="position: relative">
@@ -122,12 +127,15 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" id="gst" name="gst" value="<?php echo $vendor_data->gst ?>" placeholder="GSTIN" >
+                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" id="gst" name="gst" value="<?php echo $vendor_data->gst ?>" placeholder="GSTIN" required maxlength="15" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$">
+                        <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" name="pan_no" id="pan_no" value="<?php echo $vendor_data->gst ?>" placeholder="PAN">
+                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" name="pan_no" id="pan_no" value="<?php echo $vendor_data->gst ?>" placeholder="PAN" maxlength="10" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$">
+                        <label class="error panError" style="display: none">Invalid pan no</label>
+                 
                     </div>
 
 
@@ -146,12 +154,14 @@
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required>
+                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required maxlength="10" pattern="^[6-9][0-9]{9}$">
+                        <label class="error phoneError" style="display: none">Invalid phone</label>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" value="<?php echo $vendor_data->pincode ?>" placeholder="Pincode">
+                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" value="<?php echo $vendor_data->pincode ?>" placeholder="Pincode" required maxlength="6" pattern="^[1-9][0-9]{5}$">
+                        <label class="error pinError" style="display: none">Invalid pincode</label>
                     </div>
 
                     <!-- <div class="form-group col-md-3">
@@ -316,18 +326,21 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 
 <script>
-    const registered = document.getElementById('registered')
-    const unRegistered = document.getElementById('unRegistered')
+    const registeredGst = document.getElementById('registered')
+    const unRegisteredGst = document.getElementById('unRegistered')
 
-    function onChangeGstStatus() {
+
+    function onChnageGstStatus() {
+        $('#gst-error').hide();
         if (registered.checked) {
             document.getElementById('gst').setAttribute("required", "true");
             document.getElementById('gst').classList.add('approvalReq');
-            document.getElementById('pan_no').removeAttribute("required")
-            document.getElementById('pan_no').classList.remove('approvalReq');
+            document.getElementById('phone').removeAttribute("required")
+            document.getElementById('phone').classList.remove('approvalReq');
+            $('#phone-error').hide();
         } else if (unRegistered.checked) {
-            document.getElementById('pan_no').setAttribute("required", "true");
-            document.getElementById('pan_no').classList.add('approvalReq');
+            document.getElementById('phone').setAttribute("required", "true");
+            document.getElementById('phone').classList.add('approvalReq');
             document.getElementById('gst').removeAttribute("required");
             document.getElementById('gst').classList.remove('approvalReq');
         }
@@ -335,7 +348,7 @@
 
     (function() {
         console.log('fggd');
-        $('form .approvalReq').change(function() {
+        $('form input').change(function() {
             var empty = false;
             $('form .approvalReq').each(function() {
                 if ($(this).val() == '') empty = true;
@@ -343,47 +356,97 @@
 
             if (empty) {
                 $('#sendForApproval').attr('disabled', 'disabled');
-            console.log('page true');
-        }
-            else {
+                // document.getElementById('draftmode').classList.remove('disabled');
+                $('#draftmode').removeAttr('disabled');
+
+
+                console.log('page true');
+            } else {
                 $('#sendForApproval').removeAttr('disabled');
                 document.getElementById('sendForApproval').classList.remove('disabled');
-                        document.getElementById('sendForApproval').style.pointerEvents = "all";
+                $('#draftmode').attr('disabled', 'disabled');
+                // document.getElementById('draftmode').classList.add('disabled');
+                document.getElementById('sendForApproval').style.pointerEvents = "all";
+
             }
         })
     })();
 
-    // $("#pincode").blur(function() {
-    //    var pincode;
-    //       pincode =  $("#pincode").val();
-    //       $.ajax({
-    //     url: "https://api.postalpincode.in/pincode/"+pincode,
-    //     // url: "https://beta.finfect.biz/api/getVendorList/"+unit,
-    //     type: "get",
-    //     // cache: false,
-    //     // data: { po_id: po_id },
-    //     // dataType: "json",
-    //     beforeSend: function () {
-    //         $("#state").empty();
-
-    //     },
-    //     success: function (res) {
-    //         if(res){
-
-    //              console.log(res.data[0].PostOffice[0].State);return 1;
-
-
-    //             $("#state").val(res.data[0].PostOffice[0].state);
-    //             // $("#po_unit").val(unit);
-    //             // $("#vendor_code").val(res.data.vendor_code);
-    //             // $("#vendor_name").val(res.data.vendor_name);
-
-    //         }
-    //     },
-    // });
+    function validateGst() {
+        if ($('#gst').val().length != 0) {
+            if ($('#gst').val().length <= 15) {
+                let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
+                if (regex.test($('#gst').val()) == true) {
+                    $('.gstError').hide();
+                    $('#gst').removeAttr('required');
+                    $('#pan_no').val($('#gst').val().substring(2, 12));
+                } else $('.gstError').show();
+            } else {
+                $('#gst').attr('required', true);
+                $('#gst').val($('#gst').val().substring(0, 15))
+            }
+        } else {
+            $('.gstError').hide();
+        }
+    }
 
 
-    // });
+    function validatePan() {
+        if ($('#pan_no').val().length != 0) {
+            let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
+            if (regex.test($('#pan_no').val()) == true) {
+                $('.panError').hide();
+            } else $('.panError').show();
+        } else {
+            $('.panError').hide();
+        }
+    }
+
+    function validatePhone() {
+        if ($('#phone').val().length != 0) {
+            if ($('#phone').val().length <= 10) {
+                let regex = new RegExp(/^[6-9][0-9]{9}$/)
+                if (regex.test($('#phone').val()) == true) {
+                    $('.phoneError').hide();
+                } else $('.phoneError').show();
+            } else {
+                $('#phone').val($('#phone').val().substring(0, 10))
+            }
+        } else {
+            $('.phoneError').hide();
+        }
+    }
+
+    function validatePin() {
+        if ($('#pincode').val().length != 0) {
+            if ($('#pincode').val().length <= 6) {
+                let regex = new RegExp(/^[1-9][0-9]{5}$/)
+                if (regex.test($('#pincode').val()) == true) {
+                    $('.pinError').hide();
+                } else $('.pinError').show();
+            } else {
+                $('#pincode').val($('#pincode').val().substring(0, 6))
+            }
+        } else {
+            $('.pinError').hide();
+        }
+    }
+
+    $("#gst").keyup(function() {
+        validateGst()
+    });
+
+    $("#pan_no").keyup(function() {
+        validatePan()
+    });
+
+    $("#pincode").keyup(function() {
+        validatePin()
+    });
+
+    $("#phone").keyup(function() {
+        validatePhone()
+    });
 </script>
 
 <!--<script>

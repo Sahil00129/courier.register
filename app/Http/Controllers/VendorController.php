@@ -28,7 +28,7 @@ class VendorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/getAllVendors',
+            CURLOPT_URL => 'https://uat.finfect.biz/api/getAllVendors',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -229,7 +229,7 @@ class VendorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/update_vendor',
+            CURLOPT_URL => 'https://uat.finfect.biz/api/update_vendor',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -506,7 +506,7 @@ class VendorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/getVendorinfo/'.$id,
+            CURLOPT_URL => 'https://uat.finfect.biz/api/getVendorinfo/'.$id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -566,7 +566,7 @@ class VendorController extends Controller
 
     public function get_vendors($type)
     {
-        $url = "https://beta.finfect.biz/api/getVendorList/" . $type;
+        $url = "https://uat.finfect.biz/api/getVendorList/" . $type;
 
         $curl = curl_init();
 
