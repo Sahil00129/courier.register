@@ -248,14 +248,9 @@ function formSubmitRedirect(form)
         success: function (response)
         {
             if (response.page == "create-pos") {
-         
                 $('.submit_po').prop('disabled',true);
                 $('.submit_po').css('pointer-events', 'none');
-
-         }
-          
-    
- ;         
+         }  
           	$.toast().reset('all');
       		var delayTime = 3000;
 	        if(response.success){
@@ -408,7 +403,10 @@ function formSubmitRedirect(form)
             $("button[type=submit]").removeAttr("disabled");
 		},
         error:function(response){
-            alert("DS");
+            // alert("DS");
+            document.getElementById('loadingBlock').style.display="none";
+            swal('error',response,'error')
+
 
             $.toast({
                 heading             : 'Error',

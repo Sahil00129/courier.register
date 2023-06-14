@@ -414,7 +414,7 @@ class VendorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/add_vendor',
+            CURLOPT_URL => 'https://uat.finfect.biz/api/add_vendor',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
