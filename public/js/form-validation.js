@@ -210,8 +210,19 @@ jQuery(document).ready(function () {
   
             },
             submitHandler: function (form) {
+                var errors = false;
+                $(this).find('.required').each(function () {
+                    if ($(this).val().length < 1) {
+                        $(this).addClass('error');
+                        errors = true;
+                    }
+                });
+                if (errors == true) {
+                    event.preventDefault();
+                }else{
                 document.getElementById('loadingBlock').style.display="flex";
                 formSubmitRedirect(form);
+                }
             },
         });
 
