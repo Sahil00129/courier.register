@@ -212,15 +212,15 @@ jQuery(document).ready(function () {
                     GstCheck:true
                 },
                 pan_no:{
-                    pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
+                    // pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
                     // required: true
                 },
                 phone:{
-                    pattern: new RegExp(/^[6-9][0-9]{9}$/),
+                    // pattern: new RegExp(/^[6-9][0-9]{9}$/),
                     required: true
                 },
                 pincode:{
-                    pattern: new RegExp(/^[1-9][0-9]{5}$/),
+                    // pattern: new RegExp(/^[1-9][0-9]{5}$/),
                     required: true
                 }
             },
