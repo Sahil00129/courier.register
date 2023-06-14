@@ -216,7 +216,7 @@ jQuery(document).ready(function () {
             submitHandler: function (form) {
                 let flag=true;
                 const unRegisteredGst = document.getElementById('unRegistered')
-            if ((unRegisteredGst.checked && $('#pan_no').val().length == 0) && $('#phone').val().length == 0){
+            if (unRegisteredGst.checked && $('#pan_no').val().length == 0 && $('#phone').val().length == 0){
                 flag=false;
                 swal('error','Either Pan or Phone is required','error')
             }
