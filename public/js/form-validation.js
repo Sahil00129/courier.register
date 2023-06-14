@@ -137,6 +137,7 @@ jQuery(document).ready(function () {
         },
     });
 
+    
     //create invoice
     jQuery("#createinvoice").validate({
         rules: {
@@ -214,6 +215,12 @@ jQuery(document).ready(function () {
             },
             submitHandler: function (form) {
                 let flag=true;
+                const unRegisteredGst = document.getElementById('unRegistered')
+            if ((unRegisteredGst.checked && $('#pan_no').val().length == 0) && $('#phone').val().length == 0){
+                flag=false;
+                swal('error','Either Pan or Phone is required','error')
+            }
+
                 if ($('#gst').val().length != 0) {
                         let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
                         if (regex.test($('#gst').val()) != true) {

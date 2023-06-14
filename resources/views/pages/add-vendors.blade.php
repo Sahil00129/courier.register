@@ -313,12 +313,12 @@
         if (registered.checked) {
             document.getElementById('gst').setAttribute("required", "true");
             document.getElementById('gst').classList.add('approvalReq');
-            document.getElementById('phone').removeAttribute("required")
-            document.getElementById('phone').classList.remove('approvalReq');
+            // document.getElementById('phone').removeAttribute("required")
+            // document.getElementById('phone').classList.remove('approvalReq');
             $('#phone-error').hide();
         } else if (unRegistered.checked) {
-            document.getElementById('phone').setAttribute("required", "true");
-            document.getElementById('phone').classList.add('approvalReq');
+            // document.getElementById('phone').setAttribute("required", "true");
+            // document.getElementById('phone').classList.add('approvalReq');
             document.getElementById('gst').removeAttribute("required");
             document.getElementById('gst').classList.remove('approvalReq');
         }

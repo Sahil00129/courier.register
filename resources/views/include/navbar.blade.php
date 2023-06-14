@@ -979,11 +979,11 @@ $flag = 0;
     </li>
 </ul>
 
-<!-- <script>
+<script>
     $('#topbar #topAccordion li a').on('click', function () {
         if ($('#topbar #topAccordion li a').href.include('#') == false) {
             $('#topbar #topAccordion').find('li.active').removeClass('active');
             $(this).parent('li').addClass('active');
         }
     });
-</script> -->
+</script>
