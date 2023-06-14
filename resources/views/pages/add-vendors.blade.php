@@ -121,13 +121,13 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
+                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required maxlength="15" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$">
                         <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN">
+                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" maxlength="10" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$">
                     </div>
 
 
@@ -146,13 +146,13 @@
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" required>
+                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" required maxlength="10" pattern="^[6-9][0-9]{9}$">
                         <label class="error phoneError" style="display: none">Invalid phone</label>
                     </div>
 
                     <div class="form-group col-md-3">
                         <label for="">Pincode</label>
-                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" placeholder="Pincode" required>
+                        <input type="text" class="approvalReq form-control" name="pincode" id="pincode" placeholder="Pincode" required maxlength="6" pattern="^[1-9][0-9]{5}$">
                         <label class="error pinError" style="display: none">Invalid pincode</label>
                     </div>
 
