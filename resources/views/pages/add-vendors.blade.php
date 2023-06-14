@@ -121,13 +121,13 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
+                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$" maxlength="15">
                         <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN">
+                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" required pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" maxlength="10">
                     </div>
 
 
@@ -351,21 +351,10 @@
 
     function validateGst() {
         if ($('#gst').val().length != 0) {
-            if ($('#gst').val().length <= 15) {
-                let regex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-                if (regex.test($('#gst').val())) {
-                    $('.gstError').hide();
-                    $('#gst').removeAttr('required');
-                    $('#pan_no').val($('#gst').val().substring(2, 12));
-                } else {
-                    $('.gstError').show();
-                }
-            } else {
-                $('#gst').attr('required', true);
-                $('#gst').val($('#gst').val().substring(0, 15))
+            let regex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+            if (regex.test($('#gst').val())) {
+                $('#pan_no').val($('#gst').val().substring(2, 12));
             }
-        } else {
-            $('.gstError').hide();
         }
     }
 

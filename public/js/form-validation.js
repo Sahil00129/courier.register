@@ -137,6 +137,8 @@ jQuery(document).ready(function () {
         },
     });
 
+
+
     //create invoice
     jQuery("#createinvoice").validate({
         rules: {
@@ -200,6 +202,9 @@ jQuery(document).ready(function () {
             formSubmitRedirect(form);
         },
     });
+    // $.validator.addMethod("validateGST", function(value, element) {
+    //     return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
+    // }, "Please enter valid gst number.");
 
         //create invoice
         jQuery("#vForm").validate({
@@ -208,6 +213,8 @@ jQuery(document).ready(function () {
                     // pattern: "^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$",
                     // pattern: new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/),
                     // required: true
+                    // validateGST: true,
+                    // maxlength: 15
                 },
                 pan_no:{
                     pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
@@ -224,7 +231,7 @@ jQuery(document).ready(function () {
             },
             messages: {
                 gst:{
-                    pattern: "Invalid GST",
+                    // validateGST: "Invalid GST",
                     // required: "This field is required"
                 },
                 pan_no:{
