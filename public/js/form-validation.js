@@ -201,26 +201,23 @@ jQuery(document).ready(function () {
         },
     });
 
-    $.validator.addMethod("GstCheck", function(value, element) {
-        return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
-    }, "Invalid GST Format.");
-
         //create invoice
         jQuery("#vForm").validate({
             rules: {
                 gst:{
-                    GstCheck:true
+                    pattern: new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/),
+                    // required: true
                 },
                 pan_no:{
-                    // pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
+                    pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
                     // required: true
                 },
                 phone:{
-                    // pattern: new RegExp(/^[6-9][0-9]{9}$/),
+                    pattern: new RegExp(/^[6-9][0-9]{9}$/),
                     required: true
                 },
                 pincode:{
-                    // pattern: new RegExp(/^[1-9][0-9]{5}$/),
+                    pattern: new RegExp(/^[1-9][0-9]{5}$/),
                     required: true
                 }
             },

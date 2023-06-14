@@ -93,7 +93,7 @@
     <div class="row editTer">
         <div class="card-body">
             <form class="forms-sample" id="vForm" method="post" enctype="multipart/form-data" method="POST" action="{{url('/add_vendor_details')}}">
-                   @csrf
+
                 <!-- <form class="forms-sample" id="vForms" method="post" enctype="multipart/form-data" method="POST" > -->
 
                 <div class="form-row mb-4 pt-4">
@@ -121,7 +121,7 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required maxlength="15">
+                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
                         <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
