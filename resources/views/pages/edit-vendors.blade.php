@@ -115,13 +115,21 @@
                     </div>
                     <div class="form-group col-md-12 n-chk align-self-center">
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChangeGstStatus()" id="registered" name="registered" type="radio" checked="checked" class="new-control-input" name="gstStatus">
+                            <input onchange="onChangeGstStatus()" id="registered" name="registered" type="radio" checked="@if($vendor_data->gst) checked @endif" class="new-control-input" name="gstStatus">
                             <span class="new-control-indicator"></span>Registered
                         </label>
+                        @if($vendor_data->gst == null || empty($vendor_data->gst) )
                         <label class="new-control new-radio radio-classic-primary">
-                            <input onchange="onChangeGstStatus()" id="unRegistered" name="registered" type="radio" class="new-control-input" name="gstStatus">
+                            <input onchange="onChangeGstStatus()" id="unRegistered" name="registered" type="radio" class="new-control-input" name="gstStatus" checked="checked">
                             <span class="new-control-indicator"></span>Un-registered
                         </label>
+                        @else
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input onchange="onChangeGstStatus()" id="unRegistered" name="registered" type="radio" class="new-control-input" name="gstStatus" disabled="@if($vendor_data->gst != '') disabled @endif">
+                            <span class="new-control-indicator"></span>Un-registered
+                        </label>
+                        @endif 
+                      
                     </div>
                     <input type="hidden" name="id" value="<?php echo $id ?>">
 
@@ -334,6 +342,7 @@
         $('#gst-error').hide();
         if (registered.checked) {
             document.getElementById('gst').setAttribute("required", "true");
+            document.getElementById('gst').removeAttribute("disabled");
             document.getElementById('gst').classList.add('approvalReq');
             // document.getElementById('phone').removeAttribute("required")
             // document.getElementById('phone').classList.remove('approvalReq');
@@ -343,11 +352,12 @@
             // document.getElementById('phone').classList.add('approvalReq');
             document.getElementById('gst').removeAttribute("required");
             document.getElementById('gst').classList.remove('approvalReq');
+            document.getElementById('gst').setAttribute("disabled", "true");
         }
     }
 
     (function() {
-        console.log('fggd');
+
         $('form input').change(function() {
             var empty = false;
             $('form .approvalReq').each(function() {
@@ -358,9 +368,6 @@
                 $('#sendForApproval').attr('disabled', 'disabled');
                 // document.getElementById('draftmode').classList.remove('disabled');
                 $('#draftmode').removeAttr('disabled');
-
-
-                console.log('page true');
             } else {
                 $('#sendForApproval').removeAttr('disabled');
                 document.getElementById('sendForApproval').classList.remove('disabled');

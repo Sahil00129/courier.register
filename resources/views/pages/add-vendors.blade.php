@@ -312,6 +312,7 @@
         $('#gst-error').hide();
         if (registered.checked) {
             document.getElementById('gst').setAttribute("required", "true");
+            document.getElementById('gst').removeAttribute("disabled");
             document.getElementById('gst').classList.add('approvalReq');
             // document.getElementById('phone').removeAttribute("required")
             // document.getElementById('phone').classList.remove('approvalReq');
@@ -321,6 +322,7 @@
             // document.getElementById('phone').classList.add('approvalReq');
             document.getElementById('gst').removeAttribute("required");
             document.getElementById('gst').classList.remove('approvalReq');
+            document.getElementById('gst').setAttribute("disabled", "true");
         }
     }
 
