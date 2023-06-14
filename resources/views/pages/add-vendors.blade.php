@@ -127,7 +127,7 @@
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" required pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" maxlength="10">
+                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" maxlength="10">
                     </div>
 
 
