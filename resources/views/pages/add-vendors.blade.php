@@ -128,6 +128,7 @@
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
                         <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" maxlength="10" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$">
+                        <label class="error panError" style="display: none">Invalid pan no</label>
                     </div>
 
 
@@ -368,13 +369,27 @@
     }
 
 
+    function validatePan() {
+        if ($('#pan_no').val().length != 0) {
+            if ($('#pan_no').val().length <= 10) {
+                let regex = new RegExp(/^[6-9][0-9]{9}$/)
+                if (regex.test($('#pan_no').val()) == true) {
+                    $('.panError').hide();
+                } else $('.panError').show();
+            } else {
+                $('#pan_no').val($('#pan_no').val().substring(0, 10))
+            }
+        } else {
+            $('.panError').hide();
+        }
+    }
     function validatePhone() {
         if ($('#phone').val().length != 0) {
             if ($('#phone').val().length <= 10) {
                 let regex = new RegExp(/^[6-9][0-9]{9}$/)
                 if (regex.test($('#phone').val()) == true) {
                     $('.phoneError').hide();
-                } 
+                } else $('.phoneError').show();
             } else {
                 $('#phone').val($('#phone').val().substring(0, 10))
             }
@@ -389,7 +404,7 @@
                 let regex = new RegExp(/^[1-9][0-9]{5}$/)
                 if (regex.test($('#pincode').val()) == true) {
                     $('.pinError').hide();
-                }
+                } else $('.pinError').show();
             } else {
                 $('#pincode').val($('#pincode').val().substring(0, 6))
             }
@@ -400,6 +415,10 @@
 
     $("#gst").keyup(function() {
         validateGst()
+    });
+
+    $("#pan_no").keyup(function() {
+        validatePan()
     });
 
     $("#pincode").keyup(function() {
