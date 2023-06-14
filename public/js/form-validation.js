@@ -204,40 +204,10 @@ jQuery(document).ready(function () {
         //create invoice
         jQuery("#vForm").validate({
             rules: {
-                gst:{
-                    // pattern: new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/),
-                    // required: true
-                },
-                pan_no:{
-                    // pattern: new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/),
-                    // required: true
-                },
-                phone:{
-                    // pattern: new RegExp(/^[6-9][0-9]{9}$/),
-                    required: true
-                },
-                pincode:{
-                    // pattern: new RegExp(/^[1-9][0-9]{5}$/),
-                    required: true
-                }
+
             },
             messages: {
-                gst:{
-                    pattern: "Invalid GST",
-                    // required: "This field is required"
-                },
-                pan_no:{
-                    pattern: "Invalid PAN no",
-                    // required: "This field is required"
-                },
-                phone:{
-                    pattern: "Invalid Phone number",
-                    required: "This field is required"
-                },
-                pincode:{
-                    pattern: "Invalid pincode",
-                    required: "This field is required"
-                }
+  
             },
             submitHandler: function (form) {
                 document.getElementById('loadingBlock').style.display="flex";
