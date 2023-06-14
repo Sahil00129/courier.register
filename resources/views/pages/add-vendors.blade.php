@@ -350,7 +350,20 @@
     })();
 
     function validateGst() {
-        
+        if ($('#gst').val().length != 0) {
+            if ($('#gst').val().length <= 15) {
+                let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
+                if (regex.test($('#gst').val()) == true) {
+                    $('#gst').removeAttr('required');
+                    $('#pan_no').val($('#gst').val().substring(2, 12));
+                }
+            } else {
+                $('#gst').attr('required', true);
+                $('#gst').val($('#gst').val().substring(0, 15))
+            }
+        } else {
+            $('.gstError').hide();
+        }
     }
 
 
@@ -385,20 +398,7 @@
     }
 
     $("#gst").keyup(function() {
-        if ($('#gst').val().length != 0) {
-            if ($('#gst').val().length <= 15) {
-                let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
-                if (regex.test($('#gst').val()) == true) {
-                    $('#gst').removeAttr('required');
-                    $('#pan_no').val($('#gst').val().substring(2, 12));
-                }
-            } else {
-                $('#gst').attr('required', true);
-                $('#gst').val($('#gst').val().substring(0, 15))
-            }
-        } else {
-            $('.gstError').hide();
-        }
+        validateGst()
     });
 
     $("#pincode").keyup(function() {
