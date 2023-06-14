@@ -200,21 +200,33 @@ jQuery(document).ready(function () {
             formSubmitRedirect(form);
         },
     });
-    $.validator.addMethod("GstCheck", function(value, element) {
-        return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
-    }, "Invalid GST Format.");
+    // $.validator.addMethod("GstCheck", function(value, element) {
+    //     return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
+    // }, "Invalid GST Format.");
 
         //create invoice
         jQuery("#vForm").validate({
             rules: {
-                GstCheck:true,
+                // GstCheck:true,
             },
             messages: {
-                GstCheck:"Invalid GST"
+                // GstCheck:"Invalid GST"
             },
             submitHandler: function (form) {
+                if(document.getElementById("gst").value !="")
+                {
+                    $.validator.addMethod("GstCheck", function(value, element) {
+                    return this.optional(element) || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value);
+                    }, "Invalid GST Format.");
+                    // swal("error", "PO Value should be positive", "error");
+                
+                }
+                else{
                 document.getElementById('loadingBlock').style.display="flex";
-                formSubmitRedirect(form);
+                    formSubmitRedirect(form);
+                }
+
+            
             },
         });
 
