@@ -303,6 +303,9 @@
 <script src="{{asset('assets/js/libs/jquery-3.1.1.min.js')}}"></script>
 
 <script>
+    $(document).ready(function(){
+   alert('kk');
+    });
     const registeredGst = document.getElementById('registered')
     const unRegisteredGst = document.getElementById('unRegistered')
 
