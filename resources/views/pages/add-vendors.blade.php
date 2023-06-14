@@ -121,7 +121,7 @@
 
                     <div class="form-group col-md-3" id="gstNo">
                         <label for="">GSTIN</label>
-                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required>
+                        <input type="text" class="approvalReq form-control" id="gst" name="gst" placeholder="GSTIN" required maxlength="15">
                         <label class="error gstError" style="display: none">Invalid GST number</label>
                     </div>
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
