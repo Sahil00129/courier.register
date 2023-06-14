@@ -371,18 +371,15 @@
 
     function validatePan() {
         if ($('#pan_no').val().length != 0) {
-            if ($('#pan_no').val().length <= 10) {
-                let regex = new RegExp(/^[6-9][0-9]{9}$/)
-                if (regex.test($('#pan_no').val()) == true) {
-                    $('.panError').hide();
-                } else $('.panError').show();
-            } else {
-                $('#pan_no').val($('#pan_no').val().substring(0, 10))
-            }
+            let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
+            if (regex.test($('#pan_no').val()) == true) {
+                $('.panError').hide();
+            } else $('.panError').show();
         } else {
             $('.panError').hide();
         }
     }
+
     function validatePhone() {
         if ($('#phone').val().length != 0) {
             if ($('#phone').val().length <= 10) {
