@@ -154,7 +154,7 @@
                     <div class="form-group col-md-3">
                         <label for="">Contact Phone</label>
                         <small id="cp" class="" style="position: absolute;right: 0;background: white;top: 20px;font-size: 11px;margin-right: 8%;"></small>
-                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>" required maxlength="10" pattern="^[6-9][0-9]{9}$">
+                        <input type="number" class="approvalReq form-control" name="phone" id="phone" placeholder="Phone" value="<?php echo $vendor_data->phone ?>"  maxlength="10" pattern="^[6-9][0-9]{9}$">
                         <label class="error phoneError" style="display: none">Invalid phone</label>
                     </div>
 
