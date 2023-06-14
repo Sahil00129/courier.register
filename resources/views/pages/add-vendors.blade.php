@@ -354,8 +354,11 @@
             if ($('#gst').val().length <= 15) {
                 let regex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
                 if (regex.test($('#gst').val())) {
+                    $('.gstError').hide();
                     $('#gst').removeAttr('required');
                     $('#pan_no').val($('#gst').val().substring(2, 12));
+                } else {
+                    $('.gstError').show();
                 }
             } else {
                 $('#gst').attr('required', true);
@@ -373,7 +376,7 @@
                 let regex = new RegExp(/^[6-9][0-9]{9}$/)
                 if (regex.test($('#phone').val()) == true) {
                     $('.phoneError').hide();
-                } 
+                }
             } else {
                 $('#phone').val($('#phone').val().substring(0, 10))
             }
