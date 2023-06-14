@@ -213,23 +213,21 @@ jQuery(document).ready(function () {
                 // GstCheck:"Invalid GST"
             },
             submitHandler: function (form) {
+                let test=true;
                 if ($('#gst').val().length != 0) {
-                    if ($('#gst').val().length <= 15) {
                         let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
-                        if (regex.test($('#gst').val()) == true) {
-                            $('.gstError').hide();
-                            $('#gst').removeAttr('required');
-                            $('#pan_no').val($('#gst').val().substring(2, 12));
-                        } else $('.gstError').show();
-                    } else {
-                        $('#gst').attr('required', true);
-                        $('#gst').val($('#gst').val().substring(0, 15))
+                        if (regex.test($('#gst').val()) != true) {
+                           test=false;
+                           swal('error','Invalid GSt','error')
+                        } 
+
                     }
-                } 
-                else{
+
+              if(test){
                 document.getElementById('loadingBlock').style.display="flex";
                     formSubmitRedirect(form);
-                }
+              }
+                
 
             
             },
