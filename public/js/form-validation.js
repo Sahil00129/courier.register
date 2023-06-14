@@ -213,17 +213,42 @@ jQuery(document).ready(function () {
                 // GstCheck:"Invalid GST"
             },
             submitHandler: function (form) {
-                let test=true;
+                let flag=true;
                 if ($('#gst').val().length != 0) {
                         let regex = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/);
                         if (regex.test($('#gst').val()) != true) {
-                           test=false;
+                           flag=false;
                            swal('error','Invalid GSt','error')
                         } 
 
                     }
+                    if ($('#pan_no').val().length != 0) {
+                        let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/);
+                        if (regex.test($('#pan_no').val()) != true) {
+                           flag=false;
+                           swal('error','Invalid Pan Number','error')
+                        } 
 
-              if(test){
+                    }
+                    if ($('#phone').val().length != 0) {
+                        let regex = new RegExp(/^[6-9][0-9]{9}$/);
+                        if (regex.test($('#phone').val()) != true) {
+                           flag=false;
+                           swal('error','Invalid Phone Number','error')
+                        } 
+
+                    }
+
+                    if ($('#pincode').val().length != 0) {
+                        let regex = new RegExp(/^[1-9][0-9]{5}$/);
+                        if (regex.test($('#pincode').val()) != true) {
+                           flag=false;
+                           swal('error','Invalid Picode','error')
+                        } 
+
+                    }
+
+              if(flag){
                 document.getElementById('loadingBlock').style.display="flex";
                     formSubmitRedirect(form);
               }
