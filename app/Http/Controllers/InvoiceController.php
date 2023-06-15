@@ -460,7 +460,7 @@ class InvoiceController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://beta.finfect.biz/api/checkVendorStatus/' . $vendor_unique_id,
+            CURLOPT_URL => 'https://uat.finfect.biz/api/checkVendorStatus/' . $vendor_unique_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

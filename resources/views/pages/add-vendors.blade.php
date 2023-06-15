@@ -127,7 +127,7 @@
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" maxlength="10" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$">
+                        <input type="text" class="form-control" name="pan_no" id="pan_no" placeholder="PAN" maxlength="10">
                         <label class="error panError" style="display: none">Invalid pan no</label>
                     </div>
 
@@ -373,7 +373,7 @@
 
     function validatePan() {
         if ($('#pan_no').val().length != 0) {
-            let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
+            let regex = new RegExp(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/) 
             if (regex.test($('#pan_no').val()) == true) {
                 $('.panError').hide();
             } else $('.panError').show();

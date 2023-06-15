@@ -230,7 +230,7 @@ jQuery(document).ready(function () {
 
                     }
                     if ($('#pan_no').val().length != 0) {
-                        let regex = new RegExp(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/);
+                        let regex = new RegExp(/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
                         if (regex.test($('#pan_no').val()) != true) {
                            flag=false;
                            swal('error','Invalid Pan Number','error')
