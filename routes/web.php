@@ -220,6 +220,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get('/vendor-table', [VendorController::class, 'vendorTable']);
+    Route::get('export_vendor_list', [VendorController::class, 'export_vendor_list']);
+    Route::get('download_vendor_report', [VendorController::class, 'download_vendor_report']);
     Route::get('/get_vendors/{type}', [VendorController::class, 'get_vendors']);
     Route::post('add_vendor_details', [VendorController::class, 'add_vendor_details']);
     Route::post('edit_vendor_details', [VendorController::class, 'edit_vendor_details']);

@@ -198,10 +198,7 @@
 
                         @endif
 
-                        @if(false)
-                        <a class="btn-primary btn-cstm btn ml-2" style="font-size: 12px; padding: 9px; width: 130px" href="{{'/download_vendor_list'}}"><span><i class="fa fa-plus"></i> Export
-                            </span></a>
-                        @endif
+                    <button @click="export_vendor_list()" class="btn-primary btn-cstm btn ml-2" style="font-size: 12px; padding: 9px; width: 130px"><span><i class="fa fa-plus"></i>Export</button>
                     </div>
 
 
@@ -413,6 +410,7 @@
                 search_keyword: "",
                 data_loaded: false,
                 sender_data: {},
+                url:"",
 
             },
             created: function() {
@@ -420,6 +418,24 @@
 
             },
             methods: {
+
+                export_vendor_list: function() {
+                axios.get('/export_vendor_list', {
+
+
+                    })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.data == 1) {
+                            this.url = '/download_vendor_report';
+                            window.location.href = this.url;
+                        }
+
+                    }).catch(error => {
+
+
+                    })
+            },
                 open_edit_vendor(id) {
                     axios.post('/open_edit_vendor', {
                             'id': id

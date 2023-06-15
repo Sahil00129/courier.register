@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use URL;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportVendorList;
 
 date_default_timezone_set('Asia/Kolkata');
 
@@ -588,5 +590,17 @@ class VendorController extends Controller
         return json_decode($response);
         // $get_vendors=VendorDetails::where('unit',$type)->get();
         // return $get_vendors;
+    }
+
+    public function export_vendor_list()
+    {
+        if (Auth::check()) {
+            return 1;
+        }
+    }
+
+    public function download_vendor_report()
+    {
+        return Excel::download(new ExportVendorList, 'vendor_list_report.xlsx');
     }
 }
