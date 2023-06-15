@@ -1943,11 +1943,11 @@
                     .then(response => {
                         // this.view_file_name = 'uploads/scan_doc/' + response.data;
                         if (response.data == '') {
-                            $('.modal-backdrop').removeClass("show");
-                            $('#viewFileModal').modal('hide');
                             this.file_view_modal = false;
                             this.image_flag = true;
                             swal('error', 'No Images has been uploaded..')
+                            $('.modal-backdrop').css("display", "none");
+                            $('#viewFileModal').modal('hide');
                             return 1;
                         } else {
                             this.image_flag = false;
