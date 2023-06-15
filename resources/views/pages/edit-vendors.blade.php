@@ -141,7 +141,7 @@
                     <!-- <div class="form-group col-md-3" id="panNo" style="display: none;"> -->
                     <div class="form-group col-md-3" id="panNo">
                         <label for="">PAN</label>
-                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" name="pan_no" id="pan_no" value="<?php echo $vendor_data->pan_no ?>" placeholder="PAN" maxlength="10">
+                        <input type="text" class="form-control @if($vendor_data->gst) approvalReq @endif" name="pan_no" id="pan_no" value="<?php echo $vendor_data->pan ?>" placeholder="PAN" maxlength="10">
                         <label class="error panError" style="display: none">Invalid pan no</label>
                  
                     </div>
@@ -215,10 +215,13 @@
                     <div class="form-group col-md-3">
                         <label for="">Account No</label>
                         <input type="number" class="approvalReq form-control" name="ano" id="ano" value="<?php echo $vendor_data->ano ?>" placeholder="Acc No">
+                        <label class="error anoError" style="display: none">Invalid Account number</label>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">IFSC Code</label>
-                        <input type="text" class="approvalReq form-control" name="ifsc" id="ifsc" value="<?php echo $vendor_data->ifsc ?>" placeholder="IFSC Code">
+                        <input type="text" class="approvalReq form-control" name="ifsc" id="ifsc" value="<?php echo $vendor_data->ifsc ?>" maxlength="11"  minlength="11" placeholder="IFSC Code">
+                        <label class="error ifscError" style="display: none">Invalid IFSC code</label>
+                  
                     </div>
                     <div class="form-group col-md-3">
                         <label for="">Bank Name</label>
@@ -424,6 +427,36 @@
         }
     }
 
+    function validateAcounNo() {
+        if ($('#ano').val().length != 0) {
+            if ($('#ano').val().length >= 9) {
+                if ($('#ano').val().length <= 18) {
+                    $('.anoError').hide();
+                } else {
+                    $('#ano').val($('#ano').val().substring(0, 18))
+                }
+            } else $('.anoError').show();
+        } else $('.anoError').hide();
+    }
+
+    function validateIfsc() {
+        if ($('#ifsc').val().length != 0) {
+            if ($('#ifsc').val().length <= 11) {
+                let regex = new RegExp(/^[A-Za-z]{4}[a-zA-Z0-9]{7}$/)
+                if (regex.test($('#ifsc').val()) == true) {
+                    $('.ifscError').hide();
+                } else $('.ifscError').show();
+            } else {
+                $('#ifsc').val($('#ifsc').val().substring(0, 11))
+            }
+        } else {
+            $('.ifscError').hide();
+        }
+    }
+    $("#ifsc").keyup(function() {
+        validateIfsc()
+    });
+
     function validatePin() {
         if ($('#pincode').val().length != 0) {
             if ($('#pincode').val().length <= 6) {
@@ -438,6 +471,10 @@
             $('.pinError').hide();
         }
     }
+
+    $("#ano").keyup(function() {
+        validateAcounNo()
+    });
 
     $("#gst").keyup(function() {
         validateGst()

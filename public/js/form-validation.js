@@ -255,6 +255,15 @@ jQuery(document).ready(function () {
 
                     }
 
+                    if ($('#ifsc').val().length != 0) {
+                        let regex = new RegExp(/^[A-Za-z]{4}[a-zA-Z0-9]{7}$/);
+                        if (regex.test($('#ifsc').val()) != true) {
+                           flag=false;
+                           swal('error','Invalid IFSC code','error')
+                        } 
+
+                    }
+
               if(flag){
                 document.getElementById('loadingBlock').style.display="flex";
                     formSubmitRedirect(form);
