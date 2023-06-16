@@ -202,6 +202,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get_po_list', [InvoiceController::class, 'get_po_list']);
     Route::post('submit_sourcing_remarks', [InvoiceController::class, 'submit_sourcing_remarks']);
     Route::post('handover_invoices_document', [InvoiceController::class, 'handover_invoices_document']);
+    Route::post('get_invoice_data', [InvoiceController::class, 'get_invoice_data']);
     Route::get('/invoice_handover', [InvoiceController::class, 'invoice_handover']);
     Route::post('/accept_invoice_handover', [InvoiceController::class, 'accept_invoice_handover']);
     Route::post('/reject_invoice_handover', [InvoiceController::class, 'reject_invoice_handover']);
@@ -209,7 +210,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/get_searched_invoice', [InvoiceController::class, 'get_searched_invoice']);
     Route::post('edit_invoice_details', [InvoiceController::class, 'edit_invoice_details']);
     Route::post('open_verify_invoice', [InvoiceController::class, 'open_verify_invoice']);
+    Route::post('edit_verify_invoice', [InvoiceController::class, 'edit_verify_invoice']);
     Route::get('update_invoice/{id}', [InvoiceController::class, 'update_invoice']);
+    Route::get('admin_update_invoice/{id}', [InvoiceController::class, 'admin_update_invoice']);
     Route::get('download_invoice_list', [InvoiceController::class, 'download_invoice_list']);
     Route::get('download_vendor_list', [InvoiceController::class, 'download_vendor_list']);
     Route::get('show_unknown_invoice', [InvoiceController::class, 'show_unknown_invoice']);

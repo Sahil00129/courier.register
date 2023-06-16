@@ -45,9 +45,13 @@ class InvoiceController extends Controller
             $user = Auth::user();
             $data = json_decode(json_encode($user));
             $name = $data->roles[0]->name;
+            // return $name;
             $couriers = DB::table('courier_companies')->select('id', 'courier_name')->distinct()->get();
             if ($name == "sourcing") {
                 $role = "sourcing";
+                $tercouriers = $query->whereIn('status', ['2', '3', '4', '11', '12', '13'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
+            } else if ($name == "sourcing-admin") {
+                $role = "sourcing-admin";
                 $tercouriers = $query->whereIn('status', ['2', '3', '4', '11', '12', '13'])->where('ter_type', 1)->with('PoDetail', 'CourierCompany', 'HandoverDetail')->orderby('id', 'DESC')->paginate(20);
             } else if ($name == "accounts") {
                 $role = "accounts";
@@ -67,7 +71,7 @@ class InvoiceController extends Controller
             // $invoice_list = Tercourier::whereIn('status', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '11'])->where('ter_type',1)->with('Po', 'HandoverDetail')->orderby('id', 'DESC')->paginate(2);
 
 
-            // echo'<pre>'; print_r($tercouriers); die;
+            // echo'<pre>'; print_r($role); die;
 
             $check_eligible_for_payments = $query->where('status', 3)->where('ter_type', 1)->get();
 
@@ -369,7 +373,7 @@ class InvoiceController extends Controller
 
     public function get_all_invoice_data(Request $request)
     {
-        $pos =  Po::whereIn('status', ['1','2','5'])->orderby('id', 'ASC')->get();
+        $pos =  Po::whereIn('status', ['1', '2', '5'])->orderby('id', 'ASC')->get();
 
         $data = $request->all();
 
@@ -390,7 +394,7 @@ class InvoiceController extends Controller
         $get_file_names = $get_data[0]->file_name;
 
         if (!empty($data['scanning_file'])) {
-     
+
 
             $size = sizeof($data['scanning_file']);
 
@@ -437,14 +441,12 @@ class InvoiceController extends Controller
 
             // $saveinvoice['file_name'] = $file_real_names;
             $submit_sourcing_remarks = $data['remarks'];
-        $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
-
-        }else{
+            $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3', 'file_name' => $file_real_names]);
+        } else {
             $submit_sourcing_remarks = $data['remarks'];
             $update_table = DB::table('tercouriers')->where('id', $id)->update(['sourcing_remarks' => $submit_sourcing_remarks, 'status' => '3']);
-
         }
-       
+
 
         return $update_table;
     }
@@ -749,8 +751,7 @@ class InvoiceController extends Controller
             } else if ($check_status == '12') {
                 $status = 12;
                 $flag = 1;
-            }
-             else if ($check_status == 'fail') {
+            } else if ($check_status == 'fail') {
                 $status = 0;
                 $flag = 1;
             }
@@ -795,13 +796,14 @@ class InvoiceController extends Controller
     {
         $data = $request->all();
         $get_ter_details = DB::table('tercouriers')->where('id', $data['unid'])->where('ter_type', 1)->get();
+      
         if ($get_ter_details[0]->po_id != $data['po_id']) {
             $get_current_po_details = DB::table('pos')->where('id', $data['po_id'])->get();
 
             if ($get_ter_details[0]->employee_id != "unknown_code") {
                 $get_prev_po_data = DB::table('pos')->where('id', $get_ter_details[0]->po_id)->get();
                 $prev_updated_po_value = $get_prev_po_data[0]->po_value + $get_ter_details[0]->total_amount;
-                 DB::table('pos')->where('id', $get_ter_details[0]->po_id)->update([
+                DB::table('pos')->where('id', $get_ter_details[0]->po_id)->update([
                     "po_value" => $prev_updated_po_value
                 ]);
             }
@@ -811,18 +813,18 @@ class InvoiceController extends Controller
 
             $po_value = (int) $get_current_po_details[0]->po_value;
             $total_amt = (int)$data['total_amount'];
-    
+
             if ($get_current_po_details[0]->status != 5) {
-    
-    
-    
+
+
+
                 if ($po_value >  $total_amt) {
                     $po_data['po_value'] = $po_value - $total_amt;
                     $po_data['status'] = 2;
                 }
-    
-    
-    
+
+
+
                 if ($total_amt >= $po_value) {
                     $po_data['po_value'] = $total_amt - $po_value;
                     $po_data['status'] = 3;
@@ -833,15 +835,24 @@ class InvoiceController extends Controller
             }
 
             DB::table('pos')->where('id', $data['po_id'])->update([
-                "po_value" =>   $po_data['po_value'],"status"=> $po_data['status']
+                "po_value" =>   $po_data['po_value'], "status" => $po_data['status']
             ]);
 
             if ($get_ter_details[0]->employee_id == "unknown_code") {
-                $data['copy_status']=2;
+                if($data['role'] == "sourcing_admin")
+                {
+                    $data['status'] = 2;
+                }else{
+                    $data['copy_status'] = 2;
+                }
             }
-            if($data['po_value']== "unknown")
-            {
-                $data['copy_status']=12;
+            if ($data['po_value'] == "unknown") {
+                 if($data['role'] == "sourcing_admin")
+                {
+                    $data['status'] = 12;
+                }else{
+                    $data['copy_status'] = 12;
+                }
             }
 
             $data['employee_id'] = $get_current_po_details[0]->vendor_code;
@@ -850,6 +861,12 @@ class InvoiceController extends Controller
             $data['sender_name'] = $get_current_po_details[0]->vendor_name;
             $data['pfu'] = Helper::PoUnit($get_current_po_details[0]->unit);
             $data['po_value'] = $get_current_po_details[0]->po_value;
+
+        }
+
+        if($data['role'] == "sourcing_admin")
+        {
+            $data['hr_admin_remark'] = $data['admin_remarks'];
         }
 
         $id = $data['unid'];
@@ -857,14 +874,14 @@ class InvoiceController extends Controller
         $data['saved_by_name'] = $details->name;
         $data['saved_by_id'] = $details->id;
         unset($data['unid']);
+        unset($data['role']);
+        unset($data['admin_remarks']);
+       
+
 
         $get_db_data = DB::table('tercouriers')->select('status')->where('id', $id)->get();
-        if ($get_db_data[0]->status == 1) {
-            $new = DB::table('tercouriers')->where('id', $id)->update($data);
-            return $new;
-        } else {
-            return 0;
-        }
+        $new = DB::table('tercouriers')->where('id', $id)->update($data);
+        return $new;
     }
 
     public function open_verify_invoice(Request $request)
@@ -874,6 +891,7 @@ class InvoiceController extends Controller
         $res = URL::to('/update_invoice/' . $id);
         return $res;
     }
+
 
     public function update_invoice($id)
     {
@@ -904,10 +922,77 @@ class InvoiceController extends Controller
 
     }
 
+
+    
+    public function edit_verify_invoice(Request $request)
+    {
+        $data = $request->all();
+        $id = $data['id'];
+        $res = URL::to('/admin_update_invoice/' . $id);
+        return $res;
+    }
+
+    public function get_invoice_data(Request $request)
+    {
+        $data=$request->all();
+        $id=$data['unique_id'];
+        $get_data = DB::table('tercouriers')->where('id', $id)->get();
+        $pos =  Po::whereIn('status', ['1', '2', '5'])->orderby('id', 'ASC')->get();
+        $get_po_details = DB::table('pos')->where('id', $get_data[0]->po_id)->get();
+        if (!empty($get_data[0]->courier_id)) {
+            $couriers = DB::table('courier_companies')->where('id', $get_data[0]->courier_id)->get();
+        } else {
+            $courier_name = "not defined";
+        }
+        if (!empty($couriers)) {
+            $courier_name = $couriers[0]->courier_name;
+        } else {
+            $courier_name = "not defined";
+        }
+
+        return [$get_data[0],$pos,$get_po_details[0],$courier_name];
+        
+    }
+
+    public function admin_update_invoice($id)
+    {
+        $get_data = DB::table('tercouriers')->where('id', $id)->get();
+        $pos =  Po::whereIn('status', ['1', '2', '5'])->orderby('id', 'ASC')->get();
+        $get_po_details = DB::table('pos')->where('id', $get_data[0]->po_id)->get();
+        if (!empty($get_data[0]->courier_id)) {
+            $couriers = DB::table('courier_companies')->where('id', $get_data[0]->courier_id)->get();
+        } else {
+            $courier_name = "not defined";
+        }
+        if (!empty($couriers)) {
+            $courier_name = $couriers[0]->courier_name;
+        } else {
+            $courier_name = "not defined";
+        }
+
+        // echo "<pre>";
+        // print_r($get_data);
+        // exit;
+        return view('invoices.sourcing-admin-invoice', ['invoices_data' => $get_data[0],'pos'=>$pos, 'po_data' => $get_po_details[0], 'courier_name' => $courier_name]);
+        // if($id == '0')
+        // {
+        //     return view('tercouriers.update-tercourier');
+
+        // }else{
+        //     return view('tercouriers.update-tercourier', ['unique_id' => $id]);
+        // }
+
+    }
+
+
+
     public function download_invoice_list()
     {
         return Excel::download(new ExportInvoiceFullList, 'invoices_list.xlsx');
     }
+
+
+ 
 
 
 
