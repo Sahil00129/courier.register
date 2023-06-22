@@ -295,6 +295,18 @@ class BulkImport implements ToModel, WithHeadingRow
                     // echo "<pre>";print_r($updated_record_detail);
                 }
             }
+            if ($sender_table->branch_name != $row['branch_name']) {
+                // print_r($sender_table->last_working_date);
+                $updated_details['updated_id'] = $sender_table->id;
+                $branch_name_update = Sender::where('id', $sender_table->id)->update(['branch_name' => $row['branch_name']]);
+
+                $updated_details['updated_field'] = 'Branch Name Changed from ' . $sender_table->branch_name . ' to ' . $row['branch_name'];
+
+                if ($branch_name_update) {
+                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                    // echo "<pre>";print_r($updated_record_detail);
+                }
+            }
 
             if ($sender_table->ifsc != $row['ifsc_code']) {
                 // print_r($sender_table->last_working_date);
