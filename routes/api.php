@@ -23,4 +23,4 @@ Route::post('terportal_update_status', [TercourierController::class, 'terportal_
 
 Route::get('get-employee-list', [EmployeeController::class, 'getEmployee']);
 Route::get('get-employee-detail/{id}', [EmployeeController::class, 'getEmployeeDetail']);
-
+Route::get('get_emp_info/{id}', [EmployeeController::class, 'getEmployeeInfo']);
