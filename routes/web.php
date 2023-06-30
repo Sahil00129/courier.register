@@ -18,6 +18,8 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\MobileController;
 use App\Http\Controllers\SamplePage;
+use App\Http\Controllers\SSO\SSOController;
+
 
 
 /*
@@ -47,6 +49,10 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/sample-page', [SamplePage::class, 'sample_page']);
 
+Route::get("/sso/login", [SSOController::class, 'getLogin'])->name("sso.login");
+Route::get("/callback", [SSOController::class, 'getCallback'])->name("sso.callback");
+Route::get("/sso/connect", [SSOController::class, 'connectUser'])->name("sso.connect");
+Route::get("/portal_login/{email}", [SSOController::class, 'portal_login'])->name("login_to_portal");
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', UserController::class);
@@ -91,7 +97,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('edit-company/{id}', [TableController::class, 'editforCompany']);
     Route::put('updated-company', [TableController::class, 'updateforCompany']);
     Route::any('delete-forcompany/{id}', [TableController::class, 'destroyforCompany']);
-////////
+    ////////
     Route::get('/sample-sender', [SampleDownloadController::class, 'senderSample']);
     Route::get('/sample-spine-hr-dump', [SampleDownloadController::class, 'spinehrSample']);
     Route::get('/sample-courier', [SampledownloadController::class, 'courierCompaniesSample']);
@@ -108,7 +114,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('get_employees', [TercourierController::class, 'getEmployees']);
     Route::any('ter-bundles', [TercourierController::class, 'terBundles']);
 
-// Dhruv routes
+    // Dhruv routes
 
     Route::post('change_status', [TercourierController::class, 'change_status_to_handover']);
     Route::post('add_data', [TercourierController::class, 'add_details_to_DB']);
@@ -116,7 +122,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('get_paylater_details', [TercourierController::class, 'get_paylater_details']);
 
 
-// Route::get('update_ter', [TercourierController::class, 'update_ter']);
+    // Route::get('update_ter', [TercourierController::class, 'update_ter']);
     Route::get('update_ter/{id}', [TercourierController::class, 'update_ter']);
     Route::post('get_all_data', [TercourierController::class, 'get_all_data']);
     Route::post('ter_pay_now', [TercourierController::class, 'ter_pay_now']);
@@ -231,8 +237,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/show_vendors_form', [VendorController::class, 'show_vendors_form']);
     Route::post('/open_edit_vendor', [VendorController::class, 'open_edit_vendor']);
     Route::get('/get_vendors_form/{id}', [VendorController::class, 'get_vendors_form']);
-
-
 });
 
 Route::get('/forgot-session', [HomeController::class, 'ForgotSession']);
@@ -244,7 +248,7 @@ Route::get('/check_paid_status', [TercourierController::class, 'check_paid_statu
 Route::get('/check_deduction_paid_status', [TercourierController::class, 'check_deduction_paid_status']);
 Route::get('/check_finfect_status', [TercourierController::class, 'check_finfect_status']);
 Route::get('/check_email_trigger', [TercourierController::class, 'check_email_trigger']);
-Route::get('/get_spine_data', [TercourierController::class,'get_employee_spine_data']);
+Route::get('/get_spine_data', [TercourierController::class, 'get_employee_spine_data']);
 Route::get('email_ter_list', [TercourierController::class, 'email_ter_list']);
 
 
@@ -259,6 +263,3 @@ Route::post('/submit_otp', [MobileController::class, 'verify_user_otp']);
 Route::post('/verify_otp', [MobileController::class, 'verify_otp_for_PR']);
 Route::post('/create_unid', [MobileController::class, 'generate_unid_for_employee']);
 Route::post('/track_unid', [MobileController::class, 'track_unid_for_employee']);
-
-
-
