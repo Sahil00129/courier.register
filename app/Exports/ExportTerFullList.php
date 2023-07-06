@@ -13,7 +13,7 @@ class ExportTerFullList implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('ter_type', 2)->whereIn('status', ['2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13','0'])->get();
+        $data = Tercourier::with('CourierCompany', 'SenderDetail')->where('ter_type', 2)->whereIn('status', ['2', '3', '4', '5', '6', '7', '8', '9', '11', '12', '13', '0', '14'])->get();
 
         $size = sizeof($data);
         $arr_instrulist_excel[] = array();
@@ -47,6 +47,8 @@ class ExportTerFullList implements FromCollection, WithHeadings
                 $actual_status = "Unit Changed";
             } else if ($status == 13) {
                 $actual_status = "Payment Reject";
+            } else if ($status == 14) {
+                $actual_status = "Unid Generated";
             } else if ($status == 0) {
                 $actual_status = "Failed";
             }
