@@ -41,7 +41,7 @@ class ExportTerList implements FromCollection, WithHeadings
             } else if ($status == 9) {
                 $actual_status = "Unknown";
             } else if ($status == 14) {
-                $actual_status = "Unid Generate";
+                $actual_status = "Unid Generated";
             } else if ($status == 0) {
                 $actual_status = "Failed";
             }
