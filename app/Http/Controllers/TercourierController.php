@@ -264,7 +264,7 @@ class TercourierController extends Controller
                 $get_ter_data = Tercourier::where('id', $id)->first();
                 $status = $get_ter_data->copy_status;
                 $update_data = Tercourier::where('id', $id)->update(array('status' => $status, 'copy_status' => ""));
-                $status="";
+                $status = "";
             }
         }
         return $update_data;
@@ -627,20 +627,19 @@ class TercourierController extends Controller
         $ter_month = Helper::ShowFormatDate($terdata['terto_date']);
         $get_ter_month = explode("-", $ter_month);
 
-        $check_ter_table = DB::table('tercouriers')->where('employee_id',$terdata['employee_id'] )->orderby('id', 'desc')->first();
-   
+        $check_ter_table = DB::table('tercouriers')->where('employee_id', $terdata['employee_id'])->orderby('id', 'desc')->first();
+
 
         if (!empty($check_ter_table)) {
-        if($check_ter_table->employee_id !=0)
-        {
-     
-            $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
-            $month = explode("-", $check_ter_month);
-            if ($month[1] == $get_ter_month[1]) {
-                return "UNID Already Generated";
+            if ($check_ter_table->employee_id != 0) {
+
+                $check_ter_month = Helper::ShowFormatDate($check_ter_table->terto_date);
+                $month = explode("-", $check_ter_month);
+                if ($month[1] == $get_ter_month[1]) {
+                    return "UNID Already Generated";
+                }
             }
         }
-    }
 
         $senders =  DB::table('sender_details')->where('employee_id', $terdata['employee_id'])->get()->toArray();
 
@@ -2796,72 +2795,75 @@ class TercourierController extends Controller
             $emp_sender_id = $data_ter[0]->employee_id;
             $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
             // print_r($check_last_working);
-            if (!empty($check_last_working[0]->last_working_date)) {
-                $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
-                $ter_month = explode("-", $check_ter_month);
-                if ($get_last_working_month[1] == $ter_month[1]) {
-                    $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                        'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
-                    ));
-                    return $change_status;
+            if (!empty($check_last_working)) {
+                if (!empty($check_last_working[0]->last_working_date)) {
+                    // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                    $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+
+                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                        $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                            'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                        ));
+                        return $change_status;
+                    } else {
+                        return "Ter month Exceeding the Limit of Last working Date";
+                    }
                 }
-            } 
+            }
 
-                $res = self::api_call_finfect($id);
-                $emp_id = $data_ter[0]->employee_id;
-                // $res="dsd";
-                if ($res != '1') {
-                    $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-                    $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
-                    $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
-                    $insert_data['wallet_id'] = 0;
-                    $insert_data['incoming_payment'] = 0;
-                    $insert_data['action_done'] = 'Payment_Failed';
-                    $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
-                    $insert_data['utilize_amount'] = 0;
-                    $insert_data['updated_date'] = date('Y-m-d');
-                    $insert_data['employee_id'] = $emp_id;
-                    $insert_data['ter_id'] = $get_emp_ledger->ter_id;
-                    $insert_data['user_id'] = $get_emp_ledger->user_id;
-                    $insert_data['user_name'] = $get_emp_ledger->user_name;
-                    $insert_data['created_at'] = date('Y-m-d H:i:s');
-                    $insert_data['updated_at'] = date('Y-m-d H:i:s');
-                    EmployeeLedgerData::insert($insert_data);
+            $res = self::api_call_finfect($id);
+            $emp_id = $data_ter[0]->employee_id;
+            // $res="dsd";
+            if ($res != '1') {
+                $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                $insert_data['ax_voucher_number'] = $get_emp_ledger->ax_voucher_number;
+                $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+                $insert_data['wallet_id'] = 0;
+                $insert_data['incoming_payment'] = 0;
+                $insert_data['action_done'] = 'Payment_Failed';
+                $insert_data['ter_expense'] = $get_emp_ledger->ter_expense;
+                $insert_data['utilize_amount'] = 0;
+                $insert_data['updated_date'] = date('Y-m-d');
+                $insert_data['employee_id'] = $emp_id;
+                $insert_data['ter_id'] = $get_emp_ledger->ter_id;
+                $insert_data['user_id'] = $get_emp_ledger->user_id;
+                $insert_data['user_name'] = $get_emp_ledger->user_name;
+                $insert_data['created_at'] = date('Y-m-d H:i:s');
+                $insert_data['updated_at'] = date('Y-m-d H:i:s');
+                EmployeeLedgerData::insert($insert_data);
 
-                    $get_emp_acc = EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-                    if ($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id) {
-                        $insert_emp_data['updated_date'] = date('Y-m-d');
-                        $insert_emp_data['employee_id'] = $emp_id;
-                        $insert_emp_data['advance_amount'] = 0;
-                        $insert_emp_data['ter_id'] = $get_emp_acc->ter_id;
-                        $insert_emp_data['ax_voucher_number'] = $get_emp_acc->ax_voucher_number;
-                        $insert_emp_data['utilize_amount'] = $get_emp_acc->utilize_amount;
-                        $insert_emp_data['current_balance'] = $get_emp_acc->utilize_amount + $get_emp_acc->current_balance;
-                        $insert_emp_data['action_done'] = 'Payment_Failed';
-                        $insert_emp_data['user_id'] = $get_emp_acc->user_id;
-                        $insert_emp_data['user_name'] = $get_emp_acc->user_name;
-                        $insert_emp_data['created_at'] = date('Y-m-d H:i:s');
-                        $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
-                        // return $insert_data;
-                        $table_update = EmployeeBalance::insert($insert_emp_data);
+                $get_emp_acc = EmployeeBalance::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                if ($get_emp_acc->updated_date == date('Y-m-d') && $get_emp_ledger->ter_id == $get_emp_acc->ter_id) {
+                    $insert_emp_data['updated_date'] = date('Y-m-d');
+                    $insert_emp_data['employee_id'] = $emp_id;
+                    $insert_emp_data['advance_amount'] = 0;
+                    $insert_emp_data['ter_id'] = $get_emp_acc->ter_id;
+                    $insert_emp_data['ax_voucher_number'] = $get_emp_acc->ax_voucher_number;
+                    $insert_emp_data['utilize_amount'] = $get_emp_acc->utilize_amount;
+                    $insert_emp_data['current_balance'] = $get_emp_acc->utilize_amount + $get_emp_acc->current_balance;
+                    $insert_emp_data['action_done'] = 'Payment_Failed';
+                    $insert_emp_data['user_id'] = $get_emp_acc->user_id;
+                    $insert_emp_data['user_name'] = $get_emp_acc->user_name;
+                    $insert_emp_data['created_at'] = date('Y-m-d H:i:s');
+                    $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
+                    // return $insert_data;
+                    $table_update = EmployeeBalance::insert($insert_emp_data);
+                }
+            } else {
+                $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
+                $advance_amt = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
+                // dd($advance_amt);
+                if ($data_ter[0]->status == 7) {
+                    if ($advance_amt > 0) {
+                        DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->update(['advance_used' => $advance_amt]);
                     }
                 } else {
-                    $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
-                    $advance_amt = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
-                    // dd($advance_amt);
-                    if ($data_ter[0]->status == 7) {
-                        if ($advance_amt > 0) {
-                            DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->update(['advance_used' => $advance_amt]);
-                        }
-                    } else {
-                        if ($advance_amt > 0) {
-                            DB::table('tercouriers')->where('id', $id)->update(['advance_used' => $advance_amt]);
-                        }
+                    if ($advance_amt > 0) {
+                        DB::table('tercouriers')->where('id', $id)->update(['advance_used' => $advance_amt]);
                     }
                 }
-                return $res;
-            
+            }
+            return $res;
         }
     }
 
@@ -3001,21 +3003,23 @@ class TercourierController extends Controller
 
 
             if (!$settlement_deduction) {
+
                 $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
                 if (!empty($check_last_working)) {
-                    if ($check_last_working[0]->last_working_date) {
-                            $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                            $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
-                            $ter_month = explode("-", $check_ter_month);
-                            if ($get_last_working_month[1] == $ter_month[1]) {
-                                $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                                    'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
-                                ));
-                                return $change_status;
-                            }
-                        } 
-                    }
+                    if (!empty($check_last_working[0]->last_working_date)) {
+                        // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                        $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
+                        if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                            $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                                'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                            ));
+                            return $change_status;
+                        } else {
+                            return "Ter month Exceeding the Limit of Last working Date";
+                        }
+                    }
+                }
             }
 
             // print_r($voucher_codes);

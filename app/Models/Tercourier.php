@@ -23,7 +23,7 @@ class Tercourier extends Model
         'saved_by_id', 'saved_by_name', 'received_date', 'handover_date', 'sent_to_finfect_date', 'paid_date', 'created_at', 'updated_at', 'book_date', 'file_name',
         'po_id', 'basic_amount', 'total_amount', 'invoice_no', 'invoice_date', 'ter_type', 'handover_id', 'verify_ter_date', 'is_rejected',
         'pfu', 'old_unit', 'unit_change_remarks', 'is_unit_changed', 'iag_code', 'shifting_date', 'super_admin_remarks', 'cancel_reject', 'dedcution_paid', 'advance_used', 'deduction_options', 'paylater_uploads', 'paylater_remarks', 'po_value', 'sourcing_remarks',
-        'scanning_remarks', 'not_eligible', 'vapi_res','copy_status'
+        'scanning_remarks', 'not_eligible', 'vapi_res', 'copy_status'
 
 
     ];
@@ -73,15 +73,15 @@ class Tercourier extends Model
 
             if ($res[$i]->ter_type == 1) {
                 $change['status'] = 11;
-                
+
                 if ($res[$i]->copy_status == 12) {
                     $change['txn_type'] = 'unknown_invoice';
                     $change['copy_status'] = 12;
-                }else{
+                } else {
                     $change['copy_status'] = 2;
                     $change['txn_type'] = "sourcing_regular_invoice";
                 }
-               
+
                 $sourcing_ids[] = $res[$i]->id;
                 $change['saved_by_id'] = $user_id;
                 $change['saved_by_name'] = $user_name;
@@ -326,21 +326,21 @@ class Tercourier extends Model
             $id_sender = $data_ter[0]->sender_id;
             $check_last_working = DB::table('sender_details')->where('id', $id_sender)->get()->toArray();
 
+            if (!empty($check_last_working)) {
+                if (!empty($check_last_working[0]->last_working_date)) {
+                    // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                    $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-            if ($check_last_working[0]->last_working_date) {
-
-                $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
-                $ter_month = explode("-", $check_ter_month);
-                if ($get_last_working_month[1] == $ter_month[1]) {
-                    $data['payment_type'] = "full_and_final_payment";
-                    $payment_status = 3;
-                    $data['sent_to_finfect_date'] = "";
-                    $data['book_date'] = date('Y-m-d');
-                } else {
-                    $data['payment_type'] = "regular_payment";
-                    $data['sent_to_finfect_date'] = date('Y-m-d');
-                    $data['book_date'] = date('Y-m-d');
+                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                        $data['payment_type'] = "full_and_final_payment";
+                        $payment_status = 3;
+                        $data['sent_to_finfect_date'] = "";
+                        $data['book_date'] = date('Y-m-d');
+                    } else {
+                        $data['payment_type'] = "regular_payment";
+                        $data['sent_to_finfect_date'] = date('Y-m-d');
+                        $data['book_date'] = date('Y-m-d');
+                    }
                 }
             } else {
                 $data['payment_type'] = "regular_payment";
@@ -352,24 +352,27 @@ class Tercourier extends Model
             $data['sent_to_finfect_date'] = "";
             $data['book_date'] = date('Y-m-d');
             $data_ter = DB::table('tercouriers')->where('id', $unique_id)->get()->toArray();
-        //         echo "<pre>";
-        //    print_r($data_ter[0]);
-        //    exit;
+            //         echo "<pre>";
+            //    print_r($data_ter[0]);
+            //    exit;
             $id_sender = $data_ter[0]->sender_id;
             $check_last_working = DB::table('sender_details')->where('id', $id_sender)->get()->toArray();
-            if ($check_last_working[0]->last_working_date) {
-                $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
-                $ter_month = explode("-", $check_ter_month);
-                if ($get_last_working_month[1] == $ter_month[1]) {
-                    $data['payment_type'] = "full_and_final_payment";
-                    $payment_status = 3;
-                    $data['sent_to_finfect_date'] = "";
-                    $data['book_date'] = date('Y-m-d');
-                } else {
-                    $data['payment_type'] = "pay_later_payment";
-                    $data['sent_to_finfect_date'] = "";
-                    $data['book_date'] = date('Y-m-d');
+
+            if (!empty($check_last_working)) {
+                if (!empty($check_last_working[0]->last_working_date)) {
+                    // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                    $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+
+                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                        $data['payment_type'] = "full_and_final_payment";
+                        $payment_status = 3;
+                        $data['sent_to_finfect_date'] = "";
+                        $data['book_date'] = date('Y-m-d');
+                    } else {
+                        $data['payment_type'] = "pay_later_payment";
+                        $data['sent_to_finfect_date'] = "";
+                        $data['book_date'] = date('Y-m-d');
+                    }
                 }
             } else {
                 $data['payment_type'] = "pay_later_payment";
