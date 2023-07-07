@@ -2782,6 +2782,7 @@ class TercourierController extends Controller
         }
 
 
+
         $response = self::advance_payment_check($data, $total_payable_sum);
         // return $response;
 
@@ -3020,9 +3021,9 @@ class TercourierController extends Controller
                             $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                                 'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                             ));
-                            return $change_status;
+                            return ["F&F", 1];
                         } else {
-                            return "Ter month Exceeding the Limit of Last working Date";
+                            return ["F&F", 0];
                         }
                     }
                 }
@@ -3078,6 +3079,7 @@ class TercourierController extends Controller
                 }
             }
         } else {
+
             $utlized_amount = 0;
             $final_payable = $total_payable_sum;
             $update_employee_table = EmployeeLedgerData::employee_payment_detail($log_in_user_id, $log_in_user_name, $emp_id, $utlized_amount, $id, $ter_pay_amount, $voucher_codes);
@@ -3108,9 +3110,9 @@ class TercourierController extends Controller
                             } else {
                                 return ["F&F", 0];
                             }
+                        } else {
+                            $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                         }
-                    } else {
-                        $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                     }
                 }
             } else {
@@ -3255,7 +3257,7 @@ class TercourierController extends Controller
 
     public function api_call_finfect($id)
     {
-        // return "hello";
+
         $check_deduction_table = DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->orderby("book_date", "DESC")->first();
 
         $settlement_deduction = 0;
@@ -3408,6 +3410,7 @@ class TercourierController extends Controller
 
             return "bank_details_missing";
         }
+        // return [$payable_sum, "Dsa"];
         // $ter_id="3243534";
         // print_r($pfu);
         // print_r($ax_id);
