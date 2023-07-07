@@ -2781,11 +2781,17 @@ class TercourierController extends Controller
             DB::table('tercouriers')->where('id', $id)->update(['deduction_options' => $selected_options]);
         }
 
+
         $response = self::advance_payment_check($data, $total_payable_sum);
         // return $response;
 
+
         if ($response[1] == '4') {
             return $response[0];
+        } else if ($response[0] == "F&F" && $response[1] == 1) {
+            return 1;
+        } else if ($response[0] == "F&F" && $response[1] == 0) {
+            return "Ter month Exceeding the Limit of Last working Date";
         }
         // return $final_payable;
         // $voucher_code = $data['voucher_code'];
@@ -3088,7 +3094,24 @@ class TercourierController extends Controller
                         $response = 1;
                     }
                 } else {
-                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                    $check_last_working = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+                    if (!empty($check_last_working)) {
+                        if (!empty($check_last_working[0]->last_working_date)) {
+                            // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                            $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+
+                            if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                                $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                                    'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
+                                ));
+                                return ["F&F", 1];
+                            } else {
+                                return ["F&F", 0];
+                            }
+                        }
+                    } else {
+                        $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                    }
                 }
             } else {
                 exit;
@@ -3146,6 +3169,10 @@ class TercourierController extends Controller
         // exit;
         if ($response[1] == '4') {
             return $response[0];
+        } else if ($response[0] == "F&F" && $response[1] == 1) {
+            return 1;
+        } else if ($response[0] == "F&F" && $response[1] == 0) {
+            return "Ter month Exceeding the Limit of Last working Date";
         } else {
             $res = self::api_call_finfect($data['selected_id']);
         }
