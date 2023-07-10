@@ -331,7 +331,7 @@ class Tercourier extends Model
                     // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
                     $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                    if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
                         $data['payment_type'] = "full_and_final_payment";
                         $payment_status = 3;
                         $data['sent_to_finfect_date'] = "";
@@ -363,7 +363,7 @@ class Tercourier extends Model
                     // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
                     $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                    if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
                         $data['payment_type'] = "full_and_final_payment";
                         $payment_status = 3;
                         $data['sent_to_finfect_date'] = "";

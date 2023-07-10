@@ -2807,7 +2807,7 @@ class TercourierController extends Controller
                     // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
                     $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-                    if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                    if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
                         $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                             'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                         ));
@@ -3017,7 +3017,7 @@ class TercourierController extends Controller
                         // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
                         $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-                        if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                        if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
                             $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                                 'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                             ));
@@ -3102,7 +3102,7 @@ class TercourierController extends Controller
                             // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
                             $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
 
-                            if (strtotime($check_last_working[0]->last_working_date) > strtotime($check_ter_month)) {
+                            if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
                                 $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
                                     'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
                                 ));
