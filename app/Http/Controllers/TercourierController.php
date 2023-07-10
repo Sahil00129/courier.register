@@ -2643,11 +2643,41 @@ class TercourierController extends Controller
         $destinationPath = 'paylater_ter_uploads';
         $image->move($destinationPath, $fileName);
 
-        if ($tercourier_ax_check->ax_id  != 0) {
+
+        if ($tercourier_ax_check->ax_id  != '0') {
 
             DB::table('tercouriers')->where('id', $id)->update(['paylater_uploads' => $fileName, 'paylater_remarks' => $paylater_remarks]);
 
-            $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+            $check_last_working = DB::table('sender_details')->where('employee_id', $data_ter_check[0]->employee_id)->get()->toArray();
+            if (!empty($check_last_working)) {
+                if (!empty($check_last_working[0]->last_working_date)) {
+                    // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                    $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+                    if (!empty($payable_data)) {
+
+                        $length = sizeof($payable_data);
+                        for ($i = 0; $i < $length; $i++) {
+                            $pay_data[$i] = $payable_data[$i]['payable_amount'];
+                            $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+                        }
+                    }
+                    if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
+                        $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                            'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d'), 'final_payable' => $final_payable, 'payable_amount' => $pay_data, 'voucher_code' => $voucher_data
+                        ));
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+                }
+            } else {
+
+
+
+                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
+            }
             // $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status);
         } else {
             exit;
@@ -2892,6 +2922,7 @@ class TercourierController extends Controller
             $settlement_deduction = 1;
             $ax_code = $check_deduction_table->ax_code;
             $iag_code = $check_deduction_table->iag_code;
+            $ter_status = $check_deduction_table->status;
         } else {
             // return "DS";
             $data_ter = DB::table('tercouriers')->where('id', $id)->get()->toArray();
@@ -2900,6 +2931,7 @@ class TercourierController extends Controller
             $voucher_code = $data_ter[0]->voucher_code;
             $ax_code = $data_ter[0]->ax_id;
             $iag_code = $data_ter[0]->iag_code;
+            $ter_status = $data_ter[0]->status;
         }
 
         // dd($data_ter[0]->payment_type);
@@ -3010,20 +3042,28 @@ class TercourierController extends Controller
 
 
             if (!$settlement_deduction) {
+                if ($ter_status != 4) {
+                    $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
+                    if (!empty($check_last_working)) {
+                        if (!empty($check_last_working[0]->last_working_date)) {
+                            // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
+                            $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+                            if (!empty($payable_data)) {
 
-                $check_last_working = DB::table('sender_details')->where('employee_id', $emp_sender_id)->get()->toArray();
-                if (!empty($check_last_working)) {
-                    if (!empty($check_last_working[0]->last_working_date)) {
-                        // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                        $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
-
-                        if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
-                            $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                                'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
-                            ));
-                            return ["F&F", 1];
-                        } else {
-                            return ["F&F", 0];
+                                $length = sizeof($payable_data);
+                                for ($i = 0; $i < $length; $i++) {
+                                    $pay_data[$i] = $payable_data[$i]['payable_amount'];
+                                    $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+                                }
+                            }
+                            if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
+                                $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                                    'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d'), 'final_payable' => $final_payable, 'payable_amount' => $pay_data, 'voucher_code' => $voucher_data
+                                ));
+                                return ["F&F", 1];
+                            } else {
+                                return ["F&F", 0];
+                            }
                         }
                     }
                 }
@@ -3096,23 +3136,35 @@ class TercourierController extends Controller
                         $response = 1;
                     }
                 } else {
-                    $check_last_working = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
-                    if (!empty($check_last_working)) {
-                        if (!empty($check_last_working[0]->last_working_date)) {
-                            // $get_last_working_month = explode("-", $check_last_working[0]->last_working_date);
-                            $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+                    if ($ter_status != 4) {
+                        $check_last_working = DB::table('sender_details')->where('employee_id', $emp_id)->get()->toArray();
+                        if (!empty($check_last_working)) {
+                            if (!empty($check_last_working[0]->last_working_date)) {
+                                $check_ter_month = Helper::ShowFormatDate($data_ter[0]->terto_date);
+                                if (!empty($payable_data)) {
 
-                            if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
-                                $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
-                                    'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d')
-                                ));
-                                return ["F&F", 1];
+                                    $length = sizeof($payable_data);
+                                    for ($i = 0; $i < $length; $i++) {
+                                        $pay_data[$i] = $payable_data[$i]['payable_amount'];
+                                        $voucher_data[$i] = $payable_data[$i]['voucher_code'];
+                                    }
+                                }
+                                if (strtotime($check_last_working[0]->last_working_date) >= strtotime($check_ter_month)) {
+                                    $change_status = DB::table('tercouriers')->where("id", $data['unique_id'])->update(array(
+                                        'payment_type' => 'full_and_final_payment', 'verify_ter_date' => date('Y-m-d'), 'status' => 4, 'payment_status' => 3, 'book_date' => date('Y-m-d'), 'final_payable' => $final_payable, 'payable_amount' => $pay_data, 'voucher_code' => $voucher_data
+                                    ));
+                                    return ["F&F", 1];
+                                } else {
+                                    return ["F&F", 0];
+                                }
                             } else {
-                                return ["F&F", 0];
+                                $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                             }
                         } else {
                             $response = Tercourier::add_voucher_payable($payable_data, $id, $log_in_user_id, $log_in_user_name, $payment_status, $final_payable);
                         }
+                    } else {
+                        $response = 1;
                     }
                 }
             } else {
