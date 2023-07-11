@@ -38,7 +38,7 @@ class MobileController extends Controller
 
     public function download_unid_generate()
     {
-        $cctv_export = new UNIDGenerateExport();
+        // $cctv_export = new UNIDGenerateExport();
         // $collection = $cctv_export->collection();
         // return $collection;
         return Excel::download(new UNIDGenerateExport, 'unid_generate_list.xlsx');
