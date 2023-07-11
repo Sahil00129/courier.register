@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UNIDGenerateExport;
 use Illuminate\Http\Request;
 use App\Models\ChildTercouriers;
 use App\Models\Tercourier;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TercourierController;
 use AshAllenDesign\ShortURL\Facades\ShortURL;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 
 
@@ -31,6 +34,14 @@ class MobileController extends Controller
         // $lastdate = DB::table('tercouriers')->select('date_of_receipt', 'docket_no')->orderby('id', 'desc')->first();
         // //echo'<pre>'; print_r($lastdate);die;
         return view('mobile-docs.unid-generate');
+    }
+
+    public function download_unid_generate()
+    {
+        $cctv_export = new UNIDGenerateExport();
+        // $collection = $cctv_export->collection();
+        // return $collection;
+        return Excel::download(new UNIDGenerateExport, 'unid_generate_list.xlsx');
     }
 
     public function check_registered_mobile(Request $request)

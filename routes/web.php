@@ -130,7 +130,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('open_verify_ter', [TercourierController::class, 'open_verify_ter']);
     Route::post('open_hr_verify_ter', [TercourierController::class, 'open_hr_verify_ter']);
     Route::post('submit_change_unit', [TercourierController::class, 'submit_change_unit']);
-
     Route::get('admin_update_ter/{id}', [TercourierController::class, 'admin_update_ter']);
     Route::post('update_by_hr_admin', [TercourierController::class, 'update_by_hr_admin']);
 
@@ -263,3 +262,6 @@ Route::post('/submit_otp', [MobileController::class, 'verify_user_otp']);
 Route::post('/verify_otp', [MobileController::class, 'verify_otp_for_PR']);
 Route::post('/create_unid', [MobileController::class, 'generate_unid_for_employee']);
 Route::post('/track_unid', [MobileController::class, 'track_unid_for_employee']);
+
+Route::get('download_unid_generate', [MobileController::class, 'download_unid_generate']);
+
