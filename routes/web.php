@@ -254,6 +254,8 @@ Route::post('/submit_otp', [MobileController::class, 'verify_user_otp']);
 Route::post('/verify_otp', [MobileController::class, 'verify_otp_for_PR']);
 Route::post('/create_unid', [MobileController::class, 'generate_unid_for_employee']);
 Route::post('/track_unid', [MobileController::class, 'track_unid_for_employee']);
+Route::get('/download_unid_generate', [MobileController::class, 'download_unid_generate']);
+
 
 
 
