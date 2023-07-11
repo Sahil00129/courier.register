@@ -22,13 +22,12 @@ class UNIDGenerateExport implements FromCollection, WithHeadings
         $arr_instrulist_excel[] = array();
         for ($i = 0; $i < $size; $i++) {
 
-
             $get_data_ter = DB::table('tercouriers')->where('id', $data[$i]->tercourier_id)->get();
             $get_emp_data = DB::table('sender_details')->where('employee_id', $get_data_ter[0]->employee_id)->get();
 
-            $actual_status="";
-            $status = $get_data_ter[$i]->status;
-            $payment_status = $data[$i]->payment_status;
+            $actual_status = "";
+            $status = $get_data_ter[0]->status;
+            $payment_status = $get_data_ter[0]->payment_status;
             if ($status == 1) {
                 $actual_status = "Received";
             } else if ($status == 2) {
@@ -61,6 +60,8 @@ class UNIDGenerateExport implements FromCollection, WithHeadings
                 $actual_status = "Failed";
             }
 
+            // print_r($get_emp_data);
+
             $arr_instrulist_excel[] = array(
                 's.no.' => $i + 1,
                 'unid'  => $data[$i]->tercourier_id,
@@ -74,7 +75,7 @@ class UNIDGenerateExport implements FromCollection, WithHeadings
                 // 'state' => $get_emp_data[0]->territory,
             );
         }
-
+        // exit;
         return collect($arr_instrulist_excel);
     }
 
