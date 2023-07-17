@@ -273,7 +273,7 @@ class EmployeeLedgerData extends Model
 
         }
 
-        
+        if ($get_ter_data[0]->advance_used != "" || $deduction_settlement[0]->advance_used != "") {
         $get_emp_acc = EmployeeBalance::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
    
             $insert_emp_data['updated_date'] = date('Y-m-d');
@@ -290,6 +290,7 @@ class EmployeeLedgerData extends Model
             $insert_emp_data['updated_at'] = date('Y-m-d H:i:s');
             // return $insert_data;
             $table_update = EmployeeBalance::insert($insert_emp_data);
+        }
         
     
 
