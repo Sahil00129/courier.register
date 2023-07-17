@@ -341,6 +341,10 @@ class Tercourier extends Model
                         $data['sent_to_finfect_date'] = date('Y-m-d');
                         $data['book_date'] = date('Y-m-d');
                     }
+                } else {
+                    $data['payment_type'] = "regular_payment";
+                    $data['sent_to_finfect_date'] = date('Y-m-d');
+                    $data['book_date'] = date('Y-m-d');
                 }
             } else {
                 $data['payment_type'] = "regular_payment";
@@ -373,6 +377,10 @@ class Tercourier extends Model
                         $data['sent_to_finfect_date'] = "";
                         $data['book_date'] = date('Y-m-d');
                     }
+                } else {
+                    $data['payment_type'] = "pay_later_payment";
+                    $data['sent_to_finfect_date'] = "";
+                    $data['book_date'] = date('Y-m-d');
                 }
             } else {
                 $data['payment_type'] = "pay_later_payment";
