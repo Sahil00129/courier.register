@@ -18,17 +18,17 @@ class SSOController extends Controller
     // (
     //     [_token] => i9GEP9e7OLDDEDTWw86QmyicL59eZwYQqGLiyBoJ
     //     [state] => ruxfSG37cZG5bZBhFDJhRAydoLqNUEbWATz94OmP
-    //     [client_id] => 9978777c-129d-4574-9fc8-160d62736cd5
+    //     [client_id] => 99b8c27c-6faa-4d78-9380-918bfe7cf895
     //     [auth_token] => KzjWJP82QX0lP8eH
     // )
-    //  Client ID: 9978777c-129d-4574-9fc8-160d62736cd5
-    // Client secret: RCDYhqiGSCygz1QpWHaQfIPemV84DA1XGtIRa7JA
+//  Client ID: 99b8c27c-6faa-4d78-9380-918bfe7cf895
+// Client secret: 2Ca9teCnvZ8OU5HR8Pr9Pp2namOSzpPgk9ezCGSm
 
     public function getLogin(Request $request)
     {
         $request->session()->put("state", $state =  Str::random(40));
         $query = http_build_query([
-            "client_id" => "9978777c-129d-4574-9fc8-160d62736cd5",
+            "client_id" => "99b8c27c-6faa-4d78-9380-918bfe7cf895",
             "redirect_uri" => "http://localhost:8080/callback",
             "response_type" => "code",
             "scope" => config("auth.scopes"),
@@ -48,8 +48,8 @@ class SSOController extends Controller
             config("auth.sso_host") .  "/oauth/token",
             [
                 "grant_type" => "authorization_code",
-                "client_id" => "9978777c-129d-4574-9fc8-160d62736cd5",
-                "client_secret" => "RCDYhqiGSCygz1QpWHaQfIPemV84DA1XGtIRa7JA",
+                "client_id" => "99b8c27c-6faa-4d78-9380-918bfe7cf895",
+                "client_secret" => "2Ca9teCnvZ8OU5HR8Pr9Pp2namOSzpPgk9ezCGSm",
                 "redirect_uri" => "http://localhost:8080/callback",
                 "code" => $request->code
             ]
