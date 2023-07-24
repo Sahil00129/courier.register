@@ -81,7 +81,8 @@
                                 <div class="d-sm-flex justify-content-between">
                                     <div class="field-wrapper">
                                         <button type="submit" class="btn btn-primary" value="">{{ __('Login') }}</button>
-                                        <a href="{{ route("sso.login") }}" class="btn btn-block btn-primary btn-sm">Login with SSO</a>
+                                        
+                                        <!-- <a href="{{ route("sso.login") }}" class="btn btn-block btn-primary btn-sm">Login with SSO</a> -->
 
                                     </div>
                                 </div>
