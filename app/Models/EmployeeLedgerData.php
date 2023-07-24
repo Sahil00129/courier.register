@@ -214,7 +214,6 @@ class EmployeeLedgerData extends Model
         // exit;
         $data['employee_id']=$get_ter_data[0]->employee_id;
 
-        $deduction_settlement = DB::table('ter_deduction_settlements')->where('parent_ter_id', $ter_id)->get();
       
         if($get_ter_data[0]->status == 7)
         {
