@@ -118,8 +118,8 @@ class SSOController extends Controller
 
         try {
             $email = $userArray['email'];
+            // return $email;
             $check_user_exists = User::where('email', $email)->first();
-            // return $check_user_exists;
             if (!empty($check_user_exists)) {
                 return $email;
             } else {
@@ -159,12 +159,14 @@ class SSOController extends Controller
         $register_user = array();
         $register_user['email'] = $data['email'];
         $register_user['password'] = $data['password'];
-        $register_user['role'] = $data['role'];
+        // $register_user['role'] = $data['role'];
         $register_user['name'] = $data['name'];
 
-        if ($data['role'] == "ter user") {
-            $assignRole = "tr admin";
-        }
+        // if ($data['role'] == "ter user") {
+        //     $assignRole = "tr admin";
+        // }
+
+        // $assignRole= "hr admin";
 
         // return $register_user;
 
@@ -183,7 +185,7 @@ class SSOController extends Controller
             if (Auth::check()) {
                 // return "33";
                 $user = User::create($register_user);
-                $user->assignRole($assignRole);
+                // $user->assignRole($assignRole);
                 return 1;
             }
             // return $email;
