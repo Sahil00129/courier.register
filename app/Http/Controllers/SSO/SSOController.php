@@ -162,9 +162,13 @@ class SSOController extends Controller
         // $register_user['role'] = $data['role'];
         $register_user['name'] = $data['name'];
 
-        // if ($data['role'] == "ter user") {
-        //     $assignRole = "tr admin";
-        // }
+        $assignRole="";
+
+        if ($data['role'] == "admin user") {
+            $assignRole = "admin";
+            $register_user['role'] = $data['role'];
+        }
+        // return $assignRole;
 
         // $assignRole= "hr admin";
 
@@ -185,7 +189,10 @@ class SSOController extends Controller
             if (Auth::check()) {
                 // return "33";
                 $user = User::create($register_user);
-                // $user->assignRole($assignRole);
+                if($assignRole == "admin")
+                {
+                    $user->assignRole($assignRole);
+                }
                 return 1;
             }
             // return $email;
