@@ -193,7 +193,7 @@ class SSOController extends Controller
                 {
                     $user->assignRole($assignRole);
                 }
-                return 1;
+                return 101;
             }
             // return $email;
 
@@ -235,7 +235,7 @@ class SSOController extends Controller
                 // return "33";
                 $user = User::where('email', $register_user['email'])->delete();
                 // $user->removeRole($assignRole);
-                return 1;
+                return 101;
             }
             // return $email;
 
