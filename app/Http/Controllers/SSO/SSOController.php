@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
+use Validator;
 
 class SSOController extends Controller
 {
@@ -21,8 +22,8 @@ class SSOController extends Controller
     //     [client_id] => 99b8c27c-6faa-4d78-9380-918bfe7cf895
     //     [auth_token] => KzjWJP82QX0lP8eH
     // )
-//  Client ID: 99b8c27c-6faa-4d78-9380-918bfe7cf895
-// Client secret: 2Ca9teCnvZ8OU5HR8Pr9Pp2namOSzpPgk9ezCGSm
+    //  Client ID: 99b8c27c-6faa-4d78-9380-918bfe7cf895
+    // Client secret: 2Ca9teCnvZ8OU5HR8Pr9Pp2namOSzpPgk9ezCGSm
 
     public function getLogin(Request $request)
     {
@@ -139,7 +140,7 @@ class SSOController extends Controller
         return redirect()->route('login_to_portal', ['email' => $email]);
     }
 
-    public function portal_login($email)
+    public static function portal_login($email)
     {
         $user = User::where("email", $email)->first();
         Auth::login($user, true);
@@ -162,7 +163,7 @@ class SSOController extends Controller
         // $register_user['role'] = $data['role'];
         $register_user['name'] = $data['name'];
 
-        $assignRole="";
+        $assignRole = "";
 
         if ($data['role'] == "admin user") {
             $assignRole = "admin";
@@ -189,8 +190,7 @@ class SSOController extends Controller
             if (Auth::check()) {
                 // return "33";
                 $user = User::create($register_user);
-                if($assignRole == "admin")
-                {
+                if ($assignRole == "admin") {
                     $user->assignRole($assignRole);
                 }
                 return 101;
@@ -245,5 +245,75 @@ class SSOController extends Controller
         // } catch (\Throwable $th) {
         //     return redirect("login")->withError("Failed to get login information! Try again.");
         // }
+    }
+
+    public function custom_login(Request $request)
+    {
+        $data = $request->all();
+        $data['portal_id'] = 1;
+
+        $validator = Validator::make($data, [
+            'email' => 'required',
+            'password' => 'required|max:8|min:8',
+        ]);
+
+        if (preg_match("/([%\$#{}!()+\=\-\*\'\"\/\\\]+)/", request('email'))) {
+
+            return redirect()->back()->withErrors(['error_block' => 'Invalid characters given']);
+        }
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+
+            if ($errors->first('email')) {
+                return redirect()->back()->withErrors(['email' => $errors->first('email')]);
+            }
+            if ($errors->first('password')) {
+                return redirect()->back()->withErrors(['password' => $errors->first('password')]);
+            }
+        }
+
+        $httpHost = $_SERVER['HTTP_HOST'];
+
+        if ($httpHost === 'localhost:8080' || $httpHost === 'localhost') {
+            $url = 'http://localhost:8000/api/custom_portal_signin';
+        } else {
+            $url = 'http://heythere.easemyorder.com/api/custom_portal_signin';
+        }
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('login' => $data['email'], 'password' => $data['password'], 'portal_id' => $data['portal_id']),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $res = json_decode($response, true);
+
+
+        if ($res['status'] == "fail") {
+            return redirect()->back()->withErrors(['error_block' => $res['msg']]);
+        }
+
+        if ($res['status'] == "fail-password") {
+            return redirect()->back()->withErrors(['password' => $res['msg']]);
+        }
+
+        if ($res['status'] == "success-login") {
+           return  self::portal_login($res['email']);
+           
+            // if (Auth::attempt(['email' => $res['email'], 'password' => request('password')])) {
+            // }
+        }
     }
 }

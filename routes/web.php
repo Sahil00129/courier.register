@@ -54,6 +54,8 @@ Route::get("/callback", [SSOController::class, 'getCallback'])->name("sso.callba
 Route::get("/sso/connect", [SSOController::class, 'connectUser'])->name("sso.connect");
 Route::get("/portal_login/{email}", [SSOController::class, 'portal_login'])->name("login_to_portal");
 
+Route::post("/custom_login", [SSOController::class, 'custom_login'])->name("custom_login");
+
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

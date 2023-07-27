@@ -35,8 +35,13 @@
 
                         <h1 class="">Sign In</h1>
                         <p class="">Log in to your account to continue.</p>
+                        @if ($errors->has('error_block'))
+                        <div class="alert alert-danger">
+                            {{ $errors->first('error_block') }}
+                        </div>
+                        @endif
 
-                        <form method="POST" action="{{ route('login') }}" class="text-left">
+                        <form method="POST" action="{{ route('custom_login') }}" class="text-left">
 
                             @csrf
 
@@ -48,14 +53,13 @@
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                         <circle cx="12" cy="7" r="4"></circle>
                                     </svg>
-                                    <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email" value="" required autocomplete="email" autofocus>
+                                    <input id="email" type="text" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email" value="" required autocomplete="email" autofocus>
 
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-
                                 </div>
 
                                 <div id="password-field" class="field-wrapper input mb-2">
@@ -81,7 +85,7 @@
                                 <div class="d-sm-flex justify-content-between">
                                     <div class="field-wrapper">
                                         <button type="submit" class="btn btn-primary" value="">{{ __('Login') }}</button>
-                                        
+
                                         <!-- <a href="{{ route("sso.login") }}" class="btn btn-block btn-primary btn-sm">Login with SSO</a> -->
 
                                     </div>
