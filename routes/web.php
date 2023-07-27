@@ -41,6 +41,10 @@ Route::get('/', function () {
     return view('mobile-docs.unid-generate');
 });
 
+Route::get('/login_page', function () {
+    return view('auth.login');
+});
+
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
