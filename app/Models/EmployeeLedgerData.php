@@ -214,7 +214,8 @@ class EmployeeLedgerData extends Model
         // exit;
         $data['employee_id']=$get_ter_data[0]->employee_id;
 
-      
+        $deduction_settlement="";
+
         if($get_ter_data[0]->status == 7)
         {
             $deduction_settlement=DB::table('ter_deduction_settlements')->where('parent_ter_id',$ter_id)->get();
@@ -273,7 +274,8 @@ class EmployeeLedgerData extends Model
 
         }
 
-        if ($get_ter_data[0]->advance_used != "" || $deduction_settlement[0]->advance_used != "") {
+        
+        if ($get_ter_data[0]->advance_used != "" || @$deduction_settlement[0]->advance_used != "") {
         $get_emp_acc = EmployeeBalance::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
    
             $insert_emp_data['updated_date'] = date('Y-m-d');
