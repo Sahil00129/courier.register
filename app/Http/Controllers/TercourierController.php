@@ -3278,7 +3278,7 @@ class TercourierController extends Controller
             $get_emp_ledger = EmployeeLedgerData::where('employee_id', $emp_id)->orderBy('id', 'DESC')->first();
             $advance_amt = $get_emp_ledger->ledger_balance + $get_emp_ledger->ter_expense;
             // dd($advance_amt);
-            if ($data_ter[0]->status == 7) {
+            if (@$data_ter[0]->status == 7) {
                 if ($advance_amt > 0) {
                     DB::table('ter_deduction_settlements')->where('parent_ter_id', $id)->update(['advance_used' => $advance_amt]);
                 }
@@ -3376,9 +3376,9 @@ class TercourierController extends Controller
             $iag_code = $get_emp_id[0]->iag_code;
             $pfu = $get_emp_id[0]->pfu;
         } else {
-            $ax_id = $check_deduction_table->ax_code;
+            $ax_id = @$check_deduction_table->ax_code;
             $pfu = $check_deduction_table->pfu;
-            $iag_code = $check_deduction_table->iag_code;
+            $iag_code = @$check_deduction_table->iag_code;
             $payable_sum = $check_deduction_table->final_payable;
             $voucher_code = $check_deduction_table->voucher_code;
             $ax_data[0]['amount'] = $check_deduction_table->payable_amount;
