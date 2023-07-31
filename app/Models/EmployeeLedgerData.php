@@ -223,14 +223,14 @@ class EmployeeLedgerData extends Model
             $insert_data['ax_voucher_number']=$deduction_settlement[0]->voucher_code;
 
             $get_emp_ledger = EmployeeLedgerData::where('employee_id', $data['employee_id'])->orderBy('id', 'DESC')->first();
-            if($deduction_settlement[0]->advance_used != "")
-            {
-                $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
-                $insert_data['ter_expense'] = $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
-            }else{
+            // if($deduction_settlement[0]->advance_used != "")
+            // {
+            //     $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
+            //     $insert_data['ter_expense'] = $deduction_settlement[0]->final_payable+$deduction_settlement[0]->advance_used;
+            // }else{
                 $insert_data['ledger_balance'] = $get_emp_ledger->ledger_balance + $deduction_settlement[0]->final_payable;
                 $insert_data['ter_expense'] = $deduction_settlement[0]->final_payable;
-            }
+            // }
             $insert_data['incoming_payment'] = $insert_data['ter_expense'];
            
             $insert_data['wallet_id'] = 0;
