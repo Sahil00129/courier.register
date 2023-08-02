@@ -256,9 +256,9 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->ax_id != $row['ax_code']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'AX CODE  Changed from ' . $sender_table->ax_id . ' to ' . $row['ax_code'];
                 $ax_code_update = Sender::where('id', $sender_table->id)->update(['ax_id' => $row['ax_code']]);
 
-                $updated_details['updated_field'] = 'AX CODE  Changed from ' . $sender_table->ax_id . ' to ' . $row['ax_code'];
 
                 if ($ax_code_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -269,9 +269,9 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->account_number != $row['account_number']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'Account Number  Changed from ' . $sender_table->account_number . ' to ' . $row['account_number'];
                 $account_number_update = Sender::where('id', $sender_table->id)->update(['account_number' => $row['account_number']]);
 
-                $updated_details['updated_field'] = 'Account Number  Changed from ' . $sender_table->account_number . ' to ' . $row['account_number'];
 
                 if ($account_number_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -286,9 +286,9 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->beneficiary_name != $row['beneficiary_name']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'Beneficiary Name  Changed from ' . $sender_table->beneficiary_name . ' to ' . $row['beneficiary_name'];
                 $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['beneficiary_name' => $row['beneficiary_name']]);
 
-                $updated_details['updated_field'] = 'Beneficiary Name  Changed from ' . $sender_table->beneficiary_name . ' to ' . $row['beneficiary_name'];
 
                 if ($ifsc_code_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -298,9 +298,10 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->branch_name != $row['branch_name']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'Branch Name Changed from ' . $sender_table->branch_name . ' to ' . $row['branch_name'];
+
                 $branch_name_update = Sender::where('id', $sender_table->id)->update(['branch_name' => $row['branch_name']]);
 
-                $updated_details['updated_field'] = 'Branch Name Changed from ' . $sender_table->branch_name . ' to ' . $row['branch_name'];
 
                 if ($branch_name_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -311,9 +312,9 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->ifsc != $row['ifsc_code']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'IFSC Code Changed from ' . $sender_table->ifsc . ' to ' . $row['ifsc_code'];
                 $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['ifsc' => $row['ifsc_code']]);
 
-                $updated_details['updated_field'] = 'IFSC Code Changed from ' . $sender_table->ifsc . ' to ' . $row['ifsc_code'];
 
                 if ($ifsc_code_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -324,9 +325,9 @@ class BulkImport implements ToModel, WithHeadingRow
             if ($sender_table->bank_name != $row['bank_name']) {
                 // print_r($sender_table->last_working_date);
                 $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'Bank Name Changed from ' . $sender_table->bank_name . ' to ' . $row['bank_name'];
                 $bank_name_update = Sender::where('id', $sender_table->id)->update(['bank_name' => $row['bank_name']]);
 
-                $updated_details['updated_field'] = 'Bank Name Changed from ' . $sender_table->bank_name . ' to ' . $row['bank_name'];
 
                 if ($bank_name_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
@@ -336,8 +337,12 @@ class BulkImport implements ToModel, WithHeadingRow
 
             if ($sender_table->iag_code != $row['iag_code']) {
                 // print_r($sender_table->last_working_date);
-                Sender::where('id', $sender_table->id)->update(['iag_code' => $row['iag_code']]);
-
+                $updated_details['updated_field'] = 'Iag Code Changed from ' . $sender_table->iag_code . ' to ' . $row['iag_code'];
+               $iag= Sender::where('id', $sender_table->id)->update(['iag_code' => $row['iag_code']]);
+                if ($iag) {
+                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                    // echo "<pre>";print_r($updated_record_detail);
+                }
             }
 
             
@@ -385,8 +390,8 @@ class BulkImport implements ToModel, WithHeadingRow
             if(empty($row['date_of_leaving']) && !empty($sender_table->last_working_date))
             {
                     $updated_details['updated_id'] = $sender_table->id;
+                $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
                     $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
-                    $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
                     if ($date_of_leaving_update) {
                         $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                         // echo "<pre>";
@@ -448,8 +453,8 @@ class BulkImport implements ToModel, WithHeadingRow
             
                     if (empty($sender_table->last_working_date)) {
                         $updated_details['updated_id'] = $sender_table->id;
-                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
                         $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $lastworkingdate;
+                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
                         if ($date_of_leaving_update) {
                             $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                             // echo "<pre>";
@@ -470,9 +475,9 @@ class BulkImport implements ToModel, WithHeadingRow
                         $table_date = strtotime($sender_table->last_working_date);
                         if ($lastworkingdate != $sender_table->last_working_date) {
 
-                            // print_r($lastworkingdate);
+                                // print_r($lastworkingdate);
+                                $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $lastworkingdate;
                             $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
-                            $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $lastworkingdate;
                             if ($date_of_leaving_update) {
                                 $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                                 // echo "<pre>";
@@ -486,8 +491,8 @@ class BulkImport implements ToModel, WithHeadingRow
 
                     if (empty($sender_table->last_working_date)) {
                         $updated_details['updated_id'] = $sender_table->id;
-                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
                         $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $final_exit_date;
+                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
                         if ($date_of_leaving_update) {
                             $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                             // echo "<pre>";
@@ -499,8 +504,8 @@ class BulkImport implements ToModel, WithHeadingRow
                         $updated_details['updated_id'] = $sender_table->id;
                         $table_date = strtotime($sender_table->last_working_date);
                         if ($exit_date != $table_date) {
+                                $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $final_exit_date;
                             $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
-                            $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $final_exit_date;
                             if ($date_of_leaving_update) {
                                 $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                                 // echo "<pre>";
@@ -512,8 +517,8 @@ class BulkImport implements ToModel, WithHeadingRow
             }else{
 
                 $updated_details['updated_id'] = $sender_table->id;
-                $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
                 $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
+                $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
                 if ($date_of_leaving_update) {
                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                     // echo "<pre>";
