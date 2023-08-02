@@ -270,4 +270,6 @@ Route::post('/create_unid', [MobileController::class, 'generate_unid_for_employe
 Route::post('/track_unid', [MobileController::class, 'track_unid_for_employee']);
 
 Route::get('download_unid_generate', [MobileController::class, 'download_unid_generate']);
+Route::get('update_user_from_spine', [ImportExportController::class, 'update_user_from_spine']);
+
 
