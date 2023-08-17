@@ -3449,7 +3449,7 @@ class TercourierController extends Controller
             }
         }
 
-        if (!empty($iag_code)) {
+        if (!empty(trim($iag_code))) {
             if (!is_numeric($iag_code)) {
                 DB::table('tercouriers')->where('id', $id)->update(['status' => 0, 'voucher_code' => "", "payable_amount" => "", "final_payable" => "", 'remarks' => 'IAG/AX-ID is not available', 'updated_at' => date('Y-m-d H:i:s')]);
 
