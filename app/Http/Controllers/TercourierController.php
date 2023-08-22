@@ -440,6 +440,7 @@ class TercourierController extends Controller
 
                         if (
                             $tercouriers[$i]->status != 1
+                            || $tercouriers[$i]->status != 14
                         ) {
                             $ter_data[$j] = $tercouriers[$i];
                             //    print_r($j);
