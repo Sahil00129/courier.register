@@ -139,8 +139,8 @@ class BulkImport implements ToModel, WithHeadingRow
 
             if (!empty($row['employee_code'])) {
                 $sender_table = DB::table('sender_details')
-                ->where('employee_id', '=', $row['employee_code'])
-                ->orderBy('created_at', 'DESC')->first();
+                    ->where('employee_id', '=', $row['employee_code'])
+                    ->orderBy('created_at', 'DESC')->first();
                 // echo'<pre>';print_r($row);
                 // echo'<pre>';print_r($sender_table);
             }
@@ -269,285 +269,287 @@ class BulkImport implements ToModel, WithHeadingRow
                     'pfu' => $pfu
 
                 ]);
-            }
+            } 
+            else {
 
-            // 'account_number' => $row['account_number'],
-            // 'ifsc' => $row['ifsc_code'],
-            // 'bank_name' => $row['bank_name'],
-
-
-            if ($sender_table->ax_id != $axCode) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'AX CODE  Changed from ' . $sender_table->ax_id . ' to ' . $axCode;
-                $ax_code_update = Sender::where('id', $sender_table->id)->update(['ax_id' => $axCode]);
+                // 'account_number' => $row['account_number'],
+                // 'ifsc' => $row['ifsc_code'],
+                // 'bank_name' => $row['bank_name'],
 
 
-                if ($ax_code_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->account_number != $row['account_number']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Account Number  Changed from ' . $sender_table->account_number . ' to ' . $row['account_number'];
-                $account_number_update = Sender::where('id', $sender_table->id)->update(['account_number' => $row['account_number']]);
-
-
-                if ($account_number_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            // print_r(($row['beneficiary_name']));
-            // print_r($sender_table->beneficiary_name);
-            // exit;
-
-            if ($sender_table->beneficiary_name != $row['beneficiary_name']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Beneficiary Name  Changed from ' . $sender_table->beneficiary_name . ' to ' . $row['beneficiary_name'];
-                $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['beneficiary_name' => $row['beneficiary_name']]);
-
-
-                if ($ifsc_code_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-            if ($sender_table->branch_name != $row['branch_name']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Branch Name Changed from ' . $sender_table->branch_name . ' to ' . $row['branch_name'];
-
-                $branch_name_update = Sender::where('id', $sender_table->id)->update(['branch_name' => $row['branch_name']]);
-
-
-                if ($branch_name_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->ifsc != $row['ifsc_code']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'IFSC Code Changed from ' . $sender_table->ifsc . ' to ' . $row['ifsc_code'];
-                $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['ifsc' => $row['ifsc_code']]);
-
-
-                if ($ifsc_code_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->bank_name != $row['bank_name']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Bank Name Changed from ' . $sender_table->bank_name . ' to ' . $row['bank_name'];
-                $bank_name_update = Sender::where('id', $sender_table->id)->update(['bank_name' => $row['bank_name']]);
-
-
-                if ($bank_name_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->iag_code != $iagCode) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Iag Code Changed from ' . $sender_table->iag_code . ' to ' . $iagCode;
-                $iag = Sender::where('id', $sender_table->id)->update(['iag_code' => $iagCode]);
-                if ($iag) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-
-            if ($sender_table->designation != $row['designation']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Grade Changed from ' . $sender_table->designation . ' to ' . $row['designation'];
-                $designation = Sender::where('id', $sender_table->id)->update(['designation' => $row['designation']]);
-                if ($designation) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->grade != $row['grade']) {
-                // print_r($sender_table->last_working_date);
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Grade Changed from ' . $sender_table->grade . ' to ' . $row['grade'];
-                $grade = Sender::where('id', $sender_table->id)->update(['grade' => $row['grade']]);
-                if ($grade) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";print_r($updated_record_detail);
-                }
-            }
-
-            if ($sender_table->pfu != $pfu) {
-                // print_r($sender_table->last_working_date);
-                Sender::where('id', $sender_table->id)->update(['pfu' => $pfu]);
-            }
-
-            if ($sender_table->location != $row['hq']) {
-                // print_r($sender_table->last_working_date);
-                $location_update = Sender::where('id', $sender_table->id)->update(['location' => $row['hq']]);
-            }
-
-            if ($sender_table->telephone_no != $row['mobile_no']) {
-                // print_r($sender_table->last_working_date);
-                $mobile_no_update = Sender::where('id', $sender_table->id)->update(['telephone_no' => $row['mobile_no']]);
-            }
-
-            if ($sender_table->official_email_id != $row['official_email_id']) {
-                // print_r($sender_table->last_working_date);
-                $mobile_no_update = Sender::where('id', $sender_table->id)->update(['official_email_id' => $row['official_email_id']]);
-            }
-
-
-
-            // echo "<pre>";
-            // print_r($row['employee_code']);
-            // exit;
-            if (empty($row['date_of_leaving']) && !empty($sender_table->last_working_date)) {
-                $updated_details['updated_id'] = $sender_table->id;
-                $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
-                $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
-                if ($date_of_leaving_update) {
-                    $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                    // echo "<pre>";
-                    // print_r($updated_record_detail);
-                }
-            } else {
-
-
-                if (!empty($lastworkingdate) || $row['date_of_leaving'] != $sender_table->last_working_date) {
-
-                    $month_number = explode("-", $lastworkingdate);
-
-                    switch ($month_number[1]) {
-                        case "Jan":
-                            $month_number[1] = '01';
-                            break;
-                        case "Feb":
-                            $month_number[1] = '02';
-                            break;
-                        case "Mar":
-                            $month_number[1] = '03';
-                            break;
-                        case "Apr":
-                            $month_number[1] = '04';
-                            break;
-                        case "May":
-                            $month_number[1] = '05';
-                            break;
-                        case "Jun":
-                            $month_number[1] = '06';
-                        case "Jul":
-                            $month_number[1] = '07';
-                            break;
-                        case "Aug":
-                            $month_number[1] = '08';
-                            break;
-                        case "Sep":
-                            $month_number[1] = '09';
-                            break;
-                        case "Oct":
-                            $month_number[1] = '10';
-                            break;
-                        case "Nov":
-                            $month_number[1] = '11';
-                            break;
-                        case "Dec":
-                            $month_number[1] = '12';
-                            break;
-                    }
-                    $final_exit_date = $month_number[0] . '-' . $month_number[1] . '-' . $month_number[2];
-                    $today = date('d-m-Y');
-                    $exit_date = strtotime($final_exit_date);
-                    $today_date = strtotime($today);
-
+                if ($sender_table->ax_id != $axCode) {
                     // print_r($sender_table->last_working_date);
-                    if ($exit_date < $today_date) {
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'AX CODE  Changed from ' . $sender_table->ax_id . ' to ' . $axCode;
+                    $ax_code_update = Sender::where('id', $sender_table->id)->update(['ax_id' => $axCode]);
 
-                        if (empty($sender_table->last_working_date)) {
-                            $updated_details['updated_id'] = $sender_table->id;
-                            $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $lastworkingdate;
-                            $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
-                            if ($date_of_leaving_update) {
-                                $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                                // echo "<pre>";
-                                // print_r($updated_record_detail);
-                            }
-                        } else if (strtotime($sender_table->last_working_date) >= strtotime($lastworkingdate)) {
-                            // echo "<pre>";
-                            // print_r($lastworkingdate."  ");
-                            // print_r("Sender Table Entry  ");
-                            // print_r($sender_table->id."  ");
-                            // print_r($sender_table->last_working_date);
-                            // echo "<pre>";
-                            //         // print_r($lastworkingdate);
-                            //         print_r($sender_table->id);
-                            //         print_r($sender_table->last_working_date);
-                            $updated_details['updated_id'] = $sender_table->id;
-                            $table_date = strtotime($sender_table->last_working_date);
-                            if ($lastworkingdate != $sender_table->last_working_date) {
 
-                                // print_r($lastworkingdate);
-                                $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $lastworkingdate;
+                    if ($ax_code_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->account_number != $row['account_number']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Account Number  Changed from ' . $sender_table->account_number . ' to ' . $row['account_number'];
+                    $account_number_update = Sender::where('id', $sender_table->id)->update(['account_number' => $row['account_number']]);
+
+
+                    if ($account_number_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                // print_r(($row['beneficiary_name']));
+                // print_r($sender_table->beneficiary_name);
+                // exit;
+
+                if ($sender_table->beneficiary_name != $row['beneficiary_name']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Beneficiary Name  Changed from ' . $sender_table->beneficiary_name . ' to ' . $row['beneficiary_name'];
+                    $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['beneficiary_name' => $row['beneficiary_name']]);
+
+
+                    if ($ifsc_code_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+                if ($sender_table->branch_name != $row['branch_name']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Branch Name Changed from ' . $sender_table->branch_name . ' to ' . $row['branch_name'];
+
+                    $branch_name_update = Sender::where('id', $sender_table->id)->update(['branch_name' => $row['branch_name']]);
+
+
+                    if ($branch_name_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->ifsc != $row['ifsc_code']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'IFSC Code Changed from ' . $sender_table->ifsc . ' to ' . $row['ifsc_code'];
+                    $ifsc_code_update = Sender::where('id', $sender_table->id)->update(['ifsc' => $row['ifsc_code']]);
+
+
+                    if ($ifsc_code_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->bank_name != $row['bank_name']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Bank Name Changed from ' . $sender_table->bank_name . ' to ' . $row['bank_name'];
+                    $bank_name_update = Sender::where('id', $sender_table->id)->update(['bank_name' => $row['bank_name']]);
+
+
+                    if ($bank_name_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->iag_code != $iagCode) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Iag Code Changed from ' . $sender_table->iag_code . ' to ' . $iagCode;
+                    $iag = Sender::where('id', $sender_table->id)->update(['iag_code' => $iagCode]);
+                    if ($iag) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+
+                if ($sender_table->designation != $row['designation']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Grade Changed from ' . $sender_table->designation . ' to ' . $row['designation'];
+                    $designation = Sender::where('id', $sender_table->id)->update(['designation' => $row['designation']]);
+                    if ($designation) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->grade != $row['grade']) {
+                    // print_r($sender_table->last_working_date);
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Grade Changed from ' . $sender_table->grade . ' to ' . $row['grade'];
+                    $grade = Sender::where('id', $sender_table->id)->update(['grade' => $row['grade']]);
+                    if ($grade) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";print_r($updated_record_detail);
+                    }
+                }
+
+                if ($sender_table->pfu != $pfu) {
+                    // print_r($sender_table->last_working_date);
+                    Sender::where('id', $sender_table->id)->update(['pfu' => $pfu]);
+                }
+
+                if ($sender_table->location != $row['hq']) {
+                    // print_r($sender_table->last_working_date);
+                    $location_update = Sender::where('id', $sender_table->id)->update(['location' => $row['hq']]);
+                }
+
+                if ($sender_table->telephone_no != $row['mobile_no']) {
+                    // print_r($sender_table->last_working_date);
+                    $mobile_no_update = Sender::where('id', $sender_table->id)->update(['telephone_no' => $row['mobile_no']]);
+                }
+
+                if ($sender_table->official_email_id != $row['official_email_id']) {
+                    // print_r($sender_table->last_working_date);
+                    $mobile_no_update = Sender::where('id', $sender_table->id)->update(['official_email_id' => $row['official_email_id']]);
+                }
+
+
+
+                // echo "<pre>";
+                // print_r($row['employee_code']);
+                // exit;
+                if (empty($row['date_of_leaving']) && !empty($sender_table->last_working_date)) {
+                    $updated_details['updated_id'] = $sender_table->id;
+                    $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
+                    $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
+                    if ($date_of_leaving_update) {
+                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                        // echo "<pre>";
+                        // print_r($updated_record_detail);
+                    }
+                } else {
+
+
+                    if (!empty($lastworkingdate) || $row['date_of_leaving'] != $sender_table->last_working_date) {
+
+                        $month_number = explode("-", $lastworkingdate);
+
+                        switch ($month_number[1]) {
+                            case "Jan":
+                                $month_number[1] = '01';
+                                break;
+                            case "Feb":
+                                $month_number[1] = '02';
+                                break;
+                            case "Mar":
+                                $month_number[1] = '03';
+                                break;
+                            case "Apr":
+                                $month_number[1] = '04';
+                                break;
+                            case "May":
+                                $month_number[1] = '05';
+                                break;
+                            case "Jun":
+                                $month_number[1] = '06';
+                            case "Jul":
+                                $month_number[1] = '07';
+                                break;
+                            case "Aug":
+                                $month_number[1] = '08';
+                                break;
+                            case "Sep":
+                                $month_number[1] = '09';
+                                break;
+                            case "Oct":
+                                $month_number[1] = '10';
+                                break;
+                            case "Nov":
+                                $month_number[1] = '11';
+                                break;
+                            case "Dec":
+                                $month_number[1] = '12';
+                                break;
+                        }
+                        $final_exit_date = $month_number[0] . '-' . $month_number[1] . '-' . $month_number[2];
+                        $today = date('d-m-Y');
+                        $exit_date = strtotime($final_exit_date);
+                        $today_date = strtotime($today);
+
+                        // print_r($sender_table->last_working_date);
+                        if ($exit_date < $today_date) {
+
+                            if (empty($sender_table->last_working_date)) {
+                                $updated_details['updated_id'] = $sender_table->id;
+                                $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $lastworkingdate;
                                 $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
                                 if ($date_of_leaving_update) {
                                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                                     // echo "<pre>";
                                     // print_r($updated_record_detail);
                                 }
-                            }
-                        }
-                    } else {
-                        // echo "<pre>";print_r($final_exit_date);
-
-                        if (empty($sender_table->last_working_date)) {
-                            $updated_details['updated_id'] = $sender_table->id;
-                            $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $final_exit_date;
-                            $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
-                            if ($date_of_leaving_update) {
-                                $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                            } else if (strtotime($sender_table->last_working_date) >= strtotime($lastworkingdate)) {
                                 // echo "<pre>";
-                                // print_r($updated_record_detail);
+                                // print_r($lastworkingdate."  ");
+                                // print_r("Sender Table Entry  ");
+                                // print_r($sender_table->id."  ");
+                                // print_r($sender_table->last_working_date);
+                                // echo "<pre>";
+                                //         // print_r($lastworkingdate);
+                                //         print_r($sender_table->id);
+                                //         print_r($sender_table->last_working_date);
+                                $updated_details['updated_id'] = $sender_table->id;
+                                $table_date = strtotime($sender_table->last_working_date);
+                                if ($lastworkingdate != $sender_table->last_working_date) {
+
+                                    // print_r($lastworkingdate);
+                                    $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $lastworkingdate;
+                                    $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $lastworkingdate, 'status' => 'Blocked']);
+                                    if ($date_of_leaving_update) {
+                                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                                        // echo "<pre>";
+                                        // print_r($updated_record_detail);
+                                    }
+                                }
                             }
                         } else {
+                            // echo "<pre>";print_r($final_exit_date);
 
-                            $updated_details['updated_id'] = $sender_table->id;
-                            $table_date = strtotime($sender_table->last_working_date);
-                            if ($exit_date != $table_date) {
-                                $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $final_exit_date;
+                            if (empty($sender_table->last_working_date)) {
+                                $updated_details['updated_id'] = $sender_table->id;
+                                $updated_details['updated_field'] = 'Date of Leaving has been Added as ' . $final_exit_date;
                                 $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
                                 if ($date_of_leaving_update) {
                                     $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
                                     // echo "<pre>";
                                     // print_r($updated_record_detail);
                                 }
+                            } else {
+
+                                $updated_details['updated_id'] = $sender_table->id;
+                                $table_date = strtotime($sender_table->last_working_date);
+                                if ($exit_date != $table_date) {
+                                    $updated_details['updated_field'] = 'Date of Leaving has been changed from ' . $sender_table->last_working_date . ' to ' . $final_exit_date;
+                                    $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => $row['date_of_leaving'], 'status' => 'Active']);
+                                    if ($date_of_leaving_update) {
+                                        $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                                        // echo "<pre>";
+                                        // print_r($updated_record_detail);
+                                    }
+                                }
                             }
                         }
-                    }
-                } else {
+                    } else {
 
-                    if (empty($row['date_of_leaving']) && !empty($sender_table->last_working_date)) {
-                        $updated_details['updated_id'] = $sender_table->id;
-                        $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
-                        $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
-                        if ($date_of_leaving_update) {
-                            $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
-                            // echo "<pre>";
-                            // print_r($updated_record_detail);
+                        if (empty($row['date_of_leaving']) && !empty($sender_table->last_working_date)) {
+                            $updated_details['updated_id'] = $sender_table->id;
+                            $updated_details['updated_field'] = 'Date of Leaving has been Removed as ' . $sender_table->last_working_date;
+                            $date_of_leaving_update = Sender::where('id', $sender_table->id)->update(['last_working_date' => "", 'status' => 'Active']);
+                            if ($date_of_leaving_update) {
+                                $updated_record_detail = DB::table('spine_hr_dump_updates')->insert($updated_details);
+                                // echo "<pre>";
+                                // print_r($updated_record_detail);
+                            }
                         }
                     }
                 }
