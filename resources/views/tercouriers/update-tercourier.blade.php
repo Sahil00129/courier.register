@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Create Courier')
 @section('content')
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
-		  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 <style>
     .list-group {
         width: 500px !important;
@@ -100,68 +99,71 @@
 
     /* for checkboxes */
     ul.styledCheckbox {
-			list-style: none;
-			padding: 5px 20px;
-		}
-		ul.styledCheckbox li{
-			display: inline;
-		}
-		ul.styledCheckbox li label{
-			display: inline-block;
-			background-color: rgba(255, 255, 255, .9);
-			border: 2px solid rgba(139, 139, 139, .3);
-			color: #adadad;
-			border-radius: 25px;
-			white-space: nowrap;
-			margin: 3px 0;
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			-webkit-tap-highlight-color: transparent;
-			transition: all .2s;
-		}
+        list-style: none;
+        padding: 5px 20px;
+    }
 
-		ul.styledCheckbox li label {
-			padding: 3px 12px;
-			cursor: pointer;
-		}
+    ul.styledCheckbox li {
+        display: inline;
+    }
 
-		ul.styledCheckbox li label::before {
-			display: inline-block;
-			font-style: normal;
-			font-variant: normal;
-			text-rendering: auto;
-			-webkit-font-smoothing: antialiased;
-			font-family: "Font Awesome 5 Free";
-			font-weight: 900;
-			font-size: 12px;
-			padding: 2px 6px 2px 2px;
-			content: "\f067";
-			transition: transform .3s ease-in-out;
-		}
+    ul.styledCheckbox li label {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, .9);
+        border: 2px solid rgba(139, 139, 139, .3);
+        color: #adadad;
+        border-radius: 25px;
+        white-space: nowrap;
+        margin: 3px 0;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: all .2s;
+    }
 
-		ul.styledCheckbox li input[type="checkbox"]:checked + label::before {
-			content: "\f00c";
-			transform: rotate(-360deg);
-			transition: transform .3s ease-in-out;
-		}
+    ul.styledCheckbox li label {
+        padding: 3px 12px;
+        cursor: pointer;
+    }
 
-		ul.styledCheckbox li input[type="checkbox"]:checked + label {
-			border: 2px solid #0ba360;
-			background-color: #0ba360;
-			color: #fff;
-			transition: all .2s;
-		}
+    ul.styledCheckbox li label::before {
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 12px;
+        padding: 2px 6px 2px 2px;
+        content: "\f067";
+        transition: transform .3s ease-in-out;
+    }
 
-		ul.styledCheckbox li input[type="checkbox"] {
-			position: absolute;
-			opacity: 0;
-		}
-		ul.styledCheckbox li input[type="checkbox"]:focus + label {
-			border: 2px solid #0ba360;
-		}
+    ul.styledCheckbox li input[type="checkbox"]:checked+label::before {
+        content: "\f00c";
+        transform: rotate(-360deg);
+        transition: transform .3s ease-in-out;
+    }
+
+    ul.styledCheckbox li input[type="checkbox"]:checked+label {
+        border: 2px solid #0ba360;
+        background-color: #0ba360;
+        color: #fff;
+        transition: all .2s;
+    }
+
+    ul.styledCheckbox li input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    ul.styledCheckbox li input[type="checkbox"]:focus+label {
+        border: 2px solid #0ba360;
+    }
 </style>
 
 
@@ -305,7 +307,7 @@
                                 <!-- <p class="docketdate_error text-danger" style="display: none; color: #ff0000; font-weight: 500;">Docket date invalid.</p> -->
                             </div>
                         </div>
-                       
+
 
                         <div>
                             <p class="display-3 d-flex align-items-center justify-content-between" style="font-size: 1rem; font-weight: 700; margin-bottom: 2rem;">
@@ -315,7 +317,7 @@
                                 </span>
                             </p>
                         </div>
-                     
+
 
                         <div v-if="!update_ter_flag">
                             <div class="form-row mb-0">
@@ -338,7 +340,7 @@
                                         @{{index+1}} . Payable Amount : @{{payment_data_new.payable_amount}} ,
                                         Voucher Code : @{{payment_data_new.voucher_code}}</b>
                                 </li>
-                            
+
                             </ul>
                         </div>
 
@@ -395,23 +397,23 @@
                             </div>
                         </div>
 
-                            <!-- Partial Paid Modal -->
-            <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="partialpaidModalLabel"> TER ID: @{{unique_id}}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Remarks:</label>
-                                    <input type="text" class="form-control" id="recipient-name" v-model="pay_later_remarks">
-                                </div>
-                                <!-- <div class="form-group">
+                        <!-- Partial Paid Modal -->
+                        <div class="modal fade show" id="partialpaidModal" v-if="ter_modal" tabindex="-1" role="dialog" aria-labelledby="partialpaidModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="partialpaidModalLabel"> TER ID: @{{unique_id}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="ter_modal=false;">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Remarks:</label>
+                                                <input type="text" class="form-control" id="recipient-name" v-model="pay_later_remarks">
+                                            </div>
+                                            <!-- <div class="form-group">
                                     <label for="recipient-name" class="col-form-label">Payable Amount</label>
                                     <input type="number" class="form-control" id="recipient-name" v-model="payable_amount">
                                 </div>
@@ -419,22 +421,22 @@
                                     <label for="recipient-name" class="col-form-label">Voucher Code</label>
                                     <input type="text" class="form-control" id="recipient-name" v-model="voucher_code">
                                 </div> -->
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Upload File</label>
-                                    <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"  v-on:click="ter_pay_later()" :disabled="update_ter_flag" data-dismiss="modal">Submit
-                            </button>
-                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
-                            <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
-                        </div>
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Upload File</label>
+                                                <input type="file" accept=".jpg,.pdf" class="form-control-file" id="fileupload" v-on:change="upload_file($event)">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" v-on:click="ter_pay_later()" :disabled="update_ter_flag" data-dismiss="modal">Submit
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal" >Get Passbook</button> -->
+                                        <!-- <button type="button" class="btn btn-secondary"  data-dismiss="modal"  @click="emp_modal=false;emp_advance_amount=''">Close</button> -->
+                                    </div>
 
-                    </div>
-                </div>
-            </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="d-flex justify-content-end align-items-center mt-3" style="gap: 8px;" v-if="pay_btn_flag">
                             <button type=" submit" class="btn btn-primary addButton" v-on:click="ter_pay_now()" :disabled="update_ter_flag">
@@ -606,9 +608,9 @@
             loader: false,
             word_amount: ".",
             selected_options: [],
-            ter_modal :"",
-            pay_later_remarks:"",
-            file:"",
+            ter_modal: "",
+            pay_later_remarks: "",
+            file: "",
 
         },
         created: function() {
@@ -679,20 +681,20 @@
             },
             ter_pay_later: function() {
                 var x = this.$el.querySelector("#tb-box");
-              
-              var y = x.querySelectorAll(".select_box");
-              this.selected_options="";
 
-              for (var i = 0; i < y.length; i++) {
-                  // console.log(y[i].value);
-                  if (y[i].checked) {
-                      if (this.selected_options == "") {
-                          this.selected_options += y[i].value;
-                      } else {
-                          this.selected_options += "," + y[i].value;
-                      }
-                  }
-              }
+                var y = x.querySelectorAll(".select_box");
+                this.selected_options = "";
+
+                for (var i = 0; i < y.length; i++) {
+                    // console.log(y[i].value);
+                    if (y[i].checked) {
+                        if (this.selected_options == "") {
+                            this.selected_options += y[i].value;
+                        } else {
+                            this.selected_options += "," + y[i].value;
+                        }
+                    }
+                }
                 var i, myArray, ter_to, myArray2, last_date_array, month_number, d1, d2;
                 var terto_date = new Date(this.all_data.terto_date);
                 if (this.all_data.sender_detail.last_working_date) {
@@ -714,20 +716,19 @@
 
                 if (d1 <= d2 || this.allow_flag) {
 
-                    if(this.file!="" && this.pay_later_remarks!="")
-                    {
+                    if (this.file != "" && this.pay_later_remarks != "") {
 
-                    const config = {
+                        const config = {
                             headers: {
                                 'content-type': 'multipart/form-data',
                             }
                         }
                         let formData = new FormData();
 
-                     
-                        
+
+
                         formData.append('file', this.file);
-                        formData.append('payable_data',JSON.stringify(this.pay_data_array));
+                        formData.append('payable_data', JSON.stringify(this.pay_data_array));
                         formData.append('pay_later_remarks', this.pay_later_remarks);
                         formData.append('unique_id', this.all_data.id);
                         formData.append('payment_status', "2");
@@ -738,38 +739,38 @@
 
                         // formData.append('payable_amount', this.payable_amount);
 
-                    axios.post('/ter_pay_later',formData, config)
-                        .then(response => {
-                            // console.log(response.data);
-                            if (response.data == "error_sum_amount") {
-                                swal('error', "Amount can't be greater than total amount", 'error')
-                                // window.location.reload();
-                            } else if (response.data === "ifsc_error") {
-                                swal('error', "IFSC for this employee is not valid", 'error')
-                            } else if (response.data[0] === "duplicate_voucher") {
-                                swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
-                            } else {
-                                if (response.data) {
-                                    this.button_text = "Search";
-                                    this.flag = true;
-                                    this.update_ter_flag = true;
-                                    this.allow_flag = false;
-                                    this.get_data_by_id();
-                                    swal('success', "Record has been updated Successfully!!!", 'success')
+                        axios.post('/ter_pay_later', formData, config)
+                            .then(response => {
+                                // console.log(response.data);
+                                if (response.data == "error_sum_amount") {
+                                    swal('error', "Amount can't be greater than total amount", 'error')
+                                    // window.location.reload();
+                                } else if (response.data === "ifsc_error") {
+                                    swal('error', "IFSC for this employee is not valid", 'error')
+                                } else if (response.data[0] === "duplicate_voucher") {
+                                    swal('error', "Voucher Code : " + response.data[1] + " has been Already used", 'error')
                                 } else {
-                                    this.button_text = "Search";
-                                    this.allow_flag = false;
-                                    swal('error', "AX-ID missing in DB for this record", 'error')
+                                    if (response.data) {
+                                        this.button_text = "Search";
+                                        this.flag = true;
+                                        this.update_ter_flag = true;
+                                        this.allow_flag = false;
+                                        this.get_data_by_id();
+                                        swal('success', "Record has been updated Successfully!!!", 'success')
+                                    } else {
+                                        this.button_text = "Search";
+                                        this.allow_flag = false;
+                                        swal('error', "AX-ID missing in DB for this record", 'error')
+                                    }
                                 }
-                            }
 
-                        }).catch(error => {
+                            }).catch(error => {
 
-                            this.button_text = "Search";
+                                this.button_text = "Search";
 
 
-                        })
-                    }else{
+                            })
+                    } else {
                         swal('error', "Either File/Remark is Empty ", 'error')
                     }
 
@@ -825,9 +826,9 @@
             },
             ter_pay_now: function() {
                 var x = this.$el.querySelector("#tb-box");
-              
+
                 var y = x.querySelectorAll(".select_box");
-                this.selected_options="";
+                this.selected_options = "";
 
                 for (var i = 0; i < y.length; i++) {
                     // console.log(y[i].value);
@@ -868,7 +869,7 @@
                             "current_balance": this.current_balance,
                             "terfrom": this.terfrom,
                             'terto': this.terto,
-                            'selected_options':this.selected_options
+                            'selected_options': this.selected_options
                         })
                         .then(response => {
                             // console.log(response.data);
@@ -948,6 +949,10 @@
                         if (response.data.status_of_data === "11") {
                             this.button_text = "Search";
                             swal('error', "Record is in Created Handover Stage", 'error')
+                        }
+                        if (response.data.status_of_data === "12") {
+                            this.button_text = "Search";
+                            swal('error', "Record is in Unit Change", 'error')
                         }
                         if (response.data.status_of_data === "3") {
                             this.button_text = "Search";

@@ -2485,6 +2485,10 @@ class TercourierController extends Controller
             $data_error['status_of_data'] = "11";
             return $data_error;
         }
+        if ($tercourier_table[0]->status == 12) {
+            $data_error['status_of_data'] = "12";
+            return $data_error;
+        }
         $senders =  DB::table('sender_details')->get();
         $balance_data = DB::table('employee_balance')->select('current_balance')->where('employee_id', $tercourier_table[0]->employee_id)->orderBy('id', 'DESC')->first();;
         // return $balance_data;
