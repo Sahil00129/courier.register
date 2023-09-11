@@ -310,7 +310,7 @@ class TercourierController extends Controller
 
         // return view('emails.rejectedTER',['date_diff' => $data['date_diff'],'last_ter_date'=> $data['last_ter_date'],'terdata'=> $data['terdata'],'body'=>$data['body'],'body_two'=> $data['body_two'] ,'title'=>$data['title'],'employee_id'=>$data['employee_id'],'employee_name'=>$data['employee_name']]);
 
-        if (!empty($data["email"]) && $data["email"] != 0) {
+        if (!empty($data["email"])) {
 
             Mail::mailer('smtp2')->send('emails.rejectedTer', $data, function ($message) use ($data) {
                 $message->to($data["email"], $data["email"])
@@ -696,17 +696,6 @@ class TercourierController extends Controller
                 self::send_reject_mail($tercourier->id);
             }
 
-
-            $date = date_create($terdata['terto_date']);
-            date_add($date, date_interval_create_from_date_string("50 days"));
-            $date_check = date_format($date, "Y-m-d");
-
-
-            $today_date = date('Y-m-d');
-
-            if ($today_date >= $date_check) {
-                self::send_reject_mail($tercourier->id);
-            }
 
 
             $getsender = Sender::where('id', $terdata['sender_id'])->first();
